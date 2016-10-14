@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dropEffect="none" class="no-js no-auth ">
+<head>
+<meta charset="utf-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-ZA-Response-Id" content="000ebdf3b45ec8b0">
+<meta http-equiv="X-ZA-Experiment" content="default:None">
+
+<title>
+
+
+epoll 或者 kqueue 的原理是什么？ - 编程 - 知乎
+
+
+</title>
+
+<meta name="apple-itunes-app" content="app-id=432274380, app-argument=zhihu://questions/20122137">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta http-equiv="mobile-agent" content="format=html5;url=https://www.zhihu.com/question/20122137">
+<meta id="znonce" name="znonce" content="bb2083ce9f11474abd66ebe5520e5d6d">
+
+
+
+<link rel="apple-touch-icon" href="https://static.zhihu.com/static/revved/img/ios/touch-icon-152.87c020b9.png" sizes="152x152">
+<link rel="apple-touch-icon" href="https://static.zhihu.com/static/revved/img/ios/touch-icon-120.496c913b.png" sizes="120x120">
+<link rel="apple-touch-icon" href="https://static.zhihu.com/static/revved/img/ios/touch-icon-76.dcf79352.png" sizes="76x76">
+<link rel="apple-touch-icon" href="https://static.zhihu.com/static/revved/img/ios/touch-icon-60.9911cffb.png" sizes="60x60">
+
+
+<link rel="shortcut icon" href="https://static.zhihu.com/static/favicon.ico" type="image/x-icon">
+
+<link rel="search" type="application/opensearchdescription+xml" href="https://static.zhihu.com/static/search.xml" title="知乎" />
+<link rel="stylesheet" href="https://static.zhihu.com/static/revved/-/css/z.83c3e4f6.css">
+
+
+
+<meta name="google-site-verification" content="FTeR0c8arOPKh8c5DYh_9uu98_zJbaWw53J-Sch9MTg" />
+
+
+
+<!--[if lt IE 9]>
+<script src="https://static.zhihu.com/static/components/respond/dest/respond.min.js"></script>
+<link href="https://static.zhihu.com/static/components/respond/cross-domain/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
+<link href="/static/components/respond/cross-domain/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
+<script src="/static/components/respond/cross-domain/respond.proxy.js"></script>
+<![endif]-->
+<script src="https://static.zhihu.com/static/revved/-/js/instant.14757a4a.js"></script>
+
+
+
+
+</head>
+
+<body class="zhi ">
+
+
+
+<div role="navigation" class="zu-top" data-za-module="TopNavBar">
+<div class="zg-wrap modal-shifting clearfix" id="zh-top-inner">
+<a href="/" class="zu-top-link-logo" id="zh-top-link-logo" data-za-c="view_home" data-za-a="visit_home" data-za-l="top_navigation_zhihu_logo">知乎</a>
+
+
+
+<ul class="topnav-noauth clearfix">
+<li>
+<a href="javascript:;" class="js-signup-noauth"><i class="zg-icon zg-icon-dd-home"></i>注册知乎</a>
+</li>
+<li>
+<a href="javascript:;" class="js-signin-noauth">登录</a>
+</li>
+</ul>
+
+
+
+<button class="zu-top-add-question" id="zu-top-add-question">提问</button>
+
+
+<div role="search" id="zh-top-search" class="zu-top-search">
+<form method="GET" action="/search" id="zh-top-search-form" class="zu-top-search-form">
+
+
+
+<input type="hidden" name="type" value="content">
+<label for="q" class="hide-text">知乎搜索</label><input type="text" class="zu-top-search-input" id="q" name="q" autocomplete="off" value="" placeholder="搜索你感兴趣的内容...">
+<button type="submit" class="zu-top-search-button"><span class="hide-text">搜索</span><span class="sprite-global-icon-magnifier-dark"></span></button>
+</form>
+</div>
+
+
+
+<div id="zg-top-nav" class="zu-top-nav">
+<ul class="zu-top-nav-ul zg-clear">
+
+<li class="zu-top-nav-li " id="zh-top-nav-home">
+<a class="zu-top-nav-link" href="/" id="zh-top-link-home" data-za-c="view_home" data-za-a="visit_home" data-za-l="top_navigation_home">首页</a>
+</li>
+
+
+
+<li class="top-nav-topic-selector zu-top-nav-li " id="zh-top-nav-topic">
+<a class="zu-top-nav-link" href="/topic" id="top-nav-dd-topic">话题</a>
+</li>
+
+<li class="zu-top-nav-li " id="zh-top-nav-explore">
+<a class="zu-top-nav-link" href="/explore">发现</a>
+</li>
+
+
+</ul>
+<div class="zu-top-nav-live zu-noti7-popup zg-r5px no-hovercard" id="zh-top-nav-live-new" role="popup" tabindex="0">
+<div class="zu-top-nav-live-inner zg-r5px">
+<div class="zu-top-live-icon">&nbsp;</div>
+<div class="zu-home-noti-inner" id="zh-top-nav-live-new-inner">
+<div class="zm-noti7-popup-tab-container clearfix" tabindex="0">
+<button class="zm-noti7-popup-tab-item message">
+<span class="icon">消息</span>
+</button>
+<button class="zm-noti7-popup-tab-item user">
+<span class="icon">用户</span>
+</button>
+<button class="zm-noti7-popup-tab-item thanks">
+<span class="icon">赞同和感谢</span>
+</button>
+</div>
+</div>
+<div class="zm-noti7-frame-border top"></div>
+<div class="zm-noti7-frame">
+<div class="zm-noti7-content message">
+<div class="zm-noti7-content-inner">
+<div class="zm-noti7-content-body">
+<div class="zm-noti7-popup-loading">
+<span class="noti-spinner-loading"></span>
+</div>
+</div>
+</div>
+</div>
+<div class="zm-noti7-content user" style="display:none;">
+<div class="zm-noti7-content-inner">
+<div class="zm-noti7-content-body">
+<div class="zm-noti7-popup-loading">
+<span class="noti-spinner-loading"></span>
+</div>
+</div>
+</div>
+</div>
+<div class="zm-noti7-content thanks" style="display:none;">
+<div class="zm-noti7-content-inner">
+<div class="zm-noti7-content-body">
+<div class="zm-noti7-popup-loading">
+<span class="noti-spinner-loading"></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="zm-noti7-frame-border bottom"></div>
+<div class="zm-noti7-popup-footer">
+<a href="/notifications" class="zm-noti7-popup-footer-all zg-right">查看全部 &raquo;</a>
+<a href="/settings/notification" class="zm-noti7-popup-footer-set" title="通知设置" ><i class="zg-icon zg-icon-settings"></i></a>
+</div>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<div class="zu-global-notify" id="zh-global-message" style="display:none">
+<div class="zg-wrap">
+<div class="zu-global-nitify-inner">
+<a class="zu-global-notify-close" href="javascript:;" title="关闭" name="close">x</a>
+<span class="zu-global-notify-icon"></span>
+<span class="zu-global-notify-msg"></span>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+<div class="zu-global-notify zu-global-notify-info" id="zh-question-redirect-info" style="display:none"></div>
+
+
+<div class="zu-global-notify zu-global-notify-info" id="zh-question-notification-summary" style="display:none;">
+<div class="zg-wrap">
+<div class="zu-global-nitify-inner">
+<span class="zu-global-notify-icon"></span>
+<ul class="zu-question-notify-wrap">
+</ul>
+</div>
+</div>
+</div>
+
+
+<div class="zg-wrap zu-main clearfix with-indention-votebar" itemscope itemtype="http://schema.org/Question" id="zh-single-question-page" data-urltoken="20122137" role="main">
+<div class="zu-main-content">
+<div class="zu-main-content-inner">
+
+
+<meta itemprop="isTopQuestion" content="false" />
+<meta itemprop="visitsCount" content="112366" />
+
+
+<div class="zm-tag-editor zg-section">
+<div class="zm-tag-editor-labels zg-clear">
+
+<a class="zm-item-tag"
+href="/topic/19554298"
+data-hovercard="t$b$19554298" data-token="19554298" data-topicid="1354">
+编程
+</a>
+
+<a class="zm-item-tag"
+href="/topic/19561178"
+data-hovercard="t$b$19561178" data-token="19561178" data-topicid="3661">
+X 的原理
+</a>
+
+<a class="zm-item-tag"
+href="/topic/19582037"
+data-hovercard="t$b$19582037" data-token="19582037" data-topicid="10584">
+并发峰值
+</a>
+
+<a class="zm-item-tag"
+href="/topic/19594919"
+data-hovercard="t$b$19594919" data-token="19594919" data-topicid="14890">
+epoll
+</a>
+
+<a class="zm-item-tag"
+href="/topic/19594923"
+data-hovercard="t$b$19594923" data-token="19594923" data-topicid="14891">
+kqueue
+</a>
+
+<a class="zm-item-tag"
+href="/topic/19619463"
+data-hovercard="t$b$19619463" data-token="19619463" data-topicid="23144">
+多线程
+</a>
+
+</div>
+</div>
+<div id="zh-question-title" data-editable="false">
+<h2 class="zm-item-title">
+
+<span class="zm-editable-content">epoll 或者 kqueue 的原理是什么？</span>
+
+</h2>
+</div>
+<div id="zh-question-detail" class="zm-item-rich-text" data-resourceid="228941" data-action="/question/detail">
+
+<div class="zm-editable-content">为什么epoll和kqueue可以用基于事件的方式，单线程的实现并发？我没看过linux内核，对这方面一直有疑问……<br><b><br></b><br><b>可能我没有说太明白，我知道您说的这些，我是想了解底层原理。在底层，linux内核是如何知道这些事件的，通过轮询吗？ </b></div>
+
+
+</div>
+<div class="zm-item-meta zm-item-comment-el clearfix" id="zh-question-meta-wrap">
+<div class="zm-meta-panel">
+
+<a href="#" name="addcomment" class="toggle-comment meta-item">
+<i class="z-icon-comment"></i>1 条评论
+</a>
+<a href="#" name="share" class="share meta-item">
+<i class="z-icon-share"></i>分享
+</a>
+
+</div>
+<div class="panel-container">
+
+</div>
+</div>
+
+
+<div class="zh-answers-title clearfix">
+
+<div id="zh-answers-filter" class="Sorter">
+
+<span class="lbl">默认排序</span>
+<a class="lbl" href="/question/20122137?sort=created">按时间排序</a>
+
+<i class="zg-icon zg-icon-double-arrow"></i>
+</div>
+
+<h3 data-num="14" id="zh-question-answer-num">14 个回答</h3>
+</div>
+
+<div id="zh-question-answer-wrap" data-pagesize="10" class="zh-question-answer-wrapper" data-widget="navigable" data-navigable-options="{&quot;items&quot;: &quot;&gt;.zm-item-answer&quot;}" data-init="{&quot;params&quot;: {&quot;url_token&quot;: 20122137, &quot;pagesize&quot;: 10, &quot;offset&quot;: 0}, &quot;nodename&quot;: &quot;QuestionAnswerListV2&quot;}">
+
+
+<div tabindex="-1" class="zm-item-answer  zm-item-expanded"
+
+itemprop="topAnswer"
+
+itemscope itemtype="http://schema.org/Answer"
+data-aid="17067660"
+data-atoken="54153089"
+data-collapsed="0"
+data-created="1436258642"
+data-deleted="0"
+data-helpful="1"
+data-isowner="0"
+data-copyable="1"
+
+>
+<link itemprop="url" href="/question/20122137/answer/54153089">
+<meta itemprop="answer-id" content="17067660">
+<meta itemprop="answer-url-token" content="54153089">
+<a class="zg-anchor-hidden" name="answer-17067660"></a>
+
+
+<div class="zm-votebar">
+<button class="up ">
+<i class="icon vote-arrow"></i>
+<span class="count">85</span>
+<span class="label sr-only">赞同</span>
+</button>
+<button class="down ">
+<i class="icon vote-arrow"></i>
+<span class="label sr-only">反对</span>
+</button>
+</div>
+
+
+<div class="answer-head">
+<div class="zm-item-answer-author-info">
+
+<a class="zm-item-link-avatar avatar-link"
+
+href="/people/windoze" target="_blank" data-hovercard="p$t$windoze"
+
+><img src="https://pic2.zhimg.com/b7b47a8e1_s.jpg"
+class="zm-list-avatar avatar"
+></a>
+
+<span class="summary-wrapper">
+<span class="author-link-line">
+
+<a class="author-link"
+data-hovercard="p$t$windoze"
+target="_blank" href="/people/windoze"
+>徐辰</a></span><span title="GOP SOOP GHOP Coder" class="bio">
+GOP SOOP GHOP Coder
+</span>
+</span>
+</div>
+<div class="zm-item-vote-info" data-votecount="85">
+
+
+
+<span class="voters text"><a href="#" class="more text"><span class="js-voteCount">85</span>&nbsp;人赞同</a></span>
+
+
+</div>
+</div>
+<div class="zm-item-rich-text expandable js-collapse-body" data-resourceid="228941" data-action="/answer/content" data-author-name="徐辰" data-entry-url="/question/20122137/answer/54153089">
+
+
+<div class="zh-summary summary clearfix" style="display:none;">
+
+原理其它答案讲得差不多了，我就补一句，从kernel层面将，事件产生有可能不是由硬件中断触发的，在一定情况下kernel的确会轮询，因为响应硬件中断是一个成本比较高的操作。 以网卡为例，当数据量很少的时候，每来一个数据包网卡都回产生一个中断，kernel响…
+
+<a href="/question/20122137/answer/54153089" class="toggle-expand">显示全部</a>
+
+</div>
+
+
+<div class="zm-editable-content clearfix">
+原理其它答案讲得差不多了，我就补一句，从kernel层面将，事件产生有可能不是由硬件中断触发的，在一定情况下kernel的确会轮询，因为响应硬件中断是一个成本比较高的操作。<br>以网卡为例，当数据量很少的时候，每来一个数据包网卡都回产生一个中断，kernel响应这个中断，从网卡缓冲区中读出数据放进协议栈处理，当满足一定条件时，kernel回调用户代码，这里的“回调”一般情况下是指从一个kernel syscall中返回(在此之前用户代码一直处于block状态)。<br>当数据量很大时，每个包都产生一个中断就划不来了，此时kernel可以启动interrupt coalescing机制，让网卡做中断合并，也就是说来足够多的数据包或者等待一个timeout才会产生一个中断，kernel在响应中断时会把所有数据一起读出来处理，这样可以有效的降低中断次数。<br>当数据量更大时，网卡缓冲区里几乎总是有未处理的数据，此时kernel干脆会禁掉网卡的中断，切换到轮询处理的模式，说白了就是跑一个忙循环不停地读网卡缓冲区里的数据，这样综合开销更低。
+</div>
+
+
+</div>
+<a class="zg-anchor-hidden ac" name="17067660-comment"></a>
+<div class="zm-item-meta answer-actions clearfix js-contentActions">
+<div class="zm-meta-panel">
+
+<a itemprop="url" class="answer-date-link meta-item" target="_blank" href="/question/20122137/answer/54153089">发布于 2015-07-07</a>
+
+<a href="#" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox">
+<i class="z-icon-comment"></i>12 条评论</a>
+
+
+<a href="#" class="meta-item zu-autohide js-thank" data-thanked="false"><i class="z-icon-thank"></i>感谢</a>
+
+
+
+<a href="#" class="meta-item zu-autohide js-share"><i class="z-icon-share"></i>分享</a>
+
+<a href="#" class="meta-item zu-autohide js-collect"><i class="z-icon-collect"></i>收藏</a>
+
+
+
+
+
+<span class="zg-bull zu-autohide">&bull;</span>
+
+<a href="#" class="meta-item zu-autohide js-noHelp">没有帮助</a>
+
+<span class="zg-bull zu-autohide">&bull;</span>
+<a href="#" class="meta-item zu-autohide js-report">举报</a>
+
+
+
+
+<meta name="copyrightStatus" content="1">
+<meta name="disableCopyAvatar" content="">
+
+<span class="zg-bull">&bull;</span>
+
+<a href="/terms#sec-licence-1" target="_blank" class="meta-item copyright">
+作者保留权利
+</a>
+
+
+</div>
+</div>
+</div>
+
+<div tabindex="-1" class="zm-item-answer  zm-item-expanded"
+
+itemscope itemtype="http://schema.org/Answer"
+data-aid="1529009"
+data-atoken="15999888"
+data-collapsed="0"
+data-created="1358833980"
+data-deleted="0"
+data-helpful="1"
+data-isowner="0"
+data-copyable="1"
+
+>
+<link itemprop="url" href="/question/20122137/answer/15999888">
+<meta itemprop="answer-id" content="1529009">
+<meta itemprop="answer-url-token" content="15999888">
+<a class="zg-anchor-hidden" name="answer-1529009"></a>
+
+
+<div class="zm-votebar">
+<button class="up ">
+<i class="icon vote-arrow"></i>
+<span class="count">115</span>
+<span class="label sr-only">赞同</span>
+</button>
+<button class="down ">
+<i class="icon vote-arrow"></i>
+<span class="label sr-only">反对</span>
+</button>
+</div>
+
+
+<div class="answer-head">
+<div class="zm-item-answer-author-info">
+
+<a class="zm-item-link-avatar avatar-link"
+
+href="/people/zsummer" target="_blank" data-hovercard="p$t$zsummer"
+
+><img src="https://pic4.zhimg.com/88f87787f6da907b685700f4fe58be27_s.jpg"
+class="zm-list-avatar avatar"
+></a>
+
+<span class="summary-wrapper">
+<span class="author-link-line">
+
+<a class="author-link"
+data-hovercard="p$t$zsummer"
+target="_blank" href="/people/zsummer"
+>夏天</a></span><span title="生命是一场永不停歇的追寻" class="bio">
+生命是一场永不停歇的追寻
+</span>
+</span>
+</div>
+<div class="zm-item-vote-info" data-votecount="115">
+
+
+
+<span class="voters text"><a href="#" class="more text"><span class="js-voteCount">115</span>&nbsp;人赞同</a></span>
+
+
+</div>
+</div>
+<div class="zm-item-rich-text expandable js-collapse-body" data-resourceid="228941" data-action="/answer/content" data-author-name="夏天" data-entry-url="/question/20122137/answer/15999888">
+
+
+<div class="zh-summary summary clearfix" style="display:none;">
+
+<b>收到了在知乎的第一个赞.</b> <b>网卡设备对应一个中断号, 当网卡收到网络端的消息的时候会向CPU发起中断请求, 然后CPU处理该请求. 通过驱动程序 进而操作系统得到通知, 系统然后通知epoll, epoll通知用户代码. 大致流程是这样.</b> <b>-----------</b> <b>在内核的最底层是中断 …<a class="member_mention" data-hash="b7822d554cfe3ed3118815a0339fe4c3" href="//www.zhihu.com/people/b7822d554cfe3ed3118815a0339fe4c3" data-hovercard="p$b$b7822d554cfe3ed3118815a0339fe4c3">@蓝形参</a> 的回答.</b>
+
+<a href="/question/20122137/answer/15999888" class="toggle-expand">显示全部</a>
+
+</div>
+
+
+<div class="zm-editable-content clearfix">
+<b>收到了在知乎的第一个赞.</b><br><b>网卡设备对应一个中断号, 当网卡收到网络端的消息的时候会向CPU发起中断请求, 然后CPU处理该请求. 通过驱动程序 进而操作系统得到通知, 系统然后通知epoll, epoll通知用户代码. 大致流程是这样.</b><br><b>-----------</b><br><b>在内核的最底层是中断 类似系统回调的机制 不是轮询, 在这个基础上再去看 <a class="member_mention" data-hash="b7822d554cfe3ed3118815a0339fe4c3" href="//www.zhihu.com/people/b7822d554cfe3ed3118815a0339fe4c3" data-hovercard="p$b$b7822d554cfe3ed3118815a0339fe4c3">@蓝形参</a> 的回答.</b>
+</div>
+
+
+</div>
+<a class="zg-anchor-hidden ac" name="1529009-comment"></a>
+<div class="zm-item-meta answer-actions clearfix js-contentActions">
+<div class="zm-meta-panel">
+
+<a itemprop="url" class="answer-date-link meta-item" data-tooltip="s$t$发布于 2013-01-22" target="_blank" href="/question/20122137/answer/15999888">编辑于 2013-07-08</a>
+
+<a href="#" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox">
+<i class="z-icon-comment"></i>18 条评论</a>
+
+
+<a href="#" class="meta-item zu-autohide js-thank" data-thanked="false"><i class="z-icon-thank"></i>感谢</a>
+
+
+
+<a href="#" class="meta-item zu-autohide js-share"><i class="z-icon-share"></i>分享</a>
+
+<a href="#" class="meta-item zu-autohide js-collect"><i class="z-icon-collect"></i>收藏</a>
+
+
+
+
+
+<span class="zg-bull zu-autohide">&bull;</span>
+
+<a href="#" class="meta-item zu-autohide js-noHelp">没有帮助</a>
+
+<span class="zg-bull zu-autohide">&bull;</span>
+<a href="#" class="meta-item zu-autohide js-report">举报</a>
+
+
+
+
+<meta name="copyrightStatus" content="1">
+<meta name="disableCopyAvatar" content="">
+
+<span class="zg-bull">&bull;</span>
+
+<a href="/terms#sec-licence-1" target="_blank" class="meta-item copyright">
+作者保留权利
+</a>
+
+
+</div>
+</div>
+</div>
+
+<div tabindex="-1" class="zm-item-answer  zm-item-expanded"
+
+itemscope itemtype="http://schema.org/Answer"
+data-aid="739762"
+data-atoken="14049112"
+data-collapsed="0"
+data-created="1331840858"
+data-deleted="0"
+data-helpful="1"
+data-isowner="0"
+data-copyable="1"
+
+>
+<link itemprop="url" href="/question/20122137/answer/14049112">
+<meta itemprop="answer-id" content="739762">
+<meta itemprop="answer-url-token" content="14049112">
+<a class="zg-anchor-hidden" name="answer-739762"></a>
+
+
+<div class="zm-votebar">
+<button class="up ">
+<i class="icon vote-arrow"></i>
+<span class="count">662</span>
+<span class="label sr-only">赞同</span>
+</button>
+<button class="down ">
+<i class="icon vote-arrow"></i>
+<span class="label sr-only">反对</span>
+</button>
+</div>
+
+
+<div class="answer-head">
+<div class="zm-item-answer-author-info">
+
+<a class="zm-item-link-avatar avatar-link"
+
+href="/people/thynson" target="_blank" data-hovercard="p$t$thynson"
+
+><img src="https://pic3.zhimg.com/cf2b4db5a_s.jpg"
+class="zm-list-avatar avatar"
+></a>
+
+<span class="summary-wrapper">
+<span class="author-link-line">
+
+<a class="author-link"
+data-hovercard="p$t$thynson"
+target="_blank" href="/people/thynson"
+>蓝形参</a></span><span title="黑魔法书编撰者" class="bio">
+黑魔法书编撰者
+</span>
+</span>
+</div>
+<div class="zm-item-vote-info" data-votecount="662">
+
+
+
+<span class="voters text"><a href="#" class="more text"><span class="js-voteCount">662</span>&nbsp;人赞同</a></span>
+
+
+</div>
+</div>
+<div class="zm-item-rich-text expandable js-collapse-body" data-resourceid="228941" data-action="/answer/content" data-author-name="蓝形参" data-entry-url="/question/20122137/answer/14049112">
+
+
+<div class="zh-summary summary clearfix" style="display:none;">
+
+2013-10-27更新：由于此文陆陆续续收到赞同，而且其中有些地方并不完全正确，特在本文最后予以订正 我不了解楼主的层次，我必须从很多基础的概念开始构建这个答案，并且可能引申到很多别的问题。 首先我们来定义流的概念，一个流可以是文件，socket，pipe等…
+
+<a href="/question/20122137/answer/14049112" class="toggle-expand">显示全部</a>
+
+</div>
+
+
+<div class="zm-editable-content clearfix">
+2013-10-27更新：由于此文陆陆续续收到赞同，而且其中有些地方并不完全正确，特在本文最后予以订正<br><br>我不了解楼主的层次，我必须从很多基础的概念开始构建这个答案，并且可能引申到很多别的问题。<br><br>首先我们来定义流的概念，一个流可以是文件，socket，pipe等等可以进行I/O操作的内核对象。<br>不管是文件，还是套接字，还是管道，我们都可以把他们看作流。<br>之后我们来讨论I/O的操作，通过read，我们可以从流中读入数据；通过write，我们可以往流写入数据。现在假定一个情形，我们需要从流中读数据，<b>但是流中还没有数据</b>，（典型的例子为，客户端要从socket读如数据，但是服务器还没有把数据传回来），这时候该怎么办？<br><ul><li>阻塞。阻塞是个什么概念呢？比如某个时候你在等快递，但是你不知道快递什么时候过来，而且你没有别的事可以干（或者说接下来的事要等快递来了才能做）；那么你可以去睡觉了，因为你知道快递把货送来时一定会给你打个电话（假定一定能叫醒你）。</li><li>非阻塞<b>忙</b>轮询。接着上面等快递的例子，如果用忙轮询的方法，那么你需要知道快递员的手机号，然后每分钟给他挂个电话：“你到了没？”</li></ul>很明显一般人不会用第二种做法，不仅显很无脑，浪费话费不说，还占用了快递员大量的时间。<br>大部分程序也不会用第二种做法，因为第一种方法经济而简单，经济是指消耗很少的CPU时间，如果线程睡眠了，就掉出了系统的调度队列，暂时不会去瓜分CPU宝贵的时间片了。<br><br>为了了解阻塞是如何进行的，我们来讨论缓冲区，以及内核缓冲区，最终把I/O事件解释清楚。缓冲区的引入是为了减少频繁I/O操作而引起频繁的系统调用（你知道它很慢的），当你操作一个流时，更多的是以缓冲区为单位进行操作，这是相对于用户空间而言。对于内核来说，也需要缓冲区。<br>假设有一个管道，进程A为管道的写入方，Ｂ为管道的读出方。<br><ol><li>假设一开始内核缓冲区是空的，B作为读出方，被阻塞着。然后首先A往管道写入，这时候内核缓冲区由空的状态变到非空状态，内核就会产生一个事件告诉Ｂ该醒来了，这个事件姑且称之为“缓冲区非空”。</li><li>但是“缓冲区非空”事件通知B后，B却还没有读出数据；且内核许诺了不能把写入管道中的数据丢掉这个时候，Ａ写入的数据会滞留在内核缓冲区中，如果内核也缓冲区满了，B仍未开始读数据，最终内核缓冲区会被填满，这个时候会产生一个I/O事件，告诉进程A，你该等等（阻塞）了，我们把这个事件定义为“缓冲区满”。</li><li>假设后来Ｂ终于开始读数据了，于是内核的缓冲区空了出来，这时候内核会告诉A，内核缓冲区有空位了，你可以从长眠中醒来了，继续写数据了，我们把这个事件叫做“缓冲区非满”</li><li>也许事件Y1已经通知了A，但是A也没有数据写入了，而Ｂ继续读出数据，知道内核缓冲区空了。这个时候内核就告诉B，你需要阻塞了！，我们把这个时间定为“缓冲区空”。</li></ol>这四个情形涵盖了四个I/O事件，缓冲区满，缓冲区空，缓冲区非空，缓冲区非满（注都是说的内核缓冲区，且这四个术语都是我生造的，仅为解释其原理而造）。这四个I/O事件是进行阻塞同步的根本。（如果不能理解“同步”是什么概念，请学习操作系统的锁，信号量，条件变量等任务同步方面的相关知识）。<br><br>然后我们来说说阻塞I/O的缺点。但是阻塞I/O模式下，一个线程只能处理一个流的I/O事件。如果想要同时处理多个流，要么多进程(fork)，要么多线程(pthread_create)，很不幸这两种方法效率都不高。<br>于是再来考虑非阻塞忙轮询的I/O方式，我们发现我们可以同时处理多个流了（把一个流从阻塞模式切换到非阻塞模式再此不予讨论）：<br>while true {<br>  for i in stream[]; {<br>            if i has data<br>                  read until unavailable<br>}<br>}<br>我们只要不停的把所有流从头到尾问一遍，又从头开始。这样就可以处理多个流了，但这样的做法显然不好，因为如果所有的流都没有数据，那么只会白白浪费CPU。这里要补充一点，阻塞模式下，内核对于I/O事件的处理是阻塞或者唤醒，而非阻塞模式下则把I/O事件交给其他对象（后文介绍的select以及epoll）处理甚至直接忽略。<br><br>为了避免CPU空转，可以引进了一个代理（一开始有一位叫做select的代理，后来又有一位叫做poll的代理，不过两者的本质是一样的）。这个代理比较厉害，可以同时观察许多流的I/O事件，在空闲的时候，<b>会把当前线程阻塞掉</b>，当有一个或多个流有I/O事件时，就从阻塞态中醒来，于是我们的程序就会轮询一遍所有的流（于是我们可以把“忙”字去掉了）。代码长这样:<br>while true {<br>  select(streams[])<br>  for i in streams[] {<br>            if i has data<br>                  read until unavailable<br>}<br>}<br>于是，如果没有I/O事件产生，我们的程序就会阻塞在select处。但是依然有个问题，我们从select那里仅仅知道了，有I/O事件发生了，但却并不知道是那几个流（可能有一个，多个，甚至全部），我们只能<b>无差别轮询</b>所有流，找出能读出数据，或者写入数据的流，对他们进行操作。<br>但是使用select，我们有O(n)的无差别轮询复杂度，同时处理的流越多，每一次无差别轮询时间就越长。再次<br><b>说了这么多，终于能好好解释epoll了</b><br>epoll可以理解为event poll，不同于忙轮询和无差别轮询，epoll之会把哪个流发生了怎样的I/O事件通知我们。此时我们对这些流的操作都是有意义的。（复杂度降低到了O(k)，k为产生I/O事件的流的个数，也有认为O(1)的[更新 1]）<br>在讨论epoll的实现细节之前，先把epoll的相关操作列出[更新 2]：<br><ul><li>epoll_create 创建一个epoll对象，一般epollfd = epoll_create()<br></li><li>epoll_ctl （epoll_add/epoll_del的合体），往epoll对象中增加/删除某一个流的某一个事件<br>比如<br>epoll_ctl(epollfd, EPOLL_CTL_ADD, socket, EPOLLIN);//有缓冲区内有数据时epoll_wait返回<br>epoll_ctl(epollfd, EPOLL_CTL_DEL, socket, EPOLLOUT);//缓冲区可写入时epoll_wait返回</li><li>epoll_wait(epollfd,...)等待直到注册的事件发生<br></li></ul>（注：当对一个非阻塞流的读写发生缓冲区满或缓冲区空，write/read会返回-1，并设置errno=EAGAIN。而epoll只关心缓冲区非满和缓冲区非空事件）。<br>一个epoll模式的代码大概的样子是：<br>while true {<br>    active_stream[] = epoll_wait(epollfd)<br>    for i in active_stream[] {<br>        read or write till unavailable<br>}<br>}<br>限于篇幅，我只说这么多，以揭示原理性的东西，至于epoll的使用细节，请参考man和google，实现细节，请参阅linux kernel source。<br>======================================<br>[更新1]: 原文为O(1)，但实际上O(k)更为准确<br>[更新2]: 原文所列第二点说法让人产生EPOLLIN/EPOLLOUT等同于“缓冲区非空”和“缓冲区非满”的事件，但并非如此，详细可以Google关于epoll的边缘触发和水平触发。
+</div>
+
+
+</div>
+<a class="zg-anchor-hidden ac" name="739762-comment"></a>
+<div class="zm-item-meta answer-actions clearfix js-contentActions">
+<div class="zm-meta-panel">
+
+<a itemprop="url" class="answer-date-link meta-item" data-tooltip="s$t$发布于 2012-03-16" target="_blank" href="/question/20122137/answer/14049112">编辑于 2013-10-27</a>
+
+<a href="#" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox">
+<i class="z-icon-comment"></i>41 条评论</a>
+
+
+<a href="#" class="meta-item zu-autohide js-thank" data-thanked="false"><i class="z-icon-thank"></i>感谢</a>
+
+
+
+<a href="#" class="meta-item zu-autohide js-share"><i class="z-icon-share"></i>分享</a>
+
+<a href="#" class="meta-item zu-autohide js-collect"><i class="z-icon-collect"></i>收藏</a>
+
+
+
+
+
+<span class="zg-bull zu-autohide">&bull;</span>
+
+<a href="#" class="meta-item zu-autohide js-noHelp">没有帮助</a>
+
+<span class="zg-bull zu-autohide">&bull;</span>
+<a href="#" class="meta-item zu-autohide js-report">举报</a>
+
+
+
+
+<meta name="copyrightStatus" content="1">
+<meta name="disableCopyAvatar" content="">
+
+<span class="zg-bull">&bull;</span>
+
+<a href="/terms#sec-licence-1" target="_blank" class="meta-item copyright">
+作者保留权利
+</a>
+
+
+</div>
+</div>
+</div>
+
+<div tabindex="-1" class="zm-item-answer  zm-item-expanded"
+
+itemscope itemtype="http://schema.org/Answer"
+data-aid="4450228"
+data-atoken="23087726"
+data-collapsed="0"
+data-created="1393912478"
+data-deleted="0"
+data-helpful="1"
+data-isowner="0"
+data-copyable="1"
+
+>
+<link itemprop="url" href="/question/20122137/answer/23087726">
+<meta itemprop="answer-id" content="4450228">
+<meta itemprop="answer-url-token" content="23087726">
+<a class="zg-anchor-hidden" name="answer-4450228"></a>
+
+
+<div class="zm-votebar">
+<button class="up ">
+<i class="icon vote-arrow"></i>
+<span class="count">12</span>
+<span class="label sr-only">赞同</span>
+</button>
+<button class="down ">
+<i class="icon vote-arrow"></i>
+<span class="label sr-only">反对</span>
+</button>
+</div>
+
+
+<div class="answer-head">
+<div class="zm-item-answer-author-info">
+
+<a class="zm-item-link-avatar avatar-link"
+
+href="/people/liu-bo-39-20" target="_blank" data-hovercard="p$t$liu-bo-39-20"
+
+><img src="https://pic1.zhimg.com/da8e974dc_s.jpg"
+class="zm-list-avatar avatar"
+></a>
+
+<span class="summary-wrapper">
+<span class="author-link-line">
+
+<a class="author-link"
+data-hovercard="p$t$liu-bo-39-20"
+target="_blank" href="/people/liu-bo-39-20"
+>刘 波</a></span><span title="美团/风行/国瑞数码/zinglabs" class="bio">
+美团/风行/国瑞数码/zinglabs
+</span>
+</span>
+</div>
+<div class="zm-item-vote-info" data-votecount="12">
+
+
+
+<span class="voters text"><a href="#" class="more text"><span class="js-voteCount">12</span>&nbsp;人赞同</a></span>
+
+
+</div>
+</div>
+<div class="zm-item-rich-text expandable js-collapse-body" data-resourceid="228941" data-action="/answer/content" data-author-name="刘 波" data-entry-url="/question/20122137/answer/23087726">
+
+
+<div class="zh-summary summary clearfix" style="display:none;">
+
+linux下的NIC driver都是在有数据时，通过接口通知os。os为节省资源，关中断后，从driver buffer狂读数据。然后，把处理给协议栈处理，拿tcp为例，当在某些状态点时，会去wakeup相应的sock-&gt;socket_wq。wakeup的操作，就是执行挂在这个wq上的eppoll_entry的…
+
+<a href="/question/20122137/answer/23087726" class="toggle-expand">显示全部</a>
+
+</div>
+
+
+<div class="zm-editable-content clearfix">
+linux下的NIC driver都是在有数据时，通过接口通知os。os为节省资源，关中断后，从driver buffer狂读数据。然后，把处理给协议栈处理，拿tcp为例，当在某些状态点时，会去wakeup相应的sock-&gt;socket_wq。wakeup的操作，就是执行挂在这个wq上的eppoll_entry的callback。这个callback就是把自己对应的epoll对象epitem挂到epollevent的readylist上。<br><br>此时，如果你调用了epoll_wait()，那就直接从epollevent的readylist上，把event复制给你就完了。<br><br>简单的说，就是一个生产者，消费者的方式。底层生成数据，放到readylist，用户用epoll_wait去取。
+</div>
+
+
+</div>
+<a class="zg-anchor-hidden ac" name="4450228-comment"></a>
+<div class="zm-item-meta answer-actions clearfix js-contentActions">
+<div class="zm-meta-panel">
+
+<a itemprop="url" class="answer-date-link meta-item" target="_blank" href="/question/20122137/answer/23087726">发布于 2014-03-04</a>
+
+<a href="#" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox">
+<i class="z-icon-comment"></i>添加评论</a>
+
+
+<a href="#" class="meta-item zu-autohide js-thank" data-thanked="false"><i class="z-icon-thank"></i>感谢</a>
+
+
+
+<a href="#" class="meta-item zu-autohide js-share"><i class="z-icon-share"></i>分享</a>
+
+<a href="#" class="meta-item zu-autohide js-collect"><i class="z-icon-collect"></i>收藏</a>
+
+
+
+
+
+<span class="zg-bull zu-autohide">&bull;</span>
+
+<a href="#" class="meta-item zu-autohide js-noHelp">没有帮助</a>
+
+<span class="zg-bull zu-autohide">&bull;</span>
+<a href="#" class="meta-item zu-autohide js-report">举报</a>
+
+
+
+
+<meta name="copyrightStatus" content="1">
+<meta name="disableCopyAvatar" content="">
+
+<span class="zg-bull">&bull;</span>
+
+<a href="/terms#sec-licence-1" target="_blank" class="meta-item copyright">
+作者保留权利
+</a>
+
+
+</div>
+</div>
+</div>
+
+<div tabindex="-1" class="zm-item-answer  zm-item-expanded"
+
+itemscope itemtype="http://schema.org/Answer"
+data-aid="3304096"
+data-atoken="20295604"
+data-collapsed="0"
+data-created="1385258359"
+data-deleted="0"
+data-helpful="1"
+data-isowner="0"
+data-copyable="1"
+
+>
+<link itemprop="url" href="/question/20122137/answer/20295604">
+<meta itemprop="answer-id" content="3304096">
+<meta itemprop="answer-url-token" content="20295604">
+<a class="zg-anchor-hidden" name="answer-3304096"></a>
+
+
+<div class="zm-votebar">
+<button class="up ">
+<i class="icon vote-arrow"></i>
+<span class="count">6</span>
+<span class="label sr-only">赞同</span>
+</button>
+<button class="down ">
+<i class="icon vote-arrow"></i>
+<span class="label sr-only">反对</span>
+</button>
+</div>
+
+
+<div class="answer-head">
+<div class="zm-item-answer-author-info">
+
+<a class="zm-item-link-avatar avatar-link"
+
+href="/people/nybux" target="_blank" data-hovercard="p$t$nybux"
+
+><img src="https://pic3.zhimg.com/v2-76002f396ac52b23718445ba04d84782_s.jpg"
+class="zm-list-avatar avatar"
+></a>
+
+<span class="summary-wrapper">
+<span class="author-link-line">
+
+<a class="author-link"
+data-hovercard="p$t$nybux"
+target="_blank" href="/people/nybux"
+>nybux</a></span>
+</span>
+</div>
+<div class="zm-item-vote-info" data-votecount="6">
+
+
+
+<span class="voters text"><a href="#" class="more text"><span class="js-voteCount">6</span>&nbsp;人赞同</a></span>
+
+
+</div>
+</div>
+<div class="zm-item-rich-text expandable js-collapse-body" data-resourceid="228941" data-action="/answer/content" data-author-name="nybux" data-entry-url="/question/20122137/answer/20295604">
+
+
+<div class="zh-summary summary clearfix" style="display:none;">
+
+在句柄上注册了回调函数ep_ptable_queue_proc <a href="//link.zhihu.com/?target=http%3A//lxr.linux.no/linux%2Bv3.12.1/fs/eventpoll.c%23L1267" class=" external" target="_blank" rel="nofollow noreferrer"><span class="invisible">http://</span><span class="visible">lxr.linux.no/linux+v3.1</span><span class="invisible">2.1/fs/eventpoll.c#L1267</span><span class="ellipsis"></span><i class="icon-external"></i></a>
+
+<a href="/question/20122137/answer/20295604" class="toggle-expand">显示全部</a>
+
+</div>
+
+
+<div class="zm-editable-content clearfix">
+在句柄上注册了回调函数ep_ptable_queue_proc<br><a href="//link.zhihu.com/?target=http%3A//lxr.linux.no/linux%2Bv3.12.1/fs/eventpoll.c%23L1267" class=" external" target="_blank" rel="nofollow noreferrer"><span class="invisible">http://</span><span class="visible">lxr.linux.no/linux+v3.1</span><span class="invisible">2.1/fs/eventpoll.c#L1267</span><span class="ellipsis"></span><i class="icon-external"></i></a>
+</div>
+
+
+</div>
+<a class="zg-anchor-hidden ac" name="3304096-comment"></a>
+<div class="zm-item-meta answer-actions clearfix js-contentActions">
+<div class="zm-meta-panel">
+
+<a itemprop="url" class="answer-date-link meta-item" target="_blank" href="/question/20122137/answer/20295604">发布于 2013-11-24</a>
+
+<a href="#" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox">
+<i class="z-icon-comment"></i>2 条评论</a>
+
+
+<a href="#" class="meta-item zu-autohide js-thank" data-thanked="false"><i class="z-icon-thank"></i>感谢</a>
+
+
+
+<a href="#" class="meta-item zu-autohide js-share"><i class="z-icon-share"></i>分享</a>
+
+<a href="#" class="meta-item zu-autohide js-collect"><i class="z-icon-collect"></i>收藏</a>
+
+
+
+
+
+<span class="zg-bull zu-autohide">&bull;</span>
+
+<a href="#" class="meta-item zu-autohide js-noHelp">没有帮助</a>
+
+<span class="zg-bull zu-autohide">&bull;</span>
+<a href="#" class="meta-item zu-autohide js-report">举报</a>
+
+
+
+
+<meta name="copyrightStatus" content="1">
+<meta name="disableCopyAvatar" content="">
+
+<span class="zg-bull">&bull;</span>
+
+<a href="/terms#sec-licence-1" target="_blank" class="meta-item copyright">
+作者保留权利
+</a>
+
+
+</div>
+</div>
+</div>
+
+<div tabindex="-1" class="zm-item-answer  zm-item-expanded"
+
+itemscope itemtype="http://schema.org/Answer"
+data-aid="17096752"
+data-atoken="54225562"
+data-collapsed="0"
+data-created="1436318097"
+data-deleted="0"
+data-helpful="1"
+data-isowner="0"
+data-copyable="1"
+
+>
+<link itemprop="url" href="/question/20122137/answer/54225562">
+<meta itemprop="answer-id" content="17096752">
+<meta itemprop="answer-url-token" content="54225562">
+<a class="zg-anchor-hidden" name="answer-17096752"></a>
+
+
+<div class="zm-votebar">
+<button class="up ">
+<i class="icon vote-arrow"></i>
+<span class="count">4</span>
+<span class="label sr-only">赞同</span>
+</button>
+<button class="down ">
+<i class="icon vote-arrow"></i>
+<span class="label sr-only">反对</span>
+</button>
+</div>
+
+
+<div class="answer-head">
+<div class="zm-item-answer-author-info">
+
+<a class="zm-item-link-avatar avatar-link"
+
+href="/people/chinaxing" target="_blank" data-hovercard="p$t$chinaxing"
+
+><img src="https://pic2.zhimg.com/0b614228d_s.jpg"
+class="zm-list-avatar avatar"
+></a>
+
+<span class="summary-wrapper">
+<span class="author-link-line">
+
+<a class="author-link"
+data-hovercard="p$t$chinaxing"
+target="_blank" href="/people/chinaxing"
+>lambda喵</a></span><span title="喜欢是放肆，爱是克制" class="bio">
+喜欢是放肆，爱是克制
+</span>
+</span>
+</div>
+<div class="zm-item-vote-info" data-votecount="4">
+
+
+
+<span class="voters text"><a href="#" class="more text"><span class="js-voteCount">4</span>&nbsp;人赞同</a></span>
+
+
+</div>
+</div>
+<div class="zm-item-rich-text expandable js-collapse-body" data-resourceid="228941" data-action="/answer/content" data-author-name="lambda喵" data-entry-url="/question/20122137/answer/54225562">
+
+
+<div class="zh-summary summary clearfix" style="display:none;">
+
+根本是因为硬件就是真实世界。 那里有异步事件——中断。 所以大概不需要轮询这么麻烦和低效。 用户太太弱了
+
+<a href="/question/20122137/answer/54225562" class="toggle-expand">显示全部</a>
+
+</div>
+
+
+<div class="zm-editable-content clearfix">
+根本是因为硬件就是真实世界。<br><br>那里有异步事件——中断。<br><br>所以大概不需要轮询这么麻烦和低效。<br><br>用户太太弱了
+</div>
+
+
+</div>
+<a class="zg-anchor-hidden ac" name="17096752-comment"></a>
+<div class="zm-item-meta answer-actions clearfix js-contentActions">
+<div class="zm-meta-panel">
+
+<a itemprop="url" class="answer-date-link meta-item" target="_blank" href="/question/20122137/answer/54225562">发布于 2015-07-08</a>
+
+<a href="#" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox">
+<i class="z-icon-comment"></i>添加评论</a>
+
+
+<a href="#" class="meta-item zu-autohide js-thank" data-thanked="false"><i class="z-icon-thank"></i>感谢</a>
+
+
+
+<a href="#" class="meta-item zu-autohide js-share"><i class="z-icon-share"></i>分享</a>
+
+<a href="#" class="meta-item zu-autohide js-collect"><i class="z-icon-collect"></i>收藏</a>
+
+
+
+
+
+<span class="zg-bull zu-autohide">&bull;</span>
+
+<a href="#" class="meta-item zu-autohide js-noHelp">没有帮助</a>
+
+<span class="zg-bull zu-autohide">&bull;</span>
+<a href="#" class="meta-item zu-autohide js-report">举报</a>
+
+
+
+
+<meta name="copyrightStatus" content="1">
+<meta name="disableCopyAvatar" content="">
+
+<span class="zg-bull">&bull;</span>
+
+<a href="/terms#sec-licence-1" target="_blank" class="meta-item copyright">
+作者保留权利
+</a>
+
+
+</div>
+</div>
+</div>
+
+<div tabindex="-1" class="zm-item-answer  zm-item-expanded"
+
+itemscope itemtype="http://schema.org/Answer"
+data-aid="25024804"
+data-atoken="74003925"
+data-collapsed="0"
+data-created="1448508354"
+data-deleted="0"
+data-helpful="1"
+data-isowner="0"
+data-copyable="1"
+
+>
+<link itemprop="url" href="/question/20122137/answer/74003925">
+<meta itemprop="answer-id" content="25024804">
+<meta itemprop="answer-url-token" content="74003925">
+<a class="zg-anchor-hidden" name="answer-25024804"></a>
+
+
+<div class="zm-votebar">
+<button class="up ">
+<i class="icon vote-arrow"></i>
+<span class="count">5</span>
+<span class="label sr-only">赞同</span>
+</button>
+<button class="down ">
+<i class="icon vote-arrow"></i>
+<span class="label sr-only">反对</span>
+</button>
+</div>
+
+
+<div class="answer-head">
+<div class="zm-item-answer-author-info">
+
+<a class="zm-item-link-avatar avatar-link"
+
+href="/people/yongxinge" target="_blank" data-hovercard="p$t$yongxinge"
+
+><img src="https://pic4.zhimg.com/188665277_s.jpg"
+class="zm-list-avatar avatar"
+></a>
+
+<span class="summary-wrapper">
+<span class="author-link-line">
+
+<a class="author-link"
+data-hovercard="p$t$yongxinge"
+target="_blank" href="/people/yongxinge"
+>用心阁</a></span><span title="学习中的老码农" class="bio">
+学习中的老码农
+</span>
+</span>
+</div>
+<div class="zm-item-vote-info" data-votecount="5">
+
+
+
+<span class="voters text"><a href="#" class="more text"><span class="js-voteCount">5</span>&nbsp;人赞同</a></span>
+
+
+</div>
+</div>
+<div class="zm-item-rich-text expandable js-collapse-body" data-resourceid="228941" data-action="/answer/content" data-author-name="用心阁" data-entry-url="/question/20122137/answer/74003925">
+
+
+<div class="zh-summary summary clearfix" style="display:none;">
+
+select/poll是通过轮询的方法来获得就绪的状态，调用select/poll后就阻塞住，直到有就绪的文件描述符，或者超时，或者被中断。返回值是就绪的文件描述符的个数，需要遍历作为参数传入的文件描述符的位域或数组获得哪个文件描述符。 epoll是通过后台中断的方…
+
+<a href="/question/20122137/answer/74003925" class="toggle-expand">显示全部</a>
+
+</div>
+
+
+<div class="zm-editable-content clearfix">
+select/poll是通过轮询的方法来获得就绪的状态，调用select/poll后就阻塞住，直到有就绪的文件描述符，或者超时，或者被中断。返回值是就绪的文件描述符的个数，需要遍历作为参数传入的文件描述符的位域或数组获得哪个文件描述符。<br><br>epoll是通过后台中断的方式来获得就绪的状态，调用epoll_create创建实例，调用epoll_ctl添加或删除监控的文件描述符，调用epoll_wait阻塞住，直到有就绪的文件描述符，通过epoll_event参数返回就绪状态的文件描述符和事件<br><br>简单但不严谨的说：<br><ul><li>当调用epoll_ctl时，epoll就向底层（poll()，或tcp_poll()）注册了callback<br></li><li>当文件描述符就绪时，callback函数就会被调用，callback函数就会把该文件描述符加入列表并唤醒epoll_wait<br></li><li>当调用epoll_wait时，epoll只是简单地检查下列表是否为空，不为空就返回，为空就挂起，等待被唤醒。<br></li></ul><br>通常来说select和poll属于I/O multiplexing，而epoll可以算作signal driven I/O
+</div>
+
+
+</div>
+<a class="zg-anchor-hidden ac" name="25024804-comment"></a>
+<div class="zm-item-meta answer-actions clearfix js-contentActions">
+<div class="zm-meta-panel">
+
+<a itemprop="url" class="answer-date-link meta-item" data-tooltip="s$t$发布于 2015-11-26" target="_blank" href="/question/20122137/answer/74003925">编辑于 2015-11-26</a>
+
+<a href="#" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox">
+<i class="z-icon-comment"></i>添加评论</a>
+
+
+<a href="#" class="meta-item zu-autohide js-thank" data-thanked="false"><i class="z-icon-thank"></i>感谢</a>
+
+
+
+<a href="#" class="meta-item zu-autohide js-share"><i class="z-icon-share"></i>分享</a>
+
+<a href="#" class="meta-item zu-autohide js-collect"><i class="z-icon-collect"></i>收藏</a>
+
+
+
+
+
+<span class="zg-bull zu-autohide">&bull;</span>
+
+<a href="#" class="meta-item zu-autohide js-noHelp">没有帮助</a>
+
+<span class="zg-bull zu-autohide">&bull;</span>
+<a href="#" class="meta-item zu-autohide js-report">举报</a>
+
+
+
+
+<meta name="copyrightStatus" content="1">
+<meta name="disableCopyAvatar" content="">
+
+<span class="zg-bull">&bull;</span>
+
+<a href="/terms#sec-licence-1" target="_blank" class="meta-item copyright">
+作者保留权利
+</a>
+
+
+</div>
+</div>
+</div>
+
+<div tabindex="-1" class="zm-item-answer  zm-item-expanded"
+
+itemscope itemtype="http://schema.org/Answer"
+data-aid="738842"
+data-atoken="14046875"
+data-collapsed="0"
+data-created="1331804667"
+data-deleted="0"
+data-helpful="1"
+data-isowner="0"
+data-copyable="1"
+
+>
+<link itemprop="url" href="/question/20122137/answer/14046875">
+<meta itemprop="answer-id" content="738842">
+<meta itemprop="answer-url-token" content="14046875">
+<a class="zg-anchor-hidden" name="answer-738842"></a>
+
+
+<div class="zm-votebar">
+<button class="up ">
+<i class="icon vote-arrow"></i>
+<span class="count">15</span>
+<span class="label sr-only">赞同</span>
+</button>
+<button class="down ">
+<i class="icon vote-arrow"></i>
+<span class="label sr-only">反对</span>
+</button>
+</div>
+
+
+<div class="answer-head">
+<div class="zm-item-answer-author-info">
+
+<a class="zm-item-link-avatar avatar-link"
+
+href="/people/dccmx" target="_blank" data-hovercard="p$t$dccmx"
+
+><img src="https://pic1.zhimg.com/a5670a740_s.jpg"
+class="zm-list-avatar avatar"
+></a>
+
+<span class="summary-wrapper">
+<span class="author-link-line">
+
+<a class="author-link"
+data-hovercard="p$t$dccmx"
+target="_blank" href="/people/dccmx"
+>dccmx</a></span><span title="搞技术的" class="bio">
+搞技术的
+</span>
+</span>
+</div>
+<div class="zm-item-vote-info" data-votecount="15">
+
+
+
+<span class="voters text"><a href="#" class="more text"><span class="js-voteCount">15</span>&nbsp;人赞同</a></span>
+
+
+</div>
+</div>
+<div class="zm-item-rich-text expandable js-collapse-body" data-resourceid="228941" data-action="/answer/content" data-author-name="dccmx" data-entry-url="/question/20122137/answer/14046875">
+
+
+<div class="zh-summary summary clearfix" style="display:none;">
+
+epoll的原理就是： 你把要监控读写的文件交给内核（epoll_add) 设置你关心的事件（epoll_ctl），比如读事件 然后等（epoll_wait），此时，如果没有哪个文件有你关心的事件，则休眠，直到有事件，被唤醒 然后返回那些事件 实现并发，还需要配合非阻塞的读写…
+
+<a href="/question/20122137/answer/14046875" class="toggle-expand">显示全部</a>
+
+</div>
+
+
+<div class="zm-editable-content clearfix">
+epoll的原理就是：<br>你把要监控读写的文件交给内核（epoll_add)<br>设置你关心的事件（epoll_ctl），比如读事件<br>然后等（epoll_wait），此时，如果没有哪个文件有你关心的事件，则休眠，直到有事件，被唤醒<br>然后返回那些事件<br><br>实现并发，还需要配合非阻塞的读写。这样就可以一下搜集一大把文件（套接字），然后一下读写一大把文件（不会因为某个文件慢而阻塞），这样来实现并发。
+</div>
+
+
+</div>
+<a class="zg-anchor-hidden ac" name="738842-comment"></a>
+<div class="zm-item-meta answer-actions clearfix js-contentActions">
+<div class="zm-meta-panel">
+
+<a itemprop="url" class="answer-date-link meta-item" target="_blank" href="/question/20122137/answer/14046875">发布于 2012-03-15</a>
+
+<a href="#" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox">
+<i class="z-icon-comment"></i>2 条评论</a>
+
+
+<a href="#" class="meta-item zu-autohide js-thank" data-thanked="false"><i class="z-icon-thank"></i>感谢</a>
+
+
+
+<a href="#" class="meta-item zu-autohide js-share"><i class="z-icon-share"></i>分享</a>
+
+<a href="#" class="meta-item zu-autohide js-collect"><i class="z-icon-collect"></i>收藏</a>
+
+
+
+
+
+<span class="zg-bull zu-autohide">&bull;</span>
+
+<a href="#" class="meta-item zu-autohide js-noHelp">没有帮助</a>
+
+<span class="zg-bull zu-autohide">&bull;</span>
+<a href="#" class="meta-item zu-autohide js-report">举报</a>
+
+
+
+
+<meta name="copyrightStatus" content="1">
+<meta name="disableCopyAvatar" content="">
+
+<span class="zg-bull">&bull;</span>
+
+<a href="/terms#sec-licence-1" target="_blank" class="meta-item copyright">
+作者保留权利
+</a>
+
+
+</div>
+</div>
+</div>
+
+<div tabindex="-1" class="zm-item-answer  zm-item-expanded"
+
+itemscope itemtype="http://schema.org/Answer"
+data-aid="13108076"
+data-atoken="44283594"
+data-collapsed="0"
+data-created="1428548395"
+data-deleted="0"
+data-helpful="1"
+data-isowner="0"
+data-copyable="1"
+
+>
+<link itemprop="url" href="/question/20122137/answer/44283594">
+<meta itemprop="answer-id" content="13108076">
+<meta itemprop="answer-url-token" content="44283594">
+<a class="zg-anchor-hidden" name="answer-13108076"></a>
+
+
+<div class="zm-votebar">
+<button class="up ">
+<i class="icon vote-arrow"></i>
+<span class="count">7</span>
+<span class="label sr-only">赞同</span>
+</button>
+<button class="down ">
+<i class="icon vote-arrow"></i>
+<span class="label sr-only">反对</span>
+</button>
+</div>
+
+
+<div class="answer-head">
+<div class="zm-item-answer-author-info">
+
+<a class="zm-item-link-avatar avatar-link"
+
+href="/people/husitan" target="_blank" data-hovercard="p$t$husitan"
+
+><img src="https://pic3.zhimg.com/b324cc80e_s.jpg"
+class="zm-list-avatar avatar"
+></a>
+
+<span class="summary-wrapper">
+<span class="author-link-line">
+
+<a class="author-link"
+data-hovercard="p$t$husitan"
+target="_blank" href="/people/husitan"
+>husitan</a></span><span title="养老程序员 @ http://gdi.plus" class="bio">
+养老程序员 @ <a href="//link.zhihu.com/?target=http%3A//gdi.plus" class=" external" target="_blank" rel="nofollow noreferrer"><span class="invisible">http://</span><span class="visible">gdi.plus</span><span class="invisible"></span><i class="icon-external"></i></a>
+</span>
+</span>
+</div>
+<div class="zm-item-vote-info" data-votecount="7">
+
+
+
+<span class="voters text"><a href="#" class="more text"><span class="js-voteCount">7</span>&nbsp;人赞同</a></span>
+
+
+</div>
+</div>
+<div class="zm-item-rich-text expandable js-collapse-body" data-resourceid="228941" data-action="/answer/content" data-author-name="husitan" data-entry-url="/question/20122137/answer/44283594">
+
+
+<div class="zh-summary summary clearfix" style="display:none;">
+
+Epoll的优势在于，由接收数据的OS来负责通知你有数据可以操作，因为OS是知道什么时候有数据的。 仍然用<a href="http://www.zhihu.com/people/thynson" class="internal">蓝形参</a>的快递例子来说，EPoll的优势就是，你可以随便做其他的事情，当有快递来的时候，他给你打电话让你来拿，你空了的时候下来拿就好了。 不像阻塞那样…
+
+<a href="/question/20122137/answer/44283594" class="toggle-expand">显示全部</a>
+
+</div>
+
+
+<div class="zm-editable-content clearfix">
+Epoll的优势在于，由接收数据的OS来负责通知你有数据可以操作，因为OS是知道什么时候有数据的。<br>仍然用<a href="http://www.zhihu.com/people/thynson" class="internal">蓝形参</a>的快递例子来说，EPoll的优势就是，你可以随便做其他的事情，当有快递来的时候，他给你打电话让你来拿，你空了的时候下来拿就好了。<br>不像阻塞那样需要一直在窗边看着快递来没来，也不需要像select那样不停地打电话问快递来没来。尤其是在快递比较多的时候，select需要问快递你没有你的快递，快递说有的时候，你还需要逐个问某一个包裹到没到；EPoll会直接告诉你，你的哪个包裹的快递到了。
+</div>
+
+
+</div>
+<a class="zg-anchor-hidden ac" name="13108076-comment"></a>
+<div class="zm-item-meta answer-actions clearfix js-contentActions">
+<div class="zm-meta-panel">
+
+<a itemprop="url" class="answer-date-link meta-item" target="_blank" href="/question/20122137/answer/44283594">发布于 2015-04-09</a>
+
+<a href="#" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox">
+<i class="z-icon-comment"></i>2 条评论</a>
+
+
+<a href="#" class="meta-item zu-autohide js-thank" data-thanked="false"><i class="z-icon-thank"></i>感谢</a>
+
+
+
+<a href="#" class="meta-item zu-autohide js-share"><i class="z-icon-share"></i>分享</a>
+
+<a href="#" class="meta-item zu-autohide js-collect"><i class="z-icon-collect"></i>收藏</a>
+
+
+
+
+
+<span class="zg-bull zu-autohide">&bull;</span>
+
+<a href="#" class="meta-item zu-autohide js-noHelp">没有帮助</a>
+
+<span class="zg-bull zu-autohide">&bull;</span>
+<a href="#" class="meta-item zu-autohide js-report">举报</a>
+
+
+
+
+<meta name="copyrightStatus" content="1">
+<meta name="disableCopyAvatar" content="">
+
+<span class="zg-bull">&bull;</span>
+
+<a href="/terms#sec-licence-1" target="_blank" class="meta-item copyright">
+作者保留权利
+</a>
+
+
+</div>
+</div>
+</div>
+
+<div tabindex="-1" class="zm-item-answer  zm-item-expanded"
+
+itemscope itemtype="http://schema.org/Answer"
+data-aid="21184004"
+data-atoken="64421502"
+data-collapsed="0"
+data-created="1442724928"
+data-deleted="0"
+data-helpful="1"
+data-isowner="0"
+data-copyable="1"
+
+>
+<link itemprop="url" href="/question/20122137/answer/64421502">
+<meta itemprop="answer-id" content="21184004">
+<meta itemprop="answer-url-token" content="64421502">
+<a class="zg-anchor-hidden" name="answer-21184004"></a>
+
+
+<div class="zm-votebar">
+<button class="up ">
+<i class="icon vote-arrow"></i>
+<span class="count">0</span>
+<span class="label sr-only">赞同</span>
+</button>
+<button class="down ">
+<i class="icon vote-arrow"></i>
+<span class="label sr-only">反对</span>
+</button>
+</div>
+
+
+<div class="answer-head">
+<div class="zm-item-answer-author-info">
+
+<a class="zm-item-link-avatar avatar-link"
+
+href="/people/wa-boer" target="_blank" data-hovercard="p$t$wa-boer"
+
+><img src="https://pic3.zhimg.com/dfab39e82518c02f19ccd1cdbd467432_s.jpg"
+class="zm-list-avatar avatar"
+></a>
+
+<span class="summary-wrapper">
+<span class="author-link-line">
+
+<a class="author-link"
+data-hovercard="p$t$wa-boer"
+target="_blank" href="/people/wa-boer"
+>boerwa</a></span><span title="奔跑的犀牛" class="bio">
+奔跑的犀牛
+</span>
+</span>
+</div>
+<div class="zm-item-vote-info empty" data-votecount="0">
+
+
+
+
+</div>
+</div>
+<div class="zm-item-rich-text expandable js-collapse-body" data-resourceid="228941" data-action="/answer/content" data-author-name="boerwa" data-entry-url="/question/20122137/answer/64421502">
+
+
+<div class="zh-summary summary clearfix" style="display:none;">
+
+又不是理论意义上的并行
+
+<a href="/question/20122137/answer/64421502" class="toggle-expand">显示全部</a>
+
+</div>
+
+
+<div class="zm-editable-content clearfix">
+又不是理论意义上的并行
+</div>
+
+
+</div>
+<a class="zg-anchor-hidden ac" name="21184004-comment"></a>
+<div class="zm-item-meta answer-actions clearfix js-contentActions">
+<div class="zm-meta-panel">
+
+<a itemprop="url" class="answer-date-link meta-item" target="_blank" href="/question/20122137/answer/64421502">发布于 2015-09-20</a>
+
+<a href="#" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox">
+<i class="z-icon-comment"></i>添加评论</a>
+
+
+<a href="#" class="meta-item zu-autohide js-thank" data-thanked="false"><i class="z-icon-thank"></i>感谢</a>
+
+
+
+<a href="#" class="meta-item zu-autohide js-share"><i class="z-icon-share"></i>分享</a>
+
+<a href="#" class="meta-item zu-autohide js-collect"><i class="z-icon-collect"></i>收藏</a>
+
+
+
+
+
+<span class="zg-bull zu-autohide">&bull;</span>
+
+<a href="#" class="meta-item zu-autohide js-noHelp">没有帮助</a>
+
+<span class="zg-bull zu-autohide">&bull;</span>
+<a href="#" class="meta-item zu-autohide js-report">举报</a>
+
+
+
+
+<meta name="copyrightStatus" content="1">
+<meta name="disableCopyAvatar" content="">
+
+<span class="zg-bull">&bull;</span>
+
+<a href="/terms#sec-licence-1" target="_blank" class="meta-item copyright">
+作者保留权利
+</a>
+
+
+</div>
+</div>
+</div>
+
+
+</div>
+
+<div id="zh-question-collapsed-link" class="zu-question-collap-title" style="display:none" >
+<a href="javascript:;" name="expand" class="zg-link-gray" id="zh-question-collapsed-switcher">
+<span id="zh-question-collapsed-num">1</span> 个回答被折叠
+</a>
+（<a target="_blank" href="/question/20120168" class="zg-link-gray">为什么？</a>）
+</div>
+<div id="zh-question-collapsed-wrap" class="zh-question-answer-wrapper" style="display:none"></div>
+<a name="draft"></a>
+<div id="zh-question-answer-form-wrap" class="zh-question-answer-form-wrap">
+<div class="zm-editable-tip"></div>
+<div class="zm-editable-content"></div>
+</div>
+<!-- 版权演示 -->
+
+<script type="text/x-template" id="copyright-demo-template">
+<article>
+
+<section>
+<p class="copyright-demo-title"> 这是你的回答正文 </p>
+<div class="copyright-demo-region"></div>
+<div class="copyright-demo-region"></div>
+<div class="copyright-demo-region"></div>
+<div class="copyright-demo-region"></div>
+<div class="copyright-demo-region"></div>
+</section>
+
+<section>
+<p class="copyright-demo-title"> 当其他人想复制你的一段回答 </p>
+<div class="copyright-demo-region frame2-region" id="copyright-demo-region1">
+<span class="copyright-ico-indicator" id="copyright-demo-indicator"></span>
+</div>
+<div class="copyright-demo-region frame2-region" id="copyright-demo-region2"></div>
+<div class="copyright-demo-region frame2-region" id="copyright-demo-region3"></div>
+<div class="copyright-demo-region frame2-region" id="copyright-demo-region4"></div>
+<div class="copyright-demo-region"></div>
+</section>
+
+<section id="copyright-demo-frame3">
+<p class="copyright-demo-title copyright-demo-effect"> 复制将受限，同时会弹出提醒 </p>
+<div class="copyright-demo-region copyright-demo-region-selected"></div>
+<div class="copyright-demo-region copyright-demo-region-selected"></div>
+<div class="copyright-demo-region copyright-demo-region-selected"></div>
+<div class="copyright-demo-region copyright-demo-region-selected"></div>
+<div class="copyright-demo-region"></div>
+<span class="copyright-ico-pointer copyright-demo-pointer"></span>
+</section>
+</article>
+</script>
+
+
+
+</div>
+</div>
+
+
+<div class="zu-main-sidebar" data-za-module="RightSideBar">
+
+<div class="zm-side-section">
+<div class="zm-side-section-inner">
+<div class="SignFlow SignFlow--bordered" id="SidebarSignFlow">
+<div class="SignFlow-panel">
+<div class="title register">
+<h1>加入知乎</h1>
+<h2>与世界分享你的知识、经验和见解</h2>
+</div>
+<div class="view register SignupForm" data-za-module="SignUpForm">
+<form action="/register/email" method="POST">
+<div class="input-wrapper">
+<input type="text" name="fullname" aria-label="姓名" data-placeholder="姓名" required>
+</div>
+<div class="input-wrapper">
+
+<input type="text" name="phone_num" class="account" aria-label="手机号（仅支持中国大陆）" data-placeholder="手机号（仅支持中国大陆）" required>
+
+</div>
+<div class="input-wrapper toggle-password">
+<input type="password" hidden> 
+<input type="password" name="password" aria-label="密码" data-placeholder="密码（不少于 6 位）" required>
+<span class="z-ico-show-password"></span>
+</div>
+<div class="input-wrapper captcha-module" data-type="en" >
+<input id="captcha" name="captcha" placeholder="验证码" required data-rule-required="true" data-msg-required="请填写验证码">
+<div class="captcha-container">
+
+<img class="js-refreshCaptcha captcha" width="120" height="30" data-tooltip="s$t$看不清楚？换一张"  alt="验证码">
+</div>
+</div>
+<div class="actions">
+
+<input type="submit" value="注册" class="submit zg-btn-blue">
+
+</div>
+<div class="sns clearfix">
+<span>已有帐号？<a href="#" class="switch-to-login">登录</a></span>
+</div>
+</form>
+</div>
+</div>
+<div class="SignFlow-panel" hidden>
+<div class="LoginForm">
+<div class="title login">
+<h1>登录知乎</h1>
+<h2>与世界分享你的知识、经验和见解</h2>
+</div>
+<div class="view login" data-za-module="SignInForm">
+<form method="POST">
+<div class="input-wrapper">
+<input type="text" name="account" class="account" aria-label="手机号或邮箱" placeholder="手机号或邮箱" required>
+</div>
+<div class="input-wrapper toggle-password">
+<input type="password" name="password" aria-label="密码" placeholder="密码" required>
+<span class="z-ico-show-password"></span>
+</div>
+<div class="input-wrapper captcha-module" data-type="en" >
+<input id="captcha" name="captcha" placeholder="验证码" required data-rule-required="true" data-msg-required="请填写验证码">
+<div class="captcha-container">
+
+<img class="js-refreshCaptcha captcha" width="120" height="30" data-tooltip="s$t$看不清楚？换一张"  alt="验证码">
+</div>
+</div>
+<div class="actions">
+
+<input type="submit" value="登录" class="submit zg-btn-blue">
+
+</div>
+<div class="sns clearfix">
+<label class="remember-me"><input type="checkbox" name="remember_me" checked value="true">记住我</label>
+<span class="middot">·</span>
+<button class="unable-login" type="button">无法登录？</button>
+<button type="button" class="js-show-sns-buttons is-visible">社交帐号登录</button>
+<div class="sns-buttons">
+<button type="button" class="wechat"><span class="ico sprite-global-icon-wechat-gray"></span>微信</button>
+<button type="button" class="weibo"><span class="ico sprite-global-icon-weibo-gray"></span>微博</button>
+<button type="button" class="qq"><span class="ico sprite-global-icon-qq-gray"></span>QQ</button>
+</div>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="zm-side-section">
+<div class="DownloadApp">
+<button class="DownloadApp-button">
+<span class="sprite-global-icon-qrcode"></span>
+下载知乎 App
+</button>
+</div>
+</div>
+
+
+
+<div class="zm-side-section">
+<div class="zm-side-section-inner zg-gray-normal" id="zh-question-side-header-wrap">
+<button data-follow="q:m:button" class="follow-button zg-follow zg-btn-green" data-id="228941">关注问题</button>
+
+1428
+人关注该问题
+
+</div>
+</div>
+
+
+<div class="shameimaru-placeholder" data-loc="question_up" data-params='{&quot;question_token&quot;: 20122137}'></div>
+
+<div class="zm-side-section">
+<div class="zm-side-section-inner">
+<div id="zh-question-related-questions" class="zh-question-related-questions clearfix" data-za-module="RelatedQuestions">
+
+<a class="zg-right next">换一换</a>
+
+<h3>相关问题</h3>
+<ul itemprop="relatedQuestion" itemscope itemtype="http://schema.org/ItemList">
+
+<li itemprop="itemListElement" itemscope itemtype="http://schema.org/Question">
+<a class="question_link" href="/question/19901763" data-id="140761">
+多线程有什么用？
+</a> <span class="num">26 个回答</span><meta itemprop="followerCount" content="1067" />
+</li>
+
+<li itemprop="itemListElement" itemscope itemtype="http://schema.org/Question">
+<a class="question_link" href="/question/22397613" data-id="1139952">
+线程崩溃是否会造成进程崩溃？
+</a> <span class="num">11 个回答</span><meta itemprop="followerCount" content="137" />
+</li>
+
+<li itemprop="itemListElement" itemscope itemtype="http://schema.org/Question">
+<a class="question_link" href="/question/24047885" data-id="1800916">
+开发多线程的程序应该注意哪些问题？
+</a> <span class="num">10 个回答</span><meta itemprop="followerCount" content="360" />
+</li>
+
+<li itemprop="itemListElement" itemscope itemtype="http://schema.org/Question">
+<a class="question_link" href="/question/20114168" data-id="225751">
+Linux 开发，使用多线程还是用 IO 复用 select/epoll？
+</a> <span class="num">26 个回答</span><meta itemprop="followerCount" content="1053" />
+</li>
+
+<li itemprop="itemListElement" itemscope itemtype="http://schema.org/Question">
+<a class="question_link" href="/question/32163005" data-id="5064670">
+IO 多路复用是什么意思？
+</a> <span class="num">13 个回答</span><meta itemprop="followerCount" content="755" />
+</li>
+
+<li hidden itemprop="itemListElement" itemscope itemtype="http://schema.org/Question">
+<a class="question_link" href="/question/20398418" data-id="339681">
+语音识别的技术原理是什么？
+</a> <span class="num">13 个回答</span><meta itemprop="followerCount" content="2810" />
+</li>
+
+<li hidden itemprop="itemListElement" itemscope itemtype="http://schema.org/Question">
+<a class="question_link" href="/question/21516827" data-id="787409">
+epoll编程，如何实现高并发服务器开发？
+</a> <span class="num">16 个回答</span><meta itemprop="followerCount" content="760" />
+</li>
+
+<li hidden itemprop="itemListElement" itemscope itemtype="http://schema.org/Question">
+<a class="question_link" href="/question/19796936" data-id="98831">
+俄罗斯方块一旦开始，就不会「消」完么？是有什么原理？还是程序设计就是这样？
+</a> <span class="num">11 个回答</span><meta itemprop="followerCount" content="55" />
+</li>
+
+<li hidden itemprop="itemListElement" itemscope itemtype="http://schema.org/Question">
+<a class="question_link" href="/question/19618688" data-id="27404">
+Nginx 和 Apache 在 Windows 下的性能表现谁更好？
+</a> <span class="num">18 个回答</span><meta itemprop="followerCount" content="285" />
+</li>
+
+</ul>
+</div>
+</div>
+</div>
+
+
+
+<div class="shameimaru-placeholder" data-loc="question_down" data-params='{&quot;question_token&quot;: 20122137}'></div>
+
+</div>
+
+
+</div>
+
+
+<div id="zh-footer" class="zh-footer">
+<div class="content zg-wrap clearfix">
+<ul>
+
+<li><a href="https://liukanshan.zhihu.com" target="_blank">刘看山</a></li>
+
+<li><a href="/app" target="_blank">移动应用</a></li>
+<li><a href="/careers">加入知乎</a></li>
+<li><a href="/terms" target="_blank">知乎协议</a></li>
+<li><a href="/contact">联系我们</a></li>
+
+</ul>
+
+<span class="copy">&copy; 2016 知乎</span>
+
+</div>
+</div>
+
+<script type="text/json" class="json-inline" data-name="guiders2">{}</script>
+<script type="text/json" class="json-inline" data-name="current_user">["","","","-1","",0,0]</script>
+<script type="text/json" class="json-inline" data-name="user_status">[null,null]</script>
+<script type="text/json" class="json-inline" data-name="env">["zhihu.com","comet.zhihu.com",false,null,false]</script>
+<script type="text/json" class="json-inline" data-name="permissions">[]</script>
+
+
+<script type="text/json" class="json-inline" data-name="ga_vars">{"user_created":0,"now":1476420359000,"abtest_mask":"------------------------------","user_attr":[0,0,0,"-","-"],"user_hash":0}</script>
+
+<script type="text/json" class="json-inline" data-name="ra-urls">{"Copyright":"https:\/\/static.zhihu.com\/static\/revved\/-\/apps\/Copyright.e3c1d50d.js","PaymentApp":"https:\/\/static.zhihu.com\/static\/revved\/-\/apps\/PaymentApp.cd7b7dfa.js","Community":"https:\/\/static.zhihu.com\/static\/revved\/-\/apps\/Community.03bee60e.js","Report":"https:\/\/static.zhihu.com\/static\/revved\/-\/apps\/Report.4030ac77.js","OrgOpHelp":"https:\/\/static.zhihu.com\/static\/revved\/-\/apps\/OrgOpHelp.9d228579.js","common":"https:\/\/static.zhihu.com\/static\/revved\/-\/apps\/common.b83f31b2.js","BalanceApp":"https:\/\/static.zhihu.com\/static\/revved\/-\/apps\/BalanceApp.3ffbecb2.js","AnswerWarrant":"https:\/\/static.zhihu.com\/static\/revved\/-\/apps\/AnswerWarrant.78291293.js","OrgAnalytics":"https:\/\/static.zhihu.com\/static\/revved\/-\/apps\/OrgAnalytics.384377eb.js","CommentApp":"https:\/\/static.zhihu.com\/static\/revved\/-\/apps\/CommentApp.d4bfd4e2.js"}</script>
+
+<script type="text/json" class="json-inline" data-name="current_question">{"status":"normal","editPermission":false,"qid":228941,"askAboutMember":0,"isEditLocked":false,"detailEditReasonRequired":true,"isAnon":0,"showInvitePanel":false,"isOrg":false,"isLocked":0,"urlToken":20122137}</script>
+<script type="text/json" class="json-inline" data-name="current_question_owner">false</script>
+<script type="text/json" class="json-inline" data-name="draft">[]</script>
+<script type="text/json" class="json-inline" data-name="my_answer">{}</script>
+<script type="text/json" class="json-inline" data-name="current_question_bio">{"selected_bio":null,"type":null,"value":""}</script>
+
+<script type="text/json" class="json-inline" data-name="redirect_to">""</script>
+
+
+<script src="https://static.zhihu.com/static/revved/-/js/vendor.cb14a042.js"></script>
+<script src="https://static.zhihu.com/static/revved/-/js/closure/base.6bdfb535.js"></script>
+
+<script src="https://static.zhihu.com/static/revved/-/js/closure/common.4e3076a7.js"></script>
+
+
+<script src="https://static.zhihu.com/static/revved/-/js/closure/richtexteditor.2f4f4454.js" async></script>
+<script src="https://static.zhihu.com/static/revved/-/js/closure/page-main.a698bbcc.js"></script>
+<meta name="entry" content="ZH.entrySQ" data-module-id="page-main">
+
+<script type="text/zscript" znonce="bb2083ce9f11474abd66ebe5520e5d6d"></script>
+
+<input type="hidden" name="_xsrf" value="02bfc55ecb12a2b14112aac3475ec482"/>
+</body>
+</html>
