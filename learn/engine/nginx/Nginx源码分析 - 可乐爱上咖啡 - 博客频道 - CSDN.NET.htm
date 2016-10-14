@@ -1,0 +1,876 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+     
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>   
+   
+
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <title>Nginx源码分析 - 可乐爱上咖啡
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="" />
+    <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+      <script type="text/javascript" src="http://static.blog.csdn.net/scripts/jquery-version.js"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
+        <!--new top-->
+               <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css">        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/tracking.js"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/dark1/css/style.css?v=1.1" />
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/Marcky/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/blue_black.css" />
+ 
+
+
+</head>
+<body>
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/marcky">可乐爱上咖啡</a></h2>
+            <h3>致力于高性能服务器和小众语言的研究-个人笔记杂货摊</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>
+            
+                <li id="btnContents"><a href="http://blog.csdn.net/marcky?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/marcky?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/marcky/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "Marcky";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/marcky";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+<a href="http://huiyi.csdn.net/activity/product/goods_list?project_id=3200">
+<font color=blue>【CSDN技术主题月】深度学习框架的重构与思考
+</font></a>
+&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/PK.html">
+<font color=blue>【观点】有了深度学习，你还学传统机器学习算法么？
+</font></a>
+&nbsp;&nbsp;&nbsp;
+<a href="http://lib.csdn.net/base/deeplearning">
+<font color=red>【知识库】深度学习知识图谱上线啦
+</font></a>
+
+</font></a>
+</div>                        </div>
+                        
+<div class="list_item_new">
+
+
+    <div id="article_list" class="list">
+
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/7747067">
+        Nginx SPDY patch实现            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+前不久Nginx官方放出了SPDY的patch，到目前为止都还未合并进nginx源码，主要还是由于此patch还远不成熟，代码和功能都还不足够完善。个人感觉spdy
+ patch合并进nginx源码还有些时日。本文是基于目前的patch，初窥一下nginx官方是如何在实现spdy。
+
+
+
+
+上图是nginx处理一个请求的大致流程，这里只是绘制了简单的模型，实际过程还是相当的复杂的。图中...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2012-07-14 16:51</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/7747067" title="阅读次数">阅读</a>(5157)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/7747067#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(1)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/6358683">
+        nginx配置文件解析过程之神图            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+所谓神图就是只有自己才能看懂的图，哈哈。此图描述的是nginx配置文件解析过程生成的内存模型图，所有的配置数据，模块handler等信息都是存储在这个图中的。&#160;&#160;&#160;...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2011-04-24 12:58</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/6358683" title="阅读次数">阅读</a>(3869)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/6358683#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(4)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/6097112">
+        Nginx源码分析-内存池            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+转载申明：本文可以任意转载，但需注明原文地址，谢谢！
+
+Nginx的内存池实现得很精巧，代码也很简洁。总的来说，所有的内存池基本都一个宗旨：申请大块内存，避免“细水长流”。
+
+一、创建一个内存池
+nginx内存池主要有下面两个结构来维护，他们分别维护了内存池的头部和数据部。此处数据部就是供用户分配小块内存的地方。
+...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2010-12-24 21:57</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/6097112" title="阅读次数">阅读</a>(3444)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/6097112#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(3)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/6069958">
+        Nginx源码分析-Epoll模块            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+Linux平台上，Nginx使用epoll完成事件驱动，实现高并发；本文将不对epoll本身进行介绍（网上一堆一堆的文章介绍epoll的原理及使用方法，甚至源码分析等），仅看一下Nginx是如何使用epoll的。...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2010-12-11 19:01</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/6069958" title="阅读次数">阅读</a>(5401)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/6069958#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(1)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/6041303">
+        Nginx源码分析-connections数组            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+本文的标题让我纠结了好久，不知道是connections数组合适，还是connections链表更合适；Nginx在此或多或少的注入了二者的特点，先不管是叫数组还是叫链表吧，只要能够弄明白这个connections是怎么回事就大功告成。Nginx的每个worker进程都使用一个相同的connections数组来维护每个连接。当有一个新的连接建立时，Nginx需要从这个数组取出一个slot来存放这个连接；相反，有一个连接断开时，也需要将相应的slot归还给connections数组。本文就来看一下这个conn...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2010-11-28 19:22</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/6041303" title="阅读次数">阅读</a>(2949)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/6041303#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(2)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/6025651">
+        Nginx源码分析-事件循环            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+事件循环这个概念貌似在windows编程中提得更多，Linux程序却很少提及这个概念。本文所提及的事件循环其实就是worker cycle，由于此处将关注的不再是worker进程，而是worker进程在循环过程中关于事件处理的环节，因此就盗用了事件循环这个概念。在具体看代码前，先看一下这个“循环”的概貌：...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2010-11-21 22:02</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/6025651" title="阅读次数">阅读</a>(3898)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/6025651#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(2)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/6025647">
+        Nginx源码分析-事件驱动的初始化            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+Nginx的高性能应该算是事件驱动的功劳。Nginx事件处理的相关代码位于src/event目录中，事件驱动是Nginx的核心，所以代码量相对也比较大。事件驱动初始化的过程主要由下图中的三步组成。...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2010-11-21 22:00</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/6025647" title="阅读次数">阅读</a>(3838)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/6025647#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(0)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/6014733">
+        Nginx源码分析-master和worker进程间的通信            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+前面单独分析了master进程和worker的工作情况，本文就大概看一下master进程和worker进程之间是如何使用channel来完成通信的。这部分实现的源码主要分布于src/os/unix/channel.h和channel.c两个文件中。实现极其简单，没有什么复杂的逻辑。下面，我绘制了一个简单的master进程和worker进程间的关系，图中的箭头符号指出数据是由master进程传给worker进程，而没有从worker到master；这是因为channel不是一个普通的数据传输管道，在Nginx...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2010-11-17 14:08</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/6014733" title="阅读次数">阅读</a>(6219)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/6014733#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(1)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/6013502">
+        Nginx源码分析-进程管理之worker进程            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+上一篇博文分析了master进程，本文着手分析一下worker进程的情况。首先找到worker进程的入口地方——ngx_worker_process_cycle。这个函数不光是worker进程的入口函数，同时也是worker进程循环工作的主体函数，看函数名含有一个cycle嘛。进入这个cycle函数，第一件事就是调用ngx_worker_process_init(cycle, 1);对worker进程进行初始化操作。先看看这个worker进程的初始化过程。   
+...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2010-11-16 22:29</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/6013502" title="阅读次数">阅读</a>(3647)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/6013502#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(4)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/6001865">
+        Nginx源码分析-进程管理之master进程            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+Nginx虽然有着多种进程模型，但生产环境一般都是用master-worker模型来工作。本文着重分析Nginx的master进程做了哪些事情，它是如何管理好各个worker进程的。我们知道在main函数中完成了Nginx启动初始化过程，启动初始化过程中的一个重要环节就是解析配置文件，回调各个配置指令的回调函数，因此完成了各个模块的配置及相互关联。在所有的这些重要及不重要的初始化完成后，main函数就开始为我们打开进程的“大门”——调用ngx_master_process_cycle(cycle); 接下来...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2010-11-11 09:44</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/6001865" title="阅读次数">阅读</a>(4510)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/6001865#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(1)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/5993471">
+        Nginx源码分析-启动初始化过程（二）            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+在Nginx启动初始化过程（一）中提到main函数会调用ngx_init_cycle()初始化一个全局cycle变量，本文就来看看这个ngx_init_cycle()函数究竟做了哪些初始化工作。ngx_cycle_t结构类型被定义在src/core/ngx_cycle.h文件中，多达23个成员变量（nginx-0.7.67），初次目睹这个结构类型的时候，最让我震惊的是成员变量void ****conf_ctx，想必大家都知道我为何而震惊了吧，也许仅仅只是我见识太少吧，呵呵。由于ngx_init_cycle(...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2010-11-07 17:26</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/5993471" title="阅读次数">阅读</a>(3949)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/5993471#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(2)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/5987762">
+        Nginx源码分析-启动初始化过程（一）            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+Nginx的启动初始化在src/core/nginx.c的main函数中完成，当然main函数是整个Nginx的入口，除了完成启动初始化任务以外，也必定是所有功能模块的入口之处。Nginx的初始化工作主要围绕一个类型为ngx_cycle_t类型的全局变量（cycle）展开。下面具体看一下main函数为Nginx的启动过程做了哪些初始化方面的事情。main函数做的第一件事情就是对参数选项进行处理，和普通的Linux程序如出一辙，如下：if (ngx_get_options(argc, argv) != NGX...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2010-11-04 17:02</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/5987762" title="阅读次数">阅读</a>(3555)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/5987762#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(3)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/5756461">
+        nginx源码分析-链表            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+nginx封装的list和我们在学习数据结构时的list略有点区别。nginx的list算是数组和链表的结合。其用以下两个结构来维护一个list。struct ngx_list_part_s {
+    void             *elts;
+    ngx_uint_t        nelts;
+    ngx_list_part_t  *next;
+};
+
+typedef struct {
+    ngx_list_part_t  *last;
+    ngx_list_par...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2010-07-22 21:54</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/5756461" title="阅读次数">阅读</a>(2416)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/5756461#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(0)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="list_item article_item">
+        <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/marcky/article/details/5747431">
+        Nginx源码分析-数组            
+        </a></span>
+    </h1>
+</div>
+
+        <div class="article_description">
+俄罗斯大牛在nginx中给我们封装了非常好用的数组，在做nginx模块开发的时候，不必再使用原始的数组了。nginx使用以下结构来维护数组&#160;struct ngx_array_s {
+    void        *elts;
+    ngx_uint_t   nelts;
+    size_t       size;
+    ngx_uint_t   nalloc;
+    ngx_pool_t  *pool;
+};&#160;elts指向一块向系统申请的内存；在nginx中，这块内存是通过malloc...        </div>
+            <div class="article_manage">
+             <span class="link_postdate">2010-07-19 20:52</span>
+    
+   
+        <span class="link_view" title="阅读次数"><a href="/marcky/article/details/5747431" title="阅读次数">阅读</a>(4205)</span>
+        <span class="link_comments" title="评论次数"><a href="/marcky/article/details/5747431#comments" title="评论次数" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(4)</span>
+
+    </div>
+
+        <div class="clear"></div>
+    </div>
+    </div>
+
+    <!--显示分页-->
+
+
+</div>
+<script  type="text/ecmascript">
+    $(function () {
+        setTimeout(function () {
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({ "position": "absolute", "left": "50%" });
+        }, 300);
+    });    
+</script>
+ 
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/Marcky" target="_blank">
+    <img src="http://avatar.csdn.net/A/C/E/1_marcky.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/Marcky" class="user_name" target="_blank">Marcky</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=Marcky','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>164300次</span></li>
+    <li>积分：<span>2170</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog5.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：2170 </div>
+        </span>  </li>
+    <li>排名：<span>第13121名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>37篇</span></li>
+    <li>转载：<span>2篇</span></li>
+    <li>译文：<span>0篇</span></li>
+    <li>评论：<span>75条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字" /></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog" />
+        <input type="hidden" name="q" id="inputQ" />
+        <input type="hidden" name="t" value="blog" />
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/Marcky/article/category/747446" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Nginx源码分析</a><span>(14)</span>
+                </li>
+                 <li>
+                    <a href="/Marcky/article/category/851846" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">python</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/Marcky/article/category/832120" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Nginx的点点滴滴</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/Marcky/article/category/780631" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">高性能网络通信框架</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/Marcky/article/category/772831" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">其他</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/Marcky/article/category/852897" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Common Lisp</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/Marcky/article/category/1096926" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">编译器</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/Marcky/article/category/837057" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">分布式数据库-Hbase</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/Marcky/article/category/1097502" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Linux工具</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/Marcky/article/category/1182849" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Google开源</a><span>(6)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/Marcky/article/month/2013/10">2013年10月</a><span>(1)</span></li><li><a href="/Marcky/article/month/2012/07">2012年07月</a><span>(2)</span></li><li><a href="/Marcky/article/month/2012/06">2012年06月</a><span>(2)</span></li><li><a href="/Marcky/article/month/2012/05">2012年05月</a><span>(2)</span></li><li><a href="/Marcky/article/month/2012/03">2012年03月</a><span>(3)</span></li><li><a href="/Marcky/article/month/2012/02">2012年02月</a><span>(2)</span></li><li><a href="/Marcky/article/month/2011/12">2011年12月</a><span>(1)</span></li><li><a href="/Marcky/article/month/2011/07">2011年07月</a><span>(1)</span></li><li><a href="/Marcky/article/month/2011/06">2011年06月</a><span>(3)</span></li><li><a href="/Marcky/article/month/2011/04">2011年04月</a><span>(1)</span></li><li><a href="/Marcky/article/month/2011/01">2011年01月</a><span>(2)</span></li><li><a href="/Marcky/article/month/2010/12">2010年12月</a><span>(3)</span></li><li><a href="/Marcky/article/month/2010/11">2010年11月</a><span>(8)</span></li><li><a href="/Marcky/article/month/2010/07">2010年07月</a><span>(2)</span></li><li><a href="/Marcky/article/month/2009/08">2009年08月</a><span>(1)</span></li><li><a href="/Marcky/article/month/2009/06">2009年06月</a><span>(4)</span></li><li><a href="/Marcky/article/month/2009/05">2009年05月</a><span>(1)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/marcky/article/details/7623335" title="Nginx定时器的实现及定时事件的使用">Nginx定时器的实现及定时事件的使用</a><span>(12939)</span>
+</li>
+<li>
+<a href="/marcky/article/details/7307985" title="Go语言学习笔记2——数组和Slice">Go语言学习笔记2——数组和Slice</a><span>(11102)</span>
+</li>
+<li>
+<a href="/marcky/article/details/7728662" title="Google SPDY介绍">Google SPDY介绍</a><span>(8137)</span>
+</li>
+<li>
+<a href="/marcky/article/details/6624359" title="web.py性能测试">web.py性能测试</a><span>(6781)</span>
+</li>
+<li>
+<a href="/marcky/article/details/6014733" title="Nginx源码分析-master和worker进程间的通信">Nginx源码分析-master和worker进程间的通信</a><span>(6212)</span>
+</li>
+<li>
+<a href="/marcky/article/details/6112580" title="2010年度总结-在淘宝的半年日子">2010年度总结-在淘宝的半年日子</a><span>(5955)</span>
+</li>
+<li>
+<a href="/marcky/article/details/7318626" title="Go语言学习笔记4——struct">Go语言学习笔记4——struct</a><span>(5663)</span>
+</li>
+<li>
+<a href="/marcky/article/details/6069958" title="Nginx源码分析-Epoll模块">Nginx源码分析-Epoll模块</a><span>(5400)</span>
+</li>
+<li>
+<a href="/marcky/article/details/7747067" title="Nginx SPDY patch实现">Nginx SPDY patch实现</a><span>(5152)</span>
+</li>
+<li>
+<a href="/marcky/article/details/7603532" title="GBK和UTF-8的粗暴判断">GBK和UTF-8的粗暴判断</a><span>(4879)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/marcky/article/details/6112580" title="2010年度总结-在淘宝的半年日子">2010年度总结-在淘宝的半年日子</a><span>(25)</span>
+</li>
+<li>
+<a href="/marcky/article/details/5747431" title="Nginx源码分析-数组">Nginx源码分析-数组</a><span>(4)</span>
+</li>
+<li>
+<a href="/marcky/article/details/6013502" title="Nginx源码分析-进程管理之worker进程">Nginx源码分析-进程管理之worker进程</a><span>(4)</span>
+</li>
+<li>
+<a href="/marcky/article/details/6358683" title="nginx配置文件解析过程之神图">nginx配置文件解析过程之神图</a><span>(4)</span>
+</li>
+<li>
+<a href="/marcky/article/details/5987762" title="Nginx源码分析-启动初始化过程（一）">Nginx源码分析-启动初始化过程（一）</a><span>(3)</span>
+</li>
+<li>
+<a href="/marcky/article/details/6085241" title="Nginx源码分析-4个重要结构之间的关系">Nginx源码分析-4个重要结构之间的关系</a><span>(3)</span>
+</li>
+<li>
+<a href="/marcky/article/details/6471776" title="闲着没事，山寨个记事本玩">闲着没事，山寨个记事本玩</a><span>(3)</span>
+</li>
+<li>
+<a href="/marcky/article/details/6097112" title="Nginx源码分析-内存池">Nginx源码分析-内存池</a><span>(3)</span>
+</li>
+<li>
+<a href="/marcky/article/details/7603532" title="GBK和UTF-8的粗暴判断">GBK和UTF-8的粗暴判断</a><span>(3)</span>
+</li>
+<li>
+<a href="/marcky/article/details/7728662" title="Google SPDY介绍">Google SPDY介绍</a><span>(3)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/googdev/article/details/52575079" target="_blank">* 2016 年最受欢迎的编程语言是什么？</a></li>
+<li><a href="http://blog.csdn.net/luoshengyang/article/details/52420761" 
+target="_blank">* Chromium扩展（Extension）的页面（Page）加载过程分析</a></li>
+<li><a href="http://blog.csdn.net/googdev/article/details/52598892" 
+target="_blank">* Android Studio 2.2 来啦</a></li>
+<li><a href="http://blog.csdn.net/anddlecn/article/details/52608697" target="_blank">* 手把手教你做音乐播放器（二）技术原理与框架设计</a></li>
+<li><a href="http://blog.csdn.net/defonds/article/details/52605670" 
+target="_blank">* JVM 性能调优实战之：使用阿里开源工具 TProfiler 在海量业务代码中精确定位性能代码</a></li>
+
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="/marcky/article/details/6014733#comments">Nginx源码分析-master和worker进程间的通信</a>
+    <p style="margin:0px;"><a href="/liangpeng2891" class="user_name">liangpeng2891</a>:
+感谢楼主啊，将难以理解的nginx源码详解。楼主辛苦了，我也学习了，祝楼主工作顺利，万事如意！！！！...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/marcky/article/details/7307985#comments">Go语言学习笔记2——数组和Slice</a>
+    <p style="margin:0px;"><a href="/ZhangSongWei1" class="user_name">ZhangSongWei1</a>:
+不错！博主写的文章，有用！要是能讲讲，make和new就更好了。
+    </p>
+    </li>
+    <li>
+   
+         <a href="/marcky/article/details/7603532#comments">GBK和UTF-8的粗暴判断</a>
+    <p style="margin:0px;"><a href="/liuguangzhou123" class="user_name">liuguangzhou123</a>:
+输入gbk编码的“联通”二字，发现判断结果为utf-8编码
+    </p>
+    </li>
+    <li>
+   
+         <a href="/marcky/article/details/7603532#comments">GBK和UTF-8的粗暴判断</a>
+    <p style="margin:0px;"><a href="/zhuping_lzh" class="user_name">zhuping_lzh</a>:
+判断不准，{0xE4,0xB8,0xAD,0xE6,0x96,0x87,0x61,0x62,0x63...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/marcky/article/details/6013502#comments">Nginx源码分析-进程管理之worker进程</a>
+    <p style="margin:0px;"><a href="/yang15225094594" class="user_name">yang15225094594</a>:
+”关闭本worker进程channel的写端文件描述符，因为每个worker进程只从自己的chann...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/marcky/article/details/6001865#comments">Nginx源码分析-进程管理之master进程</a>
+    <p style="margin:0px;"><a href="/yang15225094594" class="user_name">yang15225094594</a>:
+分析源码，感觉这种 “树的横向遍历” 方式不错，便于整体把握整个结构。学习中……
+    </p>
+    </li>
+    <li>
+   
+         <a href="/marcky/article/details/5993471#comments">Nginx源码分析-启动初始化过程（二）</a>
+    <p style="margin:0px;"><a href="/yang15225094594" class="user_name">yang15225094594</a>:
+博主分析的非常不错，很利于在研究源码初期给予整体的把握。多谢楼主……
+    </p>
+    </li>
+    <li>
+   
+         <a href="/marcky/article/details/5987762#comments">Nginx源码分析-启动初始化过程（一）</a>
+    <p style="margin:0px;"><a href="/yang15225094594" class="user_name">yang15225094594</a>:
+Nginx第一篇，程序大概的轮廓描述了一遍，感觉这样分析源码很不错，下面的文章继续学习……
+    </p>
+    </li>
+    <li>
+   
+         <a href="/marcky/article/details/12217607#comments">欢迎访问我的新个人网站，博客也搬家了。</a>
+    <p style="margin:0px;"><a href="/DILIGENT203" class="user_name">DILIGENT203</a>:
+404http://112.126.74.142
+    </p>
+    </li>
+    <li>
+   
+         <a href="/marcky/article/details/6466425#comments">第一个python CGI程序——hello,world</a>
+    <p style="margin:0px;"><a href="/li1669852599" class="user_name">li1669852599</a>:
+这也行，我晕！
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                   <!-- 广告位开始 --> 
+                    <ins data-revive-zoneid="190" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+                    <!-- 广告位结束 -->
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/cnick/cnick.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/newblog.min.js"></script>
+
+
+<script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=529070"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/JavaScript1.js"></script>
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=26 border=0 width=0 height=0>");</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>     <!--new top-->
+   
+    <link href="http://c.csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet" />
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/wmd.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/showdown.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/prettify.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/apps/ask_float_block.js'></script>
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_code.css" />
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/saveToCode.js"></script>
+      <script type="text/javascript" src="//csdnimg.cn/rabbit/tracking-ad/main.js?75eacd8"></script>
+</body>
+</html>   
+ 
