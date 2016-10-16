@@ -1,0 +1,30 @@
+1：安装好MinGW及GCC编译器后,当然MinGW全安装最保险了，不会太费劲
+
+2：安装Notepad++，这个不用说了
+
+3：配置环境变量（注：可能需要重启后生效）
+计算机-->属性-->高级系统设置-->环境变量-->系统：path 中添加C:\MinGW\bin;
+当然MinGW是安在C盘下，按不同路径修改
+
+4: 打开Notepad++，编写一段C++代码并保存
+
+例如：
+#include <iostream>
+using namespace std;
+
+int main(){
+int a, b;
+cout<<"Input:"<<endl;
+while(cin>>a>>b){
+cout<<a+b<<endl;
+}
+return 0;
+}
+5：菜单栏--》运行--》运行，弹出框中输入：
+
+cmd /k g++ -o $(NAME_PART).exe "$(FULL_CURRENT_PATH)" & PAUSE & EXIT
+选择快捷键后保存为： G++编译，注意快捷键不要有重复，在点击弹出框的运行，Ok，关闭Notepad，再打开Notepad++；
+
+6：菜单栏--》运行--》运行，弹出框中输入：
+cmd /k "$(NAME_PART)" & PAUSE & EXIT
+同理保存名称换为为： G++运行，再点运行程序就会执行了
