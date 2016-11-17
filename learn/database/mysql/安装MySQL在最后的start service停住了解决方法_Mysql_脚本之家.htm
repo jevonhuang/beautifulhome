@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="gb2312" />
+<meta name="applicable-device" content="pc">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+<title>安装MySQL在最后的start service停住了解决方法_Mysql_脚本之家</title>
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta name="keywords" content="start,service" />
+<meta name="description" content="今天为一个客户配置服务器的时候，发现的问题，原来他自己安装过mysql但安全没有配置好，路径选择的也不好，重新安装后发现在start service卡住了，通过下面的方法解决了，特分享下" />
+<link rel="alternate" media="only screen and(max-width: 640px)" href="http://m.jb51.net/article/43789.htm" />
+<meta http-equiv="mobile-agent" content="format=html5; url=http://m.jb51.net/article/43789.htm" />
+<meta http-equiv="mobile-agent" content="format=xhtml; url=http://m.jb51.net/article/43789.htm" />
+<script type="text/javascript">
+var tougao="mdxy-dxy";var lmname="Mysql";var ourl="";
+(function(){var reWriteUrl=function(url){if(url){var Splits=url.split("/"),siteName=window.location.pathname;if(typeof siteName!=="undefined"){return "http://m.jb51.net"+siteName}}};if(/Android|webOS|iPhone|iPad|Windows Phone|iPod|BlackBerry|SymbianOS|Nokia|Mobile/i.test(navigator.userAgent)){var url=window.location.href;var pathname=window.location.pathname;if(url.indexOf("?pc")<0){try{window.location.href=reWriteUrl(url)}catch(e){}}}})();
+</script>
+<link type="text/css" href="http://img.jb51.net/skin/2016/base.css" rel="stylesheet" />
+<link type="text/css" href="http://img.jb51.net/skin/2016/common.css" rel="stylesheet" />
+<script type="text/javascript" src="http://img.jb51.net/jslib/jquery/jquery.min.js"></script>
+<script type=text/javascript src="http://img.jb51.net/js/base.js"></script>
+</head>
+<body>
+<!--head Star -->
+<div id="head">
+  <div class="toolBar">
+  <div class="main">
+    <!--topNav Star -->
+    <div class="topNav clearfix">
+      <ul class="navList fl">
+        <li>
+          <div class="one"><a href="http://www.jb51.net" target="_blank">脚本之家</a></div>
+        </li>
+        <li>
+          <div class="one"><a href="http://www.jb51.net/softs/" target="_blank">软件下载<i class="icon"></i></a></div>
+          <div class="two">
+<a href="/softs/android.html" target="_blank">android软件</a> <a href="/softs/mac.html" target="_blank">MAC软件</a> <a href="/qudong/" target="_blank">驱动下载</a> <a href="/fonts/" target="_blank">字体下载</a> <a href="/dll/" target="_blank">DLL下载</a> </div>
+</li>
+        <li>
+          <div class="one"><a href="/codes/" target="_blank">源码下载<i class="icon"></i></a></div>
+          <div class="two"> <a href="/codes/asp.html" target="_blank">asp源码</a> <a href="/codes/php.html" target="_blank">php源码</a> <a href="/codes/aspnet.html" target="_blank">asp.net源码</a> <a href="/codes/jsp.html" target="_blank">jsp源码</a> <a href="/codes/editor.html" target="_blank">网页编辑器</a> <a href="/codes/list123_1.html" target="_blank">数据库管理</a> <a href="/codes/list124_1.html" target="_blank">常用组件</a> <a href="/jiaoben/" target="_blank">脚本下载</a></div>
+        </li>
+        <li>
+          <div class="one"><a href="http://tools.jb51.net" target="_blank">在线工具<i class="icon"></i></a></div>
+          <div class="two"> <a href="/shouce/" target="_blank">在线手册</a> <a href="/tools/cssyasuo.shtml" target="_blank">CSS格式化</a> <a href="http://tools.jb51.net/tools/js_geshihua.asp" target="_blank">JS格式化</a> <a href="/tools/html-js.htm" target="_blank">Html转化为Js</a> <a href="http://tools.jb51.net/regex/javascript" target="_blank">js正则表达式</a>
+</div>
+        </li>
+        <li>
+          <div class="one"><a href="/w3school/" target="_blank">网页教程基础</a></div>
+        </li>
+			<li>
+          <div class="one"><a href="http://s.jb51.net" target="_blank">服务器常用软件</a></div>
+        </li>
+		<li>
+          <div class="one"><a href="http://m.jb51.net" target="_blank">手机版</a></div>
+          <div class="two"><img src="http://files.jb51.net/images/m.jb51.net.png" data-baiduimageplus-ignore /></div>     
+        </li>
+        <li class="watch">
+          <div class="one"><a href="http://weibo.com/jb51net" target="_blank" rel="nofollow" ><i class="icon"></i>关注微信</a></div>
+          <div class="two"><img src="http://files.jb51.net/images/weixin_200.gif" data-baiduimageplus-ignore /></div>
+        </li>
+      </ul>
+      <div class="navUser mt5 fr" id="jb51_topbar" > </div>
+    </div>
+    <!--topNav End -->
+  </div>
+</div>
+
+  <div class="main clearfix">
+    <div class="mtb10 clearfix">
+      <div class="logo"><a href="http://www.jb51.net/"><img src="http://www.jb51.net/images/logo.gif" title="脚本之家" alt="脚本之家" /></a></div>
+      <div class="logom fl"><span id="logo_m" class="jbTestPos"></span></div>
+      <div class="logor fr"><span id="logo_r" class="jbTestPos"></span></div>
+    </div>
+<!-- 导航-->
+<DIV class="nav_top clearfix">
+<UL>
+<li><a href="http://www.jb51.net/web/">网页制作</a></li>
+<li><a href="http://www.jb51.net/list/index_1.htm">网络编程</a></li>
+<li><a href="http://www.jb51.net/list/index_96.htm">脚本专栏</a></li>
+<li><a href="http://www.jb51.net/jiaoben/">脚本下载</a></li>
+<li><a href="http://www.jb51.net/list/index_104.htm">数据库</a></li>
+<li><a href="http://www.jb51.net/cms/">CMS教程</a></li>
+<li><a href="http://www.jb51.net/books/">电子书籍</a></li>
+<li><a href="http://www.jb51.net/pingmian/">平面设计</a></li>
+<li><a href="http://www.jb51.net/media/">媒体动画</a></li>
+<li><a href="http://www.jb51.net/os/">操作系统</a></li>
+<li><a href="http://www.jb51.net/yunying/">网站运营</a></li>
+<li><a href="http://www.jb51.net/hack/">网络安全</a></li>
+<li class="last"><a href="http://www.jb51.net/shouce/">在线手册</a></li>
+
+</UL>
+</DIV>
+
+<!--导航结束-->
+<div class="subnav clearfix">
+<ul><li><a href='/list/list_113_1.htm' title="MsSql">MsSql</a></li>
+<li><a href='/list/list_112_1.htm' title="Mysql">Mysql</a></li>
+<li><a href='/list/list_252_1.htm' title="mariadb">mariadb</a></li>
+<li><a href='/list/list_154_1.htm' title="oracle">oracle</a></li>
+<li><a href='/list/list_155_1.htm' title="DB2">DB2</a></li>
+<li><a href='/list/list_236_1.htm' title="mssql2008">mssql2008</a></li>
+<li><a href='/list/list_210_1.htm' title="mssql2005">mssql2005</a></li>
+<li><a href='/list/list_215_1.htm' title="SQLite">SQLite</a></li>
+<li><a href='/list/list_224_1.htm' title="PostgreSQL">PostgreSQL</a></li>
+<li><a href='/list/list_239_1.htm' title="MongoDB">MongoDB</a></li>
+<li><a href='/list/list_242_1.htm' title="Redis">Redis</a></li>
+<li><a href='/list/list_105_1.htm' title="Access">Access</a></li>
+<li><a href='/list/list_132_1.htm' title="数据库文摘">数据库文摘</a></li>
+<li><a href='/list/list_133_1.htm' title="数据库其它">数据库其它</a></li>
+</ul>
+</div>
+<div class="NavBar clearfix ptb10">
+<div class="fl w690">
+<div class="box mb15 mt10"><i class="icon"></i>您的位置：<a href='/'>首页</a> → <a href="/list/index_104.htm" title="数据库">数据库</a> → <a href="/list/list_112_1.htm" title="Mysql">Mysql</a> → 正文内容 start service停住</div>
+</div>
+<div class="fr w300"><div class="search">
+<form action="http://so.jb51.net/cse/search" target="_blank">
+    <input type="hidden" name="s" value="10520733385329581432">
+    <input type="hidden" name="ie" value="gbk">
+    <input type="text" name="q" class="key_input" placeholder="请输入关键词">
+    <input type="submit" value="搜索" class="c_btn">
+</form></div></div>
+  </div>
+</div>
+<!--head End -->
+<div class="main mb10 clearfix">
+<div class="clearfix"><span id="tonglan1" class="jbTestPos"></span></div>
+</div>
+
+<!--content Star -->
+<div id="contents">
+ <div class="main clearfix">
+      <div class="w690 fl">
+      <div class="article-content border">
+      <div class="title">
+            <h1 class="YaHei">安装MySQL在最后的start service停住了解决方法</h1>
+            <p>作者：  字体：[<a href="javascript:turnbig()">增加</a> <a href="javascript:turnsmall()">减小</a>] 类型：转载 时间：2013-11-26<a href="#comments"> 我要评论</a></p>
+        </div>
+        <div class="art_desc mt10"><div id="art_demo">今天为一个客户配置服务器的时候，发现的问题，原来他自己安装过mysql但安全没有配置好，路径选择的也不好，重新安装后发现在start service卡住了，通过下面的方法解决了，特分享下</div></div>
+        <div class="lbd clearfix"><span id="art_up" class="jbTestPos"></span></div>
+        <div id="content">
+<P>由于我的MySQL不知道什么原因突然打不开了并报了个10061的错，查了下原因说是因为数据库被连接发生冲突，麻烦死了于是重装，在最后一步的 start service 停了，安装失败，又重装了N次，还是失败。原因是<FONT style="COLOR: #ff0000">已经装过MySQL的电脑上存在以注册项目</FONT>，网上有很多说法，和方法，我试了一个成功了。基本步骤一下：</P>
+<P>1、卸载MySQL应用程序，要把MySQL的服务业卸载掉，命令窗口使用： sc delete MySQL </P>
+<P>2、清理注册表(找出来删掉)</P>
+<P><div class="codetitle"><span><a style="CURSOR: pointer" data="43395" class="copybut" id="copybut43395" onclick="doCopy('code43395')"><U>复制代码</U></a></span> 代码如下:</div><div class="codebody" id="code43395"><BR>HKEY_LOCAL_MACHINE/SYSTEM/ControlSet001/Services/Eventlog/Applications/MySQL<BR>HKEY_LOCAL_MACHINE/SYSTEM/ControlSet002/Services/Eventlog/Applications/MySQL<BR>HKEY_LOCAL_MACHINE/SYSTEM/CurrentControlSet/Services/Eventlog/Applications/MySQL <BR></div></P>
+<P>3、清理残余文件项,特指MySQL的数据文件<BR>1)安装目录有残余项，手动删除<BR>2)显示隐藏文件及文件夹(文件夹选项-&gt;查看-&gt;显示隐藏文件的文件、文件夹和驱动器)，这是避免你找不到目录，然后就去安装目录找吧，windows 7 下MySQL的数据文件在一个隐藏的ProgramData文件夹里，或者用懒人的办法，在搜索栏输入“mysql”，列出全部有关mysql的文件和文件夹。</P>
+<P>4、重装MySQL，按照正常流程，成功了。</P>
+
+</div><!--endmain-->
+<div class="art_xg">
+<h4>您可能感兴趣的文章:</h4><ul><li><a href="/article/30866.htm" title="安装MySQL 5后无法启动(不能Start service)解决方法小结" target="_blank">安装MySQL 5后无法启动(不能Start service)解决方法小结</a></li><li><a href="/article/27628.htm" title="MYSQL安装时解决要输入current root password的解决方法" target="_blank">MYSQL安装时解决要输入current root password的解决方法</a></li><li><a href="/article/32448.htm" title="Mysql安装 Navicat 出现1044/1045错误的解决方法" target="_blank">Mysql安装 Navicat 出现1044/1045错误的解决方法</a></li><li><a href="/article/24194.htm" title="winxp 安装MYSQL 出现Error 1045 access denied 的解决方法" target="_blank">winxp 安装MYSQL 出现Error 1045 access denied 的解决方法</a></li><li><a href="/article/65746.htm" title="python MySQLdb Windows下安装教程及问题解决方法" target="_blank">python MySQLdb Windows下安装教程及问题解决方法</a></li><li><a href="/article/9477.htm" title="安装PHP可能遇到的问题“无法载入mysql扩展” 的解决方法" target="_blank">安装PHP可能遇到的问题“无法载入mysql扩展” 的解决方法</a></li><li><a href="/article/54509.htm" title="Rails bundle命令安装mysql gem包出错的解决方法" target="_blank">Rails bundle命令安装mysql gem包出错的解决方法</a></li><li><a href="/article/47661.htm" title="MySQL安装后不能用是什么情况该如何解决" target="_blank">MySQL安装后不能用是什么情况该如何解决</a></li><li><a href="/article/31987.htm" title="centos下编译安装mysql报错解决方案" target="_blank">centos下编译安装mysql报错解决方案</a></li><li><a href="/article/90319.htm" title="mysql安装时出现各种常见问题的解决方法" target="_blank">mysql安装时出现各种常见问题的解决方法</a></li></ul>
+</div>
+<div class="lbd clearfix">
+<span id="art_down" class="jbTestPos"></span>
+</div>
+<div id="shoucang"></div>
+<div class="tags mt10">
+<strong>Tags：</strong><a href="http://img.jb51.net/tag/start/1.htm" target="_blank" title="搜索关于start的文章">start</a> <a href="http://img.jb51.net/tag/service/1.htm" target="_blank" title="搜索关于service的文章">service</a> 
+</div>
+<DIV class="relatedarticle clearfix mt5">
+<H2>相关文章</H2>
+<ul><li><span>2012-09-09</span><a href="/article/31350.htm" title="mysql函数split功能实现" target="_blank">mysql函数split功能实现</a></li><li><span>2011-01-01</span><a href="/article/25873.htm" title="MYSQL数据表损坏的原因分析和修复方法小结(推荐)" target="_blank">MYSQL数据表损坏的原因分析和修复方法小结(推荐)</a></li><li><span>2015-05-05</span><a href="/article/65796.htm" title="修改Innodb的数据页大小以优化MySQL的方法" target="_blank">修改Innodb的数据页大小以优化MySQL的方法</a></li><li><span>2016-06-06</span><a href="/article/87585.htm" title="MAC上Mysql忘记Root密码或权限错误的快速解决方案" target="_blank">MAC上Mysql忘记Root密码或权限错误的快速解决方案</a></li><li><span>2012-04-04</span><a href="/article/30164.htm" title="mysql 队列 实现并发读" target="_blank">mysql 队列 实现并发读</a></li><li><span>2008-02-02</span><a href="/article/13635.htm" title="发现mysql一个用法，比较有用" target="_blank">发现mysql一个用法，比较有用</a></li><li><span>2013-07-07</span><a href="/article/39470.htm" title="解析mysql与Oracle update的区别" target="_blank">解析mysql与Oracle update的区别</a></li><li><span>2015-05-05</span><a href="/article/66675.htm" title="MySQL中MIN()函数的使用教程" target="_blank">MySQL中MIN()函数的使用教程</a></li><li><span>2014-06-06</span><a href="/article/51234.htm" title="Mysql数据库安装完成后需要进行的6个后续操作" target="_blank">Mysql数据库安装完成后需要进行的6个后续操作</a></li><li><span>2014-10-10</span><a href="/article/56952.htm" title="MySQL错误ERROR 2002 (HY000): Can''t connect to local MySQL server through socket" target="_blank">MySQL错误ERROR 2002 (HY000): Can''t connect to local MySQL s</a></li></ul>
+</DIV>
+<div class="lbd clearfix mt5">
+<span id="art_down2" class="jbTestPos"></span>
+</div>
+<a href="#comments"></a>
+<div id="comments">
+<H2>最新评论</H2>
+<div class="pd5"><div id="SOHUCS" sid="art_43789"></div></div>
+</div>
+      </div><!--endborder-->
+      </div><!--end fl-->
+      
+<div class="w300 fr">
+<div class="r300 clearfix"><span id="side_up" class="jbTestPos"></span></div>
+<DIV class="tabTitleBar mt10 bgf borderTblue">
+<DIV class="borderTnone pb10 YaHei">
+<H4 class="blue">大家感兴趣的内容</H4>
+<UL class="newsList newList-in">
+<li><EM class="no1">1</EM><a href="/article/23876.htm" title="mysql安装图解 mysql图文安装教程(详细说明)" target="_blank">mysql安装图解 mysql图文安装教程</a></li><li><EM class="no2">2</EM><a href="/article/26505.htm" title="Can''t connect to MySQL server on localhost (10061)解决方法" target="_blank">Can''t connect to MySQL server</a></li><li><EM class="no3">3</EM><a href="/article/27458.htm" title="Mysql字符串截取函数SUBSTRING的用法说明" target="_blank">Mysql字符串截取函数SUBSTRING的</a></li><li><EM class="no4">4</EM><a href="/article/15386.htm" title="超详细mysql left join,right join,inner join用法分析" target="_blank">超详细mysql left join,right jo</a></li><li><EM class="no5">5</EM><a href="/article/23966.htm" title="MySQL日期数据类型、时间类型使用总结" target="_blank">MySQL日期数据类型、时间类型使用</a></li><li><EM class="no6">6</EM><a href="/article/39188.htm" title="windows下MySQL5.6版本安装及配置过程附有截图和详细说明" target="_blank">windows下MySQL5.6版本安装及配置</a></li><li><EM class="no7">7</EM><a href="/article/22734.htm" title="Mysql命令行导入sql数据" target="_blank">Mysql命令行导入sql数据</a></li><li><EM class="no8">8</EM><a href="/article/23781.htm" title="MySQL server has gone away 问题的解决方法" target="_blank">MySQL server has gone away 问题</a></li><li><EM class="no9">9</EM><a href="/article/25686.htm" title="MySQL数据库备份与恢复方法" target="_blank">MySQL数据库备份与恢复方法</a></li><li><EM class="no10">10</EM><a href="/article/31946.htm" title="mysql中int、bigint、smallint 和 tinyint的区别详细介绍" target="_blank">mysql中int、bigint、smallint 和</a></li>
+</UL>
+</DIV>
+</DIV>
+<div class="r300 clearfix mt10"><span id="idctu" class="jbTestPos"></span></div>
+<DIV class="tabTitleBar mt10 bgf borderTblue">
+<DIV class="borderTnone pb10 YaHei">
+<H4 class="blue">最近更新的内容</H4>
+<UL class="newsListA">
+<ul><li><a href="/article/66949.htm" title="MySQL replace into 语句浅析（二）" target="_blank">MySQL replace into 语句浅析（二）</a></li><li><a href="/article/87777.htm" title="Mysql row number()排序函数的用法和注意" target="_blank">Mysql row number()排序函数的用法和注意</a></li><li><a href="/article/55362.htm" title="mysql表的清空、删除和修改操作详解" target="_blank">mysql表的清空、删除和修改操作详解</a></li><li><a href="/article/53395.htm" title="mysql截取的字符串函数substring_index的用法" target="_blank">mysql截取的字符串函数substring_index的</a></li><li><a href="/article/74974.htm" title="Yii 连接、修改 MySQL 数据库及phpunit 测试连接" target="_blank">Yii 连接、修改 MySQL 数据库及phpunit 测</a></li><li><a href="/article/52806.htm" title="完全卸载mysql(停止服务、卸载相关程序、删除注册表" target="_blank">完全卸载mysql(停止服务、卸载相关程序、</a></li><li><a href="/article/15770.htm" title="MYSQL5 masterslave数据同步配置方法" target="_blank">MYSQL5 masterslave数据同步配置方法</a></li><li><a href="/article/50785.htm" title="深度分析mysql GROUP BY 与 ORDER BY" target="_blank">深度分析mysql GROUP BY 与 ORDER BY</a></li><li><a href="/article/68809.htm" title="MySQL开启记录执行过的SQL语句方法" target="_blank">MySQL开启记录执行过的SQL语句方法</a></li><li><a href="/article/90394.htm" title="MySQL关于exists的一个bug" target="_blank">MySQL关于exists的一个bug</a></li></ul>
+</UL>
+</DIV>
+</DIV>   
+<div class="r300 clearfix mt10"><span id="idctu1" class="jbTestPos"></span></div>
+<DIV class="tabTitleBar mt10 bgf borderTblue">
+<DIV class="borderTnone pb10 YaHei">
+<H4 class="blue">常用在线小工具</H4>
+<ul class="newsListA"><span id="bctools" class="jbTestPos"></span></ul>
+</DIV>
+</DIV>
+<div class="r300 clearfix mt10" id="idctu2"><span id="idctu2" class="jbTestPos"></span></div>
+<div class="mt10 rFixedBox">
+<span id="r_2" class="jbTestPos"></span>
+</div>
+      
+      
+      </div><!--end fr-->
+      </div>
+</div><!--end content-->
+<div id="footer">
+<div class="main clearfix">
+<p>
+<a href="http://www.jb51.net/about.htm" target="_blank">关于我们</a> - 
+<a href="http://www.jb51.net/support.htm" target="_blank">广告合作</a> - 
+<a href="http://www.jb51.net/linkus.htm" target="_blank">联系我们</a> -  
+<a href="http://www.jb51.net/sm.htm" target="_blank">免责声明</a> -  
+<a href="http://www.jb51.net/sitemap.htm" target="_blank">网站地图</a> - 
+<a href="tencent://message/?uin=461478385&Site=http://www.jb51.net" target="_blank">投诉建议</a> - 
+<a href="http://www.jb51.net/up.htm" target="_blank">在线投稿</a>
+</p>
+<p>&copy;CopyRight 2006-2016 JB51.Net Inc All Rights Reserved. 脚本之家 版权所有</p>
+</div>
+</div><!--end footer-->
+<link type="text/css" rel="stylesheet" href="/jslib/syntaxhighlighter/styles/shCore.css" />
+<link type="text/css" rel="Stylesheet" href="/jslib/syntaxhighlighter/styles/shThemeDefault.css" />
+<script type="text/javascript" src="/jslib/syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="/jslib/syntaxhighlighter/scripts/shAutoloader.js"></script>
+<script type="text/javascript"> 
+if (top.location != self.location)top.location=self.location;
+$('#content').find('img').each(function(){
+        var img = this;
+        if (img.width >= 650){
+            img.style.width = "650px";
+            img.style.height = "auto";
+            //$(img).removeAttr('height');
+            var aTag = document.createElement('a');
+            aTag.href = img.src;
+			aTag.target="_blank";
+            $(aTag).addClass('bPic')
+            .insertAfter(img).append(img)
+          }
+    });
+ $(window).scroll(function()
+    {	
+    	//rFixedBox跟随滚动
+    	var h = $(window).height();
+        var top = $(window).scrollTop();
+    	var rFixedBox = $('.rFixedBox').prev().offset();
+        var fixedTop = rFixedBox.top;
+		
+        if(top>=fixedTop+344)
+        {
+			var h1 = parseInt($('#content').children('.main').height());
+			if(parseInt(top) + 340 < h1){
+				$('.rFixedBox').css({'position':'fixed','top': 0});
+			}else{
+				$('.rFixedBox').css({'position':'absolute','top': h1-510});
+			}
+        }
+        else
+        {
+            $('.rFixedBox').css({'position':'static', 'top':0});   
+        }	
+       /* return true;*/
+    });
+SyntaxHighlighter.autoloader(
+	'applescript			/jslib/syntaxhighlighter/scripts/shBrushAppleScript.js',
+	'actionscript3 as3		/jslib/syntaxhighlighter/scripts/shBrushAS3.js',
+	'bash shell				/jslib/syntaxhighlighter/scripts/shBrushBash.js',
+	'coldfusion cf			/jslib/syntaxhighlighter/scripts/shBrushColdFusion.js',
+	'cpp c					/jslib/syntaxhighlighter/scripts/shBrushCpp.js',
+	'obj-c objc				/jslib/syntaxhighlighter/scripts/shBrushObjC.js',
+	'c# c-sharp csharp		/jslib/syntaxhighlighter/scripts/shBrushCSharp.js',
+	'css					/jslib/syntaxhighlighter/scripts/shBrushCss.js',
+	'delphi pascal			/jslib/syntaxhighlighter/scripts/shBrushDelphi.js',
+	'diff patch pas			/jslib/syntaxhighlighter/scripts/shBrushDiff.js',
+	'erl erlang				/jslib/syntaxhighlighter/scripts/shBrushErlang.js',
+	'groovy					/jslib/syntaxhighlighter/scripts/shBrushGroovy.js',
+	'haxe hx				/jslib/syntaxhighlighter/scripts/shBrushHaxe.js',
+	'java					/jslib/syntaxhighlighter/scripts/shBrushJava.js',
+	'jfx javafx				/jslib/syntaxhighlighter/scripts/shBrushJavaFX.js',
+	'js jscript javascript	/jslib/syntaxhighlighter/scripts/shBrushJScript.js',
+	'perl pl				/jslib/syntaxhighlighter/scripts/shBrushPerl.js',
+	'php					/jslib/syntaxhighlighter/scripts/shBrushPhp.js',
+	'text plain				/jslib/syntaxhighlighter/scripts/shBrushPlain.js',
+	'py python				/jslib/syntaxhighlighter/scripts/shBrushPython.js',
+	'ruby rails ror rb		/jslib/syntaxhighlighter/scripts/shBrushRuby.js',
+	'scala					/jslib/syntaxhighlighter/scripts/shBrushScala.js',
+	'sql					/jslib/syntaxhighlighter/scripts/shBrushSql.js',
+	'vb vbnet				/jslib/syntaxhighlighter/scripts/shBrushVb.js',
+	'ps powershell			/jslib/syntaxhighlighter/scripts/shBrushPowerShell.js',
+	'xml xhtml xslt html	/jslib/syntaxhighlighter/scripts/shBrushXml.js'
+);
+SyntaxHighlighter.all();
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script type="text/javascript" src='http://img.jb51.net/js/jbLoader.js'></script>
+<script>jbLoader();</script><script class="closetag">jbLoader(true);</script>
+<script>jbLoader();</script><script class="closetag">jbLoader(true);</script>
+<script>jbLoader();</script><script class="closetag">jbLoader(true);</script>
+<script>jbLoader();</script><script class="closetag">jbLoader(true);</script>
+<script>jbLoader();</script><script class="closetag">jbLoader(true);</script>
+<script>jbLoader();</script><script class="closetag">jbLoader(true);</script>
+<script>jbLoader();</script><script class="closetag">jbLoader(true);</script>
+<script>jbLoader();</script><script class="closetag">jbLoader(true);</script>
+<script>jbLoader();</script><script class="closetag">jbLoader(true);</script>
+<script>jbLoader();</script><script class="closetag">jbLoader(true);</script>
+<script>jbLoader();</script><script class="closetag">jbLoader(true);</script>
+<script>jbLoader();</script><script class="closetag">jbLoader(true);</script>
+<div id="tongji">
+<script type="text/javascript" src="http://img.jb51.net/inc/tongji.js"></script>
+<script>
+(function(){
+var appid = 'cyrHH3dwi',
+conf = 'prod_1dc5dc80970106099d43fe242b7465fc';
+var doc = document,
+s = doc.createElement('script'),
+h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+s.type = 'text/javascript';
+s.charset = 'utf-8';
+s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
+h.insertBefore(s,h.firstChild);
+window.SCS_NO_IFRAME = true;
+})();
+</script>
+</div>
+<script type="text/javascript" src="http://www.jb51.net/pl.asp?id=43789"></script>
+<script type="text/javascript" charset="utf-8" src="http://changyan.itc.cn/js/??lib/jquery.js,changyan.labs.js?appid=cyrEjJlIw"></script>
+</body>
+</html>
+<!-- published at 2016-8-24 9:50:28By dxycms qq:461478385  -->
