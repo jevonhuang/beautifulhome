@@ -19,6 +19,7 @@ int main()
 	Pizza* pizza = new Pizza;
 	GetPizzaInfo(*pizza);
 	PutPizzaInfo(*pizza);
+	delete pizza;
 }
 
 void GetPizzaInfo(Pizza& pizza)
