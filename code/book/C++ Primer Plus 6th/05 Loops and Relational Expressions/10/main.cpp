@@ -11,17 +11,16 @@ int main()
 	
 	for (int i = 0; i < row; ++i)
 	{
-		for (int j = row - 1; j >= 0; --j)
+		for (int j = 0; j < (row - 1) - i; ++j)
 		{
-			if (j > i)
-			{
-				cout << ".";
-			}
-			else
-			{
-				cout << "*";
-			}
+			cout << ".";
 		}
+		
+		for (int j = (row - 1) - i; j < row; ++j)
+		{
+			cout << "*";
+		}
+
 		cout << endl;
 	}
 }
