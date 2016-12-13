@@ -33,4 +33,6 @@ int main()
 	{
 		cout << cars[i].year << " " << cars[i].make << endl;
 	}
+	
+	delete [] cars;
 }
