@@ -3,6 +3,7 @@
 using namespace std;
 
 double tax(double income);
+
 int main()
 {
 	double income = 0.0;	
