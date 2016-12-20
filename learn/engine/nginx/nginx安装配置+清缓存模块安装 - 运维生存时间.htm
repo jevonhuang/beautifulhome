@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>nginx安装配置+清缓存模块安装 - 运维生存时间</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="114x114" href="" />
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="http://www.ttlsa.com/xmlrpc.php">
+<!--[if lt IE 9]>
+<script src="http://www.ttlsa.com/wp-content/themes/begin/js/html5.js"></script>
+<script src="http://www.ttlsa.com/wp-content/themes/begin/js/css3-mediaqueries.js"></script>
+<![endif]-->
+<meta name="applicable-device" content="pc,mobile">
+<script src="http://dup.baidustatic.com/js/ds.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47293078-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<meta name="keywords" content="nginx安装,nginx配置,nginx缓存模块,nginx cache模块,nginx如何清除cache" />
+<meta name="description" content="经过一段时间的使用，发现nginx在并发与负载能力方面确实优于apache，现在已经将大部分站点从apache转到了nginx了。以下是nginx的一些简单的安装配置。" />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel='stylesheet' id='style-css' href='http://www.ttlsa.com/wp-content/themes/begin/style.css?ver=2.0' type='text/css' media='all' />
+<link rel='stylesheet' id='sphinxStyleSheets-css' href='http://www.ttlsa.com/wp-content/plugins/wordpress-sphinx-plugin/templates/sphinxsearch.css?ver=4.6.1' type='text/css' media='all' />
+<script type='text/javascript' src='http://www.ttlsa.com/wp-content/themes/begin/js/jquery.min.js?ver=1.10.1'></script>
+<script type='text/javascript' src='http://www.ttlsa.com/wp-content/themes/begin/js/slides.js?ver=2016.05.27'></script>
+<script type='text/javascript' src='http://www.ttlsa.com/wp-content/themes/begin/js/jquery-ias.js?ver=2.2.1'></script>
+<script type='text/javascript' src='http://www.ttlsa.com/wp-content/themes/begin/js/jquery.lazyload.js?ver=2016.05.27'></script>
+<script type='text/javascript' src='http://www.ttlsa.com/wp-content/themes/begin/js/tipso.js?ver=1.0.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var wpl_ajax_url = "http:\/\/www.ttlsa.com\/wp-admin\/admin-ajax.php";
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://www.ttlsa.com/wp-content/themes/begin/js/script.js?ver=2016.05.27'></script>
+<script type='text/javascript' src='http://www.ttlsa.com/wp-content/themes/begin/js/flexisel.js?ver=2016.05.27'></script>
+<script type='text/javascript' src='http://www.ttlsa.com/wp-content/themes/begin/js/fancybox.js?ver=2016.05.27'></script>
+<script type='text/javascript' src='http://www.ttlsa.com/wp-content/themes/begin/js/comments-ajax-qt.js?ver=2016.05.27'></script>
+<link rel="canonical" href="http://www.ttlsa.com/nginx/nginx-modules-ngx_cache_purge/" />
+<style>/** 标题背景 **/
+.entry-header h1 {background: #ebebeb;}
+@media screen and (max-width: 440px) {.title-l {top: 15px;}}
+
+/** 缩进 **/
+.single-content p {
+   text-indent: 0;
+}
+/** 去掉浏览统计 
+.views, .single-meta .views {display: none;}
+**/
+
+/** 屏幕小于620x 不显示友情链接 **/
+    @media screen and (max-width: 620px) {
+        #links {
+            display: none;
+        }
+    }
+
+/** 微博 **/
+    .weibo {
+        top:-34px;
+        left:540px;
+    }
+/** 在线图书高亮**/
+#menu-item-11297 .font-text {
+        background: #ff4400;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 2px;
+}
+    
+#menu-item-11297 .font-text:hover {
+        background: #2f889a;
+        transition: all .2s ease-in 0s;
+}
+.fa-book {
+        display: none;
+}
+</style><style>#content, .top-nav, #top-menu, #mobile-nav, #main-search, #search-main, .breadcrumb, .footer-widget {width: 1100px;}@media screen and (max-width: 1100px) {#content, #colophon, .breadcrumb, .footer-widget {width: 98%;}#top-menu{width: 98%;}.top-nav {width: 98%;}#main-search, #search-main, #mobile-nav {width: 98%;}.breadcrumb {width: 98%;}}</style> </head>
+<body class="single single-post postid-1504 single-format-standard">
+<div id="page" class="hfeed site">
+<header id="masthead" class="site-header">
+<nav id="top-header">
+<div class="top-nav">
+<div id="user-profile">
+<a href="/registry/" target="_blank">立即注册</a>
+<span class="nav-set">
+<span class="nav-login">
+<a href="#login" class="flatbtn" id="login-main">登录</a>
+</span>
+</span>
+</div>
+<div class="menu-%e9%a1%b6%e9%83%a8%e8%8f%9c%e5%8d%95-container"><ul id="menu-%e9%a1%b6%e9%83%a8%e8%8f%9c%e5%8d%95" class="top-menu"><li id="menu-item-9186" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-9186"><a href="http://www.ttlsa.com/"><i class="fa-home fa"></i><span class="font-text">首页</span></a></li>
+<li id="menu-item-9188" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9188"><a href="http://www.ttlsa.com/job/"><i class="fa-road fa"></i><span class="font-text">招聘</span></a></li>
+<li id="menu-item-9231" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-9231"><a href="http://list.qq.com/cgi-bin/qf_invite?id=08d98d12f4182db5189baf2277667e2d2f1fb9a1c4a36263"><i class="fa-rss fa"></i><span class="font-text">订阅</span></a></li>
+<li id="menu-item-9233" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-9233"><a href="http://www.ttlsa.com/tougao/"><i class="fa-pencil-square-o fa"></i><span class="font-text">投稿</span></a></li>
+<li id="menu-item-9232" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-9232"><a href="http://www.ttlsa.com/sitemap.xml"><i class="fa-sitemap fa"></i><span class="font-text">网站地图</span></a></li>
+<li id="menu-item-9187" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-9187"><a href="http://www.ttlsa.com/about/"><i class="fa-ticket fa"></i><span class="font-text">联系我们</span></a></li>
+<li id="menu-item-10136" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10136"><a href="http://www.ttlsa.com/all/">文章归档</a></li>
+<li id="menu-item-10867" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-10867"><a href="http://www.ttlsa.com/huodong/"><i class="fa-book fa"></i><span class="font-text">福利&#038;活动</span></a></li>
+</ul></div> </div>
+</nav>
+<div id="menu-box">
+<div id="top-menu">
+<span class="nav-search"><i class="fa fa-search"></i></span>
+<span class="mobile-login"><a href="#login" id="login-mobile"><i class="fa fa-sun-o"></i></a></span> <hgroup class="logo-site">
+<p class="site-title">
+<a href="http://www.ttlsa.com/"><img src="/wp-content/uploads/2015/06/ttlsa_logo02.gif" alt="运维生存时间" /></a>
+</p>
+</hgroup>
+<div id="site-nav-wrap">
+<div id="sidr-close"><a href="#sidr-close" class="toggle-sidr-close">×</a></div>
+<nav id="site-nav" class="main-nav">
+<a href="#sidr-main" id="navigation-toggle" class="bars"><i class="fa fa-bars"></i></a>
+<div class="menu-%e4%b8%bb%e5%af%bc%e8%88%aa-container"><ul id="menu-%e4%b8%bb%e5%af%bc%e8%88%aa" class="down-menu nav-menu"><li id="menu-item-1655" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1655"><a href="/"><i class="fa-home fa"></i><span class="font-text">首页</span></a></li>
+<li id="menu-item-613" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-613"><a href="http://www.ttlsa.com/news/"><i class="fa-newspaper-o fa"></i><span class="font-text">业界</span></a></li>
+<li id="menu-item-9210" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-9210"><a href="http://www.ttlsa.com/system/"><i class="fa-folder-open fa"></i><span class="font-text">运维技术</span></a>
+<ul class="sub-menu">
+<li id="menu-item-612" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-612"><a href="http://www.ttlsa.com/linux/"><i class="fa-linux fa"></i><span class="font-text">Linux</span></a>
+<ul class="sub-menu">
+<li id="menu-item-9206" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9206"><a href="http://www.ttlsa.com/linux/linux-command/"><i class="fa-terminal fa"></i><span class="font-text">Linux命令</span></a></li>
+<li id="menu-item-615" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-615"><a href="http://www.ttlsa.com/linux/mono/">Mono</a></li>
+<li id="menu-item-616" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-616"><a href="http://www.ttlsa.com/tools/yum/">Yum</a></li>
+</ul>
+</li>
+<li id="menu-item-9211" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-9211"><a href="http://www.ttlsa.com/fbs/log-system/">日志系统</a>
+<ul class="sub-menu">
+<li id="menu-item-11919" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-11919"><a href="http://www.ttlsa.com/log-system/elk/">ELK</a></li>
+<li id="menu-item-604" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-604"><a href="http://www.ttlsa.com/fbs/scribe/">Scribe</a></li>
+</ul>
+</li>
+<li id="menu-item-602" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-602"><a href="http://www.ttlsa.com/fbs/">分布式</a>
+<ul class="sub-menu">
+<li id="menu-item-11920" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-11920"><a href="http://www.ttlsa.com/hbase/">HBase</a></li>
+<li id="menu-item-11921" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-11921"><a href="http://www.ttlsa.com/hdfs/">HDFS</a></li>
+<li id="menu-item-11922" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-11922"><a href="http://www.ttlsa.com/kafka/">Kafka</a></li>
+<li id="menu-item-619" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-619"><a href="http://www.ttlsa.com/fastdfs/">FastDFS</a></li>
+<li id="menu-item-672" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-672"><a href="http://www.ttlsa.com/fbs/gearman/">Gearman</a></li>
+<li id="menu-item-606" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-606"><a href="http://www.ttlsa.com/monitor/ganglia/">Ganglia</a></li>
+<li id="menu-item-591" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-591"><a href="http://www.ttlsa.com/cluster/">HA</a></li>
+</ul>
+</li>
+<li id="menu-item-617" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-617"><a href="http://www.ttlsa.com/windows/"><i class="fa-windows fa"></i><span class="font-text">Windows</span></a></li>
+</ul>
+</li>
+<li id="menu-item-590" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor menu-item-has-children menu-item-590"><a href="http://www.ttlsa.com/web/"><i class="fa-paper-plane fa"></i><span class="font-text">web技术</span></a>
+<ul class="sub-menu">
+<li id="menu-item-597" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-597"><a href="http://www.ttlsa.com/nginx/">Nginx</a></li>
+<li id="menu-item-593" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-593"><a href="http://www.ttlsa.com/apache/">Apache</a></li>
+<li id="menu-item-601" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-601"><a href="http://www.ttlsa.com/tomcat/">Tomcat</a></li>
+<li id="menu-item-9205" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9205"><a href="http://www.ttlsa.com/iis/">IIS</a></li>
+</ul>
+</li>
+<li id="menu-item-585" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-585"><a href="http://www.ttlsa.com/database/"><i class="fa-database fa"></i><span class="font-text">数据库</span></a>
+<ul class="sub-menu">
+<li id="menu-item-587" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-587"><a href="http://www.ttlsa.com/mysql/">MySQL</a></li>
+<li id="menu-item-9197" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-9197"><a href="http://www.ttlsa.com/nosql/">NoSQL</a>
+<ul class="sub-menu">
+<li id="menu-item-9201" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9201"><a href="http://www.ttlsa.com/nosql/mongodb/">mongodb</a></li>
+<li id="menu-item-9202" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9202"><a href="http://www.ttlsa.com/nosql/redis/">Redis</a></li>
+<li id="menu-item-11918" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-11918"><a href="http://www.ttlsa.com/nosql/codis/">codis</a></li>
+<li id="menu-item-9199" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9199"><a href="http://www.ttlsa.com/nosql/memcache/">Memcache</a></li>
+<li id="menu-item-9200" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9200"><a href="http://www.ttlsa.com/nosql/memcacheq/">memcacheq</a></li>
+<li id="menu-item-9203" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9203"><a href="http://www.ttlsa.com/nosql/sphinx/">Sphinx</a></li>
+<li id="menu-item-9204" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9204"><a href="http://www.ttlsa.com/nosql/ttserver/">ttserver</a></li>
+<li id="menu-item-9198" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9198"><a href="http://www.ttlsa.com/monitor/kairosdb/">KairosDB</a></li>
+</ul>
+</li>
+<li id="menu-item-589" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-589"><a href="http://www.ttlsa.com/oracle/">Oracle</a></li>
+</ul>
+</li>
+<li id="menu-item-628" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-628"><a href="http://www.ttlsa.com/dev/"><i class="fa-code fa"></i><span class="font-text">编程</span></a>
+<ul class="sub-menu">
+<li id="menu-item-1783" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1783"><a href="http://www.ttlsa.com/python/">python</a></li>
+<li id="menu-item-9189" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9189"><a href="http://www.ttlsa.com/php/">PHP</a></li>
+<li id="menu-item-636" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-636"><a href="http://www.ttlsa.com/shell/">Shell</a></li>
+<li id="menu-item-9214" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9214"><a href="http://www.ttlsa.com/perl/">Perl</a></li>
+<li id="menu-item-9213" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9213"><a href="http://www.ttlsa.com/lua/">lua</a></li>
+<li id="menu-item-635" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-635"><a href="http://www.ttlsa.com/java/">Java</a></li>
+<li id="menu-item-629" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-629"><a href="http://www.ttlsa.com/csharp/">.NET C#</a></li>
+<li id="menu-item-637" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-637"><a href="http://www.ttlsa.com/bat/">批处理</a></li>
+</ul>
+</li>
+<li id="menu-item-9191" class="a menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-9191"><a href="http://www.ttlsa.com/monitor-safe/monitor/"><i class="fa-bar-chart fa"></i><span class="font-text">监控</span></a>
+<ul class="sub-menu">
+<li id="menu-item-9190" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9190"><a href="http://www.ttlsa.com/monitor/zabbix/">zabbix</a></li>
+<li id="menu-item-9196" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9196"><a href="http://www.ttlsa.com/monitor/nagios/">Nagios</a></li>
+<li id="menu-item-9192" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9192"><a href="http://www.ttlsa.com/mms/">mms</a></li>
+<li id="menu-item-9193" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9193"><a href="http://www.ttlsa.com/monitor/ganglia/">Ganglia</a></li>
+<li id="menu-item-9194" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9194"><a href="http://www.ttlsa.com/monitor/opentsdb/">OpenTSDB</a></li>
+</ul>
+</li>
+<li id="menu-item-9209" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-9209"><a href="http://www.ttlsa.com/auto/"><i class="fa-wrench fa"></i><span class="font-text">自动化</span></a>
+<ul class="sub-menu">
+<li id="menu-item-9208" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9208"><a href="http://www.ttlsa.com/auto/saltstack/">Saltstack</a></li>
+<li id="menu-item-11916" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-11916"><a href="http://www.ttlsa.com/auto/ansible/">Ansible</a></li>
+<li id="menu-item-11917" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-11917"><a href="http://www.ttlsa.com/auto/archer/">Archer</a></li>
+<li id="menu-item-9207" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9207"><a href="http://www.ttlsa.com/auto/puppet/">Puppet</a></li>
+<li id="menu-item-9212" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9212"><a href="http://www.ttlsa.com/linux/tools/"><i class="fa-rocket fa"></i><span class="font-text">运维工具</span></a></li>
+</ul>
+</li>
+<li id="menu-item-11297" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-has-children menu-item-11297"><a href="http://www.ttlsa.com/#"><i class="fa-book fa"></i><span class="font-text">在线图书</span></a>
+<ul class="sub-menu">
+<li id="menu-item-11298" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11298"><a href="/docs/learn-python-the-hard-way/">笨办法学Python</a></li>
+<li id="menu-item-11299" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11299"><a href="/docs/jianming-python/python/">简明Python</a></li>
+<li id="menu-item-11307" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11307"><a href="/docs/awk/">awk学习笔记</a></li>
+<li id="menu-item-11308" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11308"><a href="/docs/dive-into-python/">深入Python</a></li>
+<li id="menu-item-11309" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11309"><a href="/docs/dive-into-python3/">深入 Python 3</a></li>
+<li id="menu-item-11310" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11310"><a href="/docs/greasemonkey/">深入浅出Greasemonkey</a></li>
+<li id="menu-item-11311" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11311"><a href="/docs/python_hb/">Python 手册</a></li>
+<li id="menu-item-11312" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11312"><a href="/docs/tornado/">tornado中文教程</a></li>
+</ul>
+</li>
+</ul></div> </nav>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+</header>
+<div id="search-main">
+<div id="searchbar">
+<form method="get" id="searchform" action="http://www.ttlsa.com/">
+<input type="text" value="" name="s" id="s" placeholder="输入搜索内容" required />
+<button type="submit" id="searchsubmit">搜索</button>
+</form>
+</div> <div id="searchbar">
+<form method="get" id="searchform" action="http://www.ttlsa.com/baidu/" target="_blank">
+<input type="hidden" value="1" name="entry">
+<input class="swap_value" placeholder="输入百度站内搜索关键词" name="q">
+<button type="submit" id="searchsubmit">百度</button>
+</form>
+</div> <div class="clear"></div>
+</div> <nav class="breadcrumb">
+<a class="crumbs" title="返回首页" href="http://www.ttlsa.com">首页</a><i class="fa fa-angle-right"></i><a href="http://www.ttlsa.com/web/">web应用</a><i class="fa fa-angle-right"></i><a href="http://www.ttlsa.com/nginx/" rel="category tag">Nginx</a><i class="fa fa-angle-right"></i>正文 </nav>
+<div id="content" class="site-content">
+<div class="clear"></div>
+<div id="primary" class="content-area">
+<main id="main" class="site-main" role="main">
+<div class="wow fadeInUp" data-wow-delay="0.3s"><article id="post-1504" class="post-1504 post type-post status-publish format-standard hentry category-nginx tag-nginx-2 tag-nginx_cache tag-nginx tag-ngx_cache tag-purege tag-purge tag-web">
+<header class="entry-header">
+<h1 class="entry-title">nginx安装配置+清缓存模块安装</h1> </header>
+<div class="entry-content">
+<div class="single-content">
+<div class="ad-pc ad-site">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-0956732394986573" data-ad-slot="2895550264"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+<p>经过一段时间的使用，发现<a href="http://www.ttlsa.com/nginx/" title="nginx"target="_blank">nginx</a>在并发与负载能力方面确实优于apache，现在已经将大部分站点从apache转到了nginx了。以下是nginx的一些简单的安装配置。</p>
+<p>环境</p>
+<p>操作系统：CentOS、RedHat</p>
+<p>IP地址：192.168.1.202</p>
+<h3><b>下载软件包</b></h3>
+<p># mkdir /usr/local/src/tarbag</p>
+<p># mkdir /usr/local/src/software</p>
+<p># cd /usr/local/src/tarbag/</p>
+<p>Nginx</p>
+<p># wget <a rel="external nofollow" href="http://www.nginx.org/download/nginx-1.0.6.tar.gz">http://www.nginx.org/download/nginx-1.0.6.tar.gz</a></p>
+<p>Nginx cache purge模块(可选)</p>
+<p># wget <a rel="external nofollow" href="http://labs.frickle.com/files/ngx_cache_purge-1.3.tar.gz">http://labs.frickle.com/files/ngx_cache_purge-1.3.tar.gz</a></p>
+<h3><b>编译安装</b></h3>
+<p># cd /usr/local/src/tarbag/</p>
+<p># tar -xzvf nginx-1.0.6.tar.gz -C /usr/local/src/software</p>
+<p># tar -xzvf ngx_cache_purge-1.3.tar.gz -C /usr/local/src/software</p>
+<p># cd /usr/local/src/software/</p>
+<p># ./configure \</p>
+<p>--prefix=/usr/local/nginx-1.0.6 \  # 安装路径</p>
+<p>--with-http_stub_status_module \ # 启用nginx状态模块</p>
+<p>--with-http_ssl_module \ # 启用SSL模块</p>
+<p>--with-http_realip_module \ # 启用realip模块（将用户IP转发给后端服务器）</p>
+<p>--add-module=../ngx_cache_purge-1.3 # 添加缓存清除扩展模块</p>
+<p># make</p>
+<p># make install</p>
+<p>&nbsp;</p>
+<h3><b>内核参数优化</b></h3>
+<p># vi sysctl.conf  增加以下配置</p>
+<p>net.ipv4.netfilter.ip_conntrack_tcp_timeout_established = 1800</p>
+<p>net.ipv4.ip_conntrack_max = 16777216　＃　如果使用默认参数,容易出现网络丢包</p>
+<p>net.ipv4.netfilter.ip_conntrack_max = 16777216＃　如果使用默认参数,容易出现网络丢包</p>
+<p>net.ipv4.tcp_max_syn_backlog = 65536</p>
+<p>net.core.netdev_max_backlog =  32768</p>
+<p>net.core.somaxconn = 32768</p>
+<p>net.core.wmem_default = 8388608</p>
+<p>net.core.rmem_default = 8388608</p>
+<p>net.core.rmem_max = 16777216</p>
+<p>net.core.wmem_max = 16777216</p>
+<p>net.ipv4.tcp_timestamps = 0</p>
+<p>net.ipv4.tcp_synack_retries = 2</p>
+<p>net.ipv4.tcp_syn_retries =</p>
+<p>net.ipv4.tcp_tw_recycle = 1</p>
+<p>net.ipv4.tcp_tw_reuse = 1</p>
+<p>net.ipv4.tcp_mem = 94500000 915000000 927000000</p>
+<p>net.ipv4.tcp_max_orphans = 3276800</p>
+<p>net.ipv4.ip_local_port_range = 1024  65535</p>
+<p>配置生效</p>
+<p># sysctl –p</p>
+<p>修改iptables启动脚本,在star()函数里面加上</p>
+<p># vi /etc/init.d/iptables</p>
+<p>/sbin/sysctl  -p</p>
+<p>&nbsp;</p>
+<h3><b>配置范例站点站点</b></h3>
+<p>序号</p>
+<p>域名</p>
+<p>目录</p>
+<p>1</p>
+<p><a href="http://www.heytool.com/"><b>www.heytool.com</b></a></p>
+<p>/www/html/www.heytool.com</p>
+<p>2</p>
+<p>bbs.heytool.com</p>
+<p>/www/html/bbs.heytool.com</p>
+<p>&nbsp;</p>
+<h3>修改nginx配置文件：</h3>
+<p># vi nginx.conf</p>
+<p>user  nobody nobody; # 运行nginx的所属组和所有者</p>
+<p>worker_processes  2; # 开启两个nginx工作进程,一般几个CPU核心就写几</p>
+<p>error_log  logs/error.log  notice; # 错误日志路径</p>
+<p>pid        logs/nginx.pid; # pid路径</p>
+<p>events {</p>
+<p>worker_connections  1024; # 一个进程能同时处理1024个请求</p>
+<p>}</p>
+<p>http {</p>
+<p>include       mime.types;</p>
+<p>default_type  application/octet-stream;</p>
+<p>&nbsp;</p>
+<p>log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '</p>
+<p>'$status $body_bytes_sent "$http_referer" '</p>
+<p>'"$http_user_agent" "$http_x_forwarded_for"';</p>
+<p>access_log  logs/access.log  main; # 默认访问日志路径</p>
+<p>sendfile        on;</p>
+<p>keepalive_timeout  65; # keepalive超市时间</p>
+<p># 开始配置一个域名,一个server配置段一般对应一个域名</p>
+<p>server {</p>
+<p>listen       80; #</p>
+<p># 在本机所有ip上监听80,也可以写为192.168.1.202:80,这样的话,就只监听192.168.1.202上的80口</p>
+<p>server_name  <a href="http://www.heytool.com/">www.heytool.com</a>; # 域名</p>
+<p>root   /www/html/www.heytool.com; # 站点根目录（程序目录）</p>
+<p>index  index.html index.htm; # 索引文件</p>
+<p>location / {  # 可以有多个location</p>
+<p>root   /www/html/www.heytool.com; # 站点根目录（程序目录）</p>
+<p>}</p>
+<p>error_page   500 502 503 504  /50x.html;</p>
+<p># 定义错误页面,如果是500错误,则把站点根目录下的50x.html返回给用户</p>
+<p>location = /50x.html {</p>
+<p>root   /www/html/www.heytool.com;</p>
+<p>}</p>
+<p>}</p>
+<p># 开始配置站点bbs.heytool.com</p>
+<p>server {</p>
+<p>listen       80;</p>
+<p>server_name  <a href="http://www.heytool.com/">bbs.heytool.com</a>;</p>
+<p>root   /www/html/bbs.heytool.com;</p>
+<p>index  index.html index.htm; # 索引文件</p>
+<p>location / {</p>
+<p>root   /www/html/bbs.heytool.com;</p>
+<p>}</p>
+<p>error_page   500 502 503 504  /50x.html;</p>
+<p>location = /50x.html {</p>
+<p>root   /www/html/bbs.heytool.com;</p>
+<p>}</p>
+<p>}</p>
+<p>}</p>
+<p>Nginx启动关闭</p>
+<p># /usr/local/nginx-1.0.6/sbin/nginx  //启动nginx</p>
+<p># /usr/local/nginx-1.0.6/sbin/nginx –t //测试nginx配置文件的准确性</p>
+<p># /usr/local/nginx-1.0.6/sbin/nginx –s reload //重载nginx</p>
+<p># /usr/local/nginx-1.0.6/sbin/nginx –s stop //关闭nginx</p>
+<p>&nbsp;</p>
+<p><b>测试</b></p>
+<p>创建测试站点</p>
+<p># mkdir –p /www/html/www.heytool.com</p>
+<p># mkdir –p /www/html/bbs.heytool.com</p>
+<p># echo “<a href="http://www.heytool.com/">www.heytool.com</a>” &gt; /www/html/www.heytool.com/index.html</p>
+<p><b>#</b> echo “<a href="http://www.heytool.com/">bbs.heytool.com</a>” &gt; /www/html/bbs.heytool.com/index.html</p>
+<p>&nbsp;</p>
+<h3><b>启动nginx</b></h3>
+<p># /usr/local/nginx-1.0.6/sbin/nginx –t //看到ok和successful,说明配置文件没问题</p>
+<p>nginx: the configuration file /usr/local/ nginx-1.0.6/conf/nginx.conf syntax is ok</p>
+<p>nginx: configuration file /usr/local/ nginx-1.0.6/conf/nginx.conf test is successful</p>
+<p># /usr/local/nginx-1.0.6/sbin/nginx</p>
+<p>&nbsp;</p>
+<h3>绑定hosts,测试</h3>
+<p>把两个域名指向192.168.1.202</p>
+<p>192.168.1.202     www.heytool.com</p>
+<p>192.168.1.202     bbs.heytool.com</p>
+<p>打开<a href="http://www.heytool.com/">www.heytool.com</a>,如下图：</p>
+<p><b> </b></p>
+<div id="attachment_7706" style="width: 568px" class="wp-caption alignnone"><a href="http://www.ttlsa.com/wp-content/uploads/nginx_purge_01.jpg" class="fancybox" data-fancybox-group="button" 1504><img title="nginx安装配置+清缓存模块安装" alt="nginx" class="size-full wp-image-7706" src="http://www.ttlsa.com/wp-content/uploads/nginx_purge_01.jpg" width="558" height="133" srcset="http://www.ttlsa.com/wp-content/uploads/nginx_purge_01.jpg 558w, http://www.ttlsa.com/wp-content/uploads/nginx_purge_01-150x35.jpg 150w, http://www.ttlsa.com/wp-content/uploads/nginx_purge_01-300x71.jpg 300w" sizes="(max-width: 558px) 100vw, 558px" /></a><p class="wp-caption-text">nginx</p></div>
+<p><b><br />
+</b></p>
+<p>打开bbs.heytool.com,如下图：</p>
+<div id="attachment_7707" style="width: 568px" class="wp-caption alignnone"><a href="http://www.ttlsa.com/wp-content/uploads/nginx_purge_02.jpg" class="fancybox" data-fancybox-group="button" 1504><img title="nginx安装配置+清缓存模块安装" alt="nginx" class="size-full wp-image-7707" src="http://www.ttlsa.com/wp-content/uploads/nginx_purge_02.jpg" width="558" height="133" srcset="http://www.ttlsa.com/wp-content/uploads/nginx_purge_02.jpg 558w, http://www.ttlsa.com/wp-content/uploads/nginx_purge_02-150x35.jpg 150w, http://www.ttlsa.com/wp-content/uploads/nginx_purge_02-300x71.jpg 300w" sizes="(max-width: 558px) 100vw, 558px" /></a><p class="wp-caption-text">nginx</p></div>
+<p>&nbsp;</p>
+<p>完毕！！！！</p>
+<p>更多配置参考：<a rel="external nofollow" href="http://www.docin.com/p-222277825.html">http://www.docin.com/p-222277825.html</a></p>
+<p>参考视频教程：<a rel="external nofollow" href="http://www.kuaipan.cn/index.php?ac=file&amp;oid=29331332391763978">http://www.kuaipan.cn/index.php?ac=file&amp;oid=29331332391763978</a></p>
+<p>文章推荐：</p>
+<p><a rel="external nofollow" href="http://who0168.blog.51cto.com/253401/693929">Haproxy+keepalived实现sphinx高可用负载均衡</a></p>
+<p><a rel="external nofollow" href="http://who0168.blog.51cto.com/253401/689962">使用haproxy来实现sphinx负载均衡与健康监测</a></p>
+<p><a rel="external nofollow" href="http://who0168.blog.51cto.com/253401/630097">持久化存储系统ttserver的安装配置 </a></p>
+<div id="xunlei_com_thunder_helper_plugin_d462f475-c18e-46be-bd10-327458d045bd"></div>
+</div>
+<div class="ad-pc ad-site"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-0956732394986573" data-ad-slot="2596756267"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>
+<div class="clear"></div>
+<div id="social">
+<div class="social-main">
+<span class="like">
+<a href="javascript:;" data-action="ding" data-id="1504" title="我赞" class="favorite"><i class="fa fa-thumbs-up"></i>赞 <i class="count">
+4</i>
+</a>
+</span>
+<span class="shang-p">
+<span class="tipso_style" id="tip-p" data-tipso='
+					<div id="shang">
+						<div class="shang-main">
+							<h4><i class="fa fa-heart" aria-hidden="true"></i> 您可以选择一种方式打赏本站</h4>															<div class="shang-img">
+									<img src="/wp-content/uploads/2015/06/alipay_pay.jpg" />
+									<h4>支付宝扫一扫打赏</h4>								</div>
+							
+															<div class="shang-img">
+									<img src="/wp-content/uploads/2015/06/weixin_pay.jpg" />
+									<h4>微信钱包扫描打赏</h4>								</div>
+														<div class="clear"></div>
+						</div>
+					</div>'>
+<span class="shang-s"><a title="打赏《运维生存时间》">赏</a></span></span>
+</span>
+<span class="share-sd">
+<span class="share-s"><a href="javascript:void(0)" id="share-s" title="分享"><i class="fa fa-share-alt"></i>分享</a></span>
+</span>
+<div class="clear"></div>
+</div>
+</div>
+<footer class="single-footer">
+<ul class="single-meta">
+<li class="comment"><a href="http://www.ttlsa.com/nginx/nginx-modules-ngx_cache_purge/#comments"rel="external nofollow"><i class="fa fa-comment-o"></i> 4</a></li>
+<li class="r-hide"><a href="javascript:pr()" title="侧边栏"><i class="fa fa-caret-left"></i> <i class="fa fa-caret-right"></i></a></li>
+</ul>
+<ul id="fontsize">A+</ul>
+<div class="single-cat-tag">
+<div class="single-cat">发布日期：2013年06月22日&nbsp;&nbsp;所属分类：<a href="http://www.ttlsa.com/nginx/" rel="category tag">Nginx</a></div>
+<div class="single-tag">标签：<a href="http://www.ttlsa.com/html/tag/nginx-2/" rel="tag">nginx</a><a href="http://www.ttlsa.com/html/tag/nginx_cache/" rel="tag">nginx_cache</a><a href="http://www.ttlsa.com/html/tag/nginx%e5%ae%89%e8%a3%85/" rel="tag">nginx安装</a><a href="http://www.ttlsa.com/html/tag/nginx%e5%ae%89%e8%a3%85%e9%85%8d%e7%bd%ae/" rel="tag">nginx安装配置</a><a href="http://www.ttlsa.com/html/tag/nginx%e9%85%8d%e7%bd%ae/" rel="tag">nginx配置</a><a href="http://www.ttlsa.com/html/tag/ngx_cache/" rel="tag">ngx_cache</a><a href="http://www.ttlsa.com/html/tag/purege/" rel="tag">purege</a><a href="http://www.ttlsa.com/html/tag/purge%e5%ae%89%e8%a3%85/" rel="tag">purge安装</a><a href="http://www.ttlsa.com/html/tag/web%e5%ae%b9%e5%99%a8/" rel="tag">web容器</a></div>
+</div>
+</footer>
+<div class="clear"></div>
+</div>
+</article></div>
+<div class="wow fadeInUp" data-wow-delay="0.3s"><div class="authorbio">
+<img src="http://cn.gravatar.com/avatar/8c450fc4bfabb71defa760f84c04a68f?s=128&d=mm" class="avatar avatar-128" height="128" width="128">
+<ul class="spostinfo">
+<li><strong>版权声明：</strong>本站原创文章，于4年前，由<a href="http://www.ttlsa.com/author/lianbaikai/" title="由凉白开发布" rel="author">凉白开</a>发表，共 4002字。</li>
+<li><strong>转载请注明：</strong><a href="http://www.ttlsa.com/nginx/nginx-modules-ngx_cache_purge/" rel="bookmark" title="本文固定链接 http://www.ttlsa.com/nginx/nginx-modules-ngx_cache_purge/">nginx安装配置+清缓存模块安装 | 运维生存时间</a><a href="#" onclick="copy_code('http://www.ttlsa.com/nginx/nginx-modules-ngx_cache_purge/'); return false;"> +复制链接</a></li>
+</ul>
+</div>
+</div>
+<div id="single-widget">
+<div class="wow fadeInUp" data-wow-delay="0.3s"><aside id="related_post-3" class="widget widget_related_post wow fadeInUp" data-wow-delay="0.3s"><h3 class="widget-title"><div class="s-icon"></div>相关文章</h3>
+<div id="related_post_widget">
+<ul>
+<li><a href="http://www.ttlsa.com/nginx/dynamic-php-nginx-cache/">动态PHP电商网站伪静态的 Nginx反向代理Cache缓存终极设置</a></li>
+<li><a href="http://www.ttlsa.com/shell/shell-analysis-nginx-ip-find-out-blocked-ip/">Shell分析Nginx日志 找出被阻止的IP</a></li>
+<li><a href="http://www.ttlsa.com/nginx/camel-nginx-mange/">Camel：软负载管理中间件 通过界面及接口管理Nginx集群</a></li>
+<li><a href="http://www.ttlsa.com/nginx/nginx-logs-config-request_time-upstream_response_time/">nginx日志request_time 和upstream_response_time区别</a></li>
+<li><a href="http://www.ttlsa.com/news/httpoxy-vulnerability-detection-and-treatment/">httpoxy漏洞检测与处理</a></li>
+</ul>
+</div>
+<div class="clear"></div></aside><aside id="random_post-4" class="widget widget_random_post wow fadeInUp" data-wow-delay="0.3s"><h3 class="widget-title"><div class="s-icon"></div>你可能喜欢</h3>
+<div id="random_post_widget">
+<ul>
+<li><a href="http://www.ttlsa.com/news/cdialog-1-2-20140112-publish/" rel="bookmark">cdialog 1.2-20140112 发布</a></li>
+<li><a href="http://www.ttlsa.com/monitor/oneapm-deploy-and-try/" rel="bookmark">OneAPM 云监控部署与试用体验</a></li>
+<li><a href="http://www.ttlsa.com/news/august-2014-tiobe-programming-language-list/" rel="bookmark">2014年8月TIOBE编程语言排行榜</a></li>
+<li><a href="http://www.ttlsa.com/monitor/system-sa-take-the-fall-for-xx/" rel="bookmark">运维生存时间呕血之作：网站运维黑锅如何甩</a></li>
+<li><a href="http://www.ttlsa.com/mms/mms-monitor-agent-install-and-configure/" rel="bookmark">MMS 监控代理安装与配置(8)</a></li>
+</ul>
+</div>
+<div class="clear"></div></aside></div>
+<div class="clear"></div>
+</div>
+<div class="wow fadeInUp" data-wow-delay="0.3s"> <div class="ad-pc ad-site">
+<a href="http://www.ttlsa.com/go/teakki-cmt" target="_blank"><img src="/wp-content/uploads/hezuo/teakki-cmt.jpg" alt="teakki" /></a>
+</div> </div>
+<nav class="nav-single wow fadeInUp" data-wow-delay="0.3s">
+<a href="http://www.ttlsa.com/nginx/nginx-modules-upload-module/" rel="prev"><span class="meta-nav"><span class="post-nav"><i class="fa fa-angle-left"></i> 上一篇</span><br/>nginx上传模块&#8212;nginx upload module</span></a><a href="http://www.ttlsa.com/nginx/nginx-install-on-linux/" rel="next"><span class="meta-nav"><span class="post-nav">下一篇 <i class="fa fa-angle-right"></i></span><br/>nginx安装(1) &#8211; ttlsa教程系列之nginx</span></a> <div class="clear"></div>
+</nav>
+<nav class="navigation post-navigation" role="navigation">
+<h2 class="screen-reader-text">文章导航</h2>
+<div class="nav-links"><div class="nav-previous"><a href="http://www.ttlsa.com/news/fu-zhou-tie-tong-dns/" rel="prev"><span class="meta-nav-r" aria-hidden="true"><i class="fa fa-angle-left"></i></span></a></div><div class="nav-next"><a href="http://www.ttlsa.com/nosql/single-server-install-neo4j/" rel="next"><span class="meta-nav-l" aria-hidden="true"><i class="fa fa-angle-right"></i></span></a></div></div>
+</nav>
+<div class="scroll-comments"></div>
+<div id="comments" class="comments-area">
+<div id="respond" class="comment-respond wow fadeInUp" data-wow-delay="0.3s">
+<h3 id="reply-title" class="comment-reply-title"><i class="fa fa-pencil-square-o"></i>发表评论<small><a rel="nofollow" id="cancel-comment-reply-link" href="/nginx/nginx-modules-ngx_cache_purge/#respond" style="display:none;">取消回复</a></small></h3>
+<form action="http://www.ttlsa.com/wp-comments-post.php" method="post" id="commentform">
+<div id="comment-author-info">
+<p class="comment-form-author">
+<input type="text" name="author" id="author" class="commenttext" value="" tabindex="1" />
+<label for="author">昵称</label>
+</p>
+<p class="comment-form-email">
+<input type="text" name="email" id="email" class="commenttext" value="" tabindex="2" />
+<label for="email">邮箱</label>
+</p>
+<p class="comment-form-url">
+<input type="text" name="url" id="url" class="commenttext" value="" tabindex="3" />
+<label for="url">网址</label>
+</p>
+</div>
+<p class="emoji-box"><script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_question.gif" alt=":?:" title="疑问" /></a>
+<a href="javascript:grin(':razz:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_razz.gif" alt=":razz:" title="调皮" /></a>
+<a href="javascript:grin(':sad:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_sad.gif" alt=":sad:" title="难过" /></a>
+<a href="javascript:grin(':evil:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_evil.gif" alt=":evil:" title="抠鼻" /></a>
+<a href="javascript:grin(':!:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_exclaim.gif" alt=":!:" title="吓" /></a>
+<a href="javascript:grin(':smile:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_smile.gif" alt=":smile:" title="微笑" /></a>
+<a href="javascript:grin(':oops:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_redface.gif" alt=":oops:" title="憨笑" /></a>
+<a href="javascript:grin(':grin:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_biggrin.gif" alt=":grin:" title="坏笑" /></a>
+<a href="javascript:grin(':eek:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_surprised.gif" alt=":eek:" title="惊讶" /></a>
+<a href="javascript:grin(':shock:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_eek.gif" alt=":shock:" title="发呆" /></a>
+<a href="javascript:grin(':???:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_confused.gif" alt=":???:" title="撇嘴" /></a>
+<a href="javascript:grin(':cool:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_cool.gif" alt=":cool:" title="大兵" /></a>
+<a href="javascript:grin(':lol:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_lol.gif" alt=":lol:" title="偷笑" /></a>
+<a href="javascript:grin(':mad:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_mad.gif" alt=":mad:" title="咒骂" /></a>
+<a href="javascript:grin(':twisted:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_twisted.gif" alt=":twisted:" title="发怒" /></a>
+<a href="javascript:grin(':roll:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_rolleyes.gif" alt=":roll:" title="白眼" /></a>
+<a href="javascript:grin(':wink:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_wink.gif" alt=":wink:" title="鼓掌" /></a>
+<a href="javascript:grin(':idea:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_idea.gif" alt=":idea:" title="酷" /></a>
+<a href="javascript:grin(':arrow:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_arrow.gif" alt=":arrow:" title="擦汗" /></a>
+<a href="javascript:grin(':neutral:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_neutral.gif" alt=":neutral:" title="亲亲" /></a>
+<a href="javascript:grin(':cry:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_cry.gif" alt=":cry:" title="大哭" /></a>
+<a href="javascript:grin(':mrgreen:')"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/smilies/icon_mrgreen.gif" alt=":mrgreen:" title="呲牙" /></a>
+<br /></p>
+<div class="clear"></div>
+<div class="qaptcha"></div>
+<p class="comment-form-comment"><textarea id="comment" name="comment" rows="4" tabindex="4"></textarea></p>
+<p class="comment-tool">
+<a class="tool-img" href='javascript:embedImage();' title="插入图片"><i class="icon-img"></i><i class="fa fa-picture-o"></i></a>
+<a class="emoji" href="" title="插入表情"><i class="fa fa-meh-o"></i></a>
+</p>
+<p class="form-submit">
+<input id="submit" name="submit" type="submit" tabindex="5" value="提交评论"/>
+<input type='hidden' name='comment_post_ID' value='1504' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="05caf0e607" /></p><p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="75"/></p> </p>
+</form>
+</div>
+<h2 class="comments-title wow fadeInUp" data-wow-delay="0.3s">
+目前评论：4 &nbsp;&nbsp;其中：访客&nbsp;&nbsp;3 &nbsp;&nbsp;博主&nbsp;&nbsp;0 &nbsp;&nbsp;引用&nbsp;&nbsp; 1 </h2>
+<ol class="comment-list">
+<div id="anchor"><div id="comment-2040"></div></div>
+<li class="wow fadeInUp" data-wow-delay="0.3s" class="comment even thread-even depth-1 parent" id="comment-2040">
+<div id="div-comment-2040" class="comment-body">
+<div class="comment-author vcard">
+<img src="http://cn.gravatar.com/avatar/?s=128&d=mm" class="avatar avatar-128" height="128" width="128"> 
+<strong>
+<a href='http://t.qq.com/swingsofwind' rel='external nofollow' class='url'>风</a> </strong>
+<a class="vip5" title="评论达人 VIP.5"><i class="fa fa-vimeo-square"></i><span class="lv">5</span></a> <span class="comment-meta commentmetadata">
+<a href="http://www.ttlsa.com/nginx/nginx-modules-ngx_cache_purge/#comment-2040"></a><br />
+<span class="comment-aux">
+<span class="reply"><a rel='nofollow' class='comment-reply-link' href='http://www.ttlsa.com/nginx/nginx-modules-ngx_cache_purge/?replytocom=2040#respond' onclick='return addComment.moveForm( "div-comment-2040", "2040", "respond", "1504" )' aria-label='回复给风'>回复</a></span>
+2015年02月28日 上午 11:43 <span class="floor">
+&nbsp;沙发 </span>
+</span>
+</span>
+</div>
+<p>内核参数优化 报出很多错误：<br />
+error: &quot;net.bridge.bridge-nf-call-ip6tables&quot; is an unknown key<br />
+error: &quot;net.bridge.bridge-nf-call-iptables&quot; is an unknown key<br />
+error: &quot;net.bridge.bridge-nf-call-arptables&quot; is an unknown key<br />
+上面三个还是未改动之前的配置文件里面就有的<br />
+error: &quot;net.ipv4.netfilter.ip_conntrack_tcp_timeout_established&quot; is an unknown key<br />
+error: &quot;net.ipv4.ip_conntrack_max&quot; is an unknown key<br />
+error: &quot;net.ipv4.netfilter.ip_conntrack_max&quot; is an unknown key</p>
+<p>修改nginx配置文件 这一步，有警告信息 nginx: [warn] server name &quot;/usr/local/nginx/html/bbs&quot; has suspicious symbols in /usr/local/nginx/conf/nginx.conf:86</p>
+<p>是有哪里出的错误<br />
+系统是centos6,3 x64, nginx 1.6.2</p>
+</div>
+<ul class="children">
+<div id="anchor"><div id="comment-2041"></div></div>
+<li class="wow fadeInUp" data-wow-delay="0.3s" class="comment byuser comment-author-xhh_0168 odd alt depth-2 parent" id="comment-2041">
+<div id="div-comment-2041" class="comment-body">
+<div class="comment-author vcard">
+<img src="http://cn.gravatar.com/avatar/7fd92c1162e49e13f0a479d2e17e653a?s=128&d=mm" class="avatar avatar-128" height="128" width="128"> 
+<strong>
+<a href='http://t.qq.com/xhh_0168' rel='external nofollow' class='url'>默北</a> </strong>
+<a class="vip5" title="评论达人 VIP.5"><i class="fa fa-vimeo-square"></i><span class="lv">5</span></a> <span class="comment-meta commentmetadata">
+<a href="http://www.ttlsa.com/nginx/nginx-modules-ngx_cache_purge/#comment-2041"></a><br />
+<span class="comment-aux">
+<span class="reply"><a rel='nofollow' class='comment-reply-link' href='http://www.ttlsa.com/nginx/nginx-modules-ngx_cache_purge/?replytocom=2041#respond' onclick='return addComment.moveForm( "div-comment-2041", "2041", "respond", "1504" )' aria-label='回复给默北'>回复</a></span>
+2015年02月28日 下午 12:00 <span class="floor">
+&nbsp;1层 </span>
+</span>
+</span>
+</div>
+<p><span class="at">@<a href="#comment-2040">风</a></span> 内核参数这些，要么是相关模块没有加载，要么是名称改变了。 这个查看centos6版本的文档。</p>
+<p>nginx 的 看看86行，是不是有特殊符号</p>
+</div>
+<ul class="children">
+<div id="anchor"><div id="comment-2042"></div></div>
+<li class="wow fadeInUp" data-wow-delay="0.3s" class="comment even depth-3" id="comment-2042">
+<div id="div-comment-2042" class="comment-body">
+<div class="comment-author vcard">
+<img src="http://cn.gravatar.com/avatar/?s=128&d=mm" class="avatar avatar-128" height="128" width="128"> 
+<strong>
+<a href='http://t.qq.com/swingsofwind' rel='external nofollow' class='url'>风</a> </strong>
+<a class="vip5" title="评论达人 VIP.5"><i class="fa fa-vimeo-square"></i><span class="lv">5</span></a> <span class="comment-meta commentmetadata">
+<a href="http://www.ttlsa.com/nginx/nginx-modules-ngx_cache_purge/#comment-2042"></a><br />
+<span class="comment-aux">
+<span class="reply"><a rel='nofollow' class='comment-reply-link' href='http://www.ttlsa.com/nginx/nginx-modules-ngx_cache_purge/?replytocom=2042#respond' onclick='return addComment.moveForm( "div-comment-2042", "2042", "respond", "1504" )' aria-label='回复给风'>回复</a></span>
+2015年02月28日 下午 1:13 <span class="floor">
+&nbsp;2层 </span>
+</span>
+</span>
+</div>
+<p><span class="at">@<a href="#comment-2041">默北</a></span> 谢谢，原来是85行行末少了个分号。太大意了</p>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<div id="trackbacks">
+<h2 class="backs">来自外部的引用： 1</h2>
+<ul class="track">
+<li>nginx教程从入门到精通（ttlsa出品）</li>
+</ul>
+</div>
+</ol>
+</div>
+</main>
+</div>
+<div id="sidebar" class="widget-area">
+<div class="wow fadeInUp" data-wow-delay="0.5s">
+<aside id="advert-3" class="widget widget_advert wow fadeInUp" data-wow-delay="0.3s">
+<div id="advert_widget">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-0956732394986573" data-ad-slot="8438566262"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>
+<div class="clear"></div></aside><aside id="hot_commend-4" class="widget widget_hot_commend wow fadeInUp" data-wow-delay="0.3s"><h3 class="widget-title"><i class="fa fa-bars"></i>本站推荐</h3>
+<div id="hot" class="hot_commend">
+<ul>
+<li>
+<figure class="thumbnail">
+<a href="http://www.ttlsa.com/yuanchuang/pandas-mrjob-python-list/"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/random/6.jpg" alt="Pandas、MRJob实战Python数据分析(汇总)" /></a> </figure>
+<div class="hot-title"><a href="http://www.ttlsa.com/yuanchuang/pandas-mrjob-python-list/" rel="bookmark">Pandas、MRJob实战Python数据分析(汇总)</a></div>
+<i class="fa fa-thumbs-o-up">&nbsp;11</i>
+</li>
+<li>
+<figure class="thumbnail">
+<a href="http://www.ttlsa.com/python/python-big-data-analysis-init/"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/random/8.jpg" alt="Init - Python数据分析(1)" /></a> </figure>
+<div class="hot-title"><a href="http://www.ttlsa.com/python/python-big-data-analysis-init/" rel="bookmark">Init &#8211; Python数据分析(1)</a></div>
+<i class="fa fa-thumbs-o-up">&nbsp;7</i>
+</li>
+<li>
+<figure class="thumbnail">
+<a href="http://www.ttlsa.com/nginx/camel-nginx-mange/"><img src="http://www.ttlsa.com/wp-content/themes/begin/timthumb.php?src=https://raw.githubusercontent.com/leonindy/camel/master/camel-admin/src/main/webapp/assets/images/camel_logo_blue.png&w=280&h=210&zc=1" alt="Camel：软负载管理中间件 通过界面及接口管理Nginx集群" /></a> </figure>
+<div class="hot-title"><a href="http://www.ttlsa.com/nginx/camel-nginx-mange/" rel="bookmark">Camel：软负载管理中间件 通过界面及接口管理Nginx集群</a></div>
+<i class="fa fa-thumbs-o-up">&nbsp;12</i>
+</li>
+<li>
+<figure class="thumbnail">
+<a href="http://www.ttlsa.com/mysql/mysql-sql-performance-let-you-head-big-open/"><img src="http://www.ttlsa.com/wp-content/themes/begin/img/random/7.jpg" alt="MySQL SQL优化-让你脑洞大开" /></a> </figure>
+<div class="hot-title"><a href="http://www.ttlsa.com/mysql/mysql-sql-performance-let-you-head-big-open/" rel="bookmark">MySQL SQL优化-让你脑洞大开</a></div>
+<i class="fa fa-thumbs-o-up">&nbsp;17</i>
+</li>
+<li>
+<figure class="thumbnail">
+<a href="http://www.ttlsa.com/mysql/mysql-application-architecture-performerce-1/"><img src="http://www.ttlsa.com/wp-content/themes/begin/timthumb.php?src=http://www.ttlsa.com/wp-content/uploads/2016/06/mysql.png&w=280&h=210&zc=1" alt="MySQL应用架构优化-实时数据处理(1)" /></a> </figure>
+<div class="hot-title"><a href="http://www.ttlsa.com/mysql/mysql-application-architecture-performerce-1/" rel="bookmark">MySQL应用架构优化-实时数据处理(1)</a></div>
+<i class="fa fa-thumbs-o-up">&nbsp;12</i>
+</li>
+<div class="clear"></div>
+</ul>
+</div>
+<div class="clear"></div></aside><aside id="like_most-6" class="widget widget_like_most wow fadeInUp" data-wow-delay="0.3s"><h3 class="widget-title"><i class="fa fa-bars"></i>大家喜欢</h3>
+<div id="like" class="like_most">
+<ul>
+<li><span class='li-icon li-icon-1'>1</span><a href="http://www.ttlsa.com/golang/leaf-golang-game-f/">Leaf:GO语言游戏框架介绍及入门</a></li><li><span class='li-icon li-icon-2'>2</span><a href="http://www.ttlsa.com/yuanchuang/pandas-mrjob-python-list/">Pandas、MRJob实战Python数据分析(汇总)</a></li><li><span class='li-icon li-icon-3'>3</span><a href="http://www.ttlsa.com/mysql/maxscale-install-read-write-split/">Maxscale安装-读写分离(1)</a></li><li><span class='li-icon li-icon-4'>4</span><a href="http://www.ttlsa.com/mysql/maxscale-right-read-write-split/">Maxscale-正确对待读写分离(2)</a></li><li><span class='li-icon li-icon-5'>5</span><a href="http://www.ttlsa.com/news/zabbix-3-2-2-res/">Zabbix 3.2.2 正式发布</a></li><li><span class='li-icon li-icon-6'>6</span><a href="http://www.ttlsa.com/mysql/maxscale-became-binlog-server/">Maxscale-充当Binlog Server(4)</a></li><li><span class='li-icon li-icon-7'>7</span><a href="http://www.ttlsa.com/python/python-big-data-analysis-goods-recommend-mrjob/">物品推荐-MRJob-Python数据分析(21)</a></li><li><span class='li-icon li-icon-8'>8</span><a href="http://www.ttlsa.com/python/python-big-data-goods-recommand-pandas/">物品推荐-Pandas-Python数据分析(22)</a></li><li><span class='li-icon li-icon-9'>9</span><a href="http://www.ttlsa.com/mysql/maxscale-sql-firewall/">Maxscale-SQL防火墙(3)</a></li><li><span class='li-icon li-icon-10'>10</span><a href="http://www.ttlsa.com/web/apple-ats-feature-server-configuration-guide/">苹果ATS特性服务器配置指南</a></li> </ul>
+</div>
+<div class="clear"></div></aside> <aside id="recent-posts-5" class="widget widget_recent_entries wow fadeInUp" data-wow-delay="0.3s"> <h3 class="widget-title"><i class="fa fa-bars"></i>最近更新</h3> <ul>
+<li>
+<a href="http://www.ttlsa.com/mysql/maxscale-ha-configuration/">Maxscale-高可用配置(5)</a>
+</li>
+<li>
+<a href="http://www.ttlsa.com/mysql/maxscale-became-binlog-server/">Maxscale-充当Binlog Server(4)</a>
+</li>
+<li>
+<a href="http://www.ttlsa.com/news/zabbix-3-2-2-res/">Zabbix 3.2.2 正式发布</a>
+</li>
+<li>
+<a href="http://www.ttlsa.com/web/apple-ats-feature-server-configuration-guide/">苹果ATS特性服务器配置指南</a>
+</li>
+<li>
+<a href="http://www.ttlsa.com/mysql/maxscale-sql-firewall/">Maxscale-SQL防火墙(3)</a>
+</li>
+<li>
+<a href="http://www.ttlsa.com/mysql/maxscale-right-read-write-split/">Maxscale-正确对待读写分离(2)</a>
+</li>
+<li>
+<a href="http://www.ttlsa.com/yuanchuang/pandas-mrjob-python-list/">Pandas、MRJob实战Python数据分析(汇总)</a>
+</li>
+<li>
+<a href="http://www.ttlsa.com/mysql/maxscale-install-read-write-split/">Maxscale安装-读写分离(1)</a>
+</li>
+<li>
+<a href="http://www.ttlsa.com/python/python-big-data-goods-recommand-pandas/">物品推荐-Pandas-Python数据分析(22)</a>
+</li>
+<li>
+<a href="http://www.ttlsa.com/golang/leaf-golang-game-f/">Leaf:GO语言游戏框架介绍及入门</a>
+</li>
+</ul>
+<div class="clear"></div></aside> <aside id="hot_post-4" class="widget widget_hot_post wow fadeInUp" data-wow-delay="0.3s"><h3 class="widget-title"><i class="fa fa-bars"></i>热门文章</h3>
+<div id="hot_post_widget">
+<ul>
+<li><span class='li-icon li-icon-1'>1</span><a href="http://www.ttlsa.com/yuanchuang/pandas-mrjob-python-list/">Pandas、MRJob实战Python数据分析(汇总)</a></li><li><span class='li-icon li-icon-2'>2</span><a href="http://www.ttlsa.com/golang/leaf-golang-game-f/">Leaf:GO语言游戏框架介绍及入门</a></li><li><span class='li-icon li-icon-3'>3</span><a href="http://www.ttlsa.com/python/python-big-data-analysis-goods-recommend-mrjob/">物品推荐-MRJob-Python数据分析(21)</a></li><li><span class='li-icon li-icon-4'>4</span><a href="http://www.ttlsa.com/mysql/maxscale-install-read-write-split/">Maxscale安装-读写分离(1)</a></li><li><span class='li-icon li-icon-5'>5</span><a href="http://www.ttlsa.com/mysql/maxscale-right-read-write-split/">Maxscale-正确对待读写分离(2)</a></li><li><span class='li-icon li-icon-6'>6</span><a href="http://www.ttlsa.com/python/python-big-data-goods-recommand-pandas/">物品推荐-Pandas-Python数据分析(22)</a></li><li><span class='li-icon li-icon-7'>7</span><a href="http://www.ttlsa.com/news/zabbix-3-2-2-res/">Zabbix 3.2.2 正式发布</a></li><li><span class='li-icon li-icon-8'>8</span><a href="http://www.ttlsa.com/web/apple-ats-feature-server-configuration-guide/">苹果ATS特性服务器配置指南</a></li><li><span class='li-icon li-icon-9'>9</span><a href="http://www.ttlsa.com/mysql/maxscale-sql-firewall/">Maxscale-SQL防火墙(3)</a></li><li><span class='li-icon li-icon-10'>10</span><a href="http://www.ttlsa.com/mysql/maxscale-became-binlog-server/">Maxscale-充当Binlog Server(4)</a></li> </ul>
+</div>
+<div class="clear"></div></aside> </div>
+<div class="sidebar-roll">
+<aside id="feed-7" class="widget widget_feed wow fadeInUp" data-wow-delay="0.3s"><h3 class="widget-title"><i class="fa fa-bars"></i>关注我们</h3>
+<div id="feed_widget">
+<span class="feed-rss">
+<ul>
+<li class="weixin">
+<span class="tipso_style" id="tip-w-j" data-tipso='<div id="weixin-qr"><img src=""/></div>'><a title="微信"><i class="fa fa-weixin"></i></a></span>
+</li>
+<li class="feed"><a title="订阅" href="http://www.ttlsa.com/feed/" target="_blank"><i class="fa fa-rss"></i></a></li>
+<li class="tsina"><a title="" href="" target="_blank"><i class=""></i></a></li>
+<li class="tqq"><a title="" href="" target="_blank"><i class=""></i></a></li>
+</ul>
+</span>
+</div>
+<div class="clear"></div></aside> </div>
+<div class="wow fadeInUp" data-wow-delay="0.5s">
+<aside id="cx_tag_cloud-5" class="widget widget_cx_tag_cloud wow fadeInUp" data-wow-delay="0.3s"><h3 class="widget-title"><i class="fa fa-bars"></i>热门标签</h3> <div class="tagcloud">
+<a href='http://www.ttlsa.com/html/tag/php-2/' class='tag-link-1395 tag-link-position-1' title='20个话题' style='font-size: 14px;'>php</a>
+<a href='http://www.ttlsa.com/html/tag/nginx-2/' class='tag-link-57 tag-link-position-2' title='166个话题' style='font-size: 14px;'>nginx</a>
+<a href='http://www.ttlsa.com/html/tag/mysql-2/' class='tag-link-39 tag-link-position-3' title='199个话题' style='font-size: 14px;'>mysql</a>
+<a href='http://www.ttlsa.com/html/tag/redis-2/' class='tag-link-1408 tag-link-position-4' title='23个话题' style='font-size: 14px;'>redis</a>
+<a href='http://www.ttlsa.com/html/tag/python/' class='tag-link-2140 tag-link-position-5' title='104个话题' style='font-size: 14px;'>python</a>
+<a href='http://www.ttlsa.com/html/tag/apache/' class='tag-link-2133 tag-link-position-6' title='28个话题' style='font-size: 14px;'>Apache</a>
+<a href='http://www.ttlsa.com/html/tag/linux/' class='tag-link-2134 tag-link-position-7' title='142个话题' style='font-size: 14px;'>Linux</a>
+<a href='http://www.ttlsa.com/html/tag/elasticsearch/' class='tag-link-1677 tag-link-position-8' title='26个话题' style='font-size: 14px;'>Elasticsearch</a>
+<a href='http://www.ttlsa.com/html/tag/mongodb/' class='tag-link-2136 tag-link-position-9' title='96个话题' style='font-size: 14px;'>mongodb</a>
+<a href='http://www.ttlsa.com/html/tag/%e7%9b%91%e6%8e%a7/' class='tag-link-269 tag-link-position-10' title='97个话题' style='font-size: 14px;'>监控</a>
+<a href='http://www.ttlsa.com/html/tag/opentsdb/' class='tag-link-2148 tag-link-position-11' title='18个话题' style='font-size: 14px;'>OpenTSDB</a>
+<a href='http://www.ttlsa.com/html/tag/nagios-2/' class='tag-link-1488 tag-link-position-12' title='67个话题' style='font-size: 14px;'>nagios</a>
+<a href='http://www.ttlsa.com/html/tag/nosql-2/' class='tag-link-35 tag-link-position-13' title='20个话题' style='font-size: 14px;'>nosql</a>
+<a href='http://www.ttlsa.com/html/tag/elk/' class='tag-link-2190 tag-link-position-14' title='31个话题' style='font-size: 14px;'>ELK</a>
+<a href='http://www.ttlsa.com/html/tag/mysql-utilities/' class='tag-link-1872 tag-link-position-15' title='56个话题' style='font-size: 14px;'>MySQL Utilities</a>
+<a href='http://www.ttlsa.com/html/tag/%e6%95%b0%e6%8d%ae%e5%ba%93/' class='tag-link-143 tag-link-position-16' title='18个话题' style='font-size: 14px;'>数据库</a>
+<a href='http://www.ttlsa.com/html/tag/pandas/' class='tag-link-2539 tag-link-position-17' title='22个话题' style='font-size: 14px;'>pandas</a>
+<a href='http://www.ttlsa.com/html/tag/zabbix/' class='tag-link-2145 tag-link-position-18' title='134个话题' style='font-size: 14px;'>zabbix</a>
+<a href='http://www.ttlsa.com/html/tag/mrjob/' class='tag-link-2538 tag-link-position-19' title='23个话题' style='font-size: 14px;'>mrjob</a>
+<a href='http://www.ttlsa.com/html/tag/monitor-2/' class='tag-link-1487 tag-link-position-20' title='18个话题' style='font-size: 14px;'>monitor</a> <div class="clear"></div>
+</div>
+<div class="clear"></div></aside> </div>
+</div>
+<div class="clear"></div> <div class="clear"></div>
+</div>
+<div id="footer-widget-box">
+<div class="footer-widget">
+<aside id="nav_menu-3" class="widget widget_nav_menu wow fadeInUp" data-wow-delay="0.3s"><h3 class="widget-title"><div class="s-icon"></div>综合</h3><div class="menu-%e9%a1%b5%e8%84%9a-container"><ul id="menu-%e9%a1%b5%e8%84%9a" class="menu"><li id="menu-item-10158" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10158"><a href="http://www.ttlsa.com/about/"><i class="fa-coffee fa"></i><span class="font-text">商务合作</span></a></li>
+<li id="menu-item-10154" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10154"><a href="http://www.ttlsa.com/contact/"><i class="fa-envelope-o fa"></i><span class="font-text">联系方式</span></a></li>
+<li id="menu-item-10147" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10147"><a href="http://www.ttlsa.com/pay/"><i class="fa-wrench fa"></i><span class="font-text">技术支持</span></a></li>
+<li id="menu-item-644" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-644"><a href="http://www.ttlsa.com/about-us-cat/"><i class="fa-users fa"></i><span class="font-text">关于我们</span></a></li>
+<li id="menu-item-10148" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10148"><a href="http://www.ttlsa.com/all/"><i class="fa-indent fa"></i><span class="font-text">文章归档</span></a></li>
+<li id="menu-item-10146" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10146"><a href="http://www.ttlsa.com/guestbook/"><i class="fa-commenting-o fa"></i><span class="font-text">近期留言</span></a></li>
+<li id="menu-item-10145" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10145"><a href="http://www.ttlsa.com/tags/"><i class="fa-tags fa"></i><span class="font-text">热门标签</span></a></li>
+<li id="menu-item-10160" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10160"><a href="http://www.ttlsa.com/tougao/"><i class="fa-paper-plane-o fa"></i><span class="font-text">我要投稿</span></a></li>
+<li id="menu-item-10157" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10157"><a href="http://www.ttlsa.com/donate/"><i class="fa-money fa"></i><span class="font-text">赞助名单</span></a></li>
+</ul></div><div class="clear"></div></aside><aside id="text-22" class="widget widget_text wow fadeInUp" data-wow-delay="0.3s"><h3 class="widget-title"><div class="s-icon"></div>关于本站</h3> <div class="textwidget">本站以分享运维技术为主，欢迎大家参与技术分享，同时也欢迎大家吐槽，本站提供以下交流圈：QQ群①：*****（满）QQ群②：6690706 QQ群③：168085569 QQ群④：415230207（新） 微信公众号：ttlsacom 商务合作QQ：1715812369</div>
+<div class="clear"></div></aside> <div class="clear"></div>
+</div>
+</div>
+<footer id="colophon" class="site-footer" role="contentinfo">
+<div class="site-info wow fadeInUp" data-wow-delay="0.6s">
+Copyright © www.ttlsa.com 2010-2016 All Rights Reserved. <span class="add-info">
+<strong>合作伙伴:</strong> <a title="靠谱云" href="http://www.kaopuyun.com/" target="_blank" rel="external nofollow"><img src="/wp-content/uploads/hezuo/kaopuyun.gif" alt="靠谱云" /></a><a title="监控宝" href="#" target="_blank" rel="external nofollow"><img src="/wp-content/uploads/hezuo/jiankongbao.png" alt="监控宝" /></a><a title="onealert" href="#" target="_blank" rel="external nofollow"><img src="/wp-content/uploads/hezuo/onealert.jpg" alt="onealert" /></a><a title="听云LOGO" href="#" target="_blank" rel="external nofollow"><img src="/wp-content/uploads/hezuo/tingyun.jpg" alt="听云LOGO" /></a><a title="又拍云LOGO" href="#" target="_blank" rel="external nofollow"><img src="/wp-content/uploads/hezuo/upyun.jpg" alt="又拍云LOGO" /></a> 
+<div style="display:none;">
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_5534345'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/stat.php%3Fid%3D5534345' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+<script>
+(function() {
+    var s = "_" + Math.random().toString(36).slice(2);
+    document.write('<div id="' + s + '"></div>');
+    (window.slotbydup=window.slotbydup || []).push({
+        id: '2581957',
+        container: s,
+        size: '300,250',
+        display: 'inlay-fix'
+    });
+})();
+</script> </span>
+</div>
+</footer>
+<div id="login">
+<div class="login-t">用户登录</div>
+<form action="http://www.ttlsa.com/wp-login.php?redirect_to=http%3A%2F%2Fwww.ttlsa.com%2Fnginx%2Fnginx-modules-ngx_cache_purge%2F" method="post" id="loginform">
+<input type="username" type="text" name="log" id="log" placeholder="名称" required/>
+<input type="password" name="pwd" id="pwd" placeholder="密码" required/>
+<input type="submit" id="submit" value="登录">
+<input type="hidden" name="redirect_to" value="/nginx/nginx-modules-ngx_cache_purge/" />
+<label><input type="checkbox" name="rememberme" id="modlogn_remember" value="yes" checked="checked" alt="Remember Me">自动登录</label>
+<a href="http://www.ttlsa.com/wp-login.php?action=lostpassword">&nbsp;&nbsp;忘记密码？</a>
+<a href="/registry/" target="_blank"> 立即注册</a> </form>
+<div class="login-b"></div>
+</div>
+<ul id="scroll">
+<div class="log log-no"><li><a class="log-button" title="文章目录"><i class="fa fa-bars"></i></a></li><div class="log-prompt"><div class="log-arrow">文章目录</div></div></div>
+<li><a class="scroll-h" title="返回顶部"><i class="fa fa-angle-up"></i></a></li>
+<li><a class="scroll-c" title="评论"><i class="fa fa-comment-o"></i></a></li> <li><a class="scroll-b" title="转到底部"><i class="fa fa-angle-down"></i></a></li>
+<li class="gb2-site"><a name="gb2big5" id="gb2big5"><span>繁</span></a></li> </ul>
+<script type="text/javascript" src="http://www.ttlsa.com/wp-content/themes/begin/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="http://www.ttlsa.com/wp-content/themes/begin/js/qaptcha.jquery.js"></script>
+<script type="text/javascript">var QaptchaJqueryPage="http://www.ttlsa.com/wp-content/themes/begin/inc/function/qaptcha.jquery.php"</script>
+<script type="text/javascript">$(document).ready(function(){$('.qaptcha').QapTcha();});</script>
+<script type='text/javascript' src='http://www.ttlsa.com/wp-content/plugins/akismet/_inc/form.js?ver=3.2'></script>
+<script type='text/javascript' src='http://www.ttlsa.com/wp-content/themes/begin/js/superfish.js?ver=2016.05.27'></script>
+<script type='text/javascript' src='http://www.ttlsa.com/wp-content/themes/begin/js/gb2big5.js?ver=2016.05.27'></script>
+<script type="text/javascript">var ias=$.ias({container:"#comments",item:".comment-list",pagination:".scroll-links",next:".scroll-links .nav-previous a",});ias.extension(new IASTriggerExtension({text:'<i class="fa fa-chevron-circle-down"></i>更多',offset: 0,}));ias.extension(new IASSpinnerExtension());ias.extension(new IASNoneLeftExtension({text:'已是最后',}));ias.on('rendered',function(items){$("img").lazyload({effect: "fadeIn",failure_limit: 10});});</script>
+</body>
+</html>
