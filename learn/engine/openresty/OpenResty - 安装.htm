@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>OpenResty - 安装</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes">
+	<link href='https://openresty.org/css/fonts.css' rel='stylesheet' type='text/css'>
+	<!--
+	If you ever wanted to use LESS instead of CSS...
+	<link rel="stylesheet" type="text/less" href="/css/main.less">
+	<script src="/js/less.js"></script>
+	-->
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
+</head>
+<body>
+
+<header role="header">
+        <p class="site-name left">
+            <a href=".">
+                <img src="/images/logo.png" width="64">
+            </a>
+        </p>
+
+        <p class="site-name left">
+                <a href=".">OpenResty <span class="trade">&trade;</span></a>
+                <small>通过 Lua 扩展 NGINX 实现的可伸缩的 Web 平台</small>
+        </p><!-- / site-name -->
+
+        <form action="search.html" class="right">
+                <fieldset>
+                        <input type="search" name="query" id="search"
+                               placeholder="搜索 OpenResty.org 中文站" required>
+                </fieldset>
+        </form>
+</header>
+
+
+	<div id="wrapper">
+		<div class="sidebar sleft">
+			<nav id="nav">
+<ul>
+<li><big><strong><a href="download.html">下载</a></strong></big></li>
+<li><a href="installation.html">安装</a></li>
+<li><a href="getting-started.html">新手上路</a></li>
+<li><a href="openresty.html">概览</a></li>
+<li><a href="components.html">组件</a></li>
+<li><a href="events.html">活动</a></li>
+<li><a href="samples.html">样例</a></li>
+<li><a href="benchmark.html">性能评测</a></li>
+<li><a href="presentations.html">幻灯片</a></li>
+<li><a href="ebooks.html">电子图书</a></li>
+<li><a href="resources.html">资源</a></li>
+<li><a href="changes.html">变更历史</a></li>
+<li><a href="quality-assurance.html">测试</a></li>
+<li><a href="contact-us.html">联系我们</a></li>
+<li><a href="https://openresty.org/survey/cn">用户问卷调查</a></li>
+<li><a href="donate-online.html">捐助</a></li>
+<li><a href="donors.html">捐款者</a></li>
+<li><a href="about.html">关于</a></li>
+<li><a href="/en/">English Site</a></li>
+</ul>
+
+			</nav><!-- / nav -->
+
+<ul class="buttons">
+    <!-- <li><a href="#" class="btn rss">RSS Feed</a></li> -->
+    <li>
+        <!-- <a href="#" class="btn paypal">Donate with PayPal</a> -->
+        <form name="_xclick" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+        <input type="hidden" name="cmd" value="_xclick">
+        <input type="hidden" name="business" value="agentzh@gmail.com">
+        <input type="hidden" name="item_name" value="OpenResty Donation (in USD)">
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="hidden" name="amount" value="">
+        <input type="image" src="/images/donate_paypal.gif" name="submit" alt="Donate with PayPal">
+        </form>
+    </li>
+</ul>
+
+
+		</div><!-- / sidebar left -->
+		
+		<section id="main">
+<div class="item">
+        <header>
+                <h2>安装</h2>
+                <small>
+                    
+                    Yichun Zhang (agentzh)
+                    ,
+                    21 Sep 2016 (created 21 Jun 2011)</small>
+                <div class="options">
+                        <!--
+                        <a href="#" class="trigger">Show Options</a>
+                        <ul class="first-level">
+                                <li><a href="#">close</a></li>
+                                <li><a href="#">close others</a></li>
+                                <li><a href="#">view</a></li>
+                                <li><a href="#">fields</a></li>
+                                <li><a href="#">syncing</a></li>
+                                <li><a href="#">permalink</a></li>
+                                <li><a href="#">references</a></li>
+                                <li>
+                                        <a href="#">jump</a>
+                                        <ul class="second-level">
+                                                <li><a href="#">Benchmark</a></li>
+                                                <li><a href="#">Presentations</a></li>
+                                                <li><a href="#">eBooks</a></li>
+                                        </ul>
+                                </li>
+                        </ul>
+                        -->
+                </div><!-- / options -->
+        </header>
+        <div class="body">
+<p>对于一些常见的 Linux 发行版本，OpenResty 提供 <a href="linux-packages.html">官方预编译包</a>。确保你首先用这种方式来安装。</p>
+<p>如果您还没有下载 <a href="openresty.html">OpenResty</a> 的源码包, 请到 <a href="download.html">Download</a> 页下载。</p>
+<p>首先，您可以根据下面的示例安装和构建<a href="openresty.html">OpenResty</a>。</p>
+<pre><code>tar -xzvf openresty-VERSION.tar.gz
+cd openresty-VERSION/
+./configure
+make
+sudo make install</code></pre>
+<p>示例中的 <code>VERSION</code>替换成 <a href="openresty.html">OpenResty</a>的版本号, 比如 <code>1.11.2.1</code>。 如果您在构建过程中需要对于细节更加灵活的控制，请您继续阅读。</p>
+<h1>安装前的准备</h1>
+<p>您必须将这些库 <code>perl 5.6.1+</code>, <code>libreadline</code>, <code>libpcre</code>, <code>libssl</code>安装在您的电脑之中。 对于 Linux来说, 您需要确认使用 <code>ldconfig</code> 命令，让其在您的系统环境路径中能找到它们。</p>
+<h2 id="debian--ubuntu-">Debian 和 Ubuntu 用户</h2>
+<p>推荐您使用 apt-get安装以下的开发库:</p>
+<pre><code>apt-get install libreadline-dev libncurses5-dev libpcre3-dev \
+    libssl-dev perl make build-essential</code></pre>
+<h2 id="fedora--redhat-">Fedora 和 RedHat 用户</h2>
+<p>推荐您使用yum安装以下的开发库:</p>
+<pre><code>yum install readline-devel pcre-devel openssl-devel gcc</code></pre>
+<h2 id="mac-os-x-darwin-">Mac OS X (Darwin) 用户</h2>
+<p>推荐您使用一些软件管理工具先安装PCRE, 比如说 <a href="http://mxcl.github.com/homebrew/">Homebrew</a>:</p>
+<pre><code>brew update
+brew install pcre openssl</code></pre>
+<p>当然了，您也可以直接通过代码安装 PCRE 和 OpenSSL.</p>
+<p>安装好 PCRE 和 OpenSSL 之后，可以使用下面的命令进行安装：</p>
+<pre><code>$ ./configure \
+   --with-cc-opt=&quot;-I/usr/local/opt/openssl/include/ -I/usr/local/opt/pcre/include/&quot; \
+   --with-ld-opt=&quot;-L/usr/local/opt/openssl/lib/ -L/usr/local/opt/pcre/lib/&quot; \
+   -j8</code></pre>
+<p>假设 hombrew 把库都安装到 <code>/usr/local/opt/</code> 目录下面。</p>
+<h2 id="freebsd-">FreeBSD 用户</h2>
+<p>您需要安装以下的工具:</p>
+<ul>
+<li>devel/gmake</li>
+<li>security/openssl</li>
+<li>devel/pcre</li>
+</ul>
+<h2 id="solaris-11-">Solaris 11 用户</h2>
+<p>您需要从官方的源中安装以下的工具:</p>
+<ul>
+<li>gcc-3</li>
+<li>SUNWlibm 通常情况下可以根据以下的示例安装：</li>
+</ul>
+<pre><code>pfexec pkg install gcc-3 SUNWlibm</code></pre>
+<h1 id="-openresty">构建 OpenResty</h1>
+<h2>下载</h2>
+<p>从下载页 <a href="download.html">Download</a>下载最新的 openresty 源码包，并且像下面的示例一样将其解压:</p>
+<pre><code>tar -xzvf openresty-VERSION.tar.gz</code></pre>
+<p><code>VERSION</code> 的地方替换成您下载的源码包的版本号，比如说 <code>0.8.54.6</code>。</p>
+<h2 id="configure">./configure</h2>
+<p>然后在进入 <code>openresty-VERSION/</code> 目录, 然后输入以下命令配置:</p>
+<pre><code>./configure</code></pre>
+<p>默认, <code>--prefix=/usr/local/openresty</code> 程序会被安装到/usr/local/openresty目录。</p>
+<p>您可以指定各种选项，比如</p>
+<pre><code>./configure --prefix=/opt/openresty \
+            --with-luajit \
+            --without-http_redis2_module \
+            --with-http_iconv_module \
+            --with-http_postgres_module</code></pre>
+<p>试着使用 <code>./configure --help</code> 查看更多的选项。</p>
+<p>配置文件（./configure script）运行出错可以到 <code>build/nginx-VERSION/objs/autoconf.err</code> 找到。 <code>VERSION</code> 的地方必须与<a href="openresty.html">OpenResty</a>版本号相对应, 比如 <code>0.8.54.6</code>。</p>
+<h3 id="solaris">Solaris的用户请注意：</h3>
+<p>对于 Solaris,安装开发库一般通过 OpenSSL 的形式插入 <code>/lib</code>, 因此当编译时出现 missing OpenSSL 说明您已经安装过了t, 特别是一些选项的时候 <code>--with-ld-opt='-L/lib'</code> 。</p>
+<h2 id="make">make</h2>
+<p>您可以使用下面的命令来编译：</p>
+<pre><code>make</code></pre>
+<p>如果您的电脑支持多核 <code>make</code> 工作的特性, 您可以这样编译:</p>
+<pre><code>make -j2</code></pre>
+<p>假设您是的机器是双核。</p>
+<h2 id="make-install">make install</h2>
+<p>如果前面的步骤都没有问题的话,您可以使用下面的命令安装l <a href="openresty.html">OpenResty</a>到您的系统之中：</p>
+<pre><code>make install</code></pre>
+<p>在 Linux,通常包括 <code>sudo</code>来执行root权限做的事情。</p>
+
+        </div><!-- / body -->
+</div><!-- / item -->
+
+		</section><!-- / main -->
+
+<div class="sidebar sright">
+        <div class="options">
+                <!--
+                <ul class="first">
+                        <li><a href="#" class="close-all">close all</a></li>
+                        <li><a href="#" class="permaview">permaview</a></li>
+                        <li><a href="#" class="more-options">options</a></li>
+                </ul> --><!-- / first -->
+        </div><!-- options -->
+
+        <div class="tabs">
+                <ul class="navigation">
+                        <!--
+                        <li><a href="#" class="current">Timeline</a></li>
+                        <li><a href="#">All</a></li>
+                        <li><a href="#">Tags</a></li>
+                        <li><a href="#">More</a></li>
+                        -->
+                        <li><span>最近更新</span></li>
+                </ul><!-- / navigation -->
+                <div class="panes">
+                        <div class="pane" id="timeline">
+                                <ul>
+                                    <li>
+                                            <h3>15 Dec 2016</h3>
+                                            <ul>
+                                                <li><a href="linux-packages.html">Linux 包</a></li>
+                                            </ul>
+                                    </li>
+                                    <li>
+                                            <h3>28 Nov 2016</h3>
+                                            <ul>
+                                                <li><a href="events.html">活动</a></li>
+                                                <li><a href="main-menu.html">Main Menu</a></li>
+                                            </ul>
+                                    </li>
+                                    <li>
+                                            <h3>18 Nov 2016</h3>
+                                            <ul>
+                                                <li><a href="components.html">Components</a></li>
+                                                <li><a href="download.html">下载</a></li>
+                                            </ul>
+                                    </li>
+                                    <li>
+                                            <h3>21 Sep 2016</h3>
+                                            <ul>
+                                                <li><a href="installation.html">安装</a></li>
+                                            </ul>
+                                    </li>
+                                    <li>
+                                            <h3>25 Aug 2016</h3>
+                                            <ul>
+                                                <li><a href="changelog-1011002.html">ChangeLog 1.11.2</a></li>
+                                                <li><a href="changes.html">Changes</a></li>
+                                            </ul>
+                                    </li>
+                                    <li>
+                                            <h3>22 Jul 2016</h3>
+                                            <ul>
+                                                <li><a href="donate-online.html">在线捐助</a></li>
+                                            </ul>
+                                    </li>
+                                    <li>
+                                            <h3>21 Jul 2016</h3>
+                                            <ul>
+                                                <li><a href="rpm-packages.html">RPM 包</a></li>
+                                            </ul>
+                                    </li>
+                                    <li>
+                                            <h3>23 Jun 2016</h3>
+                                            <ul>
+                                                <li><a href="openresty.html">OpenResty</a></li>
+                                            </ul>
+                                    </li>
+                                    <li>
+                                            <h3>04 Jun 2016</h3>
+                                            <ul>
+                                                <li><a href="changelog-1009015.html">ChangeLog 1.9.15</a></li>
+                                            </ul>
+                                    </li>
+                                    <li>
+                                            <h3>31 May 2016</h3>
+                                            <ul>
+                                                <li><a href="changelog-1009007.html">ChangeLog 1.9.7</a></li>
+                                            </ul>
+                                    </li>
+                                    <li>
+                                            <h3>20 Mar 2016</h3>
+                                            <ul>
+                                                <li><a href="lua-cjson-library.html">Lua Cjson Library</a></li>
+                                            </ul>
+                                    </li>
+                                    <li>
+                                            <h3>05 Jan 2016</h3>
+                                            <ul>
+                                                <li><a href="about.html">About</a></li>
+                                            </ul>
+                                    </li>
+                                    <li>
+                                            <h3>23 Nov 2015</h3>
+                                            <ul>
+                                                <li><a href="resty-cli.html">Resty CLI</a></li>
+                                                <li><a href="changelog-1009003.html">ChangeLog 1.9.3</a></li>
+                                            </ul>
+                                    </li>
+                                </ul>
+                        </div><!-- / pane -->
+                </div><!-- / panes -->
+        </div><!-- / tabs -->
+</div><!-- / sidebar right -->
+
+	</div><!-- / wrapper -->
+
+<div class="content-footer">
+<hr class="footer-sep"/>
+<div class="footer">
+  <p>版权所有 © 2016 章亦春（agentzh）</p>
+  <p>100% 由 OpenResty 和 PostgreSQL 驱动
+     （<a href="https://github.com/openresty/openresty.org/">
+     查看本站的源代码</a>）</p>
+  <br/>
+  <p>京ICP备16021991号</p>
+</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/main.js"></script>
+
+<!-- Google analytics -->
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-24724965-1']);
+  //_gaq.push(['_setDomainName', 'openresty.org']);
+  _gaq.push(['_trackPageview']);
+
+  var ga_f = function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  };
+  setTimeout(ga_f, 0);
+
+</script>
+
+
+</body>
+</html>
