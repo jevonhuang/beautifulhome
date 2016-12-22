@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<!--STATUS OK-->
+<html>
+
+
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta name="referrer" content="always" />
+<meta name="description" content="OpenSSL 是一个安全套接字层密码库，囊括主要的密码算法、常用的密钥和证书封装管理功能及SSL协议，并提供丰富的应用程序供测试或其它目的使用。OpenSSL被曝出现严重安全漏洞后，发现多数通过SSL协议加密的网站使用名为OpenSSL的开源软件包。OpenSSL漏洞不仅影响以https开头的网站，黑客还可利用此漏洞...">
+<title>openssl_百度百科</title>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="icon" sizes="any" mask href="//www.baidu.com/img/baidu.svg">
+
+<meta name="keywords" content="openssl opensssl opessl open ssl openssl背景技术 openssl特点 openssl功能 openssl算法 openssl应用 openssl漏洞 openssl主要版本 openssl安装方法">
+<meta name="image" content="http://baike.bdimg.com/cms/static/baike.png">
+<script type="text/javascript">
+  // 配置 PD 监控。
+  window.alogObjectConfig = {
+    product: '103',
+    page: '103_',
+    monkey_page: '',
+    speed_page: '',
+    speed: {
+      sample: '1'
+    },
+    monkey: {
+      sample: '1',
+      hid: '1533'
+    },
+    exception: { 
+      sample: '1'
+    },
+    feature: {
+      sample: '1'
+    },
+    csp: {
+      sample: '1',
+      'default-src': [
+        {match: '*.baidu.com,*.bdimg.com,localhost', target: 'Accept'},
+        {match: '*', target: 'Accept,Warn'}
+      ]
+    }
+  };
+
+  void function(a,b,c,d,e,f,g){if(a.alogObjectName=e,a[e]=a[e]||function(){(a[e].q=a[e].q||[]).push(arguments)},a[e].l=a[e].l||+new Date,"https:"===a.location.protocol){if(d="https://gss2.bdstatic.com/70cFsjip0QIZ8tyhnq"+d,!a.alogObjectConfig||!a.alogObjectConfig.sample)return}else d="http://img.baidu.com"+d;var h=!0;if(a.alogObjectConfig&&a.alogObjectConfig.sample){var i=Math.random();a.alogObjectConfig.rand=i,i>a.alogObjectConfig.sample&&(h=!1)}h&&(f=b.createElement(c),f.async=!0,f.src=d,g=b.getElementsByTagName(c)[0],g.parentNode.insertBefore(f,g))}(window,document,"script","/hunter/alog/alog.min.js","alog"),void function(){function a(){}window.PDC={mark:function(a,b){alog("speed.set",a,b||+new Date),alog.fire&&alog.fire("mark")},init:function(a){alog("speed.set","options",a)},view_start:a,tti:a,page_ready:a}}();void function(n){var o=!1;n.onerror=function(n,e,t,c){var i=!0;return!e&&/^script error/i.test(n)&&(o?i=!1:o=!0),i&&alog("exception.send","exception",{msg:n,js:e,ln:t,col:c}),!1},alog("exception.on","catch",function(n){alog("exception.send","exception",{msg:n.msg,js:n.path,ln:n.ln,method:n.method,flag:"catch"})})}(window);
+</script>
+<meta name="csrf-token" content="">
+
+<!--[if lte IE 9]>
+<script>
+    (function() {
+      var e = "abbr,article,aside,audio,canvas,datalist,details,dialog,eventsource,figure,footer,header,hgroup,mark,menu,meter,nav,output,progress,section,time,video".split(","),
+        i = e.length;
+      while (i--) {
+        document.createElement(e[i]);
+      }
+    })();
+  </script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma_7850da5.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common-base_b4e62b7.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/userbar/userbar_9fb5389.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/searchbar/searchbar_main_f9c7c20.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/navbar/navbar_0697c78.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/announcement/announcement_b0d7681.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/unameFiller/unameFiller_d631c34.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/label/label_461cbe0.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/newSideShare/sideShare_ebee986.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/praise/praise_2120cd2.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/video/pageMask/pageMask_ff9a193.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma-module_1709cbf.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/userCard/userCard_2402f1f.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/mainContent_1a67233.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/lemmaRelation_9f629f5.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/configModule/zhixin/zhixin_1c34583.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/footer/footer_main_eb7bd79.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/searchHeader/toolButtons/toolButtons-o_a2c470f.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/searchHeader/toolButtons/userInfo-o_9ba20c1.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/searchHeader/searchHeader-o_e786bfb.css"/></head>
+
+<script type="text/javascript">
+    alog('speed.set', 'ht', +new Date);
+</script>
+
+<body class="wiki-lemma normal">
+
+
+
+<div class="header-wrapper">
+<ul class="wgt-userbar">
+<li>
+<a href="http://www.baidu.com/">百度首页</a>
+</li>
+</ul>
+<div class="header">
+<div class="layout">
+<div class="wgt-searchbar wgt-searchbar-main cmn-clearfix">
+<div class="logo-container">
+<a class="logo cmn-inline-block" title="到百科首页" href="/">
+<span class="cmn-baike-logo">
+<em class="cmn-icon cmn-icons cmn-icons_logo-bai"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-baike"></em>
+</span>
+</a>
+</div>
+<div class="search">
+<div class="nav">
+<a href="http://news.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://news.baidu.com/ns?tn=news&cl=2&rn=20&ct=1&fr=bks0000&ie=utf-8&word=">新闻</a>
+<a href="http://www.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://www.baidu.com/s?ie=utf-8&fr=bks0000&wd=">网页</a>
+<a href="http://tieba.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://tieba.baidu.com/f?ie=utf-8&fr=bks0000&kw=">贴吧</a>
+<a href="http://zhidao.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://zhidao.baidu.com/search?pn=0&&rn=10&lm=0&fr=bks0000&word=">知道</a>
+<a href="http://music.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://music.baidu.com/search?f=ms&ct=134217728&ie=utf-8&rn=&lm=-1&pn=30fr=bks0000&key=">音乐</a>
+<a href="http://image.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://image.baidu.com/search/index?tn=baiduimage&ct=201326592&lm=-1&cl=2&nc=1&ie=utf-8&word=">图片</a>
+<a href="http://v.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://v.baidu.com/v?ct=301989888&rn=20&pn=0&db=0&s=22&ie=utf-8&fr=bks0000&word=">视频</a>
+<a href="http://map.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://map.baidu.com/m?ie=utf-8&fr=bks0000&word=">地图</a>
+<a class="baike" nslog="normal" nslog-type="10080001" >百科</a>
+<a href="http://wenku.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://wenku.baidu.com/search?lm=0&od=0&ie=utf-8&fr=bks0000&word=">文库</a>
+</div>
+<div class="form">
+<form id="searchForm" action="/search/word" method="GET" target="_self">
+<input id="query" nslog="normal" nslog-type="10080005" name="word" type="text" autocomplete="off" autocorrect="off" value="openssl" /><button id="search" nslog="normal" nslog-type="10080002" type="button">进入词条</button><button id="searchLemma" nslog="normal" nslog-type="10080003" type="button">搜索词条</button><a class="help" nslog="normal" nslog-type="10080004" href="/help" target="_blank">帮助</a>
+</form>
+<form id="searchLemmaForm" action="/search" method="GET" target="_self">
+<input id="searchLemmaQuery" name="word" type="hidden" />
+<input name="pn" type="hidden" value="0" />
+<input name="rn" type="hidden" value="0" />
+<input name="enc" type="hidden" value="utf8" />
+</form>
+<ul id="suggestion" class="suggestion">
+<div class="sug"></div>
+<li class="extra">
+<span id="close" nslog="normal" nslog-type="10080006" >关闭</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="navbar-wrapper">
+<div class="wgt-navbar">
+<div class="navbar-bg">
+<div class="navbar-bg-top">
+<div class="navbar-content layout">
+<div class="navbar-content-box">
+<dl class="index ">
+<dt><a href="/">首页</a></dt>
+</dl>
+<dl class="cat ">
+<dt><a>分类</a></dt>
+<dd>
+<div><a href="/art" target="_blank" class="art">艺术</a></div>
+<div><a href="/science" target="_blank" class="technology">科学</a></div>
+<div><a href="/ziran" target="_blank">自然</a></div>
+<div><a href="/wenhua" target="_blank">文化</a></div>
+<div><a href="/dili" target="_blank">地理</a></div>
+<div><a href="/shenghuo" target="_blank">生活</a></div>
+<div><a href="/shehui" target="_blank">社会</a></div>
+<div><a href="/renwu" target="_blank">人物</a></div>
+<div><a href="/jingji" target="_blank">经济</a></div>
+<div><a href="/tiyu" target="_blank">体育</a></div>
+<div><a href="/lishi" target="_blank">历史</a></div>
+</dd>
+</dl>
+<dl class="special ">
+<dt><a>特色百科</a></dt>
+<dd>
+<div><a href="/calendar/" target="_blank">历史上的今天</a></div>
+<div><a href="/museum/" target="_blank">数字博物馆</a></div>
+<div><a href="/shiji/2015?fr=navbar" target="_blank">史记·2015</a></div>
+<div><a href="/city/" target="_blank">城市百科</a></div>
+<div><a href="/operation/worldwar2" target="_blank">二战百科</a></div>
+<div><a href="/feiyi?fr=dhlfeiyi" target="_blank">非遗百科</a></div>
+</dd>
+</dl>
+<dl class="user" >
+<dt><a>用户</a></dt>
+<dd>
+<div><a href="/kedou/" target="_blank">蝌蚪团</a></div>
+<div><a href="/event/ranmeng/" target="_blank">燃梦计划</a></div>
+<div><a href="/task/" target="_blank">百科任务</a></div>
+<div><a href="/mall/" target="_blank">百科商城</a></div>
+</dd>
+</dl>
+<dl class="cooperation" >
+<dt><a>权威合作</a></dt>
+<dd>
+<div><a href="/operation/cooperation#joint" target="_blank">合作模式</a></div>
+<div><a href="/operation/cooperation#issue" target="_blank">常见问题</a></div>
+<div><a href="/operation/cooperation#connection" target="_blank">联系方式</a></div>
+</dd>
+</dl>
+<dl class="mobile" >
+<dt><a>手机百科</a></dt>
+<dd>
+<div><a href="/m#wap" target="_blank">网页版</a></div>
+</dd>
+</dl>
+<div class="usercenter">
+<div><a href="/usercenter" target="_blank"><em class="cmn-icon cmn-icons cmn-icons_navbar-usercenter"></em>个人中心</a></div>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="body-wrapper">
+<div class="before-content">
+</div>
+<div class="content-wrapper">
+<div class="content">
+<div class="personal-content">
+</div>
+<div class="main-content">
+<div class="top-tool">
+<a class="add-sub-icon" href="javascript:;" title="添加义项" nslog-type="50000101"></a>
+<a href="/divideload/openssl" title="拆分词条" target="_blank" class="split-icon" style="display:none;" nslog-type="50000104"></a>
+<div class="top-collect" nslog="area" nslog-type="50000102">
+<span class="collect-text">收藏</span>
+<div class="collect-tip">查看<a href="/uc/favolemma" target="_blank">我的收藏</a></div>
+</div>
+<a href="javascript:void(0);" class="top-vote" nslog-type="50000103">
+<span class="vote-count">0</span>
+<span class="vote-tip">有用+1</span>
+<span class="voted-tip">已投票</span>
+</a>
+<div class="bdsharebuttonbox top-share" data-tag="top-share">
+<a class="bds_more top-share-icon" data-cmd="more" nslog-type="9067">
+<span class="bds_count share-count" id="j-topShareCount" data-cmd="count">0</span>
+</a>
+</div>
+</div>
+<div style="width:0;height:0;clear:both"></div><dl class="lemmaWgt-lemmaTitle lemmaWgt-lemmaTitle-">
+<dd class="lemmaWgt-lemmaTitle-title">
+<h1 >openssl</h1>
+<a href="javascript:;" class="edit-lemma cmn-btn-hover-blue cmn-btn-28 j-edit-link"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+<a class="lock-lemma" target="_blank" href="/view/10812319.htm" title="锁定"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_lock-lemma"></em>锁定</a>
+</dd>
+</dl><div class="promotion-declaration">
+</div><div class="lemma-summary" label-module="lemmaSummary">
+<div class="para" label-module="para">OpenSSL  是一个安全<a target=_blank href="/view/538713.htm">套接字</a>层密码库，囊括主要的<a target=_blank href="/view/8790.htm">密码算法</a>、常用的<a target=_blank href="/view/934.htm">密钥</a>和证书封装管理功能及<a target=_blank href="/view/16147.htm">SSL</a>协议，并提供丰富的应用程序供测试或其它目的使用。</div><div class="para" label-module="para">OpenSSL被曝出现严重安全漏洞后，发现多数通过SSL协议加密的网站使用名为OpenSSL的<a target=_blank href="/view/9664.htm">开源</a>软件包。OpenSSL漏洞不仅影响以<a target=_blank href="/view/14121.htm">https</a>开头的网站，黑客还可利用此漏洞直接对个人电脑发起“心脏出血”（<a target=_blank href="/view/12769298.htm">Heartbleed</a>）攻击。据分析，<a target=_blank href="/view/4821.htm">Windows</a>上有大量软件使用了存在漏洞的OpenSSL代码库，可能被黑客攻击抓取用户电脑上的内存数据。</div>
+</div>
+<div class="configModuleBanner">
+</div><div class="basic-info cmn-clearfix">
+<dl class="basicInfo-block basicInfo-left">
+<dt class="basicInfo-item name">软件名称</dt>
+<dd class="basicInfo-item value">
+开放式<a target=_blank href="/view/2438396.htm">安全套接层协议</a>
+</dd>
+<dt class="basicInfo-item name">软件平台</dt>
+<dd class="basicInfo-item value">
+网络传输层
+</dd>
+<dt class="basicInfo-item name">软件版本</dt>
+<dd class="basicInfo-item value">
+1.0.1 g
+</dd>
+</dl><dl class="basicInfo-block basicInfo-right">
+<dt class="basicInfo-item name">更新时间</dt>
+<dd class="basicInfo-item value">
+2014年4月7日
+</dd>
+<dt class="basicInfo-item name">软件授权</dt>
+<dd class="basicInfo-item value">
+开源
+</dd>
+<dt class="basicInfo-item name">英文名</dt>
+<dd class="basicInfo-item value">
+Open Secure Sockets Layer
+</dd>
+<dt class="basicInfo-item name">简&nbsp;&nbsp;&nbsp;&nbsp;称</dt>
+<dd class="basicInfo-item value">
+OpenSSL
+</dd>
+</dl></div>
+<div class="lemmaWgt-lemmaCatalog">
+<div class="lemma-catalog">
+<h2 class="block-title">目录</h2>
+<div class="catalog-list column-4">
+<ol>
+<li class="level1">
+<span class="index">1</span>
+<span class="text"><a href="#1">背景技术</a></span>
+</li>
+<li class="level1">
+<span class="index">2</span>
+<span class="text"><a href="#2">特点</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#2_1">安全信道特性</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#2_2">开源特点</a></span>
+</li>
+<li class="level1">
+<span class="index">3</span>
+<span class="text"><a href="#3">功能</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#3_1">基本功能</a></span>
+</li>
+</ol><ol><li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#3_2">辅助功能</a></span>
+</li>
+<li class="level1">
+<span class="index">4</span>
+<span class="text"><a href="#4">算法</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#4_1">密钥证书管理</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#4_2">对称加密</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#4_3">非对称加密</a></span>
+</li>
+<li class="level1">
+<span class="index">5</span>
+<span class="text"><a href="#5">应用</a></span>
+</li>
+</ol><ol><li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#5_1">功能</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#5_2">机制</a></span>
+</li>
+<li class="level1">
+<span class="index">6</span>
+<span class="text"><a href="#6">漏洞</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#6_1">发现</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#6_2">成因</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#6_3">补救措施</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#6_4">漏洞拦截</a></span>
+</li>
+</ol><ol><li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#6_5">漏洞风险</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#6_6">漏洞影响</a></span>
+</li>
+<li class="level1">
+<span class="index">7</span>
+<span class="text"><a href="#7">主要版本</a></span>
+</li>
+<li class="level1">
+<span class="index">8</span>
+<span class="text"><a href="#8">安装方法</a></span>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="anchor-list">
+<a name="1" class="lemma-anchor para-title" ></a>
+<a name="sub300712_1" class="lemma-anchor " ></a>
+<a name="背景技术" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">openssl</span>背景技术</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="1" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para"><a target=_blank href="/view/16147.htm">SSL</a>是Secure Sockets Layer（<a target=_blank href="/view/2438396.htm">安全套接层协议</a>）的缩写，可以在Internet上提供秘密性传输。<a target=_blank href="/view/153922.htm">Netscape</a>公司在推出第一个<a target=_blank href="/view/206703.htm">Web浏览器</a>的同时，提出了SSL协议标准。其目标是保证两个应用间通信的保密性和可靠性,可在服务器端和用户端同时实现支持。已经成为<a target=_blank href="/view/11165.htm">Internet</a>上保密通讯的工业标准。</div>
+<div class="para" label-module="para">SSL能使用户/服务器应用之间的通信不被攻击者窃听，并且始终对服务器进行认证，还可选择对用户进行认证。SSL协议要求建立在可靠的<a target=_blank href="/view/239605.htm">传输层</a>协议(<a target=_blank href="/subview/32754/8048820.htm" data-lemmaid="33012">TCP</a>)之上。SSL协议的优势在于它是与<a target=_blank href="/view/239619.htm">应用层</a>协议独立无关的，高层的应用层协议(例如：<a target=_blank href="/view/9472.htm">HTTP</a>，<a target=_blank href="/subview/369/6149695.htm" data-lemmaid="13839">FTP</a>，<a target=_blank href="/view/44255.htm">TELNET</a>等)能透明地建立于SSL协议之上。SSL协议在应用层协议通信之前就已经完成<a target=_blank href="/view/155969.htm">加密算法</a>、通信<a target=_blank href="/view/934.htm">密钥</a>的协商及服务器认证工作。在此之后应用层协议所传送的数据都会被加密，从而保证通信的私密性。</div><div class="anchor-list">
+<a name="2" class="lemma-anchor para-title" ></a>
+<a name="sub300712_2" class="lemma-anchor " ></a>
+<a name="特点" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">openssl</span>特点</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="2" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="anchor-list">
+<a name="2_1" class="lemma-anchor para-title" ></a>
+<a name="sub300712_2_1" class="lemma-anchor " ></a>
+<a name="安全信道特性" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>安全信道特性</h3>
+</div>
+<div class="para" label-module="para"><b>数据保密性</b></div>
+<div class="para" label-module="para">信息加密就是把明码的输入文件用<a target=_blank href="/view/155969.htm">加密算法</a>转换成加密的文件以实现数据的保密。加密<div class="lemma-picture text-pic layout-right" style="width:250px; float: right;">
+<a class="image-link" nslog-type="9317" 
+			href="/pic/openssl/5454803/0/b25d9901399ce0f9277fb5ec?fr=lemma&ct=single" target="_blank"
+		title="" style="width:250px;height:114px;">
+<img  class="lazy-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAMAAAAoyzS7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRF9fX1AAAA0VQI3QAAAAxJREFUeNpiYAAIMAAAAgABT21Z4QAAAABJRU5ErkJggg==" data-src="http://a.hiphotos.baidu.com/baike/s%3D250/sign=0a52b1a7d43f8794d7ff4f2be21b0ead/eac4b74543a9822657eb79388a82b9014a90eb83.jpg"  alt="" style="width:250px;height:114px;"/>
+</a>
+</div>的过程需要用到<a target=_blank href="/view/934.htm">密钥</a>来加密数据然后再解密。没有了密钥，就无法解开加密的数据。<a target=_blank href="/view/696431.htm">数据加密</a>之后，只有密钥要用一个安全的方法传送。加密过的数据可以公开地传送。</div>
+<div class="para" label-module="para"><b>数据完整性</b></div>
+<div class="para" label-module="para">加密也能保证数据的一致性。例如：消息验证码（<a target=_blank href="/subview/32702/4924698.htm" data-lemmaid="329741">MAC</a>），能够校验用户提供的加密信息，接收者可以用MAC来校验加密数据，保证数据在传输过程中没有被篡改过。</div>
+<div class="para" label-module="para"><b>安全验证</b></div>
+<div class="para" label-module="para">加密的另外一个用途是用来作为个人的标识，用户的密钥可以作为他的安全验证的标识。SSL是利用<a target=_blank href="/view/1145160.htm">公开密钥</a>的<a target=_blank href="/view/8136.htm">加密技术</a>（<a target=_blank href="/view/7520.htm">RSA</a>）来作为用户端与服务器端在传送机密资料时的加密通讯协定。</div>
+<div class="para" label-module="para">OpenSSL包含一个命令行工具用来完成OpenSSL库中的所有功能，更好的是，它可能已经安装到你的系统中了。</div>
+<div class="para" label-module="para">OpenSSL是一个强大的安全套接字层密码库，<a target=_blank href="/subview/28283/5990593.htm" data-lemmaid="6848636">Apache</a>使用它加密HTTPS，OpenSSH使用它加密<a target=_blank href="/subview/16184/5909252.htm" data-lemmaid="10407">SSH</a>，但是，你不应该只将其作为一个库来使用，它还是一个多用途的、跨平台的密码工具。<sup>[1]</sup><a class="sup-anchor" name="ref_[1]_300712">&nbsp;</a>
+</div><div class="anchor-list">
+<a name="2_2" class="lemma-anchor para-title" ></a>
+<a name="sub300712_2_2" class="lemma-anchor " ></a>
+<a name="开源特点" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>开源特点</h3>
+</div>
+<div class="para" label-module="para">Eric A. Young和Tim J. Hudson自1995年开始编写后来具有巨大影响的OpenSSL软件包，这是一个没有太多限制的<a target=_blank href="/view/1708.htm">开放源代码</a>的软件包。Eric A. Young 和Tim J. Hudson是加拿大人，后来由于写OpenSSL功成名就之后就到大公司里赚大钱去了。1998年，OpenSSL项目组接管了OpenSSL的开发工作，并推出了OpenSSL的0.9.1版，到目前为止，OpenSSL的算法已经非常完善，对SSL2.0、SSL3.0以及TLS1.0都支持。</div>
+<div class="para" label-module="para">OpenSSL采用C语言作为开发语言，这使得OpenSSL具有优秀的<a target=_blank href="/view/469855.htm">跨平台</a>性能，这对于广大技术人员来说是一件非常美妙的事情，可以在不同的平台使用同样熟悉的东西。OpenSSL支持Linux、Windows、BSD、Mac、VMS等平台，这使得OpenSSL具有广泛的适用性。但习惯C语言总比使用C++重新写一个跟OpenSSL相同功能的软件包轻松不少。</div><div class="anchor-list">
+<a name="3" class="lemma-anchor para-title" ></a>
+<a name="sub300712_3" class="lemma-anchor " ></a>
+<a name="功能" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">openssl</span>功能</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="3" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="anchor-list">
+<a name="3_1" class="lemma-anchor para-title" ></a>
+<a name="sub300712_3_1" class="lemma-anchor " ></a>
+<a name="基本功能" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>基本功能</h3>
+</div>
+<div class="para" label-module="para">OpenSSL整个软件包大概可以分成三个主要的功能部分：SSL协议库、应用程序以及<a target=_blank href="/view/8790.htm">密码算法</a>库。OpenSSL的目录结构自然也是围绕这三个功能部分进行规划的。</div>
+<div class="para" label-module="para">作为一个基于密码学的安全开发包，OpenSSL提供的功能相当强大和全面，囊括了主要的密码算法、常用的<a target=_blank href="/view/934.htm">密钥</a>和证书封装管理功能以及SSL协议，并提供了丰富的应用程序供测试或其它目的使用。</div><div class="anchor-list">
+<a name="3_2" class="lemma-anchor para-title" ></a>
+<a name="sub300712_3_2" class="lemma-anchor " ></a>
+<a name="辅助功能" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>辅助功能</h3>
+</div>
+<div class="para" label-module="para"><a target=_blank href="/view/1160082.htm">BIO</a>机制是OpenSSL提供的一种高层IO接口，该接口封装了几乎所有类型的<a target=_blank href="/subview/1142749/5362454.htm" data-lemmaid="5918">IO</a>接口，如内存访问、文件访问以及Socket等。这使得代码的重用性大幅度提高，OpenSSL提供API的复杂性也降低了很多。</div>
+<div class="para" label-module="para">OpenSSL对于随机数的生成和管理也提供了一整套的解决方法和支持API函数。随机数的好坏是决定一个<a target=_blank href="/view/934.htm">密钥</a>是否安全的重要前提。</div>
+<div class="para" label-module="para">OpenSSL还提供了其它的一些辅助功能，如从口令生成密钥的API，证书签发和管理中的配置文件机制等等。如果你有足够的耐心，将会在深入使用OpenSSL的过程慢慢发现很多这样的小功能，让你不断有新的惊喜。</div><div class="anchor-list">
+<a name="4" class="lemma-anchor para-title" ></a>
+<a name="sub300712_4" class="lemma-anchor " ></a>
+<a name="算法" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">openssl</span>算法</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="4" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="anchor-list">
+<a name="4_1" class="lemma-anchor para-title" ></a>
+<a name="sub300712_4_1" class="lemma-anchor " ></a>
+<a name="密钥证书管理" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>密钥证书管理</h3>
+</div>
+<div class="para" label-module="para"><a target=_blank href="/view/934.htm">密钥</a>和证书管理是<a target=_blank href="/view/7615.htm">PKI</a>的一个重要组成部分，OpenSSL为之提供了丰富的功能，支持多种标准。</div>
+<div class="para" label-module="para">首先，OpenSSL实现了ASN.1的证书和密钥相关标准，提供了对证书、<a target=_blank href="/view/355291.htm">公钥</a>、<a target=_blank href="/view/493846.htm">私钥</a>、证书请求以及CRL等<a target=_blank href="/view/178571.htm">数据对象</a>的DER、PEM和BASE64的编解码功能。OpenSSL提供了产生各种<a target=_blank href="/view/1145160.htm">公开密钥</a>对和对称密钥的方法、函数和应用程序，同时提供了对公钥和私钥的DER编解码功能。并实现了私钥的PKCS#12和PKCS#8的编解码功能。OpenSSL在标准中提供了对私钥的加密保护功能，使得密钥可以安全地进行存储和分发。</div>
+<div class="para" label-module="para">在此基础上，OpenSSL实现了对证书的X.509标准编解码、PKCS#12格式的编解码以及PKCS#7的编解码功能。并提供了一种文本数据库，支持证书的管理功能，包括证书<a target=_blank href="/view/934.htm">密钥</a>产生、请求产生、证书签发、吊销和验证等功能。</div>
+<div class="para" label-module="para">事实上，OpenSSL提供的CA应用程序就是一个小型的证书管理中心（CA），实现了证书签发的整个流程和证书管理的大部分机制。</div>
+<div class="para" label-module="para">5.SSL和TLS协议</div>
+<div class="para" label-module="para">OpenSSL实现了SSL协议的SSLv2和SSLv3，支持了其中绝大部分算法协议。OpenSSL也实现了TLSv1.0，TLS是SSLv3的标准化版，虽然区别不大，但毕竟有很多细节不尽相同。</div>
+<div class="para" label-module="para">虽然已经有众多的软件实现了OpenSSL的功能，但是OpenSSL里面实现的SSL协议能够让我们对SSL协议有一个更加清楚的认识，因为至少存在两点：一是OpenSSL实现的SSL协议是开放源代码的，我们可以追究SSL协议实现的每一个细节；二是OpenSSL实现的SSL协议是纯粹的SSL协议，没有跟其它协议（如HTTP）协议结合在一起，澄清了SSL协议的本来面目。</div><div class="anchor-list">
+<a name="4_2" class="lemma-anchor para-title" ></a>
+<a name="sub300712_4_2" class="lemma-anchor " ></a>
+<a name="对称加密" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>对称加密</h3>
+</div>
+<div class="para" label-module="para">OpenSSL一共提供了8种对称加密算法，其中7种是分组加密算法，仅有的一种流加密算法是RC4。这7种分组加密算法分别是AES、DES、Blowfish、CAST、IDEA、RC2、RC5，都支持电子密码本模式（ECB）、加密分组链接模式（CBC）、加密反馈模式（CFB）和输出反馈模式（OFB）四种常用的<a target=_blank href="/view/79482.htm">分组密码</a>加密模式。其中，AES使用的加密反馈模式（CFB）和输出反馈模式（OFB）分组长度是128位，其它算法使用的则是64位。事实上，DES算法里面不仅仅是常用的DES算法，还支持三个<a target=_blank href="/view/934.htm">密钥</a>和两个密钥3DES算法。</div><div class="anchor-list">
+<a name="4_3" class="lemma-anchor para-title" ></a>
+<a name="sub300712_4_3" class="lemma-anchor " ></a>
+<a name="非对称加密" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>非对称加密</h3>
+</div>
+<div class="para" label-module="para">OpenSSL一共实现了4种非对称<a target=_blank href="/view/155969.htm">加密算法</a>，包括<a target=_blank href="/view/461564.htm">DH</a>算法、<a target=_blank href="/view/7520.htm">RSA</a>算法、<a target=_blank href="/view/637115.htm">DSA算法</a>和<a target=_blank href="/view/531769.htm">椭圆曲线算法</a>（EC）。DH算法一般用于<a target=_blank href="/view/934.htm">密钥</a>交换。RSA算法既可以用于密钥交换，也可以用于<a target=_blank href="/view/7626.htm">数字签名</a>，当然，如果你能够忍受其缓慢的速度，那么也可以用于<a target=_blank href="/view/696431.htm">数据加密</a>。DSA算法则一般只用于数字签名。</div>
+<div class="para" label-module="para">信息摘要</div>
+<div class="para" label-module="para">OpenSSL实现了5种信息摘要算法，分别是MD2、MD5、MDC2、SHA（SHA1）和<a target=_blank href="/view/260854.htm">RIPEMD</a>。SHA算法事实上包括了SHA和SHA1两种信息摘要算法。此外，OpenSSL还实现了DSS标准中规定的两种信息摘要算法DSS和DSS1。</div><div class="anchor-list">
+<a name="5" class="lemma-anchor para-title" ></a>
+<a name="sub300712_5" class="lemma-anchor " ></a>
+<a name="应用" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">openssl</span>应用</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="5" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="anchor-list">
+<a name="5_1" class="lemma-anchor para-title" ></a>
+<a name="sub300712_5_1" class="lemma-anchor " ></a>
+<a name="功能" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>功能</h3>
+</div>
+<div class="para" label-module="para">OpenSSL的应用程序已经成为了OpenSSL重要的一个组成部分，其重要性恐怕是OpenSSL的开发者开始没有想到的。如OpenCA，就是完全使用OpenSSL的应用程序实现的。OpenSSL的应用程序是基于OpenSSL的<a target=_blank href="/view/8790.htm">密码算法</a>库和SSL协议库写成的，所以也是一些非常好的OpenSSL的API使用范例，读懂所有这些范例，你对OpenSSL的API使用了解就比较全面了，当然，这也是一项锻炼你的意志力的工作。</div>
+<div class="para" label-module="para">OpenSSL的应用程序提供了相对全面的功能，在相当多的人看来，OpenSSL已经为自己做好了一切，不需要再做更多的开发工作了，所以，他们也把这些应用程序成为OpenSSL的指令。OpenSSL的应用程序主要包括<a target=_blank href="/view/934.htm">密钥</a>生成、证书管理、格式转换、<a target=_blank href="/view/696431.htm">数据加密</a>和签名、SSL测试以及其它辅助配置功能。</div><div class="anchor-list">
+<a name="5_2" class="lemma-anchor para-title" ></a>
+<a name="sub300712_5_2" class="lemma-anchor " ></a>
+<a name="机制" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>机制</h3>
+</div>
+<div class="para" label-module="para">Engine机制 Engine机制的出现是在OpenSSL的0.9.6版的事情，开始的时候是将普通版本跟支持Engine的版本分开的，到了OpenSSL的0.9.7版，Engine机制集成到了OpenSSL的内核中，成为了OpenSSL不可缺少的一部分。 Engine机制目的是为了使OpenSSL能够透明地使用第三方提供的软件加密库或者硬件加密设备进行加密。OpenSSL的Engine机制成功地达到了这个目的，这使得OpenSSL已经不仅仅使一个加密库，而是提供了一个通用地加密接口，能够与绝大部分加密库或者加密设备协调工作。当然，要使特定加密库或加密设备OpenSSL协调工作，需要写少量的接口代码，但是这样的工作量并不大，虽然还是需要一点密码学的知识。Engine机制的功能跟<a target=_blank href="/view/4821.htm">Windows</a>提供的CSP功能目标是基本相同的。包括：CryptoSwift、<a target=_blank href="/view/4511830.htm">nCipher</a>、Atalla、Nuron、UBSEC、Aep、SureWare以及IBM 4758 CCA的硬件加密设备。当然，所有上述Engine接口支持不一定很全面，比如，可能支持其中一两种<a target=_blank href="/view/1145160.htm">公开密钥</a>算法。</div><div class="anchor-list">
+<a name="6" class="lemma-anchor para-title" ></a>
+<a name="sub300712_6" class="lemma-anchor " ></a>
+<a name="漏洞" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">openssl</span>漏洞</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="6" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="anchor-list">
+<a name="6_1" class="lemma-anchor para-title" ></a>
+<a name="sub300712_6_1" class="lemma-anchor " ></a>
+<a name="发现" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>发现</h3>
+</div>
+<div class="para" label-module="para">2014年4月8日，OpenSSL的大漏洞曝光。这个漏洞被曝光的黑客命名为“heartbleed”，意思是“心脏流血”——代表着最致命的内伤。利用该漏洞，黑客坐在自己家里电脑前，就可以实时获取到约30%https开头网址的用户登录账号密码，包括大批网银、购物网站、电子邮件等。</div>
+<div class="para" label-module="para">“心脏流血”首先被<a target=_blank href="/view/1931.htm">谷歌</a>(微博)研究员尼尔·梅塔（Neel Mehta）发现，它可从特定服务器上随机获取64k的工作日志，由于数据是随机获取的，所以攻击者也不一定可以获得想要的信息，因此整个过程如同钓鱼，攻击可能一次次持续进行，大量敏感数据可能泄露。由于一台服务器的密钥也记录在其工作日志中，并且在大量数据中可被轻易辨别，因此将是首当其冲的获取目标，获取密钥后，攻击者可以掌握某网站或服务的实时流量情况，甚至可以破解被加密的以往流量日志。<sup>[2]</sup><a class="sup-anchor" name="ref_[2]_300712">&nbsp;</a>
+</div>
+<div class="para" label-module="para">安全专家介绍说，OpenSSL此漏洞堪称网络核弹，网银、网购、网上支付、邮箱等众多网站受其影响。无论用户电脑多么安全，只要网站使用了存在漏洞的OpenSSL版本，用户登录该网站时就可能被黑客实时监控到登录账号和密码。</div>
+<div class="para" label-module="para">根据相关媒体的报导，研究人员发现OpenSSL漏洞遍及全球互联网公司，并为其起了个形象的名字“心脏出血”，中国超过3万台主机受波及，国内网站和安全厂商技术人员为检查、抢修彻夜未眠。截至昨天，有超30%的主机已经修复，但技术人士称，消费者敏感信息是否泄露还有待日后观察。<sup>[3]</sup><a class="sup-anchor" name="ref_[3]_300712">&nbsp;</a>
+</div><div class="anchor-list">
+<a name="6_2" class="lemma-anchor para-title" ></a>
+<a name="sub300712_6_2" class="lemma-anchor " ></a>
+<a name="成因" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>成因</h3>
+</div>
+<div class="para" label-module="para">此次漏洞的成因是OpenSSL Heartbleed模块存在一个BUG，当攻击者构造一个特殊的数据包，满足用户心跳包中无法提供足够多的数据会导致memcpy把SSLv3记录之后的数据直接输出，该漏洞导致攻击者可以远程读取存在漏洞版本的OpenSSL服务器内存中长达64K的数据。<sup>[4]</sup><a class="sup-anchor" name="ref_[4]_300712">&nbsp;</a>
+</div>
+<div class="para" label-module="para">“心脏流血”这个名字听起来有点夸张，但这个漏洞的威力似乎当得起它的名字。不管是从可能感染的电脑数量还是从可能被泄露的数据规模，“心脏流血”的破坏力都超过在2014年早些时候狠狠羞辱了苹果公司的“GoToFail ”漏洞。“心脏流血”漏洞可以帮助黑客获得打开服务器的密钥，监听服务器数据和流量。更糟糕的是，这并不是一个新的漏洞， “心脏流血”其实已经存在两年了，但具体何时被人发现其危险性尚不得而知。<sup>[2]</sup><a class="sup-anchor" name="ref_[2]_300712">&nbsp;</a>
+</div><div class="anchor-list">
+<a name="6_3" class="lemma-anchor para-title" ></a>
+<a name="sub300712_6_3" class="lemma-anchor " ></a>
+<a name="补救措施" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>补救措施</h3>
+</div>
+<div class="para" label-module="para">在各个网站尚未解决安全漏洞的近两天，用户尽量不登录或者少登录涉及资金、个人隐私的网站或系统，已经多次登录的用户请尽快修改密码、绑定手机、设置支付密码，最好采用手机令牌类软件如号令手机令牌等，确保通过实时变化的动态口令保障账号安全。</div>
+<div class="para" label-module="para">代码安全审计机构NCC Group将开始参与到 OpenSSL 的代码审计当中。NCC 首席安全工程师的描述，OpenSSL 已经对代码进行了重构，新的代码已经足够稳定并且很快会取代现有版本。而 NCC 在代码审计中将会专注于 TLS stacks 方面的安全问题，包含 protocol flow、state transitions 和 memory management。除 NCC Group 之外，其它学术机构、商业分析公司、认证机构和个人都会参与 OpenSSL 各方面代码审计。<sup>[5]</sup><a class="sup-anchor" name="ref_[5]_300712">&nbsp;</a>
+</div><div class="anchor-list">
+<a name="6_4" class="lemma-anchor para-title" ></a>
+<a name="sub300712_6_4" class="lemma-anchor " ></a>
+<a name="漏洞拦截" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>漏洞拦截</h3>
+</div>
+<div class="para" label-module="para">备受关注的OpenSSL“<a target=_blank href="/view/12769956.htm">心脏出血</a>”漏洞有了最新进展：不法分子可以通过漏洞获取网站<a target=_blank href="/view/493846.htm">私钥</a>，并通过盗取的证书伪造假冒网站，或可躲避一些安全软件及安全浏览器的拦截。</div><div class="anchor-list">
+<a name="6_5" class="lemma-anchor para-title" ></a>
+<a name="sub300712_6_5" class="lemma-anchor " ></a>
+<a name="漏洞风险" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>漏洞风险</h3>
+</div>
+<div class="para" label-module="para">此前曝出的“心血漏洞”由于影响范围之广而引起了国内互联网业界及用户的极大关注。黑客可能利用“心脏出血”漏洞，攻击网民的个人电脑，盗取帐号密码、登陆认证<a target=_blank href="/view/1311.htm">cookies</a>、网银密钥等私密数据。</div><div class="anchor-list">
+<a name="6_6" class="lemma-anchor para-title" ></a>
+<a name="sub300712_6_6" class="lemma-anchor " ></a>
+<a name="漏洞影响" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">openssl</span>漏洞影响</h3>
+</div>
+<div class="para" label-module="para">据专家介绍，由于Windows上用OpenSSL的软件很多，且多数使用自己安装目录下的 SSLeay32.dll 和 Libeay32.dll，没有统一的升级管理机制，该漏洞可能会长期存在。</div>
+<div class="para" label-module="para">专家解释，由于网站证书被认为是网址安全可信的标志，因此黑客会利用漏洞盗取网站私钥从而冒名顶替合格的网站证书。此种情况下，安全系统或杀毒软件很可能不能判断网站的真实性。</div><div class="anchor-list">
+<a name="7" class="lemma-anchor para-title" ></a>
+<a name="sub300712_7" class="lemma-anchor " ></a>
+<a name="主要版本" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">openssl</span>主要版本</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="7" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<table log-set-param="table_view" class="table-view log-set-param"><tr><th>版本</th><th>发布时间</th><th>备注</th></tr><tr><td>老版本，不再支持: 0.9.1c</td><td>1998年12月23日</td><td align="right">　</td></tr><tr><td>老版本，不再支持: 0.9.2c</td><td>1999年3月22日</td><td align="right"><div class="para" label-module="para">取代0.9.1c</div>
+</td></tr><tr><td>老版本，不再支持: 0.9.3</td><td>1999年5月25日</td><td align="right"><div class="para" label-module="para">取代0.9.2b</div>
+</td></tr><tr><td>老版本，不再支持: 0.9.4</td><td>1999年8月9日</td><td align="right"><div class="para" label-module="para">取代0.9.3a</div>
+</td></tr><tr><td>老版本，不再支持: 0.9.5</td><td>2000年2月28日</td><td align="right"><div class="para" label-module="para">取代0.9.4</div>
+</td></tr><tr><td>老版本，不再支持: 0.9.6</td><td>2000年9月25日</td><td align="right"><div class="para" label-module="para">取代0.9.5a</div>
+</td></tr><tr><td>老版本，不再支持: 0.9.7</td><td>2002年12月31日</td><td align="right"><div class="para" label-module="para">取代0.9.6h</div>
+</td></tr><tr><td>老版本，不再支持: 0.9.8</td><td>2005年7月5日</td><td align="right"><div class="para" label-module="para">取代0.9.7h</div>
+</td></tr><tr><td>老版本，不再支持: 1.0.0</td><td>2010年3月29日</td><td align="right"><div class="para" label-module="para">取代0.9.8x</div>
+</td></tr><tr><td>老版本，不再支持: 1.0.1</td><td>2012年3月14日</td><td align="right"><div class="para" label-module="para">取代1.0.0e支持TLS v1.2SRP支持</div>
+</td></tr><tr><td>当前稳定版本:<b>1.0.1g</b></td><td>2014年4月7日</td><td><div class="para" label-module="para">当前版本修补“血崩”漏洞<sup>[6]</sup><a class="sup-anchor" name="ref_[6]_300712">&nbsp;</a>
+</div>
+</td></tr><tr><td colspan="1" rowspan="1">OpenSSL 1.0.2</td><td colspan="1" rowspan="1">OpenSSL 1.0.2</td><td colspan="1" rowspan="1">主要的更新版本，包含众多的改进内容<sup>[7]</sup><a class="sup-anchor" name="ref_[7]_300712">&nbsp;</a>
+</td></tr></table><div class="anchor-list">
+<a name="8" class="lemma-anchor para-title" ></a>
+<a name="sub300712_8" class="lemma-anchor " ></a>
+<a name="安装方法" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">openssl</span>安装方法</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="8" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">OpenSSL的编译安装需Perl的支持，下载最新版ActivePerl和OpenSSL源码包。</div>
+<div class="para" label-module="para">安装ActivePerl。</div>
+<div class="para" label-module="para">执行VC安装目录下vcvarsall.bat 配置默认环境。</div>
+<div class="para" label-module="para">进入openssl目录，执行如下指令（X64环境)</div>
+<div class="para" label-module="para">&gt; perl Configure VC-WIN64A<br/>　　&gt; ms\do_win64a<br/>　　&gt; nmake -f ms\ntdll.mak<br/>　　&gt; cd out32dll<br/>　　&gt; ..mstest</div>
+<div class="para" label-module="para">具体详情可参考openssl目录下Install.w32等文件。</div>
+<dl class="lemma-reference collapse nslog-area log-set-param" data-nslog-type="2" log-set-param="ext_reference">
+<dt class="reference-title">参考资料<em class="toggle"></em></dt>
+<dd class="reference-list-wrap">
+<ul class="reference-list">
+<li class="reference-item " id="reference-[1]-300712-wrap">
+<span class="index">1.</span>
+<a class="gotop anchor"  name="refIndex_1_300712" id="refIndex_1_300712" title="向上跳转" href="#ref_[1]_300712">&nbsp;&nbsp;</a>
+<a rel="nofollow" href="http://baike.baidu.com/redirect/be64F4WWNXowSPsgBW4uHQIgcST2BcTfA61IEpF-IDWp4t2uBlWlbRqI_xCrnWUbo0qoY5bqYr-48iwoXg" target="_blank" class="text">加密程序库 OpenSSL <span class="linkout">&nbsp;</span></a>
+<span class="site">．开源社区网</span><span>&#91;引用日期2012-09-23&#93;</span></li><li class="reference-item " id="reference-[2]-300712-wrap">
+<span class="index">2.</span>
+<a class="gotop anchor"  name="refIndex_2_300712" id="refIndex_2_300712" title="向上跳转" href="#ref_[2]_300712">&nbsp;&nbsp;</a>
+<a rel="nofollow" href="http://baike.baidu.com/redirect/52c606V2fGTrZIbBgzf-actnZ1x1grjXFeZ9lCpZKI_yP_8TRo2ixiVlLufgDth_u2Kh2_F5sjB7yq8oSn03VjBo7Gbk" target="_blank" class="text">为何“心脏流血”是最危险的网站安全漏洞<span class="linkout">&nbsp;</span></a>
+<span class="site">．腾讯</span><span>&#91;引用日期2014-04-9&#93;</span></li><li class="reference-item " id="reference-[3]-300712-wrap">
+<span class="index">3.</span>
+<a class="gotop anchor"  name="refIndex_3_300712" id="refIndex_3_300712" title="向上跳转" href="#ref_[3]_300712">&nbsp;&nbsp;</a>
+<a rel="nofollow" href="http://baike.baidu.com/redirect/3cfcd9pfQvd_B_I9kfPpc1PhEXLTjG4QAT8J5tgwZOOr7YuGUjD5mewMYvJzMMAjahdN_P_h8wH7fJO6uCD_HWOm5vKNkSEs" target="_blank" class="text">互联网现核弹级漏洞 电商网银受威胁<span class="linkout">&nbsp;</span></a>
+<span class="site">．腾讯财经</span><span>．2014-04-10</span><span>&#91;引用日期2014-04-10&#93;</span></li><li class="reference-item " id="reference-[4]-300712-wrap">
+<span class="index">4.</span>
+<a class="gotop anchor"  name="refIndex_4_300712" id="refIndex_4_300712" title="向上跳转" href="#ref_[4]_300712">&nbsp;&nbsp;</a>
+<a rel="nofollow" href="http://baike.baidu.com/redirect/33968NhPsnS_jdo2KddGnqe2PlaaRgwwiENg5cQ1ZEQ5VqGChLB29hfZ4e49S9TVEVF3oSISvvkU0qi7SRkkxlCuUaUexI_Ara2E6B4AUjGqfjg" target="_blank" class="text">OpenSSL曝重大安全漏洞 可致网购支付密码泄露<span class="linkout">&nbsp;</span></a>
+<span class="site">．新浪科技</span><span>．2014-04-08</span><span>&#91;引用日期2014-04-9&#93;</span></li><li class="reference-item " id="reference-[5]-300712-wrap">
+<span class="index">5.</span>
+<a class="gotop anchor"  name="refIndex_5_300712" id="refIndex_5_300712" title="向上跳转" href="#ref_[5]_300712">&nbsp;&nbsp;</a>
+<a rel="nofollow" href="http://baike.baidu.com/redirect/b6eb0VxRMX_lGz3tAU1IkJnKDTPOCOkwc2oDohNnFg5JFg8qZCMyiBlU3Gf3lFJiaUuJPauJ3Bl9yx5zDbQ" target="_blank" class="text">NCC Group 将参与有关 OpenSSL 安全漏洞的代码审计<span class="linkout">&nbsp;</span></a>
+<span class="site">．36氪</span><span>&#91;引用日期2015-03-9&#93;</span></li><li class="reference-item " id="reference-[6]-300712-wrap">
+<span class="index">6.</span>
+<a class="gotop anchor"  name="refIndex_6_300712" id="refIndex_6_300712" title="向上跳转" href="#ref_[6]_300712">&nbsp;&nbsp;</a>
+<a rel="nofollow" href="http://baike.baidu.com/redirect/ab6cD3vwxxeEl8WA_-zYyTOnL3OSKzSaGwzqrp97kuWXKhRNLjN33ILigjdlzdmmwzcwxPAT2FghkCuNPLksDnevYsY" target="_blank" class="text">openssl-主要版本<span class="linkout">&nbsp;</span></a>
+<span class="site">．openssl</span><span>．2014-04-9</span><span>&#91;引用日期2014-04-9&#93;</span></li><li class="reference-item " id="reference-[7]-300712-wrap">
+<span class="index">7.</span>
+<a class="gotop anchor"  name="refIndex_7_300712" id="refIndex_7_300712" title="向上跳转" href="#ref_[7]_300712">&nbsp;&nbsp;</a>
+<a rel="nofollow" href="http://baike.baidu.com/redirect/a94bUI80BD-kJ8y9-U7TSEqTp_F0YjtWKFw4PpAfbM4fwNy_cD6vcLa3lhRLBkls8mWQU26dNFgmTyupJs-3m_MKAnxlc-ZvC7AObQ" target="_blank" class="text">OpenSSL 1.0.2 发布<span class="linkout">&nbsp;</span></a>
+<span class="site">．开源中国社区</span><span>．2015-01-22</span><span>&#91;引用日期2015-06-18&#93;</span></li></ul>
+</dd>
+</dl>
+</div>
+<div class="side-content">
+<div class="summary-pic" >
+<a href="/pic/openssl/5454803/0/e61190ef76c6a7efb5f492a5fffaaf51f2de6666?fr=lemma&amp;ct=single" target="_blank" nslog-type="10002401">
+<img src="http://d.hiphotos.baidu.com/baike/w%3D268%3Bg%3D0/sign=65f88531bb014a90813e41bb914c5e2f/e61190ef76c6a7efb5f492a5fffaaf51f2de6666.jpg" />
+<button class="picAlbumBtn"><em></em><span>图集</span></button>
+<div>openssl图册</div>
+</a>
+</div>
+<div id="promotion_xunke"></div>
+<div class="lemmaWgt-promotion-vbaike">
+<div class="promotion_title">V百科<a href="/vbaike#gallary" target="_blank">往期回顾</a></div>
+<div class="promotion_viewport">
+<dl>
+</dl>
+<div class="promotion_viewport_pager"></div>
+</div>
+</div><div class="lemmaWgt-promotion-rightPreciseAd" data-lemmaId="5454803" data-lemmaTitle="openssl"></div><div class="lemmaWgt-sideRecommend">
+<a name="zhixinWrap" class="qnAnchor"></a>
+<div class="zhixin-box" id="zhixinWrap" data-source="" data-newLemmaId="5454803">
+</div>
+<form id="zhixinErrorForm" class="hidden" action="http://f3.baidu.com/index.php/feedback/zx/baikeJC" target="zhixinSubErr" method="post">
+<input class="js-url" name="fb_html_url" type="hidden" />
+<input class="js-query" name="fb_query" type="hidden" />
+<input class="js-title" name="fb_card_title" type="hidden" />
+<input class="js-content" name="fb_content" type="hidden" />
+<input class="js-souceId" name="fb_source_id" type="hidden" />
+</form>
+<iframe id="zhixinSubErr" name="zhixinSubErr" style="display:none" frameborder="0"></iframe>
+</div><div class="lemmaWgt-promotion-slide">
+<div class="promotion_viewport">
+<dl>
+</dl>
+<div class="promotion_viewport_pager"></div>
+</div>
+</div><div class="lemmaWgt-promotion-rightBigAd">
+</div><dl class="side-box lemma-statistics">
+<dt class="title">词条统计</dt>
+<dd class="description">
+<ul>
+<li>浏览次数：<span id="j-lemmaStatistics-pv"></span>次</li>
+<li>编辑次数：58次<a href="/historylist/openssl/5454803" class="nslog:1021" target="_blank">历史版本</a></li>
+<li>最近更新：<span class="j-modified-time" style="display:none">2016-09-13</span></li>
+<li>创建者：<a class="show-userCard" data-uid="638505" title="查看此用户资料" target="_blank" href="http://www.baidu.com/p/forxy" nslog-type="1022">forxy</a></li>
+</ul>
+</dd>
+</dl>
+<div class="side-catalog" style="visibility:hidden">
+<div class="side-bar">
+<em class="circle start"></em>
+<em class="circle end"></em>
+</div>
+<div class="catalog-scroller">
+<dl class="catalog-list">
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#1" class="title-link">
+<span class="text">
+<span class="title-index">1</span>
+<span class="title-link" nslog-type="1026">背景技术</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#2" class="title-link">
+<span class="text">
+<span class="title-index">2</span>
+<span class="title-link" nslog-type="1026">特点</span>
+</span>
+</a>
+</dt>
+<dd class="catalog-title level2">
+<a href="#2_1" class="title-link">
+<span class="text">
+<span class="title-index">2.1</span>
+<span class="title-link" nslog-type="1026">安全信道特性</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#2_2" class="title-link">
+<span class="text">
+<span class="title-index">2.2</span>
+<span class="title-link" nslog-type="1026">开源特点</span>
+</span>
+</a>
+</dd>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#3" class="title-link">
+<span class="text">
+<span class="title-index">3</span>
+<span class="title-link" nslog-type="1026">功能</span>
+</span>
+</a>
+</dt>
+<dd class="catalog-title level2">
+<a href="#3_1" class="title-link">
+<span class="text">
+<span class="title-index">3.1</span>
+<span class="title-link" nslog-type="1026">基本功能</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#3_2" class="title-link">
+<span class="text">
+<span class="title-index">3.2</span>
+<span class="title-link" nslog-type="1026">辅助功能</span>
+</span>
+</a>
+</dd>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#4" class="title-link">
+<span class="text">
+<span class="title-index">4</span>
+<span class="title-link" nslog-type="1026">算法</span>
+</span>
+</a>
+</dt>
+<dd class="catalog-title level2">
+<a href="#4_1" class="title-link">
+<span class="text">
+<span class="title-index">4.1</span>
+<span class="title-link" nslog-type="1026">密钥证书管理</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#4_2" class="title-link">
+<span class="text">
+<span class="title-index">4.2</span>
+<span class="title-link" nslog-type="1026">对称加密</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#4_3" class="title-link">
+<span class="text">
+<span class="title-index">4.3</span>
+<span class="title-link" nslog-type="1026">非对称加密</span>
+</span>
+</a>
+</dd>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#5" class="title-link">
+<span class="text">
+<span class="title-index">5</span>
+<span class="title-link" nslog-type="1026">应用</span>
+</span>
+</a>
+</dt>
+<dd class="catalog-title level2">
+<a href="#5_1" class="title-link">
+<span class="text">
+<span class="title-index">5.1</span>
+<span class="title-link" nslog-type="1026">功能</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#5_2" class="title-link">
+<span class="text">
+<span class="title-index">5.2</span>
+<span class="title-link" nslog-type="1026">机制</span>
+</span>
+</a>
+</dd>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#6" class="title-link">
+<span class="text">
+<span class="title-index">6</span>
+<span class="title-link" nslog-type="1026">漏洞</span>
+</span>
+</a>
+</dt>
+<dd class="catalog-title level2">
+<a href="#6_1" class="title-link">
+<span class="text">
+<span class="title-index">6.1</span>
+<span class="title-link" nslog-type="1026">发现</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#6_2" class="title-link">
+<span class="text">
+<span class="title-index">6.2</span>
+<span class="title-link" nslog-type="1026">成因</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#6_3" class="title-link">
+<span class="text">
+<span class="title-index">6.3</span>
+<span class="title-link" nslog-type="1026">补救措施</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#6_4" class="title-link">
+<span class="text">
+<span class="title-index">6.4</span>
+<span class="title-link" nslog-type="1026">漏洞拦截</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#6_5" class="title-link">
+<span class="text">
+<span class="title-index">6.5</span>
+<span class="title-link" nslog-type="1026">漏洞风险</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#6_6" class="title-link">
+<span class="text">
+<span class="title-index">6.6</span>
+<span class="title-link" nslog-type="1026">漏洞影响</span>
+</span>
+</a>
+</dd>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#7" class="title-link">
+<span class="text">
+<span class="title-index">7</span>
+<span class="title-link" nslog-type="1026">主要版本</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#8" class="title-link">
+<span class="text">
+<span class="title-index">8</span>
+<span class="title-link" nslog-type="1026">安装方法</span>
+</span>
+</a>
+</dt>
+<a class="arrow" href="javascript:void(0);"></a>
+</dl>
+</div>
+<div class="right-wrap">
+<a class="go-up disable" href="javascript:void(0);"></a>
+<a class="go-down" href="javascript:void(0);"></a>
+</div>
+<div class="bottom-wrap">
+<a class="toggle-button" href="javascript:void(0);"></a>
+<a class="gotop-button" href="javascript:void(0);"></a>
+</div>
+</div>
+<div class="unionAd_fromPs side-box" id="unionAd_fromPs">
+<script type="BAIDU_HH">
+    {
+        type : 'pageembed',
+        di   : 'u2140330',
+        rsi0 : 270,
+        rsi1 : 175
+    }
+    </script>
+</div>
+<div id="side_box_fengchao" class="fengchao side-box" nslog="area" nslog-type="10000902">
+</div>
+<div id="side_box_unionAd" class="unionAd side-box">
+<div class="union-content"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="after-content">
+<div class="fc-guess-like new" id="fc_guess_like_new">
+<span class="logo-du">
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+</span>
+<h6>猜你喜欢</h6>
+<ul class="cmn-clearfix">
+</ul>
+</div>
+<div class="bottom-promotion" id="bottom-promotion">
+<div id="BOTTOM_PRO_AD"></div>
+</div></div>
+</div>
+
+<div class="wgt-footer-main">
+<div class="content">
+<dl class="fresh">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-fresh"></em>新手上路</dt>
+<dd>
+<div><a target="_blank" href="/usercenter/tasks#guide">成长任务</a></div>
+<div><a target="_blank" href="/help#main01">编辑入门</a></div>
+<div><a target="_blank" href="/help#main06">编辑规则</a></div>
+<div><a target="_blank" href="/help#main05">百科术语</a></div>
+</dd>
+</dl>
+<dl class="question">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-question"></em>我有疑问</dt>
+<dd>
+<div><a target="_blank" href="/wikiui/doubt?lemmaId=5454803&fr=lemma"
+            nslog-type="10070001">我要质疑</a></div>
+<div><a target="_blank" href="http://ikefu.baidu.com/baidubaike/chat.html" nslog-type="10000003">我要提问</a></div>
+<div><a target="_blank" href="http://tieba.baidu.com/f?ie=utf-8&fr=bks0000&kw=%E7%99%BE%E5%BA%A6%E7%99%BE%E7%A7%91">参加讨论</a></div>
+<div><a target="_blank" href="/feedback">意见反馈</a></div>
+</dd>
+</dl>
+<dl class="suggestion">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-suggestion"></em>投诉建议</dt>
+<dd>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#1">举报不良信息</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#2">未通过词条申诉</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#4">投诉侵权信息</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#3">封禁查询与解封</a></div>
+</dd>
+</dl>
+</div>
+<div class="copyright">©2016Baidu&nbsp;<a href="http://www.baidu.com/duty/" target="_blank">使用百度前必读</a>&nbsp;|&nbsp;<a href="http://help.baidu.com/question?prod_en=baike&class=159&id=1047" target="_blank">百科协议</a>&nbsp;|&nbsp;<a href="/operation/cooperation" target="_blank">百度百科合作平台</a></div>
+</div>
+
+<div class="lemmaWgt-searchHeader">
+<div class="layout">
+<div class="logo-container">
+<a class="logo cmn-inline-block" title="到百科首页" href="/">
+<span class="cmn-baike-logo">
+<em class="cmn-icon cmn-icons cmn-icons_logo-bai"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-baike"></em>
+</span>
+</a>
+</div>
+<div class="search">
+<div class="form">
+<form id="searchForm" action="/search/word" method="GET" target="_self">
+<input id="query" name="word" type="text" autocomplete="off" autocorrect="off" value="openssl" /><a id="search" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_search" nslog-type="10010004"></em></a>
+</form>
+<ul id="suggestion" class="suggestion">
+<div></div>
+<li class="extra">
+<span id="close">关闭</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="tool-buttons">
+<a class="toolButtons-edit button j-edit-link" href="javascript:;" nslog-type="10010001"></a>
+<a class="toolButtons-collect button" href="javascript:;" nslog-type="10010002"></a>
+<a class="toolButtons-vote button" href="javascript:;" nslog-type="10010003"></a>
+</div>
+<div class="user-info">
+<a class="user-link unlogin" href="javascript:;" nslog-type="10010005" target="_blank">登录</a>
+</div>
+</div></div>
+<div class="new-bdsharebuttonbox new-side-share" id="side-share">
+<span class="title">分享</span>
+<div class="side-border">
+<div class="triangle"></div>
+<a class="bds_qzone"  href="javascript:void(0);" nslog-type="10060101">
+<em class="cmn-icon cmn-icons cmn-icons_logo-qzone"></em>
+</a>
+<a class="bds_tsina" href="javascript:void(0);" nslog-type="10060301">
+<em class="cmn-icon cmn-icons cmn-icons_logo-sina-weibo"></em>
+</a>
+<a class="bds_wechat"  href="javascript:void(0);" nslog-type="10060001">
+<em class="cmn-icon cmn-icons cmn-icons_logo-wechat"></em>
+</a>
+<a class="bds_tqq"  href="javascript:void(0);" nslog-type="10060201">
+<em class="cmn-icon cmn-icons cmn-icons_logo-qq"></em>
+</a>
+</div>
+</div>
+<div class="qrcode-wrapper" id="layer" style="display: none">
+<div class="bd_weixin_popup_header">
+<em class="cmn-icon cmn-icons cmn-icons_close"></em>
+<span>分享到微信朋友圈</span>
+</div>
+<div id="wechat-qrcode-img"></div>
+<div class="bd_weixin_popup_footer">打开微信“扫一扫”即可将网页分享至朋友圈</div>
+</div>
+<div></div><div></div>
+</body><script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_0_29c88fe.js"></script>
+<script type="text/javascript">require.resourceMap({"res":{"wiki-lemma:widget/lemma_content/mainContent/lemmaRelation/lemmaInsert.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/lemmaInsert_17d225d.js","pkg":"wiki-lemma:p5","deps":["wiki-common:widget/component/nslog/nslog.js"]},"wiki-lemma:widget/lemma_content/mainContent/lemmaRelation/tangram.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/tangram_1e4b3aa.js","pkg":"wiki-lemma:p5"},"wiki-lemma:widget/lemma_content/mainContent/lemmaReference/lemmaReferenceTip/lemmaReferenceTip.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaReference/lemmaReferenceTip/lemmaReferenceTip_d50e02d.js","deps":["wiki-common:widget/lib/jquery/jquery.js","wiki-common:widget/util/string.js"]}},"pkg":{"wiki-lemma:p5":{"url":"http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma-module-lemmaRelation_782158b.js"}}});</script><script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/widget/lib/jsmart/PHPJS_3347e0a.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_1_ec0cd21.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_2_7a24e62.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_5_62d9343.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma_921f707.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/configModule/zhixin/zhixin_d2befc8.js"></script>
+<script type="text/javascript">!function(){  var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+    userbar = require('wiki-common:widget/component/userbar/userbar.js');
+    
+  $(function() {
+    userbar.buildUserbar($('.wgt-userbar'), null);
+  });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+      initSearchbar = require('wiki-common:widget/component/searchbar/searchbar.js');  
+    initSearchbar($('.wgt-searchbar-main'));
+  }();
+!function(){  var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+
+  var timer = '';
+
+  $('.wgt-navbar').on('mouseenter', 'dl', function() {
+  clearTimeout(timer);
+  timer = setTimeout(function() {
+  $('.wgt-navbar').addClass('wgt-navbar-hover');
+}, 300);
+}).on('mouseleave', function() {
+clearTimeout(timer);
+$('.wgt-navbar').removeClass('wgt-navbar-hover');
+}).on('click', 'a', function() {
+clearTimeout(timer);
+$('.wgt-navbar').removeClass('wgt-navbar-hover');
+});
+}();
+!function(){                var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+                var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+                // 展现策略
+                rightCheck.editView('5454803', function(res) {
+                    if (!res.errno) {
+                        if (res.data.edit) {
+                            $('.lemmaWgt-lemmaTitle .add-subLemma').css('display', 'inline-block');
+                            $('.top-tool .add-sub-icon').css('display', 'inline-block');
+                        }
+                    } else {
+                        if ('1') {
+                            $('.lemmaWgt-lemmaTitle .add-subLemma').css('display', 'inline-block');
+                            $('.top-tool .add-sub-icon').css('display', 'inline-block');
+                        }
+                    }
+                });
+                require('wiki-lemma:widget/basicElement/addSub/addSub.js')({                    lemmaId: '5454803',                    lemmaTitle: 'openssl',                    lemmaDesc: '',                    versionId: '112513090',                    subLemmaId: '300712'                });
+            }();
+!function(){        var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+        var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+        // 展现策略
+        rightCheck.editView('5454803', function(res) {
+            if (!res.errno) {
+                if (res.data.divide) {
+                    $('.top-tool .split-icon').css('display', 'block');
+                }
+            }
+        });
+    }();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	require.async("wiki-lemma:widget/basicElement/collect/collect.js",function(collect){
+		collect({
+            newLemmaId:"5454803",
+			lemmaId:"300712",
+			subLemmaId:"300712"
+		});
+	});
+}();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	require.async("wiki-lemma:widget/basicElement/vote/vote.js",function(vote){
+		vote({
+			lemmaId:"300712",
+            subLemmaId:"300712",
+            newLemmaId:"5454803"
+		});
+	});
+}();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	!!window.BKShare && window.BKShare.regist({
+		"tag" : "top-share",
+		"bdSize" : 32,
+		"bdMini":1
+	});
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.lemmaWgt-lemmaTitle .edit-lemma').css('display', 'inline-block');
+            } else {
+                $('.lemmaWgt-lemmaTitle .lock-lemma').show();
+            }
+        } else {
+            if ('1') {
+                $('.lemmaWgt-lemmaTitle .edit-lemma').css('display', 'inline-block');
+            } else {
+                $('.lemmaWgt-lemmaTitle .lock-lemma').show();
+            }
+        }
+    });
+}();
+!function(){	require('wiki-lemma:widget/lemma_content/mainContent/basicInfo/basicInfo.js')();
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('5454803', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){		require.async(["wiki-lemma:widget/lemma_content/mainContent/lemmaReference/lemmaReference.js", "wiki-lemma:widget/lemma_content/mainContent/lemmaReference/lemmaReferenceTip/lemmaReferenceTip.js"],function(Reference,ReferenceTip){
+			new Reference({
+				subLemmaId:"300712"
+			});
+			new ReferenceTip({
+				subLemmaId:"300712"
+			});
+		});
+	}();
+!function(){    require.async('wiki-lemma:widget/promotion/xunke/xunke.js', function (app) {
+        app.init({
+            lemmaTitle: 'openssl',
+            adManager: null
+        });
+    });
+}();
+!function(){        require('wiki-lemma:widget/lemma_content/configModule/zhixin/zhixin.js')(
+            5454803,
+            'openssl'
+        );
+    }();
+!function(){    require.async("wiki-lemma:widget/lemma_content/mainContent/lemmaStatistics/lemmaStatistics.js",function(init){
+        init({
+            newLemmaIdEnc:"2767bec0b03428ac71673619"
+        });
+    });
+}();
+!function(){	require.async("wiki-lemma:widget/lemma_content/mainContent/sideCatalog/sideCatalog.js",function(SideCatalog){
+		new SideCatalog();
+	});
+}();
+!function(){        require.async(['wiki-lemma:widget/promotion/unionAdFromPs/unionAdFromPs.js'], function (init) {
+            init({
+                adManager: null
+            });
+        });
+    }();
+!function(){    require.async(["wiki-lemma:widget/promotion/fengchao/fengchao.js", "wiki-lemma:widget/promotion/unionAd/unionAd.js"], function (init, unionAd) {
+        init({
+            newLemmaId: "5454803",
+            lemmaTitle: "openssl",
+            encodeLemmaTitle: "openssl",
+            adManager: null
+        }, {
+            errFn: unionAd,
+            dom: $('#side_box_unionAd')
+        });
+    });
+}();
+!function(){    require.async('wiki-lemma:widget/promotion/guessLike/guessLike.js', function (app) {
+        app.init({
+            lemmaTitle: 'openssl',
+            adManager: null
+        });
+    });
+}();
+!function(){        require.async('wiki-lemma:widget/promotion/bottomAd/bottomAd.js', function (init) {
+            init({
+                sId: 'BOTTOM_PRO_AD',
+                adManager: null
+            });
+        });
+    }();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var Dialog = require("wiki-common:widget/ui/dialog/dialog.js");
+    var userLogin = require('wiki-common:widget/component/userLogin/userLogin.js');
+    var unameFiller = require('wiki-common:widget/component/unameFiller/unameFiller.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+            var isEnterprise = false;
+        var enterpriseOwnerUserId = 0;
+    
+    var userId = 0;
+    var editUrl = '/edit/' + encodeURIComponent('openssl') + '/' + '5454803';
+    var pgcUrl = '/enterprise/editpgc?lemmaId=5454803';
+
+    userLogin.regist({
+        onLogin: function(user) {
+            userId = user ? user.uid : 0;
+        }
+    });
+
+    function gotoEdit(url, isMidNight) {
+        if (isMidNight) {
+            Dialog.alert({
+                title: '编辑提示',
+                subMsg: '晚23:00至次日8:00，因审核系统例行维护，您提交的版本可能需要较长时间才能通过，望您谅解。',
+                onConfirm: function() {
+                    window.location.href = url;
+                }
+            });
+        } else {
+            window.location.href = url;
+        }    
+    }
+
+    function showChoseEditDialog(pgcCallback, ugcCallback) {
+        new Dialog({
+            title: '编辑提示',
+            subMsg: '<p>您已开通企业百科服务，推荐您直接编辑“官方资料”，官方资料仅限企业百科绑定的百科账号修改，其他用户账号不可修改。</p><p>如果您想修改其他网友编辑的普通词条内容，请注意遵守百科百科编辑规则。<p>',
+            btns: [{
+            key: 'pgc',
+            text: '编辑官方资料'
+            }, {
+            style: 'white',
+            text: '修改普通词条',
+            key: 'ugc'
+            }],
+            onBtnClick: function(btnKey){
+                if (btnKey === 'pgc') {
+                    pgcCallback && pgcCallback();
+                } else if (btnKey === 'ugc') {
+                    ugcCallback && ugcCallback();
+                }
+            }
+        }).show();
+    }
+
+    function checkUserLegal(res) {
+        var legal = false;
+        switch (res.errno) {
+            case 100001:
+                userLogin.showLoginPop();
+                break;
+            case 100006:
+                unameFiller.show();
+                break;
+            default:
+                legal = true;
+        }
+        return true;
+    }
+
+    function checkUgc(res, url) {
+        if (res.errno) {
+            switch (res.errno) {
+                case 100005:
+                    alert('对不起，您目前被封禁');
+                    break;
+                case 110001:
+                    alert('对不起，该词条被锁定');
+                    break;
+                case 110007:
+                    alert('对不起，消歧页无法编辑');
+                    break;
+                case 110005:
+                    Dialog.alert({
+                    title: '编辑提示',
+                    mainMsg: '对不起，您暂时没有权限编辑该词条。',
+                    subMsg: '<p>您好，该词条内容已较丰富，现仅对百科等级达到<b>四级</b>且通过率达到<b>85%</b>的科友开放编辑。</p><p>当您通过努力达到以上要求，就可以参与编辑该词条了。</p><p><img src="http://img.baidu.com/img/baike/usercenter/growuptask/star.gif" class="star" />参加<a target="_blank" href="/usercenter#guide">成长任务</a>，更快掌握百科编辑技巧，加速升级！</p>'
+                    });
+                    break;
+                case 110008:
+                    Dialog.alert({
+                    title: '编辑提示',
+                    mainMsg: '对不起，您暂时没有权限编辑该词条。',
+                    subMsg: '<p>您好，该词条内容已较丰富，现仅对百科等级达到<b>六级</b>且通过率达到<b>85%</b>的科友开放编辑。</p><p>当您通过努力达到以上要求，就可以参与编辑该词条了。</p><p><img src="http://img.baidu.com/img/baike/usercenter/growuptask/star.gif" class="star" />参加<a target="_blank" href="/usercenter#guide">成长任务</a>，更快掌握百科编辑技巧，加速升级！</p>'
+                    });
+                    break;
+                case 470001:
+                    alert('系统错误，请刷新重试');
+                    break;
+            }
+        } else {
+            if (!res.data.right.noAudit) {
+                Dialog.alert({
+                    title: '编辑提示',
+                    subMsg: '很抱歉，该词条有其他用户编辑的版本正在提交，您暂时无法编辑。<br/>百科建议您晚些时候再编辑该词条，或者尝试编辑其他的词条。'
+                });
+                return;
+            }
+            gotoEdit(url, res.data.notice.isMidNight);
+        }
+    }
+
+    $(document.body).on('click', '.j-edit-link', function() {
+        var dl = $(this).attr('data-edit-dl');
+        if (dl) {
+            var url = editUrl + '?dl=' + dl;
+        } else {
+            var url = editUrl;
+        }
+
+        rightCheck.preeditCheck('5454803', 'openssl', 'OpenSSL', '112513090', function(res) {
+            if (!checkUserLegal(res)) {
+                return;
+            }
+            if (isEnterprise && enterpriseOwnerUserId === userId) {
+                showChoseEditDialog(function() {
+                    location.href = pgcUrl;
+                }, function() {
+                    checkUgc(res, url);
+                });
+            } else {
+                checkUgc(res, url);
+            }
+        });
+    });
+}();
+!function(){    require.async("wiki-lemma:widget/tools/searchHeader/toolButtons/toolButtons.js",function(init){
+        init({
+            lemmaId:"300712",
+            subLemmaId:"300712",
+            newLemmaId:"5454803"
+        });
+    });
+}();
+!function(){    require('wiki-lemma:widget/tools/searchHeader/toolButtons/userInfo.js')();
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+      animation = require('wiki-common:widget/util/animation.js'),
+      nslog = require('wiki-common:widget/component/nslog/nslog.js'),
+      initSearchbar = require('wiki-common:widget/component/searchbar/searchbar.js');
+
+    var isFadeIn = false,
+        isFadeOut = false;
+
+    var fadeInAni, fadeOutAni;
+
+    $(window).on('scroll', function(e) {
+        var scrollTop = $(this).scrollTop();
+
+        if (scrollTop > 200 && !isFadeIn && $('.lemmaWgt-searchHeader').css('display') == 'none') {
+            fadeOutAni && fadeOutAni.stop();
+            fadeInAni = animation({
+                duration: 200,
+                easing: 'linear',
+                onStart: function() {
+                    isFadeOut = false;
+                    isFadeIn = true;
+                    $('.lemmaWgt-searchHeader').css('display', 'block');
+                },
+                onStep: function(progress) {
+                    $('.lemmaWgt-searchHeader').css('opacity', progress)
+                },
+                onComplete: function(progress) {
+                    isFadeIn = false;
+                    nslog(10010006);
+                }
+            });
+        } else if (scrollTop <= 200 && !isFadeOut && $('.lemmaWgt-searchHeader').css('display') == 'block') {
+            fadeInAni && fadeInAni.stop();
+            fadeOutAni = animation({
+                duration: 300,
+                easing: 'linear',
+                onStart: function() {
+                    $('.lemmaWgt-searchHeader #suggestion').hide();
+                    isFadeIn = false;
+                    isFadeOut = true;
+                },
+                onStep: function(progress) {
+                    $('.lemmaWgt-searchHeader').css('opacity', 1 - progress);
+                },
+                onComplete: function(progress) {
+                    isFadeOut = false;
+                    $('.lemmaWgt-searchHeader').css('display', 'none');
+                }
+            });
+        }
+    });
+
+    initSearchbar($('.lemmaWgt-searchHeader'));
+}();
+!function(){    require('wiki-lemma:widget/tools/newSideShare/qzopensl.js');
+    require.async("wiki-lemma:widget/tools/newSideShare/taskSideShare.js",function(taskShare){
+        taskShare.init({
+            title: 'openssl',
+            desc: "OpenSSL \u662f\u4e00\u4e2a\u5b89\u5168\u5957\u63a5\u5b57\u5c42\u5bc6\u7801\u5e93\uff0c\u56ca\u62ec\u4e3b\u8981\u7684\u5bc6\u7801\u7b97\u6cd5\u3001\u5e38\u7528\u7684\u5bc6\u94a5\u548c\u8bc1\u4e66\u5c01\u88c5\u7ba1\u7406\u529f\u80fd\u53caSSL\u534f\u8bae\uff0c\u5e76\u63d0\u4f9b\u4e30\u5bcc\u7684\u5e94\u7528\u7a0b\u5e8f\u4f9b\u6d4b\u8bd5\u6216\u5176\u5b83\u76ee\u7684\u4f7f\u7528\u3002OpenSSL\u88ab\u66dd\u51fa\u73b0\u4e25\u91cd\u5b89\u5168\u6f0f\u6d1e\u540e\uff0c\u53d1\u73b0\u591a\u6570\u901a\u8fc7SSL\u534f\u8bae\u52a0\u5bc6\u7684\u7f51\u7ad9\u4f7f\u7528\u540d\u4e3aOpenSSL\u7684\u5f00\u6e90\u8f6f\u4ef6\u5305\u3002OpenSSL\u6f0f\u6d1e\u4e0d\u4ec5\u5f71\u54cd\u4ee5https\u5f00\u5934\u7684\u7f51\u7ad9\uff0c\u9ed1\u5ba2\u8fd8\u53ef\u5229\u7528\u6b64\u6f0f\u6d1e",
+            pic: 'http:\/\/d.hiphotos.baidu.com\/baike\/w%3D268\/sign=cb91c53367380cd7e61ea5eb9946ad14\/e61190ef76c6a7efb5f492a5fffaaf51f2de6666.jpg',
+            url: '',
+            qqPic: 'http:\/\/d.hiphotos.baidu.com\/baike\/whfpf%3D186%2C186%2C0\/sign=fc7bab717f1ed21b799c7da5cb53ecfc\/e61190ef76c6a7efb5f492a5fffaaf51f2de6666.jpg'
+        });
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var nslog = require("wiki-common:widget/component/nslog/nslog.js");
+    var testElem = require('wiki-common:widget/component/testElem/testElem.js');
+    var cmsModuleLoader = require('wiki-common:widget/component/cmsModuleLoader/cmsModuleLoader.js');
+
+    function requireAsync() {
+        require.async('wiki-lemma:widget/tools/announcement/announcement.js');
+    }
+
+    cmsModuleLoader('/cms/global/lemma_config.json', [{
+        name: 'announcement',
+        script: 'wiki-lemma:widget/tools/announcement/announcement.js'
+    }]);
+
+    require.async("wiki-lemma:widget/tools/lazyLoad/lazyLoad.js", function(LazyLoad) {
+        new LazyLoad();
+    });
+
+    require.async(['wiki-common:widget/component/nslog/nslog.js', 'wiki-common:widget/lib/jquery/jquery.js'], function(nslog, $) {
+        nslog().setGlobal({
+            lemmaId: "300712",
+            newLemmaId: "5454803",
+            subLemmaId: "300712",
+            lemmaTitle: "openssl"
+        });
+
+        // 词条页 pv
+        nslog(9322);
+
+        // 新版头部pv（小流量）
+        if ($('.pc-header-new').length > 0) {
+            nslog(9069);
+        }
+
+        // 链接点击 pv
+        var lemmaPageRegExp = new RegExp(/\/subview\/\d+|\/view\/\d+|\/item\//i);
+        $('body').on('mousedown', 'a', function() {
+            var href = $(this).attr('href');
+            if (href && href.indexOf('/') >= 0 && href.indexOf('#') !== 0) {
+                // 链接点击 pv
+                nslog(10000001);
+                if (lemmaPageRegExp.test(href)) {
+                    // 词条页链接点击 pv
+                    nslog(10000002, window.location.href, {
+                        targetTitle: $(this).text()
+                    });
+                }
+            }
+        });
+
+        /****** 词条页站内流转需求统计 start ******/
+        (function () {
+            // 各种统计配置
+            var circulationLinkCfg = {
+                innerLink: [ // 内链
+                    '.para',
+                    '.lemmaWgt-baseInfo-simple-largeMovie',
+                    '.lemmaWgt-baseInfo-simple-largeStar',
+                    '.basic-info .basicInfo-block',
+                    '.lemma-summary',
+                    '.lemmaWgt-lemmaSummary',
+                    '.view-tip-panel',
+                    '.horizontal-module',
+                    '.lemmaWgt-roleIntroduction',
+                    '.dramaSeries .dramaSerialList',
+                    '.module-music',
+                    '.table-view',
+                    '[log-set-param="table_view"]',
+                    '.list-module',
+                    '.cell-module',
+                    '.baseBox .dl-baseinfo', // 配置后台字段
+                    '.pvBtn-box .leadPVBtnWrapper',
+                    '.drama-actor',
+                    '#staffList',
+                    '.starMovieAndTvplay',
+                    '.main_tab:not(.main_tab-defaultTab)' // 除去词条tab外的tab
+                ],
+                relationTable: '.rs-container-foot', // 关系表
+                peopleRelation: '.star-info-block.relations, .lemmaWgt-focusAndRelation', // 人物关系（明星+普通）
+                moduleActors: '.featureBaseInfo .actors, .lemmaWgt-majorActors', // 主要演员、嘉宾、主持人
+                moduleWorks: '.featureBaseInfo .works, .large-feature .works', // 代表作品
+                moduleQuarterly: '.featureBaseInfo .po_quarterly, .mian_quarterly', // 分季介绍
+                rankStar: '.rank-list.stars-rank', // 明星榜
+                rankDrama: '.drama-rank-list', // 电视剧榜
+                specialTopic: '.special-topic', // 专题模块
+                modDetailTable: '#modDetailTable', // 关系表出图
+                chuizhitu: '.chuizhitu', // 垂直化模块
+                polysemantList: '.polysemantList-wrapper' // 义项切换
+            };
+            /****** 连接统计 ******/
+            function clickNslogFn() {
+                for (var k in circulationLinkCfg) {
+                    if (k === 'innerLink') {
+                        // 词条内链到词条页
+                        var tempArr = circulationLinkCfg[k];
+                        for (var i = 0, l = tempArr.length; i < l; i++) {
+                            tempArr[i] += ' a';
+                        }
+                        var sSelector = tempArr.join(', ');
+
+                        $('body').on('mousedown', sSelector, {key: k},function(e) {
+                            var key = e.data.key;
+                            var href = $(this).attr('href');
+                            var tar = $(this).attr('target') || '';
+                            if (href && href.indexOf('/') >= 0 && href.indexOf('#') !== 0
+                            && tar === '_blank' && lemmaPageRegExp.test(href)) {
+                                // 词条页普通内链点击 pv
+                                nslog(10000004, null ,{division: key});
+                            }
+                        });
+                    } else {
+                        // 模块到词条页链接
+                        $(circulationLinkCfg[k]).on('mousedown', 'a', {key: k}, function (e) {
+                            var key = e.data.key;
+                            var href = $(this).attr('href');
+                            if (href && href.indexOf('#') !== 0 && lemmaPageRegExp.test(href)) {
+                                // 词条页配置模块链接点击 pv
+                                nslog(10000004, null, {division: key});
+                            }
+                        });
+                    }
+                }
+            }
+            // 发起统计请求
+            clickNslogFn();
+
+            /****** 各模块展现量pv ******/
+            function checkModuleIsShow() {
+                var result = [];
+                for (var k in circulationLinkCfg) {
+                    if (k !== 'innerLink' && k !== 'relationTable') {
+                        !!$(circulationLinkCfg[k]).html() && result.push(k);
+                    }
+                }
+                if (result.length > 0) {
+                    nslog(10000005, null, {showModules: result.join(',')});
+                }
+            }
+            checkModuleIsShow();
+
+        })();
+        /****** 词条页站内流转需求统计 end ******/
+
+    });
+
+    // 广告接入 wikiad 统一加载
+    // log 词条页广告被拦截情况（此处 log 请求行为）
+    nslog(70000101, window.location.href, {
+        api: 'lemma-ad',
+        action: 'request'
+    });
+    $.ajax({
+        type: 'GET',
+        url: '/api/wikiad/getsquirrels',
+        data: {
+            lemmaId: 5454803
+        },
+        cache: false,
+        dataType: 'JSON',
+        success: function (res) {
+            // log 词条页广告被拦截情况（此处 log 请求成功）
+            nslog(70000101, window.location.href, {
+                api: 'lemma-ad',
+                action: 'success'
+            });
+
+            if (!res.errno) {
+                if (res.data[5]) {
+                    require.async(['wiki-lemma:widget/promotion/rightPreciseAd/rightPreciseAd.js'], function(rightPreciseAd) {
+                        rightPreciseAd(res.data[5]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[5][0].adId,
+                            adTitle: res.data[5][0].name,
+                            adPos: 5
+                        });
+                    });
+                } else if (res.data[1]) {
+                    require.async(['wiki-lemma:widget/promotion/vbaike/vbaike.js'], function(vbaike) {
+                        vbaike(res.data[1]);
+                        for(var i in res.data[1]) {
+                            nslog(10002201, location.href, {
+                                adId: res.data[1][i].adId,
+                                adTitle: res.data[1][i].name,
+                                adPos: 1
+                            });
+                        }
+                    });
+                }
+                if (res.data[9]) {
+                    require.async(['wiki-lemma:widget/promotion/rightBigAd/rightBigAd.js'], function(rightBigAd) {
+                        rightBigAd(res.data[9]);
+                            nslog(10002201, location.href, {
+                                adId: res.data[9][0].adId,
+                                adTitle: res.data[9][0].name,
+                                adPos: 9
+                            });
+                    });
+                } else if(res.data[2]) {
+                    require.async(['wiki-lemma:widget/promotion/slide/slide.js'], function(slide) {
+                        slide(res.data[2]);
+                        for(var i in res.data[2]) {
+                            nslog(10002201, location.href, {
+                                adId: res.data[2][i].adId,
+                                adTitle: res.data[2][i].name,
+                                adPos: 2
+                            });
+                        }
+                    });
+                }
+                if (res.data[3]) {
+                    require.async(['wiki-lemma:widget/promotion/topAd/topAd.js'], function(topAd) {
+                        topAd(res.data[3]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[3][0].adId,
+                            adTitle: res.data[3][0].name,
+                            adPos: 3
+                        });
+                    });
+                }
+                if (res.data[4]) {
+                    require.async(['wiki-lemma:widget/promotion/rightAd/rightAd.js'], function(rightAd) {
+                        rightAd(res.data[4]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[4][0].adId,
+                            adTitle: res.data[4][0].name,
+                            adPos: 4
+                        });
+                    });
+                }
+                if (res.data[15]) {
+                    require.async(['wiki-lemma:widget/promotion/banner/banner.js'], function(banner) {
+                        banner(res.data[15]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[15][0].adId,
+                            adTitle: res.data[15][0].name,
+                            adPos: 15
+                        });
+                    });
+                }
+                if (res.data[16]) {
+                    require.async(['wiki-lemma:widget/promotion/declaration/declaration.js'], function(declaration) {
+                        declaration(res.data[16]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[16][0].adId,
+                            adTitle: res.data[16][0].name,
+                            adPos: 16
+                        });
+                    })
+                }
+            } else {
+                return;
+            }
+
+            setTimeout(function () {
+                var elemArr = {};
+                res.data[1] && res.data[1].length > 0 && (elemArr['lemma-vbaike-ad'] = $('.lemmaWgt-promotion-vbaike .promotion_viewport a:eq(0) img').get(0));
+                res.data[2] && res.data[2].length > 0 && (elemArr['lemma-slide-ad'] = $('.lemmaWgt-promotion-slide .promotion_viewport a:eq(0) img').get(0));
+                res.data[3] && res.data[3].length > 0 && (elemArr['lemma-navbar-ad'] = {
+                    node: $('.header [nslog-type="10002202"]').get(0),
+                    validations: {
+                        'noBackgroundImage': function() {
+                            return $('.header [nslog-type="10002202"]').css('background-image').indexOf(res.data[3][0].picUrl) < 0
+                        }
+                    }
+                });
+                res.data[4] && res.data[4].length > 0 && (elemArr['lemma-side-ad'] = {
+                    node: $('.right-ad img').get(0),
+                    validations: {
+                        'noBackgroundImage': function() {
+                            return $('.right-ad img').attr('src').indexOf(res.data[4][0].picUrl) < 0
+                        }
+                    }
+                });
+                res.data[15] && res.data[15].length > 0 && (elemArr['lemma-configModule-banner'] = $('.configModuleBanner').get(0));
+                res.data[16] && res.data[16].length > 0 && (elemArr['lemma-configModule-declaration'] = $('.lemmaWgt-declaration').get(0));
+
+                testElem.log(elemArr, 70000102);
+            }, 1000);
+        },
+        error: function () {
+            // log 词条页广告被拦截情况（此处 log 请求失败）
+            nslog(70000101, window.location.href, {
+                api: 'lemma-ad',
+                action: 'error'
+            });
+        }
+    });
+
+    // 设置分享内容
+    window.BKShare.setCommon({
+        bdText: "\u3010openssl_\u767e\u5ea6\u767e\u79d1\u3011OpenSSL \u662f\u4e00\u4e2a\u5b89\u5168\u5957\u63a5\u5b57\u5c42\u5bc6\u7801\u5e93\uff0c\u56ca\u62ec\u4e3b\u8981\u7684\u5bc6\u7801\u7b97\u6cd5\u3001\u5e38\u7528\u7684\u5bc6\u94a5\u548c\u8bc1\u4e66\u5c01\u88c5\u7ba1\u7406\u529f\u80fd\u53caSSL\u534f\u8bae\uff0c\u5e76\u63d0\u4f9b\u4e30\u5bcc\u7684\u5e94\u7528\u7a0b\u5e8f\u4f9b\u6d4b\u8bd5\u6216\u5176\u5b83\u76ee\u7684\u4f7f\u7528\u3002OpenSSL\u88ab\u66dd\u51fa\u73b0\u4e25\u91cd\u5b89\u5168\u6f0f\u6d1e\u540e\uff0c\u53d1\u73b0\u591a\u6570\u901a\u8fc7SSL\u534f\u8bae\u52a0\u5bc6\u7684\u7f51\u7ad9\u4f7f\u7528\u540d\u4e3aOpenSSL\u7684\u5f00\u6e90\u8f6f\u4ef6\u5305\u3002OpenSSL\u6f0f\u6d1e\u4e0d\u4ec5\u5f71\u54cd\u4ee5https\u5f00\u5934\u7684\u7f51\u7ad9\uff0c\u9ed1\u5ba2\u8fd8\u53ef\u5229\u7528\u6b64\u6f0f\u6d1e.....\uff08\u5206\u4eab\u81ea@\u767e\u5ea6\u767e\u79d1\uff09",
+        bdDesc: '',
+        bdUrl: 'http:\/\/baike.baidu.com\/subview\/300712\/300712.htm',
+        bdPic: '',
+        onBeforeClick: function (){
+            $('.bdshare_dialog_box').hide();
+        }
+    });
+
+    // 底部投诉带入当前页面 url
+    var map = [1, 2, 4, 3];
+    $('.wgt-footer-main .suggestion').find('a').each(function(i) {
+        $(this).attr('href', 'http://tousu.baidu.com/baike/add?word=openssl' + '&&submit_link=' + encodeURIComponent(window.location.href) + '#' + map[i]);
+    });
+}();
+!function(){      require('wiki-common:widget/component/psLink/psLink.js');
+    }();</script>
+<script type="text/javascript">
+  var Hunter = window.Hunter || {};
+  Hunter.userConfig = Hunter.userConfig || [];
+  </script>
+<script type="text/javascript" src="https://gss0.baidu.com/70cFsjip0QIZ8tyhnq/hunter/baike.js?st=17155" defer></script><script type="text/javascript">
+  // DOM Ready时，统计用户可操作时间。
+  alog('speed.set', 'drt', +new Date);
+
+  void function(a,b,c,d,e,f){function g(b){a.attachEvent?a.attachEvent("onload",b,!1):a.addEventListener&&a.addEventListener("load",b)}function h(a,c,d){d=d||15;var e=new Date;e.setTime((new Date).getTime()+1e3*d),b.cookie=a+"="+escape(c)+";path=/;expires="+e.toGMTString()}function i(a){var c=b.cookie.match(new RegExp("(^| )"+a+"=([^;]*)(;|$)"));return null!=c?unescape(c[2]):null}function j(){var a=i("PMS_JT");if(a){h("PMS_JT","",-1);try{a=a.match(/{["']s["']:(\d+),["']r["']:["']([\s\S]+)["']}/),a=a&&a[1]&&a[2]?{s:parseInt(a[1]),r:a[2]}:{}}catch(c){a={}}a.r&&b.referrer.replace(/#.*/,"")!=a.r||alog("speed.set","wt",a.s)}}if(a.alogObjectConfig){var k=a.alogObjectConfig.sample,l=a.alogObjectConfig.rand;if("https:"===a.location.protocol){if(d="https://gss2.bdstatic.com/70cFsjip0QIZ8tyhnq"+d,!k||!l)return}else d="http://img.baidu.com"+d;k&&l&&l>k||(g(function(){alog("speed.set","lt",+new Date),e=b.createElement(c),e.async=!0,e.src=d+"?v="+~(new Date/864e5),f=b.getElementsByTagName(c)[0],f.parentNode.insertBefore(e,f)}),j())}}(window,document,"script","/hunter/alog/dp.min.js");
+</script>
+</html>
