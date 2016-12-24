@@ -1,0 +1,516 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>乘法战斗公式分析研究：有关防御减伤率与随机变动 - GameRes游资网</title>
+<link href="http://www.gameres.com/thread_696861_1_1.html" rel="canonical" />
+<meta name="keywords" content="策划,数值,减伤率,乘法战斗公式,游戏策划" />
+<meta name="description" content=" 乘法战斗公式分析研究：有关防御减伤率与随机变动 " />
+<meta name="MSSmartTagsPreventParsing" content="True" />
+<meta http-equiv="MSThemeCompatible" content="Yes" />
+<base href="http://www.gameres.com/" /><link rel="stylesheet" type="text/css" href="data/cache/style_1_common.css?zFi" /><link rel="stylesheet" type="text/css" href="data/cache/style_1_forum_viewthread.css?zFi" /><link rel="stylesheet" id="css_extstyle" type="text/css" href="./template/default/style/t1/style.css" /><script type="text/javascript">var STYLEID = '1', STATICURL = 'static/', IMGDIR = 'static/image/common', VERHASH = 'zFi', charset = 'utf-8', discuz_uid = '0', cookiepre = 'yHah_16ed_', cookiedomain = '.gameres.com', cookiepath = '/', showusercard = '1', attackevasive = '0', disallowfloat = 'newthread|debate|nav|usergroups|task', creditnotice = '1|威望|,2|金钱|,3|贡献|', defaultstyle = './template/default/style/t1', REPORTURL = 'aHR0cDovL3d3dy5nYW1lcmVzLmNvbS82OTY4NjEuaHRtbA==', SITEURL = 'http://www.gameres.com/', JSPATH = 'static/js/';</script>
+<script src="static/js/common.js?zFi" type="text/javascript"></script>
+<meta name="application-name" content="GameRes游资网" />
+<meta name="msapplication-tooltip" content="GameRes游资网" />
+<meta name="msapplication-task" content="name=门户;action-uri=http://www.gameres.com/portal.php;icon-uri=http://www.gameres.com/static/image/common/portal.ico" /><meta name="msapplication-task" content="name=论坛;action-uri=http://bbs.gameres.com;icon-uri=http://www.gameres.com/static/image/common/bbs.ico" />
+<link rel="archives" title="GameRes游资网" href="http://www.gameres.com/archiver/" />
+<script src="static/js/forum.js?zFi" type="text/javascript"></script>
+
+
+</head>
+
+<body id="nv_forum" class="pg_viewthread" onkeydown="if(event.keyCode==27) return false;">
+<div id="append_parent"></div><div id="ajaxwaitid"></div>
+
+<div id="toptb" class="cl">
+<div class="wp">
+<div class="z"></div>
+<div class="y">
+</div>
+</div>
+</div>
+
+
+<div id="qmenu_menu" class="p_pop blk" style="display: none;">
+<div class="ptm pbw hm">
+请 <a href="javascript:;" class="xi2" onclick="lsSubmit()"><strong>登录</strong></a> 后使用快捷导航<br />没有帐号？<a href="member.php?mod=create_user2016" class="xi2 xw1">立即注册</a>
+</div>
+</div>
+<div id="hd">
+<div class="wp">
+<div class="hdc cl"><h2><a href="./" title="GameRes游资网"><img src="http://img.gameres.com/images2013/2013_new_title.png" alt="GameRes游资网" border="0" /></a></h2>
+
+<script src="static/js/logging.js?zFi" type="text/javascript"></script>
+<form method="post" autocomplete="off" id="lsform" action="member.php?mod=logging&amp;action=login&amp;loginsubmit=yes&amp;infloat=yes&amp;lssubmit=yes" onsubmit="return lsSubmit()">
+<div class="fastlg cl" style="color:#fff">
+<span id="return_ls" style="display:none"></span>
+<div class="y pns">
+<table cellspacing="0" cellpadding="0">
+<tr>
+<td>
+<span class="ftid" style="color:#fff;">用户名
+<!--
+<select name="fastloginfield" id="ls_fastloginfield" width="40" tabindex="900" style="color:#fff;">
+<option value="username">用户名</option>
+<option value="uid">UID</option>
+<option value="email">Email</option>
+</select>
+-->
+</span>
+<script type="text/javascript">simulateSelect('ls_fastloginfield')</script>
+</td>
+<td><input type="text" name="username" id="ls_username" autocomplete="off" class="px vm" tabindex="901" /></td>
+<td class="fastlg_l"><label for="ls_cookietime"><input type="checkbox" name="cookietime" id="ls_cookietime" class="pc" value="2592000" tabindex="903" />自动登录</label></td>
+<td>&nbsp;<a style="color:#fff" href="javascript:;" onclick="showWindow('login', 'member.php?mod=logging&action=login&viewlostpw=1')">找回密码</a></td>
+</tr>
+<tr>
+<td><label for="ls_password" class="z psw_w">密码</label></td>
+<td><input type="password" name="password" id="ls_password" class="px vm" autocomplete="off" tabindex="902" /></td>
+<td class="fastlg_l"><button type="submit" class="pn vm" tabindex="904" style="width: 75px;"><em>登录</em></button></td>
+<td>&nbsp;<a style="color:#fff" href="member.php?mod=create_user2016" class="xi2 xw1">立即注册</a></td>
+</tr>
+</table>
+<input type="hidden" name="quickforward" value="yes" />
+<input type="hidden" name="handlekey" value="ls" />
+</div>
+</div>
+</form>
+</div>
+
+<div id="nv">
+<ul><li class="a" id="mn_Nb179" ><a href="http://www.gameres.com" hidefocus="true" target="_blank"  >首页</a></li><li id="mn_Nc601" onmouseover="showMenu({'ctrlid':this.id,'ctrlclass':'hover','duration':2})"><a href="http://bbs.gameres.com" hidefocus="true"  >论坛</a></li><li id="mn_N3e76" onmouseover="showMenu({'ctrlid':this.id,'ctrlclass':'hover','duration':2})"><a href="http://www.gameres.com/zuixin_1.html" hidefocus="true" target="_blank"  >新闻</a></li><li id="mn_N0e6e" onmouseover="showMenu({'ctrlid':this.id,'ctrlclass':'hover','duration':2})"><a href="http://www.gameres.com/yanfa_1.html" hidefocus="true" target="_blank"  >文档</a></li><li id="mn_Ne589" ><a href="http://bbs.gameres.com/forum_47_1.html" hidefocus="true" target="_blank"  >招聘</a></li><li id="mn_N9e1d" onmouseover="showMenu({'ctrlid':this.id,'ctrlclass':'hover','duration':2})"><a href="http://cp.gameres.com" hidefocus="true" target="_blank"   style="font-weight: bold;color: yellow">产品</a></li><li id="mn_Na7fe" ><a href="http://www.gameres.com/fabu.html" hidefocus="true" target="_blank"  >投稿</a></li></ul>
+</div>
+<ul class="p_pop h_pop" id="mn_Nc601_menu" style="display: none"><li><a href="http://bbs.gameres.com/forum_6_1.html" hidefocus="true" >游戏策划</a></li><li><a href="http://bbs.gameres.com/forum_1_1.html" hidefocus="true" >游戏程序</a></li><li><a href="http://bbs.gameres.com/forum_55_1.html" hidefocus="true" >游戏运营</a></li><li><a href="#" hidefocus="true"  style="color: red">——————</a></li><li><a href="http://bbs.gameres.com/forum_20_1.html" hidefocus="true" >行业消息</a></li><li><a href="http://bbs.gameres.com/forum_45_1.html" hidefocus="true" >游戏职场</a></li><li><a href="http://bbs.gameres.com/forum_122_1.html" hidefocus="true" >游戏八卦</a></li><li><a href="#" hidefocus="true"  style="color: red">——————</a></li><li><a href="http://job.gameres.com" hidefocus="true"  style="color: blue">人才招聘</a></li><li><a href="http://bbs.gameres.com/forum_49_1.html" hidefocus="true" >投资交易</a></li><li><a href="http://bbs.gameres.com/forum_111_1.html" hidefocus="true" >游戏外包</a></li></ul><ul class="p_pop h_pop" id="mn_N3e76_menu" style="display: none"><li><a href="http://www.gameres.com/changshang_1.html" hidefocus="true" target="_blank"  style="color: red">— 游戏厂商 —</a></li><li><a href="http://www.gameres.com/guancha_1.html" hidefocus="true" target="_blank" >观察/分析</a></li><li><a href="http://www.gameres.com/zhuanfang_1.html" hidefocus="true" target="_blank" >人物/专访</a></li><li><a href="http://www.gameres.com/shichang_1.html" hidefocus="true" target="_blank" >市场动态</a></li><li><a href="http://www.gameres.com/dianjing_1.html" hidefocus="true" >电子竞技</a></li><li><a href="http://www.gameres.com/touzi_1.html" hidefocus="true" target="_blank" >投资收购</a></li><li><a href="http://www.gameres.com/bagua_1.html" hidefocus="true" target="_blank" >游戏八卦</a></li><li><a href="http://www.gameres.com/chanpindongtai_1.html" hidefocus="true" target="_blank"  style="color: red">— 产品动态 —</a></li><li><a href="http://www.gameres.com/shouyou_1.html" hidefocus="true" target="_blank"  style="color: blue">手机游戏</a></li><li><a href="http://www.gameres.com/vr_1.html" hidefocus="true" >虚拟/VR</a></li><li><a href="http://www.gameres.com/yeyou_1.html" hidefocus="true" target="_blank" >网页游戏</a></li><li><a href="http://www.gameres.com/duanyou_1.html" hidefocus="true" target="_blank" >端游/微端</a></li><li><a href="http://www.gameres.com/shejiao_1.html" hidefocus="true" target="_blank" >社交游戏</a></li><li><a href="http://www.gameres.com/danji_1.html" hidefocus="true" target="_blank" >单机游戏</a></li><li><a href="http://www.gameres.com/zhuji_1.html" hidefocus="true" target="_blank" >游戏机/TV</a></li><li><a href="#" hidefocus="true"  style="color: red">——————</a></li><li><a href="http://www.gameres.com/huodong_1.html" hidefocus="true" target="_blank" >展会/活动</a></li><li><a href="http://www.gameres.com/qita_1.html" hidefocus="true" target="_blank" >其它</a></li></ul><ul class="p_pop h_pop" id="mn_N0e6e_menu" style="display: none"><li><a href="http://www.gameres.com/chanpinfenxi_1.html" hidefocus="true" target="_blank" >产品分析</a></li><li><a href="http://www.gameres.com/yanfa_1.html" hidefocus="true" target="_blank"  style="color: red">— 游戏研发 —</a></li><li><a href="http://www.gameres.com/yinqing_1.html" hidefocus="true" target="_blank" >游戏引擎</a></li><li><a href="http://www.gameres.com/cehua_1.html" hidefocus="true" target="_blank"  style="color: blue">游戏策划</a></li><li><a href="http://www.gameres.com/chengxu_1.html" hidefocus="true" target="_blank" >游戏程序</a></li><li><a href="http://www.gameres.com/yunying_1.html" hidefocus="true" target="_blank"  style="color: red">— 游戏运营 —</a></li><li><a href="http://www.gameres.com/baogao_1.html" hidefocus="true" target="_blank" >产业报告</a></li><li><a href="http://www.gameres.com/shuju_1.html" hidefocus="true" target="_blank" >游戏数据</a></li><li><a href="http://www.gameres.com/zhichang_1.html" hidefocus="true" target="_blank"  style="color: red">— 游戏职场 —</a></li><li><a href="http://www.gameres.com/chuangye_1.html" hidefocus="true" target="_blank" >游戏创业</a></li><li><a href="http://www.gameres.com/guanli_1.html" hidefocus="true" target="_blank" >团队管理</a></li><li><a href="http://www.gameres.com/xinqing_1.html" hidefocus="true" target="_blank" >游戏心情</a></li><li><a href="#" hidefocus="true"  style="color: red">——————</a></li><li><a href="http://www.gameres.com/meishu_1.html" hidefocus="true" target="_blank" >游戏美术</a></li><li><a href="http://www.gameres.com/yinyue_1.html" hidefocus="true" target="_blank" >游戏音乐</a></li><li><a href="http://www.gameres.com/ceshi_1.html" hidefocus="true" target="_blank" >测试/QA</a></li></ul><ul class="p_pop h_pop" id="mn_N9e1d_menu" style="display: none"><li><a href="http://cp.gameres.com/cplist.php" hidefocus="true" target="_blank" >找产品</a></li><li><a href="http://cp.gameres.com/marketlist.php" hidefocus="true" target="_blank" >找渠道</a></li><li><a href="http://cp.gameres.com/servicelist.php" hidefocus="true" target="_blank" >找外包</a></li></ul><div id="mu" class="cl">
+</div><div class="a_mu"><table style="width: 958px;height:30px;background-color: #F2F2F2;" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td style="text-align: left">
+
+
+
+<font style="font-size: 14px;">　<span style="color:#999">论坛入口：</span>
+<a href="http://bbs.gameres.com/forum_6_1.html">游戏策划</a>　<a href="http://bbs.gameres.com/forum_1_1.html">游戏程序</a>　<b>|</b>　<b><a href="http://bbs.gameres.com/forum_55_1.html">游戏运营</a></b>　<a href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=55&filter=typeid&typeid=18">游戏报告</a>　<a href="http://bbs.gameres.com/forum_28.html">独立游戏</a>　<b>|</b>　<a href="http://bbs.gameres.com/forum_20_1.html">行业消息</a>　<a href="http://bbs.gameres.com/forum_45_1.html">游戏职场</a>　<a href="http://bbs.gameres.com/forum_122_1.html">游戏八卦</a>　<b>|</b>　<b><a href="http://bbs.gameres.com/forum_49_1.html">投资交易</a></b>　<a href="http://bbs.gameres.com/forum_111_1.html">项目外包</a>　<b>|</b>　<a href="http://bbs.gameres.com/forum_47_1.html">人才招聘</a>
+</font>
+
+</td>
+
+</tr>
+</table></div></div>
+</div>
+
+
+<div id="wp" class="wp"><script type="text/javascript">var fid = parseInt('6'), tid = parseInt('696861');</script>
+<form method="post" autocomplete="off" name="modactions" id="modactions">
+<input type="hidden" name="formhash" value="b3a770bc" />
+<input type="hidden" name="optgroup" />
+<input type="hidden" name="operation" />
+<input type="hidden" name="listextra" value="page%3D1" />
+</form>
+
+<script src="static/js/forum_viewthread.js?zFi" type="text/javascript"></script>
+<script type="text/javascript">zoomstatus = parseInt(0);var imagemaxwidth = '600';var aimgcount = new Array();</script>
+
+
+
+
+
+
+<style id="diy_style" type="text/css">#frame83q9PP {  margin:1px !important;border:#cccccc 1px solid !important;}#portal_block_50 .dxb_bc {  margin:8px !important;font-size:15px !important;}#portal_block_52 .dxb_bc {  font-size:15px !important;margin:12px !important;}#portal_block_52 .dxb_bc a {  color:#666666 !important;}#portal_block_50 .dxb_bc a {  color:#666666 !important;}</style>
+<div class="wp">
+<!--[diy=diy1]--><div id="diy1" class="area"></div><!--[/diy]-->
+</div>
+
+<br>
+
+<div id="ct" class="ct2 wp cl">
+<div class="mn">
+<div class="bm vw pl">
+<!-- 广告位：文章模板 横幅 
+<div id="PAGE_AD_top" style="width:728px;height:90px;"></div>-->
+<div class="h hm">
+<h1 class="ph">乘法战斗公式分析研究：有关防御减伤率与随机变动</h1>
+<p class="xg1">
+发布者:
+<a href="home.php?mod=space&amp;uid=233455">小篱</a>
+<span class="pipe">|</span>
+发布时间: 2016-12-23 16:19<span class="pipe">|</span>
+评论数: 1</p>
+</div>
+<div class="d">
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td><div class="pcb"  style="width:100%;">
+<span style="color:#666;border-bottom:1px dashed #888;position:relative"><b>游戏类型</b>：&nbsp;　　<b>设计类型</b>：【数值/经济系统/付费】&nbsp;<br><br></span><div class="t_fsz">
+<table cellspacing="0" cellpadding="0"><tr><td class="t_f" id="postmessage_2034672">
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_430193" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/23/161911tl7nruph8hw8ie88.jpg" file="data/attachment/forum/201612/23/161911tl7nruph8hw8ie88.jpg" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_430193" inpost="1" alt="乘法战斗公式分析研究：有关防御减伤率与随机变动 ..." title="乘法战斗公式分析研究：有关防御减伤率与随机变动 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_430193_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-23 16:19:11">昨天&nbsp;16:19</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDMwMTkzfGMyYTNkY2I0fDE0ODI1NDI2NTl8MHw2OTY4NjE%3D&amp;nothumb=yes" title="QQ截图20161223161857.jpg 下载次数:3" target="_blank"><strong>下载附件</strong> <span class="xs0">(190.31 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　文/徐明<br />
+<br />
+　　刚好在整理一些数值方面的东西，就乘法战斗公式这块我分享一下我整理的文章，仅供参考：<br />
+<br />
+　<strong><font color="#8b0000">　最基本的公式：攻方伤害=攻方攻击力*系数</font></strong><br />
+<br />
+　　系数包括且不限于以下几个方面的乘积：<br />
+<br />
+　　<strong>1. 防御减伤率：根据受击方的护甲/防御力而产生的一个减伤的系数</strong><br />
+<br />
+　　a) 这个系数设计的基本思路有：<br />
+<br />
+　　i. 护甲越高，防御减伤率越高。<br />
+<br />
+　　ii. 护甲越高，所带来防御减伤率的边际收益越低。<br />
+<br />
+　　iii. 护甲值趋向于无限大的情况下，防御减伤率趋向于小于1的一个定值。<br />
+<br />
+　　b) 具体的一些思路/例子：<br />
+<br />
+　　i. 基本的反比例函数，构建一个满足上述条件的反比例函数。以DotA普攻为例，这个减 伤率=护甲*0.06/（1+护甲*0.06），在护甲值趋向于无穷大的情况下，减伤率趋向于1，由于游戏特性，这个值一般不会超高100，模拟出来的函数曲线是这样的：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_430189" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/23/16050869t9prudfu3kos73.png" file="data/attachment/forum/201612/23/16050869t9prudfu3kos73.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_430189" inpost="1" alt="乘法战斗公式分析研究：有关防御减伤率与随机变动 ..." title="乘法战斗公式分析研究：有关防御减伤率与随机变动 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_430189_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-23 16:05:08">昨天&nbsp;16:05</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDMwMTg5fDg3MGRlMzIzfDE0ODI1NDI2NTl8MHw2OTY4NjE%3D&amp;nothumb=yes" title="v2-18273cc92ca0ebc013643fca55f58c48_b.png 下载次数:3" target="_blank"><strong>下载附件</strong> <span class="xs0">(41.91 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　ii. 分段函数：对于数值比较大，不断引入新系统投放防御属性的游戏（页游/端游），单纯的一个函数便不能满足需求，这时候需要根据属性投放制定分阶段的防御减伤率函数。下面拿之前项目的公式举个栗子：<br />
+<br />
+　　阶段1：当0≤数值防御≤500时<br />
+<br />
+　　防御免伤率=1-1/(1+数值防御/4500)<br />
+<br />
+　　阶段2：当500&lt;数值防御《7000时<br />
+<br />
+　　防御免伤率=1-1/(125/117+数值防御/11700)<br />
+<br />
+　　阶段3：当7000&lt;数值防御《30000<br />
+<br />
+　　防御免伤率=1-1/(108/69+数值防御/69000)<br />
+<br />
+　　阶段4：当数值防御&gt;30000<br />
+<br />
+　　防御御免伤率=0.5+0.1*((数值防御-30000)/30000/((数值防御-30000)/30000+1)<br />
+<br />
+　　模拟出来的曲线是这样的：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_430188" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/23/160508hcmuafsd57aapfcd.png" file="data/attachment/forum/201612/23/160508hcmuafsd57aapfcd.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_430188" inpost="1" alt="乘法战斗公式分析研究：有关防御减伤率与随机变动 ..." title="乘法战斗公式分析研究：有关防御减伤率与随机变动 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_430188_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-23 16:05:08">昨天&nbsp;16:05</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDMwMTg4fDYxZTY1MWRifDE0ODI1NDI2NTl8MHw2OTY4NjE%3D&amp;nothumb=yes" title="2.png 下载次数:3" target="_blank"><strong>下载附件</strong> <span class="xs0">(51.94 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　<strong>2. 随机变动：</strong>为了增加战斗的随机性、观赏性抑或不稳定因素，或者是为了增加小属性的投放（数值言中的“挖坑”），往往会引入一些随机因素。主要的随机因素可能有以下一些：<br />
+<br />
+　　a) 随机数：纯粹的使得在特定的攻击者和攻击对象的情况下，多次伤害值在较小范围内浮动。产生这个随机数的常用做法有：<br />
+<br />
+　　i. 固定伤害值*单纯的在1左右随机，例如：Random(0.9~1.1)，一般大数值的游戏常用这种做法。<br />
+<br />
+　　ii. 固定伤害值+数字数*骰子面数：DnD规则，后来魔兽争霸也沿用了这个设定，即为特定的单位定义骰子数，骰子面数，最终的值是抛掷骰子数次所得骰子面数的总和。例如使用3D9，即3个9面的骰子，攻击的浮动下限为3，上限为27。这种做法一般用在小数值的游戏里面。<br />
+<br />
+　　b) 暴击、格挡、破击、伤害加深/伤害减免等，这些系数的特点是有一个前提判定，如果判定成功，则一个系数生效：例如暴击成立，则伤害*2；格挡成立，则伤害*0.5；破击成立，则伤害*1.5；伤害加深，则伤害*（1+加深系数）；受击方伤害减免，则伤害*（1-减免次数）。这些系数一般都是相乘的关系，对于判定的做法一般是这样的：<br />
+<br />
+<ul><li>计算公式为：产生概率 — 抵抗概率 = 理想概率<li>Random（1%—100%）得出实际概率<li>实际概率 ≤ 理想概率，判定生效<li>实际概率 ＞ 理想概率，判定无效<br />
+</ul><br />
+<br />
+　　最后，<br />
+<br />
+<ul><li>如果随机数用的是随机系数的话，攻方伤害就是这样的：<br />
+</ul><br />
+<br />
+　　o攻方伤害=攻方攻击力*（1-防御免伤率）*随机数*暴击系数*格挡系数*破击系数*（1+攻方伤害加深）*（1-守方伤害减免）<br />
+<br />
+<ul><li>如果随机数用的是骰子的话，攻方的伤害就是这样的：<br />
+</ul><br />
+<br />
+　　o攻方伤害=攻方攻击力*（1-防御免伤率）*暴击系数*格挡系数*破击系数*（1+攻方伤害加深）*（1-守方伤害减免）+骰子数*骰子面数<br />
+<br />
+　　最后要说的是：做数值始于公式与拉表，但好的数值从来都不是表一拉就成了的。<br />
+<br />
+　<font color="#8b0000">　相关阅读</font>：<a href="http://www.gameres.com/696414.html" target="_blank">游戏数值设定</a><br />
+<br />
+</td></tr></table>
+</div>
+<div id="comment_2034672" class="cm">
+</div>
+<div id="post_rate_div_2034672"></div>
+</div><!-- 广告位：文章模版 中间 文后 -->
+
+
+<hr style="width:98%;" color=#dddddd size=1>
+<br>
+<center>
+<table><tr>
+
+<td width="33%">
+<center>
+<img alt="GameRes游资网微信公众号二维码" src="http://img.gameres.com/images2015/G.jpg" width="180" height="180"><br>
+<span style="color:#333;"><b>关注我们官方微信公众号</b><br></span>
+</td>
+
+
+<td width="33%">
+<center>
+<img alt="游戏行APP二维码" src="http://www.16p.com/app/imgs/liantu.png" width="180" height="180"><br>
+<span style="color:#333;"><b>下载我们官方APP-游戏行</b><br></span>
+</td>
+
+<td width="34%">
+<center>
+<img alt="游戏行APP二维码" src="http://img.gameres.com/images2015/cp.jpg" width="180" height="180"><br>
+<span style="color:#333;"><b>关注手游动态微信公众号</b><br></span>
+</td>
+
+
+</tr></table>
+</center>
+
+
+<br>
+
+
+
+
+
+<div id="p_btn" class="mtw mbm cl xs1">
+<a href="home.php?mod=spacecp&amp;ac=favorite&amp;type=thread&amp;id=696861" id="k_favorite" onclick="showWindow(this.id, this.href, 'get', 0);" onmouseover="this.title = $('favoritenumber').innerHTML + ' 人收藏'"><i><img src="static/image/common/fav.gif" alt="收藏" />收藏<span id="favoritenumber">1</span></i></a>
+<a id="recommend_add" href="forum.php?mod=misc&amp;action=recommend&amp;do=add&amp;tid=696861&amp;hash=b3a770bc"  onclick="showWindow('login', this.href)" onmouseover="this.title = $('recommendv_add').innerHTML + ' 人支持'"><i><img src="static/image/common/rec_add.gif" alt="支持" />支持<span id="recommendv_add">0</span></i></a>
+<a id="recommend_subtract" href="forum.php?mod=misc&amp;action=recommend&amp;do=subtract&amp;tid=696861&amp;hash=b3a770bc"  onclick="showWindow('login', this.href)" onmouseover="this.title = $('recommendv_subtract').innerHTML + ' 人反对'"><i><img src="static/image/common/rec_subtract.gif" alt="反对" />反对<span id="recommendv_subtract">0</span></i></a>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" reload="1">
+aimgcount[2034672] = ['430193','430189','430188'];
+attachimggroup(2034672);
+</script>
+</div>
+
+<div class="bm vw pl" id="comment">
+<div class="bm_h cl">
+<h2>最新评论</h2>
+</div>
+<div class="bm_c"><div id="post_2034689" class="xld xlda mbm"><dl class="bbda cl">
+<dd class="m avt"><a href="home.php?mod=space&amp;uid=214558"><img src="http://bbs.gameres.com/uc_server/avatar.php?uid=214558&size=small" /></a></dd>
+<dt>
+<span class="y xw0">
+
+</span>
+<a href="home.php?mod=space&amp;uid=214558" target="_blank" class="xi2">175916152</a><em id="author_2034689"> 发表于</em>
+<span class="xg1 xw0"><span title="2016-12-23 16:49:11">昨天&nbsp;16:49</span></span>
+</dt>
+<dd class="z"><div class="pcb"  style="width:100%;">
+<div class="t_fsz">
+<table cellspacing="0" cellpadding="0"><tr><td class="t_f" id="postmessage_2034689">
+翻来覆去就这么点东西</td></tr></table>
+</div>
+<div id="comment_2034689" class="cm">
+</div>
+<div id="post_rate_div_2034689"></div>
+</div></dd>
+
+</dl>
+
+
+
+</div>
+<div id="postlistreply" class="xld xlda mbm"><div id="post_new" class="viewthread_table" style="display: none;"></div></div>
+</div>
+
+</div>
+
+</div>
+<div class="sd">
+<div class="bm">
+<div class="bm_h cl">
+<h2>浏览过的帖子</h2>
+</div>
+<div class="bm_c xl xl1">
+<ul><li><a href="forum.php?mod=viewthread&amp;tid=696846&amp;from=portal">范伟林子聪上阵 40亿广告费难救页游游戏市场</a></li>
+</ul>
+</div>
+</div>
+
+<div class="drag">
+<!--[diy=diy2]--><div id="diy2" class="area"><div id="frame83q9PP" class=" frame move-span cl frame-1"><div id="frame83q9PP_left" class="column frame-1-c"><div id="frame83q9PP_left_temp" class="move-span temp"></div><div id="portal_block_47" class="block move-span"><div id="portal_block_47_content" class="dxb_bc"><div class="portal_block_summary"><center>
+<a title="游戏行" href="http://www.16p.com/app/" target="_blank" rel="nofollow"><img src="http://img.gameres.com/images/data/16p.jpg" width="260" height="120"></a><br>
+<br>
+<div class="jiathis_style_32x32">
+<table>
+<tr>
+<td ><span class="jiathis_txt" style="font-size:18px;">关注我们：</span></td>
+<td>
+<a class="jiathis_follow_weixin" rel="http://img.gameres.com/images2013/wx.jpg"></a>
+<a class="jiathis_follow_tsina" rel="http://weibo.com/gamerescom"></a>
+</td>
+<td>
+<a href="http://www.gameres.com/msg_202023.html" target="_blank">QQ群<img src="http://img.gameres.com/images2013/qq.jpg" style="width:28px;"></a>
+</td></tr>
+</table>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1851706" charset="utf-8"></script>
+<br>
+<form action="http://zhannei.baidu.com/cse/search" target="_blank">
+<input type="hidden" name="s" value="13698104158759869988">
+<input type="text" name="q" size="16" maxlength="100" style="font-size:18px;height:22px;padding-left:6px;vertical-align:middle;">
+<input type="submit" value=" 搜 索 "  style="height:22px;vertical-align:middle;" >
+</form>
+<br></div></div></div><div id="portal_block_62" class="block move-span"><div id="portal_block_62_content" class="dxb_bc"><div class="portal_block_summary"><center>
+
+<a title="2016中国游戏行业投融资交易会" href="http://www.gameres.com/zt/jump_cgtf.htm" rel="nofollow" target="_blank"><img src="http://img.gameres.com/images/data/cgtf260x120.jpg" width="260"></a><br>
+<a title="绯雨音乐" href="http://www.gameres.com/zt/jump_lightrain.htm" rel="nofollow" target="_blank"><img src="http://img.gameres.com/images/data/feiyu_260_120.gif" style="" width="260" height="120"></a><br>
+
+
+
+<a title="投稿" href="http://www.gameres.com/fabu.html" rel="nofollow" target="_blank"><img src="http://img.gameres.com/images/data/tougao.jpg" style="" width="266"></a><br>
+
+
+<br>
+<script type="text/javascript">
+    var cpro_id = "u2577505";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script></div></div></div><div id="portal_block_52" class="block move-span"><div class="blocktitle title" style="background-image: none; background-color: rgb(204, 204, 204); background-repeat: repeat repeat;"><span class="titletext" style="float:;margin-left:px;font-size:16px;color:;">　最新消息</span></div><div id="portal_block_52_content" class="dxb_bc"><div class="module cl xl xl1" style="text-align: left;">
+<ul><li><a href="http://www.gameres.com/696892.html" title="5亿玩家 为你加冕 2016 硬核联盟黑石奖颁奖盛典完美收官" target="_blank">5亿玩家 为你加冕 2016 硬核联盟黑石奖颁奖</a></li><li><a href="http://www.gameres.com/696880.html" title="《炉石传说》之后的TCG新星 《Shadowverse 影之诗》规则设计" target="_blank">《炉石传说》之后的TCG新星 《Shadowverse </a></li><li><a href="http://www.gameres.com/696861.html" title="乘法战斗公式分析研究：有关防御减伤率与随机变动" target="_blank">乘法战斗公式分析研究：有关防御减伤率与随</a></li><li><a href="http://www.gameres.com/696849.html" title="合规是网游的生命线 业界聚焦银商危害等问题" target="_blank">合规是网游的生命线 业界聚焦银商危害等问</a></li><li><a href="http://www.gameres.com/696846.html" title="范伟林子聪上阵 40亿广告费难救页游游戏市场" target="_blank">范伟林子聪上阵 40亿广告费难救页游游戏市</a></li><li><a href="http://www.gameres.com/696833.html" title="Glu收购手游《QuizUp》开发商Plain Vanilla" target="_blank">Glu收购手游《QuizUp》开发商Plain Vanilla</a></li></ul>
+</div></div></div><div id="portal_block_33" class="block move-span"><div id="portal_block_33_content" class="dxb_bc"><div class="portal_block_summary"><hr style='width:95%;border:1px dashed #BEAA7E;' />
+<br>
+
+
+<table style="width:100%;" cellspacing="0" cellpadding="0" >
+<tr><td>
+<p class="style45">
+&nbsp;<a target="_blank" href="http://job.gameres.com"><span style="color:#888888;font-
+size:12px;">招聘信息</span></a>&nbsp;&nbsp;<a target="_blank" href="http://bbs.gameres.com/forum.php?
+
+mod=post&action=newthread&fid=47"><span style="color:#888888;font-size:12px;">免费发布</span></a><img 
+
+src="http://img.gameres.com/images/hot.gif"><br>
+<center><b>
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=1">北京
+
+</a>] 
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=3">上海
+
+</a>] 
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=6">杭州
+
+</a>]
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=5">成都
+
+</a>]<br/> 
+
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=4">广州
+
+</a>]
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=8">深圳
+
+</a>]
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=9">厦门
+
+</a>]
+[<a target="_blank" href="http://bbs.gameres.com/forum_47_1.html">更多</a>] 
+</b></p>
+
+</td>
+</tr>
+</table></div></div></div><div id="portal_block_50" class="block move-span"><div id="portal_block_50_content" class="dxb_bc"><div class="module cl xl xl1" style="text-align: left;">
+<ul><li><a href="http://www.gameres.com/696844.html" title="【上海博羡】高薪招聘第二波" target="_blank"><font style="color: #8F2A90;">【上海博羡】高薪招聘第二波</font></a></li><li><a href="http://www.gameres.com/693293.html" title="哆可梦高薪诚聘各路人才" target="_blank"><font style="color: #996600;">哆可梦高薪诚聘各路人才</font></a></li><li><a href="http://www.gameres.com/448568.html" title="擎天柱 诚聘系统、数值、文案策划、运营策划、游戏开发" target="_blank"><font style="color: #EE1B2E;">擎天柱 诚聘系统、数值、文案策划、运营策</font></a></li><li><a href="http://www.gameres.com/685187.html" title="天象互动招聘用户运营，待遇好，福利多" target="_blank">天象互动招聘用户运营，待遇好，福利多</a></li><li><a href="http://www.gameres.com/680218.html" title="优质项目--暗沙游戏招:U3D特效/修图/UI/3D角色/3D动作/策划" target="_blank">优质项目--暗沙游戏招:U3D特效/修图/UI/3D</a></li><li><a href="http://www.gameres.com/694648.html" title="杭州掌优科技有限公司北京分公司招聘市场经理" target="_blank"><font style="color: #996600;">杭州掌优科技有限公司北京分公司招聘市场经</font></a></li><li><a href="http://www.gameres.com/675900.html" title="上海异界 VR游戏美术" target="_blank"><font style="font-weight: 900;color: #EE1B2E;">上海异界 VR游戏美术</font></a></li><li><a href="http://www.gameres.com/684129.html" title="飞鼠网络急聘页游、手游开发人才" target="_blank"><font style="color: #EE1B2E;">飞鼠网络急聘页游、手游开发人才</font></a></li></ul>
+</div></div></div></div></div></div><!--[/diy]-->
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+new lazyload();
+</script>
+
+<div class="wp mtn">
+<!--[diy=diy3]--><div id="diy3" class="area"></div><!--[/diy]-->
+</div>
+
+<!--
+<script src="http://cbjs.baidu.com/js/m.js" type="text/javascript"></script>
+<script type="text/javascript">
+BAIDU_CLB_fillSlotAsync('554159','PAGE_AD_top');
+BAIDU_CLB_fillSlotAsync('554434','PAGE_AD_bottom');
+BAIDU_CLB_fillSlotAsync('554143','PAGE_AD_right');
+</script>
+-->
+
+<div class="jiathis_share_slide jiathis_share_24x24" id="jiathis_share_slide">
+<div class="jiathis_share_slide_top" id="jiathis_share_title"></div>
+<div class="jiathis_share_slide_inner">
+<div class="jiathis_style_24x24">
+<a class="jiathis_button_weixin"></a>
+<a class="jiathis_button_tsina"></a>
+<a class="jiathis_button_tqq"></a>
+<a class="jiathis_button_qzone"></a>
+<a href="http://www.gameres.com" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+<script type="text/javascript">
+var jiathis_config = {
+slide:{
+divid:'wp',
+pos:'left',
+gt:"true",
+bgcolor:'#ffffff',
+mt:74
+}
+};
+</script>
+<script src="http://v3.jiathis.com/code/jia.js?uid=1851706" type="text/javascript" charset="utf-8"></script>	
+<script src="http://v3.jiathis.com/code/jiathis_slide.js" type="text/javascript" charset="utf-8"></script>
+</div></div></div>	</div>
+<div id="ft" class="wp cl">
+<div id="flk" class="y">
+<p><a href="http://www.gameres.com/ad.html" target="_blank" >广告投放</a><span class="pipe">|</span><a href="http://www.gameres.com/fabu.html" target="_blank" >信息发布</a><span class="pipe">|</span><a href="http://www.gameres.com/about.html" target="_blank" >关于本站</a><span class="pipe">|</span><a href="forum.php?mobile=yes" >手机版</a><span class="pipe">|</span><strong><a href="http://www.gameres.com" target="_blank">GameRes游资网</a></strong>
+( <a href="http://www.miitbeian.gov.cn/" target="_blank">闽ICP备05005107</a> )<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fda15d801c31af4462f4da256d5cf95e8' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</p>
+<p class="xs0">
+GMT+8, 2016-12-24 09:24<span id="debuginfo">
+</span>
+</p>
+</div>
+
+<!-- ɾ����discuz���� --></div>
+
+<div id="g_upmine_menu" class="tip tip_3" style="display:none;">
+<div class="tip_c">
+积分 0, 距离下一级还需  积分
+</div>
+<div class="tip_horn"></div>
+</div>
+<script src="home.php?mod=misc&ac=sendmail&rand=1482542659" type="text/javascript"></script>
+
+</body>
+</html>

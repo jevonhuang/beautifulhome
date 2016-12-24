@@ -1,0 +1,672 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>从“跨平台移植”探讨：游戏硬件和软件的关系 - GameRes游资网</title>
+<link href="http://www.gameres.com/thread_696701_1_1.html" rel="canonical" />
+<meta name="keywords" content="视野,游戏硬件,游戏软件,游戏开发,游戏产业" />
+<meta name="description" content=" 从“跨平台移植”探讨：游戏硬件和软件的关系 " />
+<meta name="MSSmartTagsPreventParsing" content="True" />
+<meta http-equiv="MSThemeCompatible" content="Yes" />
+<base href="http://www.gameres.com/" /><link rel="stylesheet" type="text/css" href="data/cache/style_1_common.css?zFi" /><link rel="stylesheet" type="text/css" href="data/cache/style_1_forum_viewthread.css?zFi" /><link rel="stylesheet" id="css_extstyle" type="text/css" href="./template/default/style/t1/style.css" /><script type="text/javascript">var STYLEID = '1', STATICURL = 'static/', IMGDIR = 'static/image/common', VERHASH = 'zFi', charset = 'utf-8', discuz_uid = '0', cookiepre = 'yHah_16ed_', cookiedomain = '.gameres.com', cookiepath = '/', showusercard = '1', attackevasive = '0', disallowfloat = 'newthread|debate|nav|usergroups|task', creditnotice = '1|威望|,2|金钱|,3|贡献|', defaultstyle = './template/default/style/t1', REPORTURL = 'aHR0cDovL3d3dy5nYW1lcmVzLmNvbS82OTY3MDEuaHRtbA==', SITEURL = 'http://www.gameres.com/', JSPATH = 'static/js/';</script>
+<script src="static/js/common.js?zFi" type="text/javascript"></script>
+<meta name="application-name" content="GameRes游资网" />
+<meta name="msapplication-tooltip" content="GameRes游资网" />
+<meta name="msapplication-task" content="name=门户;action-uri=http://www.gameres.com/portal.php;icon-uri=http://www.gameres.com/static/image/common/portal.ico" /><meta name="msapplication-task" content="name=论坛;action-uri=http://bbs.gameres.com;icon-uri=http://www.gameres.com/static/image/common/bbs.ico" />
+<link rel="archives" title="GameRes游资网" href="http://www.gameres.com/archiver/" />
+<script src="static/js/forum.js?zFi" type="text/javascript"></script>
+
+
+</head>
+
+<body id="nv_forum" class="pg_viewthread" onkeydown="if(event.keyCode==27) return false;">
+<div id="append_parent"></div><div id="ajaxwaitid"></div>
+
+<div id="toptb" class="cl">
+<div class="wp">
+<div class="z"></div>
+<div class="y">
+</div>
+</div>
+</div>
+
+
+<div id="qmenu_menu" class="p_pop blk" style="display: none;">
+<div class="ptm pbw hm">
+请 <a href="javascript:;" class="xi2" onclick="lsSubmit()"><strong>登录</strong></a> 后使用快捷导航<br />没有帐号？<a href="member.php?mod=create_user2016" class="xi2 xw1">立即注册</a>
+</div>
+</div>
+<div id="hd">
+<div class="wp">
+<div class="hdc cl"><h2><a href="./" title="GameRes游资网"><img src="http://img.gameres.com/images2013/2013_new_title.png" alt="GameRes游资网" border="0" /></a></h2>
+
+<script src="static/js/logging.js?zFi" type="text/javascript"></script>
+<form method="post" autocomplete="off" id="lsform" action="member.php?mod=logging&amp;action=login&amp;loginsubmit=yes&amp;infloat=yes&amp;lssubmit=yes" onsubmit="return lsSubmit()">
+<div class="fastlg cl" style="color:#fff">
+<span id="return_ls" style="display:none"></span>
+<div class="y pns">
+<table cellspacing="0" cellpadding="0">
+<tr>
+<td>
+<span class="ftid" style="color:#fff;">用户名
+<!--
+<select name="fastloginfield" id="ls_fastloginfield" width="40" tabindex="900" style="color:#fff;">
+<option value="username">用户名</option>
+<option value="uid">UID</option>
+<option value="email">Email</option>
+</select>
+-->
+</span>
+<script type="text/javascript">simulateSelect('ls_fastloginfield')</script>
+</td>
+<td><input type="text" name="username" id="ls_username" autocomplete="off" class="px vm" tabindex="901" /></td>
+<td class="fastlg_l"><label for="ls_cookietime"><input type="checkbox" name="cookietime" id="ls_cookietime" class="pc" value="2592000" tabindex="903" />自动登录</label></td>
+<td>&nbsp;<a style="color:#fff" href="javascript:;" onclick="showWindow('login', 'member.php?mod=logging&action=login&viewlostpw=1')">找回密码</a></td>
+</tr>
+<tr>
+<td><label for="ls_password" class="z psw_w">密码</label></td>
+<td><input type="password" name="password" id="ls_password" class="px vm" autocomplete="off" tabindex="902" /></td>
+<td class="fastlg_l"><button type="submit" class="pn vm" tabindex="904" style="width: 75px;"><em>登录</em></button></td>
+<td>&nbsp;<a style="color:#fff" href="member.php?mod=create_user2016" class="xi2 xw1">立即注册</a></td>
+</tr>
+</table>
+<input type="hidden" name="quickforward" value="yes" />
+<input type="hidden" name="handlekey" value="ls" />
+</div>
+</div>
+</form>
+</div>
+
+<div id="nv">
+<ul><li class="a" id="mn_Nb179" ><a href="http://www.gameres.com" hidefocus="true" target="_blank"  >首页</a></li><li id="mn_Nc601" onmouseover="showMenu({'ctrlid':this.id,'ctrlclass':'hover','duration':2})"><a href="http://bbs.gameres.com" hidefocus="true"  >论坛</a></li><li id="mn_N3e76" onmouseover="showMenu({'ctrlid':this.id,'ctrlclass':'hover','duration':2})"><a href="http://www.gameres.com/zuixin_1.html" hidefocus="true" target="_blank"  >新闻</a></li><li id="mn_N0e6e" onmouseover="showMenu({'ctrlid':this.id,'ctrlclass':'hover','duration':2})"><a href="http://www.gameres.com/yanfa_1.html" hidefocus="true" target="_blank"  >文档</a></li><li id="mn_Ne589" ><a href="http://bbs.gameres.com/forum_47_1.html" hidefocus="true" target="_blank"  >招聘</a></li><li id="mn_N9e1d" onmouseover="showMenu({'ctrlid':this.id,'ctrlclass':'hover','duration':2})"><a href="http://cp.gameres.com" hidefocus="true" target="_blank"   style="font-weight: bold;color: yellow">产品</a></li><li id="mn_Na7fe" ><a href="http://www.gameres.com/fabu.html" hidefocus="true" target="_blank"  >投稿</a></li></ul>
+</div>
+<ul class="p_pop h_pop" id="mn_Nc601_menu" style="display: none"><li><a href="http://bbs.gameres.com/forum_6_1.html" hidefocus="true" >游戏策划</a></li><li><a href="http://bbs.gameres.com/forum_1_1.html" hidefocus="true" >游戏程序</a></li><li><a href="http://bbs.gameres.com/forum_55_1.html" hidefocus="true" >游戏运营</a></li><li><a href="#" hidefocus="true"  style="color: red">——————</a></li><li><a href="http://bbs.gameres.com/forum_20_1.html" hidefocus="true" >行业消息</a></li><li><a href="http://bbs.gameres.com/forum_45_1.html" hidefocus="true" >游戏职场</a></li><li><a href="http://bbs.gameres.com/forum_122_1.html" hidefocus="true" >游戏八卦</a></li><li><a href="#" hidefocus="true"  style="color: red">——————</a></li><li><a href="http://job.gameres.com" hidefocus="true"  style="color: blue">人才招聘</a></li><li><a href="http://bbs.gameres.com/forum_49_1.html" hidefocus="true" >投资交易</a></li><li><a href="http://bbs.gameres.com/forum_111_1.html" hidefocus="true" >游戏外包</a></li></ul><ul class="p_pop h_pop" id="mn_N3e76_menu" style="display: none"><li><a href="http://www.gameres.com/changshang_1.html" hidefocus="true" target="_blank"  style="color: red">— 游戏厂商 —</a></li><li><a href="http://www.gameres.com/guancha_1.html" hidefocus="true" target="_blank" >观察/分析</a></li><li><a href="http://www.gameres.com/zhuanfang_1.html" hidefocus="true" target="_blank" >人物/专访</a></li><li><a href="http://www.gameres.com/shichang_1.html" hidefocus="true" target="_blank" >市场动态</a></li><li><a href="http://www.gameres.com/dianjing_1.html" hidefocus="true" >电子竞技</a></li><li><a href="http://www.gameres.com/touzi_1.html" hidefocus="true" target="_blank" >投资收购</a></li><li><a href="http://www.gameres.com/bagua_1.html" hidefocus="true" target="_blank" >游戏八卦</a></li><li><a href="http://www.gameres.com/chanpindongtai_1.html" hidefocus="true" target="_blank"  style="color: red">— 产品动态 —</a></li><li><a href="http://www.gameres.com/shouyou_1.html" hidefocus="true" target="_blank"  style="color: blue">手机游戏</a></li><li><a href="http://www.gameres.com/vr_1.html" hidefocus="true" >虚拟/VR</a></li><li><a href="http://www.gameres.com/yeyou_1.html" hidefocus="true" target="_blank" >网页游戏</a></li><li><a href="http://www.gameres.com/duanyou_1.html" hidefocus="true" target="_blank" >端游/微端</a></li><li><a href="http://www.gameres.com/shejiao_1.html" hidefocus="true" target="_blank" >社交游戏</a></li><li><a href="http://www.gameres.com/danji_1.html" hidefocus="true" target="_blank" >单机游戏</a></li><li><a href="http://www.gameres.com/zhuji_1.html" hidefocus="true" target="_blank" >游戏机/TV</a></li><li><a href="#" hidefocus="true"  style="color: red">——————</a></li><li><a href="http://www.gameres.com/huodong_1.html" hidefocus="true" target="_blank" >展会/活动</a></li><li><a href="http://www.gameres.com/qita_1.html" hidefocus="true" target="_blank" >其它</a></li></ul><ul class="p_pop h_pop" id="mn_N0e6e_menu" style="display: none"><li><a href="http://www.gameres.com/chanpinfenxi_1.html" hidefocus="true" target="_blank" >产品分析</a></li><li><a href="http://www.gameres.com/yanfa_1.html" hidefocus="true" target="_blank"  style="color: red">— 游戏研发 —</a></li><li><a href="http://www.gameres.com/yinqing_1.html" hidefocus="true" target="_blank" >游戏引擎</a></li><li><a href="http://www.gameres.com/cehua_1.html" hidefocus="true" target="_blank"  style="color: blue">游戏策划</a></li><li><a href="http://www.gameres.com/chengxu_1.html" hidefocus="true" target="_blank" >游戏程序</a></li><li><a href="http://www.gameres.com/yunying_1.html" hidefocus="true" target="_blank"  style="color: red">— 游戏运营 —</a></li><li><a href="http://www.gameres.com/baogao_1.html" hidefocus="true" target="_blank" >产业报告</a></li><li><a href="http://www.gameres.com/shuju_1.html" hidefocus="true" target="_blank" >游戏数据</a></li><li><a href="http://www.gameres.com/zhichang_1.html" hidefocus="true" target="_blank"  style="color: red">— 游戏职场 —</a></li><li><a href="http://www.gameres.com/chuangye_1.html" hidefocus="true" target="_blank" >游戏创业</a></li><li><a href="http://www.gameres.com/guanli_1.html" hidefocus="true" target="_blank" >团队管理</a></li><li><a href="http://www.gameres.com/xinqing_1.html" hidefocus="true" target="_blank" >游戏心情</a></li><li><a href="#" hidefocus="true"  style="color: red">——————</a></li><li><a href="http://www.gameres.com/meishu_1.html" hidefocus="true" target="_blank" >游戏美术</a></li><li><a href="http://www.gameres.com/yinyue_1.html" hidefocus="true" target="_blank" >游戏音乐</a></li><li><a href="http://www.gameres.com/ceshi_1.html" hidefocus="true" target="_blank" >测试/QA</a></li></ul><ul class="p_pop h_pop" id="mn_N9e1d_menu" style="display: none"><li><a href="http://cp.gameres.com/cplist.php" hidefocus="true" target="_blank" >找产品</a></li><li><a href="http://cp.gameres.com/marketlist.php" hidefocus="true" target="_blank" >找渠道</a></li><li><a href="http://cp.gameres.com/servicelist.php" hidefocus="true" target="_blank" >找外包</a></li></ul><div id="mu" class="cl">
+</div><div class="a_mu"><table style="width: 958px;height:30px;background-color: #F2F2F2;" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td style="text-align: left">
+
+
+
+<font style="font-size: 14px;">　<span style="color:#999">论坛入口：</span>
+<a href="http://bbs.gameres.com/forum_6_1.html">游戏策划</a>　<a href="http://bbs.gameres.com/forum_1_1.html">游戏程序</a>　<b>|</b>　<b><a href="http://bbs.gameres.com/forum_55_1.html">游戏运营</a></b>　<a href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=55&filter=typeid&typeid=18">游戏报告</a>　<a href="http://bbs.gameres.com/forum_28.html">独立游戏</a>　<b>|</b>　<a href="http://bbs.gameres.com/forum_20_1.html">行业消息</a>　<a href="http://bbs.gameres.com/forum_45_1.html">游戏职场</a>　<a href="http://bbs.gameres.com/forum_122_1.html">游戏八卦</a>　<b>|</b>　<b><a href="http://bbs.gameres.com/forum_49_1.html">投资交易</a></b>　<a href="http://bbs.gameres.com/forum_111_1.html">项目外包</a>　<b>|</b>　<a href="http://bbs.gameres.com/forum_47_1.html">人才招聘</a>
+</font>
+
+</td>
+
+</tr>
+</table></div></div>
+</div>
+
+
+<div id="wp" class="wp"><script type="text/javascript">var fid = parseInt('20'), tid = parseInt('696701');</script>
+<form method="post" autocomplete="off" name="modactions" id="modactions">
+<input type="hidden" name="formhash" value="b3a770bc" />
+<input type="hidden" name="optgroup" />
+<input type="hidden" name="operation" />
+<input type="hidden" name="listextra" value="page%3D1" />
+</form>
+
+<script src="static/js/forum_viewthread.js?zFi" type="text/javascript"></script>
+<script type="text/javascript">zoomstatus = parseInt(0);var imagemaxwidth = '600';var aimgcount = new Array();</script>
+
+
+
+
+
+
+<style id="diy_style" type="text/css">#frame83q9PP {  margin:1px !important;border:#cccccc 1px solid !important;}#portal_block_50 .dxb_bc {  margin:8px !important;font-size:15px !important;}#portal_block_52 .dxb_bc {  font-size:15px !important;margin:12px !important;}#portal_block_52 .dxb_bc a {  color:#666666 !important;}#portal_block_50 .dxb_bc a {  color:#666666 !important;}</style>
+<div class="wp">
+<!--[diy=diy1]--><div id="diy1" class="area"></div><!--[/diy]-->
+</div>
+
+<br>
+
+<div id="ct" class="ct2 wp cl">
+<div class="mn">
+<div class="bm vw pl">
+<!-- 广告位：文章模板 横幅 
+<div id="PAGE_AD_top" style="width:728px;height:90px;"></div>-->
+<div class="h hm">
+<h1 class="ph">从“跨平台移植”探讨：游戏硬件和软件的关系</h1>
+<p class="xg1">
+发布者:
+<a href="home.php?mod=space&amp;uid=246485">一元</a>
+<span class="pipe">|</span>
+发布时间: 2016-12-22 12:04<span class="pipe">|</span>
+评论数: 1</p>
+</div>
+<div class="d">
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td><div class="pcb"  style="width:100%;">
+<div class="t_fsz">
+<table cellspacing="0" cellpadding="0"><tr><td class="t_f" id="postmessage_2034111">
+　　在狭义的理解上，电子游戏的软件是指供电子游戏机实用的软件，属于软件性质，如《最终幻想》系列，《英雄传说》系列，《生化危机》系列等。而电子游戏的硬件是指供电子游戏软件运行的机器，可以分为家用机、掌机、街机和个人电脑等。<br />
+<br />
+　　最早期，软件与硬件是类似于模组化的关系，一款游戏必须对应一个特定的硬件才能够运行，例如《拳皇》对应街机，《超级马里奥》对应红白机，但在现在，这个界限被逐渐模糊，越来越多的游戏被跨平台运行，我们可以在手机上玩到《拳皇》和《超级马里奥》。<br />
+<br />
+　　但这并不代表软件与硬件之间的关系可以淡化，跨平台运行终究只是一种让软件寻找到更合适的载体的办法。要想找到这个载体，理清作为载体的硬件和软件之间的交互关系就显得无比重要。<br />
+<br />
+　　本文就来探讨一个问题：究竟是软件的发展推动了硬件的升级，还是硬件的升级带动了软件的发展？游戏硬件和软件的究竟是何种关系？<br />
+<br />
+　　<strong><font color="#8b0000">从最早的电子游戏《OXO》和鼻祖雅达利说起</font></strong><br />
+<br />
+　　有记录的最早电子游戏是一名研究人员1952年在剑桥大学制作的《OXO》，其玩法相当于现在的“井字过三关”，玩家用转盘操作对抗有基本人工智能的电脑。这款游戏需要基于阴极射线管显示记忆体内容，无论规则还是画面均非常简陋。<br />
+<br />
+　　讽刺的是，作为电子游戏始祖《OXO》的制作目的却并不是游戏，而是作为设计者展示其一篇人机互动论文的佐证。<br />
+<br />
+　　提到电子游戏，那么就不得不提电子游戏的鼻祖雅达利公司。1971年，一个叫做布什内尔的麻省理工学院的学生设计了一款叫做《空间大战》的业务用游戏机，规则是两个玩家各自控制一艘围绕着具有强大引力的星球的太空战舰向对方发射导弹进行攻击。但是这台始祖级游戏机却因为“代价太高昂”而惨遭淘汰，毕竟不是每一个人都有使用它所需要的PDP-1小型机的财力。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_429666" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/22/114750hubhzhxg6hhx6ebh.jpg" file="data/attachment/forum/201612/22/114750hubhzhxg6hhx6ebh.jpg" class="zoom" onclick="zoom(this, this.src)" width="553" id="aimg_429666" inpost="1" alt="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." title="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_429666_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-22 11:47:50">昨天&nbsp;11:47</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDI5NjY2fDhmZDc5MTdhfDE0ODI0NTUxMDR8MHw2OTY3MDE%3D&amp;nothumb=yes" title="610.jpg 下载次数:3" target="_blank"><strong>下载附件</strong> <span class="xs0">(17.55 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　不过布什内尔并没有放弃，而是在次年做了一个赌注：他辞掉工作和朋友成立了自己的公司，这也就是被奉为鼻祖的雅达利，他用这个公司继续推销《空间大战》的升级版《电脑空间》，然而结果是依然惨败。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_429667" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/22/1147501ypyv3uy1cuuyqlx.jpg" file="data/attachment/forum/201612/22/1147501ypyv3uy1cuuyqlx.jpg" class="zoom" onclick="zoom(this, this.src)" width="554" id="aimg_429667" inpost="1" alt="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." title="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_429667_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-22 11:47:50">昨天&nbsp;11:47</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDI5NjY3fGU3MDQ0NjA3fDE0ODI0NTUxMDR8MHw2OTY3MDE%3D&amp;nothumb=yes" title="611.jpg 下载次数:3" target="_blank"><strong>下载附件</strong> <span class="xs0">(20.28 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　如果说《空间大战》的失败是由于其游戏硬件价格太过高昂，那么在硬件上被完善至只需要一台黑白电视机以及一个控制柄即可运行的《电脑空间》为什么还是失败？当时人们给出的答案是规则太过复杂，不如玩当时流行的一种叫做“弹子球”的街机击球游戏有意思。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_429668" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/22/114750v8oouvu6uy8t81t7.jpg" file="data/attachment/forum/201612/22/114750v8oouvu6uy8t81t7.jpg" class="zoom" onclick="zoom(this, this.src)" width="400" id="aimg_429668" inpost="1" alt="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." title="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_429668_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-22 11:47:50">昨天&nbsp;11:47</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDI5NjY4fDU4ZDU1ZDhjfDE0ODI0NTUxMDR8MHw2OTY3MDE%3D&amp;nothumb=yes" title="612.jpg 下载次数:3" target="_blank"><strong>下载附件</strong> <span class="xs0">(14.11 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　布什内尔依然没有放弃对电子游戏产业的看好，在总结失败之后，一款叫做《Pong》的乒乓球题材街机游戏横空出世，现在业界普遍认为《Pong》是最初被消费者接受的电子游戏。据说，《Pong》在推出时依然放在了满是“弹子球”包围的弹子房内，没几天就出了故障——原因不在于游戏本身出现了问题，而是玩家的投币已经将这台街机塞满了。<br />
+<br />
+　　《Pong》的成功在于游戏规则非常简单有趣，一看就会，同时拥有相当大的可玩性，将玩家的感官和能力调动到极限。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_429669" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/22/114750m5tg2ppp6266mt26.jpg" file="data/attachment/forum/201612/22/114750m5tg2ppp6266mt26.jpg" class="zoom" onclick="zoom(this, this.src)" width="350" id="aimg_429669" inpost="1" alt="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." title="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_429669_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-22 11:47:50">昨天&nbsp;11:47</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDI5NjY5fDUyNGRjYzA3fDE0ODI0NTUxMDR8MHw2OTY3MDE%3D&amp;nothumb=yes" title="613.jpg 下载次数:3" target="_blank"><strong>下载附件</strong> <span class="xs0">(17.77 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　虽说是很老的游戏了，但《Pong》无疑命中了游戏的本质。因为从某种程度上讲，游戏本质上是一种放松的手段，谁会有时间和耐心去理解复杂的游戏规则呢？又有谁有那么多财力为了一款游戏而耗费千金？<br />
+<br />
+　　如果说《OXO》是最初的有记录的电子游戏，那么布什内尔创造的雅达利则是明确了电子游戏这一概念，因为它是一台专用的电子游戏机，从中我们看到了“非目的性”和“专一目的性”之间的差别。<br />
+<br />
+　　而从《空间大战》至《电脑空间》再到《Pong》，我们看到电子游戏产业的诞生和逐渐被大众接受的过程，也看到一名游戏业者对于游戏执着的追求，以及追求过程中反映出的游戏本质问题。<br />
+<br />
+　　<strong><font color="#8b0000">83年雅达利事件：日本主导美国游戏产业长达20年</font></strong><br />
+<br />
+　　雅达利事件，是指于1983年发生的美国游戏市场大萧条的灾难。事件起因于当时已经主导北美游戏产业的雅达利公司“数量压倒质量”的游戏政策，市场上涌现了大量包装华丽，内容同质化的垃圾游戏，导致恶性竞争，让美国玩家对于电子游戏彻底失去信心，并于1983年的圣诞节大崩溃，导致整个美国游戏市场大衰退。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_429670" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/22/114750yahjqn6jcaq6qfaa.jpg" file="data/attachment/forum/201612/22/114750yahjqn6jcaq6qfaa.jpg" class="zoom" onclick="zoom(this, this.src)" width="554" id="aimg_429670" inpost="1" alt="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." title="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_429670_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-22 11:47:50">昨天&nbsp;11:47</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDI5NjcwfGQ0MDI0ZDg0fDE0ODI0NTUxMDR8MHw2OTY3MDE%3D&amp;nothumb=yes" title="614.jpg 下载次数:4" target="_blank"><strong>下载附件</strong> <span class="xs0">(39.64 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p>　　雅达利事件是游戏和经济领域一个非常重要的案例，专业人士的评价是：美国游戏业就此毁于一旦，没有10年别想恢复。直至1985年日本任天堂一款叫做《超级马里奥》的电子游戏才让美国玩家看到了希望，从此美国游戏行业被日本统治长达20年，直到微软XBOX的出现。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_429671" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/22/114751zm1h0phps97pc9h9.jpg" file="data/attachment/forum/201612/22/114751zm1h0phps97pc9h9.jpg" class="zoom" onclick="zoom(this, this.src)" width="531" id="aimg_429671" inpost="1" alt="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." title="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_429671_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-22 11:47:51">昨天&nbsp;11:47</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDI5NjcxfGYwMjliZmYxfDE0ODI0NTUxMDR8MHw2OTY3MDE%3D&amp;nothumb=yes" title="615.jpg 下载次数:3" target="_blank"><strong>下载附件</strong> <span class="xs0">(16.87 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　现在普遍认为雅达利事件的本质有三点：其一是大量廉价的家用电脑，干预美国游戏业。其二是基于廉价家用电脑的问世而大量仓促开发出来的劣质游戏。其三是媒体过分宣传游戏负面价值。<br />
+<br />
+　　那么问题是：为什么硬件条件的大幅度降低却导致了大量劣质游戏的诞生？归根究底，就要提到Activision这家公司。四名不满于雅达利福利政策的原员工在炒了老东家鱿鱼后，自己组建了Activision这家公司。这四名白眼狼基于老东家的硬件设计出了高质量游戏，并计划推广上市，雅达利自然要出面阻止，结果两者闹上法庭。<br />
+<br />
+　　但最终结果却出人意料——雅达利败诉。虽然不知道当时法官基于什么下达这一判决，但其无疑导致了一项重要决定的诞生——第三方开发的游戏合法化，而后者又让多如牛毛的游戏制作商获得了在任意硬件上开发游戏的权利，这中间甚至包括桂格燕麦这些生产食物的公司，以及大量毫无经验的新手程序员——他们开发的游戏自然让人不敢恭维。<br />
+<br />
+　　同时也带来了市场的激烈竞争，欣欣向荣的市场产生出一个“数量压倒质量”的假象。也许是基于这个，就连雅达利等大公司也落入了陷阱，雅达利以洪水般的势头生产了数百万批游戏却卖不出去，剩余的游戏不得不拖到墨西哥进行填埋。<br />
+<br />
+　　“雅达利事件”是软件品质上与硬件脱节的缩影，进一步说，我们可以认为这是硬件开始注重普及化，却没有注重软件品质提升带来的一场灾难。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_429672" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/22/114751149st1dtprf20f0r.jpg" file="data/attachment/forum/201612/22/114751149st1dtprf20f0r.jpg" class="zoom" onclick="zoom(this, this.src)" width="553" id="aimg_429672" inpost="1" alt="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." title="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_429672_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-22 11:47:51">昨天&nbsp;11:47</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDI5NjcyfGM5NDIyODg1fDE0ODI0NTUxMDR8MHw2OTY3MDE%3D&amp;nothumb=yes" title="616.jpg 下载次数:3" target="_blank"><strong>下载附件</strong> <span class="xs0">(19.56 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　<strong><font color="#8b0000">从跨平台移植探讨硬件和软件之间的匹配性</font></strong><br />
+<br />
+　　正如前面所说，由于早期的硬件技术的限制，设计者是基于现有的硬件条件下才去创造一款游戏。但是现在硬件呈现移动端，个人电脑，家用机和街机四种类型的发展，已经完全有条件去根据一款游戏的需要去选择硬件，硬件与软件之间的单一匹配已经不复存在。<br />
+<br />
+　　由此延伸出寻找合适的载体问题，成为新的研究硬件和软件之间匹配性的关键。因为硬件可选择的范围被空前扩大，究竟一款游戏软件以什么样的硬件诞生才能将这款游戏的价值发挥到最大？<br />
+<br />
+　　《拳皇》系列最早是基于街机开发的游戏，自90年代开始成为一款相当大众的街机游戏。在个人电脑普及后，《拳皇》系列被移植到了电脑上，用键盘操作的模式代替了街机的AB键，但令人意外的是，电脑移植并没有取得意料之中的成功。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_429673" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/22/114751n8zfiitt66zin6fi.jpg" file="data/attachment/forum/201612/22/114751n8zfiitt66zin6fi.jpg" class="zoom" onclick="zoom(this, this.src)" width="554" id="aimg_429673" inpost="1" alt="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." title="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_429673_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-22 11:47:51">昨天&nbsp;11:47</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDI5NjczfGMwYTE0MTFkfDE0ODI0NTUxMDR8MHw2OTY3MDE%3D&amp;nothumb=yes" title="617.jpg 下载次数:3" target="_blank"><strong>下载附件</strong> <span class="xs0">(25.74 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><p align="center">当年在街机上的热血去了哪里？难道只是硬件换了一换，一款游戏就不同了吗？</p><br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_429674" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/22/114751ekfp0abakmfppeee.jpg" file="data/attachment/forum/201612/22/114751ekfp0abakmfppeee.jpg" class="zoom" onclick="zoom(this, this.src)" width="553" id="aimg_429674" inpost="1" alt="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." title="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_429674_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-22 11:47:51">昨天&nbsp;11:47</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDI5Njc0fDI4YTNhZTVhfDE0ODI0NTUxMDR8MHw2OTY3MDE%3D&amp;nothumb=yes" title="618.jpg 下载次数:3" target="_blank"><strong>下载附件</strong> <span class="xs0">(39.7 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　同样类型的例子，火影IP游戏最早也是基于个人电脑进行开发的，例如《火影究极风暴》系列，在国内掀起动漫IP风之后，火影IP也成了国内厂商争相改编的目标，但硬件平台却是更多的偏向于手游，《火影忍者》手游可以说取得了相当不俗的成绩。<br />
+<br />
+　　为什么《拳皇》的跨平台移植无人问津，《火影》的跨平台移植却如此轰动？<br />
+<br />
+　　客观说来，一款游戏虽然没有软件和硬件的唯一匹配性，却有着适合和不适合的问题，即是说同样的游戏，如果选错了硬件，这将导致游戏的价值被大幅度削弱。火影IP在手游上的成功主要是基于三大原因：第一，玩法满足玩家的幻想欲和收集欲；第二，手游带来的便利性符合当今“泛娱乐”的发展特点；第三，手游成本较低，可以实现流水线式的生产。当然还有更多的原因，但这却无一不说明手游正是实现火影IP游戏的最佳方式。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_429675" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201612/22/114752m2gpgpqydzdyhjff.jpg" file="data/attachment/forum/201612/22/114752m2gpgpqydzdyhjff.jpg" class="zoom" onclick="zoom(this, this.src)" width="538" id="aimg_429675" inpost="1" alt="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." title="从“跨平台移植”探讨：游戏硬件和软件的关系 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_429675_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y"><span title="2016-12-22 11:47:52">昨天&nbsp;11:47</span> 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDI5Njc1fDg4MTBmMmJhfDE0ODI0NTUxMDR8MHw2OTY3MDE%3D&amp;nothumb=yes" title="619.jpg 下载次数:3" target="_blank"><strong>下载附件</strong> <span class="xs0">(36.04 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　更进一步，将眼光放大到整个游戏市场，我们可以看到推动一款游戏最适合载体的形成，还有一双看不见的手——整个市场的发展趋势。虽然不是很客观，但“泛娱乐”已经成为游戏发展的主流，追求简单，刺激，粗暴等情感成为玩家选择一款游戏的新标准，这也是为什么手游代替了网游成为了如今游戏市场主角的原因所在。<br />
+<br />
+　　综上所述可以看到，电子游戏硬件和软件的关系是一种交融式发展，它们是互相选择彼此，没有明确的主导关系。但我们可以得到如下结论：<br />
+<br />
+　　第一，考虑到游戏的本质以及对一款游戏的定位，去选择合适的硬件放大游戏的价值。<br />
+<br />
+　　第二，即使硬件条件优秀，也不可在软件品质上放水。<br />
+<br />
+　　第三，软件和硬件互相选择之余，还应该考虑到如今的市场形势以及玩家欲求。<br />
+<br />
+　　但这些带有研究和探讨性质的结论背后，我想起了在第一段中提到的电子游戏鼻祖布什内尔——如果真的有电子游戏硬件和软件的幕后推手，想必就是布什内尔们打从心底想做出一款好游戏的那份热情吧！　<br />
+<br />
+via：腾讯<br />
+<br />
+相关阅读：<a href="http://www.gameres.com/695825.html" target="_blank">游戏的战争？资本的战争！十年游戏人透视游戏行业</a><br />
+<br />
+<br />
+</td></tr></table>
+</div>
+<div id="comment_2034111" class="cm">
+</div>
+<div id="post_rate_div_2034111"></div>
+</div><div class="modact xs1"><a href="forum.php?mod=misc&amp;action=viewthreadmod&amp;tid=696701" title="帖子模式" onclick="showWindow('viewthreadmod', this.href)">本主题由 一元 于 <span title="2016-12-22 12:04:11">昨天&nbsp;12:04</span> 审核通过</a></div><!-- 广告位：文章模版 中间 文后 -->
+
+
+<hr style="width:98%;" color=#dddddd size=1>
+<br>
+<center>
+<table><tr>
+
+<td width="33%">
+<center>
+<img alt="GameRes游资网微信公众号二维码" src="http://img.gameres.com/images2015/G.jpg" width="180" height="180"><br>
+<span style="color:#333;"><b>关注我们官方微信公众号</b><br></span>
+</td>
+
+
+<td width="33%">
+<center>
+<img alt="游戏行APP二维码" src="http://www.16p.com/app/imgs/liantu.png" width="180" height="180"><br>
+<span style="color:#333;"><b>下载我们官方APP-游戏行</b><br></span>
+</td>
+
+<td width="34%">
+<center>
+<img alt="游戏行APP二维码" src="http://img.gameres.com/images2015/cp.jpg" width="180" height="180"><br>
+<span style="color:#333;"><b>关注手游动态微信公众号</b><br></span>
+</td>
+
+
+</tr></table>
+</center>
+
+
+<br>
+
+
+
+
+
+<div id="p_btn" class="mtw mbm cl xs1">
+<a href="home.php?mod=spacecp&amp;ac=favorite&amp;type=thread&amp;id=696701" id="k_favorite" onclick="showWindow(this.id, this.href, 'get', 0);" onmouseover="this.title = $('favoritenumber').innerHTML + ' 人收藏'"><i><img src="static/image/common/fav.gif" alt="收藏" />收藏<span id="favoritenumber">0</span></i></a>
+<a id="recommend_add" href="forum.php?mod=misc&amp;action=recommend&amp;do=add&amp;tid=696701&amp;hash=b3a770bc"  onclick="showWindow('login', this.href)" onmouseover="this.title = $('recommendv_add').innerHTML + ' 人支持'"><i><img src="static/image/common/rec_add.gif" alt="支持" />支持<span id="recommendv_add">0</span></i></a>
+<a id="recommend_subtract" href="forum.php?mod=misc&amp;action=recommend&amp;do=subtract&amp;tid=696701&amp;hash=b3a770bc"  onclick="showWindow('login', this.href)" onmouseover="this.title = $('recommendv_subtract').innerHTML + ' 人反对'"><i><img src="static/image/common/rec_subtract.gif" alt="反对" />反对<span id="recommendv_subtract">0</span></i></a>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" reload="1">
+aimgcount[2034111] = ['429675','429674','429673','429672','429671','429670','429669','429668','429667','429666'];
+attachimggroup(2034111);
+</script>
+</div>
+
+<div class="bm vw pl" id="comment">
+<div class="bm_h cl">
+<h2>最新评论</h2>
+</div>
+<div class="bm_c"><div id="post_2034139" class="xld xlda mbm"><dl class="bbda cl">
+<dd class="m avt"><img src="static/image/magic/hidden.gif" alt="hidden" /></dd>
+<dt>
+<span class="y xw0">
+<a href="forum.php?mod=post&amp;action=reply&amp;fid=20&amp;tid=696701&amp;repquote=2034139&amp;extra=page%3D1&amp;page=1&amp;from=portal" onclick="showWindow('reply', this.href)">回复</a>
+
+</span>
+游客
+<em id="author_2034139"> 发表于</em>
+<span class="xg1 xw0"><span title="2016-12-22 13:41:24">昨天&nbsp;13:41</span></span>
+</dt>
+<dd class="z"><div class="pcb"  style="width:100%;">
+<div class="t_fsz">
+<table cellspacing="0" cellpadding="0"><tr><td class="t_f" id="postmessage_2034139">
+作者敖厂长视频看多了，希望多写点自己的理性分析，敖敖很多东西有点偏执</td></tr></table>
+</div>
+<div id="comment_2034139" class="cm">
+</div>
+<div id="post_rate_div_2034139"></div>
+</div></dd>
+
+</dl>
+
+
+
+</div>
+<div id="postlistreply" class="xld xlda mbm"><div id="post_new" class="viewthread_table" style="display: none;"></div></div>
+</div>
+
+<div class="bm_c"><script type="text/javascript">
+var postminchars = parseInt('10');
+var postmaxchars = parseInt('20000');
+var disablepostctrl = parseInt('0');
+</script>
+
+<div id="f_pst" class="pl">
+<form method="post" autocomplete="off" id="fastpostform" action="forum.php?mod=post&amp;action=reply&amp;fid=20&amp;tid=696701&amp;extra=page%3D1&amp;replysubmit=yes&amp;infloat=yes&amp;handlekey=fastpost&amp;from=portal" onSubmit="return fastpostvalidate(this)">
+
+<span id="fastpostreturn"></span>
+
+
+<div class="cl">
+<div id="fastposteditor">
+<div class="tedt mtn">
+<div class="bar">
+<span class="y">
+<a href="forum.php?mod=post&amp;action=reply&amp;fid=20&amp;tid=696701&amp;from=portal" onclick="return switchAdvanceMode(this.href)">高级模式</a>
+</span><script src="static/js/seditor.js?zFi" type="text/javascript"></script>
+<div class="fpd">
+<a href="javascript:;" title="文字加粗" class="fbld">B</a>
+<a href="javascript:;" title="设置文字颜色" class="fclr" id="fastpostforecolor">Color</a>
+<a id="fastpostimg" href="javascript:;" title="图片" class="fmg">Image</a>
+<a id="fastposturl" href="javascript:;" title="添加链接" class="flnk">Link</a>
+<a id="fastpostquote" href="javascript:;" title="引用" class="fqt">Quote</a>
+<a id="fastpostcode" href="javascript:;" title="代码" class="fcd">Code</a>
+<a href="javascript:;" class="fsml" id="fastpostsml">Smilies</a>
+</div></div>
+<div class="area">
+<textarea rows="6" cols="80" name="message" id="fastpostmessage" onKeyDown="seditor_ctlent(event, 'fastpostvalidate($(\'fastpostform\'))');" tabindex="4" class="pt"></textarea>
+</div>
+</div>
+</div>
+</div>
+<div class="mtm sec">
+<input name="sechash" type="hidden" value="S28MpiI0" />
+
+验证码 <span id="seccodeS28MpiI0" onclick="showMenu(this.id)"><input name="seccodeverify" id="seccodeverify_S28MpiI0" type="text" autocomplete="off" style="ime-mode:disabled;width:100px" class="txt px vm" onblur="checksec('code', 'S28MpiI0')" tabindex="1" />
+<a href="javascript:;" onclick="updateseccode('S28MpiI0');doane(event);" class="xi2">换一个</a>
+<span id="checkseccodeverify_S28MpiI0"><img src="static/image/common/none.gif" width="16" height="16" class="vm" /></span>
+</span><div id="seccodeS28MpiI0_menu" class="p_pop p_opt" style="display:none"><span id="seccode_S28MpiI0"></span>
+<script type="text/javascript" reload="1">updateseccode('S28MpiI0');</script>
+</div>
+
+</div>
+
+<input type="hidden" name="formhash" value="b3a770bc" />
+<input type="hidden" name="subject" value="" />
+<p class="ptm pnpost">
+<button type="submit" name="replysubmit" id="fastpostsubmit" class="pn pnc vm" value="replysubmit" tabindex="5"><strong>发表回复</strong></button>
+</p>
+</form>
+</div></div>
+</div>
+
+</div>
+<div class="sd">
+
+<div class="drag">
+<!--[diy=diy2]--><div id="diy2" class="area"><div id="frame83q9PP" class=" frame move-span cl frame-1"><div id="frame83q9PP_left" class="column frame-1-c"><div id="frame83q9PP_left_temp" class="move-span temp"></div><div id="portal_block_47" class="block move-span"><div id="portal_block_47_content" class="dxb_bc"><div class="portal_block_summary"><center>
+<a title="游戏行" href="http://www.16p.com/app/" target="_blank" rel="nofollow"><img src="http://img.gameres.com/images/data/16p.jpg" width="260" height="120"></a><br>
+<br>
+<div class="jiathis_style_32x32">
+<table>
+<tr>
+<td ><span class="jiathis_txt" style="font-size:18px;">关注我们：</span></td>
+<td>
+<a class="jiathis_follow_weixin" rel="http://img.gameres.com/images2013/wx.jpg"></a>
+<a class="jiathis_follow_tsina" rel="http://weibo.com/gamerescom"></a>
+</td>
+<td>
+<a href="http://www.gameres.com/msg_202023.html" target="_blank">QQ群<img src="http://img.gameres.com/images2013/qq.jpg" style="width:28px;"></a>
+</td></tr>
+</table>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1851706" charset="utf-8"></script>
+<br>
+<form action="http://zhannei.baidu.com/cse/search" target="_blank">
+<input type="hidden" name="s" value="13698104158759869988">
+<input type="text" name="q" size="16" maxlength="100" style="font-size:18px;height:22px;padding-left:6px;vertical-align:middle;">
+<input type="submit" value=" 搜 索 "  style="height:22px;vertical-align:middle;" >
+</form>
+<br></div></div></div><div id="portal_block_62" class="block move-span"><div id="portal_block_62_content" class="dxb_bc"><div class="portal_block_summary"><center>
+
+<a title="2016中国游戏行业投融资交易会" href="http://www.gameres.com/zt/jump_cgtf.htm" rel="nofollow" target="_blank"><img src="http://img.gameres.com/images/data/cgtf260x120.jpg" width="260"></a><br>
+<a title="绯雨音乐" href="http://www.gameres.com/zt/jump_lightrain.htm" rel="nofollow" target="_blank"><img src="http://img.gameres.com/images/data/feiyu_260_120.gif" style="" width="260" height="120"></a><br>
+
+
+
+<a title="投稿" href="http://www.gameres.com/fabu.html" rel="nofollow" target="_blank"><img src="http://img.gameres.com/images/data/tougao.jpg" style="" width="266"></a><br>
+
+
+<br>
+<script type="text/javascript">
+    var cpro_id = "u2577505";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script></div></div></div><div id="portal_block_52" class="block move-span"><div class="blocktitle title" style="background-image: none; background-color: rgb(204, 204, 204); background-repeat: repeat repeat;"><span class="titletext" style="float:;margin-left:px;font-size:16px;color:;">　最新消息</span></div><div id="portal_block_52_content" class="dxb_bc"><div class="module cl xl xl1" style="text-align: left;">
+<ul><li><a href="http://www.gameres.com/696767.html" title="Superdata：2016游戏产业收入6320亿 手游贡献近5成" target="_blank">Superdata：2016游戏产业收入6320亿 手游贡</a></li><li><a href="http://www.gameres.com/696750.html" title="你的项目为什么会延误？ 时程估算的误区" target="_blank">你的项目为什么会延误？ 时程估算的误区</a></li><li><a href="http://www.gameres.com/696748.html" title="再次聊聊游戏测试中的bug：bug层级划分与分析" target="_blank">再次聊聊游戏测试中的bug：bug层级划分与分</a></li><li><a href="http://www.gameres.com/696739.html" title="游戏策划方案解析：好友系统文档怎么写？" target="_blank">游戏策划方案解析：好友系统文档怎么写？</a></li><li><a href="http://www.gameres.com/696737.html" title="解析《超级马里奥跑酷》的闪光点" target="_blank">解析《超级马里奥跑酷》的闪光点</a></li><li><a href="http://www.gameres.com/696719.html" title="休闲手游再升级  乐逗明年将推创新大作" target="_blank">休闲手游再升级  乐逗明年将推创新大作</a></li></ul>
+</div></div></div><div id="portal_block_33" class="block move-span"><div id="portal_block_33_content" class="dxb_bc"><div class="portal_block_summary"><hr style='width:95%;border:1px dashed #BEAA7E;' />
+<br>
+
+
+<table style="width:100%;" cellspacing="0" cellpadding="0" >
+<tr><td>
+<p class="style45">
+&nbsp;<a target="_blank" href="http://job.gameres.com"><span style="color:#888888;font-
+size:12px;">招聘信息</span></a>&nbsp;&nbsp;<a target="_blank" href="http://bbs.gameres.com/forum.php?
+
+mod=post&action=newthread&fid=47"><span style="color:#888888;font-size:12px;">免费发布</span></a><img 
+
+src="http://img.gameres.com/images/hot.gif"><br>
+<center><b>
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=1">北京
+
+</a>] 
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=3">上海
+
+</a>] 
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=6">杭州
+
+</a>]
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=5">成都
+
+</a>]<br/> 
+
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=4">广州
+
+</a>]
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=8">深圳
+
+</a>]
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=9">厦门
+
+</a>]
+[<a target="_blank" href="http://bbs.gameres.com/forum_47_1.html">更多</a>] 
+</b></p>
+
+</td>
+</tr>
+</table></div></div></div><div id="portal_block_50" class="block move-span"><div id="portal_block_50_content" class="dxb_bc"><div class="module cl xl xl1" style="text-align: left;">
+<ul><li><a href="http://www.gameres.com/693293.html" title="哆可梦高薪诚聘各路人才" target="_blank"><font style="color: #996600;">哆可梦高薪诚聘各路人才</font></a></li><li><a href="http://www.gameres.com/448568.html" title="擎天柱 诚聘系统、数值、文案策划、运营策划、游戏开发" target="_blank"><font style="color: #EE1B2E;">擎天柱 诚聘系统、数值、文案策划、运营策</font></a></li><li><a href="http://www.gameres.com/685187.html" title="天象互动招聘用户运营，待遇好，福利多" target="_blank">天象互动招聘用户运营，待遇好，福利多</a></li><li><a href="http://www.gameres.com/680218.html" title="优质项目--暗沙游戏招:U3D特效/修图/UI/3D角色/3D动作/策划" target="_blank">优质项目--暗沙游戏招:U3D特效/修图/UI/3D</a></li><li><a href="http://www.gameres.com/694648.html" title="杭州掌优科技有限公司北京分公司招聘市场经理" target="_blank"><font style="color: #996600;">杭州掌优科技有限公司北京分公司招聘市场经</font></a></li><li><a href="http://www.gameres.com/675900.html" title="上海异界 VR游戏美术" target="_blank"><font style="font-weight: 900;color: #EE1B2E;">上海异界 VR游戏美术</font></a></li><li><a href="http://www.gameres.com/684129.html" title="飞鼠网络急聘页游、手游开发人才" target="_blank"><font style="color: #EE1B2E;">飞鼠网络急聘页游、手游开发人才</font></a></li><li><a href="http://www.gameres.com/496098.html" title="厦门吉比特重大主推项目启动，各岗位招募中" target="_blank"><font style="font-weight: 900;color: #996600;">厦门吉比特重大主推项目启动，各岗位招募中</font></a></li></ul>
+</div></div></div></div></div></div><!--[/diy]-->
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+new lazyload();
+</script>
+
+<div class="wp mtn">
+<!--[diy=diy3]--><div id="diy3" class="area"></div><!--[/diy]-->
+</div>
+
+<!--
+<script src="http://cbjs.baidu.com/js/m.js" type="text/javascript"></script>
+<script type="text/javascript">
+BAIDU_CLB_fillSlotAsync('554159','PAGE_AD_top');
+BAIDU_CLB_fillSlotAsync('554434','PAGE_AD_bottom');
+BAIDU_CLB_fillSlotAsync('554143','PAGE_AD_right');
+</script>
+-->
+
+<div class="jiathis_share_slide jiathis_share_24x24" id="jiathis_share_slide">
+<div class="jiathis_share_slide_top" id="jiathis_share_title"></div>
+<div class="jiathis_share_slide_inner">
+<div class="jiathis_style_24x24">
+<a class="jiathis_button_weixin"></a>
+<a class="jiathis_button_tsina"></a>
+<a class="jiathis_button_tqq"></a>
+<a class="jiathis_button_qzone"></a>
+<a href="http://www.gameres.com" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+<script type="text/javascript">
+var jiathis_config = {
+slide:{
+divid:'wp',
+pos:'left',
+gt:"true",
+bgcolor:'#ffffff',
+mt:74
+}
+};
+</script>
+<script src="http://v3.jiathis.com/code/jia.js?uid=1851706" type="text/javascript" charset="utf-8"></script>	
+<script src="http://v3.jiathis.com/code/jiathis_slide.js" type="text/javascript" charset="utf-8"></script>
+</div></div></div>	</div>
+<div id="ft" class="wp cl">
+<div id="flk" class="y">
+<p><a href="http://www.gameres.com/ad.html" target="_blank" >广告投放</a><span class="pipe">|</span><a href="http://www.gameres.com/fabu.html" target="_blank" >信息发布</a><span class="pipe">|</span><a href="http://www.gameres.com/about.html" target="_blank" >关于本站</a><span class="pipe">|</span><a href="forum.php?mobile=yes" >手机版</a><span class="pipe">|</span><strong><a href="http://www.gameres.com" target="_blank">GameRes游资网</a></strong>
+( <a href="http://www.miitbeian.gov.cn/" target="_blank">闽ICP备05005107</a> )<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fda15d801c31af4462f4da256d5cf95e8' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</p>
+<p class="xs0">
+GMT+8, 2016-12-23 09:05<span id="debuginfo">
+</span>
+</p>
+</div>
+
+<!-- ɾ����discuz���� --></div>
+
+<div id="g_upmine_menu" class="tip tip_3" style="display:none;">
+<div class="tip_c">
+积分 0, 距离下一级还需  积分
+</div>
+<div class="tip_horn"></div>
+</div>
+<script src="home.php?mod=misc&ac=sendmail&rand=1482455104" type="text/javascript"></script>
+
+</body>
+</html>
