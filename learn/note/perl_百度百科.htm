@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<!--STATUS OK-->
+<html>
+
+
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta name="referrer" content="always" />
+<meta name="description" content="Perl，一种功能丰富的计算机程序语言，运行在超过100种计算机平台上，适用广泛，从大型机到便携设备，从快速原型创建到大规模可扩展开发。Perl最初的设计者为拉里·沃尔（Larry Wall），于1987年12月18日发表。现在的版本为Perl 6，于2015年12月25日更新。Perl借取了C、sed、awk、shell 脚本语言以及很多其他...">
+<title>perl_百度百科</title>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="icon" sizes="any" mask href="//www.baidu.com/img/baidu.svg">
+
+<meta name="keywords" content="perl perl引言 perl基本信息 perl编程语言 perl特点 perl基本语法 perl优点 perl缺点 perl相关文化 perl下载安装 perl其他信息">
+<meta name="image" content="http://baike.bdimg.com/cms/static/baike.png">
+<script type="text/javascript">
+  // 配置 PD 监控。
+  window.alogObjectConfig = {
+    product: '103',
+    page: '103_',
+    monkey_page: '',
+    speed_page: '',
+    speed: {
+      sample: '1'
+    },
+    monkey: {
+      sample: '1',
+      hid: '1533'
+    },
+    exception: { 
+      sample: '1'
+    },
+    feature: {
+      sample: '1'
+    },
+    csp: {
+      sample: '1',
+      'default-src': [
+        {match: '*.baidu.com,*.bdimg.com,localhost', target: 'Accept'},
+        {match: '*', target: 'Accept,Warn'}
+      ]
+    }
+  };
+
+  void function(a,b,c,d,e,f,g){if(a.alogObjectName=e,a[e]=a[e]||function(){(a[e].q=a[e].q||[]).push(arguments)},a[e].l=a[e].l||+new Date,"https:"===a.location.protocol){if(d="https://gss2.bdstatic.com/70cFsjip0QIZ8tyhnq"+d,!a.alogObjectConfig||!a.alogObjectConfig.sample)return}else d="http://img.baidu.com"+d;var h=!0;if(a.alogObjectConfig&&a.alogObjectConfig.sample){var i=Math.random();a.alogObjectConfig.rand=i,i>a.alogObjectConfig.sample&&(h=!1)}h&&(f=b.createElement(c),f.async=!0,f.src=d,g=b.getElementsByTagName(c)[0],g.parentNode.insertBefore(f,g))}(window,document,"script","/hunter/alog/alog.min.js","alog"),void function(){function a(){}window.PDC={mark:function(a,b){alog("speed.set",a,b||+new Date),alog.fire&&alog.fire("mark")},init:function(a){alog("speed.set","options",a)},view_start:a,tti:a,page_ready:a}}();void function(n){var o=!1;n.onerror=function(n,e,t,c){var i=!0;return!e&&/^script error/i.test(n)&&(o?i=!1:o=!0),i&&alog("exception.send","exception",{msg:n,js:e,ln:t,col:c}),!1},alog("exception.on","catch",function(n){alog("exception.send","exception",{msg:n.msg,js:n.path,ln:n.ln,method:n.method,flag:"catch"})})}(window);
+</script>
+<meta name="csrf-token" content="">
+
+<!--[if lte IE 9]>
+<script>
+    (function() {
+      var e = "abbr,article,aside,audio,canvas,datalist,details,dialog,eventsource,figure,footer,header,hgroup,mark,menu,meter,nav,output,progress,section,time,video".split(","),
+        i = e.length;
+      while (i--) {
+        document.createElement(e[i]);
+      }
+    })();
+  </script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma_7850da5.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common-base_b4e62b7.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/userbar/userbar_9fb5389.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/searchbar/searchbar_main_f9c7c20.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/navbar/navbar_0697c78.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/announcement/announcement_b0d7681.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/unameFiller/unameFiller_d631c34.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/label/label_461cbe0.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/newSideShare/sideShare_ebee986.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/praise/praise_2120cd2.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/video/pageMask/pageMask_ff9a193.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma-module_1709cbf.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/userCard/userCard_2402f1f.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/mainContent_1a67233.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/lemmaRelation_9f629f5.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/configModule/zhixin/zhixin_1c34583.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/footer/footer_main_eb7bd79.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/searchHeader/toolButtons/toolButtons-o_a2c470f.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/searchHeader/toolButtons/userInfo-o_9ba20c1.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/searchHeader/searchHeader-o_e786bfb.css"/></head>
+
+<script type="text/javascript">
+    alog('speed.set', 'ht', +new Date);
+</script>
+
+<body class="wiki-lemma normal">
+
+
+
+<div class="header-wrapper">
+<ul class="wgt-userbar">
+<li>
+<a href="http://www.baidu.com/">百度首页</a>
+</li>
+</ul>
+<div class="header">
+<div class="layout">
+<div class="wgt-searchbar wgt-searchbar-main cmn-clearfix">
+<div class="logo-container">
+<a class="logo cmn-inline-block" title="到百科首页" href="/">
+<span class="cmn-baike-logo">
+<em class="cmn-icon cmn-icons cmn-icons_logo-bai"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-baike"></em>
+</span>
+</a>
+</div>
+<div class="search">
+<div class="nav">
+<a href="http://news.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://news.baidu.com/ns?tn=news&cl=2&rn=20&ct=1&fr=bks0000&ie=utf-8&word=">新闻</a>
+<a href="http://www.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://www.baidu.com/s?ie=utf-8&fr=bks0000&wd=">网页</a>
+<a href="http://tieba.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://tieba.baidu.com/f?ie=utf-8&fr=bks0000&kw=">贴吧</a>
+<a href="http://zhidao.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://zhidao.baidu.com/search?pn=0&&rn=10&lm=0&fr=bks0000&word=">知道</a>
+<a href="http://music.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://music.baidu.com/search?f=ms&ct=134217728&ie=utf-8&rn=&lm=-1&pn=30fr=bks0000&key=">音乐</a>
+<a href="http://image.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://image.baidu.com/search/index?tn=baiduimage&ct=201326592&lm=-1&cl=2&nc=1&ie=utf-8&word=">图片</a>
+<a href="http://v.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://v.baidu.com/v?ct=301989888&rn=20&pn=0&db=0&s=22&ie=utf-8&fr=bks0000&word=">视频</a>
+<a href="http://map.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://map.baidu.com/m?ie=utf-8&fr=bks0000&word=">地图</a>
+<a class="baike" nslog="normal" nslog-type="10080001" >百科</a>
+<a href="http://wenku.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://wenku.baidu.com/search?lm=0&od=0&ie=utf-8&fr=bks0000&word=">文库</a>
+</div>
+<div class="form">
+<form id="searchForm" action="/search/word" method="GET" target="_self">
+<input id="query" nslog="normal" nslog-type="10080005" name="word" type="text" autocomplete="off" autocorrect="off" value="perl" /><button id="search" nslog="normal" nslog-type="10080002" type="button">进入词条</button><button id="searchLemma" nslog="normal" nslog-type="10080003" type="button">搜索词条</button><a class="help" nslog="normal" nslog-type="10080004" href="/help" target="_blank">帮助</a>
+</form>
+<form id="searchLemmaForm" action="/search" method="GET" target="_self">
+<input id="searchLemmaQuery" name="word" type="hidden" />
+<input name="pn" type="hidden" value="0" />
+<input name="rn" type="hidden" value="0" />
+<input name="enc" type="hidden" value="utf8" />
+</form>
+<ul id="suggestion" class="suggestion">
+<div class="sug"></div>
+<li class="extra">
+<span id="close" nslog="normal" nslog-type="10080006" >关闭</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="navbar-wrapper">
+<div class="wgt-navbar">
+<div class="navbar-bg">
+<div class="navbar-bg-top">
+<div class="navbar-content layout">
+<div class="navbar-content-box">
+<dl class="index ">
+<dt><a href="/">首页</a></dt>
+</dl>
+<dl class="cat ">
+<dt><a>分类</a></dt>
+<dd>
+<div><a href="/art" target="_blank" class="art">艺术</a></div>
+<div><a href="/science" target="_blank" class="technology">科学</a></div>
+<div><a href="/ziran" target="_blank">自然</a></div>
+<div><a href="/wenhua" target="_blank">文化</a></div>
+<div><a href="/dili" target="_blank">地理</a></div>
+<div><a href="/shenghuo" target="_blank">生活</a></div>
+<div><a href="/shehui" target="_blank">社会</a></div>
+<div><a href="/renwu" target="_blank">人物</a></div>
+<div><a href="/jingji" target="_blank">经济</a></div>
+<div><a href="/tiyu" target="_blank">体育</a></div>
+<div><a href="/lishi" target="_blank">历史</a></div>
+</dd>
+</dl>
+<dl class="special ">
+<dt><a>特色百科</a></dt>
+<dd>
+<div><a href="/calendar/" target="_blank">历史上的今天</a></div>
+<div><a href="/museum/" target="_blank">数字博物馆</a></div>
+<div><a href="/shiji/2015?fr=navbar" target="_blank">史记·2015</a></div>
+<div><a href="/city/" target="_blank">城市百科</a></div>
+<div><a href="/operation/worldwar2" target="_blank">二战百科</a></div>
+<div><a href="/feiyi?fr=dhlfeiyi" target="_blank">非遗百科</a></div>
+</dd>
+</dl>
+<dl class="user" >
+<dt><a>用户</a></dt>
+<dd>
+<div><a href="/kedou/" target="_blank">蝌蚪团</a></div>
+<div><a href="/event/ranmeng/" target="_blank">燃梦计划</a></div>
+<div><a href="/task/" target="_blank">百科任务</a></div>
+<div><a href="/mall/" target="_blank">百科商城</a></div>
+</dd>
+</dl>
+<dl class="cooperation" >
+<dt><a>权威合作</a></dt>
+<dd>
+<div><a href="/operation/cooperation#joint" target="_blank">合作模式</a></div>
+<div><a href="/operation/cooperation#issue" target="_blank">常见问题</a></div>
+<div><a href="/operation/cooperation#connection" target="_blank">联系方式</a></div>
+</dd>
+</dl>
+<dl class="mobile" >
+<dt><a>手机百科</a></dt>
+<dd>
+<div><a href="/m#wap" target="_blank">网页版</a></div>
+</dd>
+</dl>
+<div class="usercenter">
+<div><a href="/usercenter" target="_blank"><em class="cmn-icon cmn-icons cmn-icons_navbar-usercenter"></em>个人中心</a></div>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="body-wrapper">
+<div class="before-content">
+</div>
+<div class="content-wrapper">
+<div class="content">
+<div class="personal-content">
+</div>
+<div class="main-content">
+<div class="top-tool">
+<a class="add-sub-icon" href="javascript:;" title="添加义项" nslog-type="50000101"></a>
+<a href="/divideload/perl" title="拆分词条" target="_blank" class="split-icon" style="display:none;" nslog-type="50000104"></a>
+<div class="top-collect" nslog="area" nslog-type="50000102">
+<span class="collect-text">收藏</span>
+<div class="collect-tip">查看<a href="/uc/favolemma" target="_blank">我的收藏</a></div>
+</div>
+<a href="javascript:void(0);" class="top-vote" nslog-type="50000103">
+<span class="vote-count">0</span>
+<span class="vote-tip">有用+1</span>
+<span class="voted-tip">已投票</span>
+</a>
+<div class="bdsharebuttonbox top-share" data-tag="top-share">
+<a class="bds_more top-share-icon" data-cmd="more" nslog-type="9067">
+<span class="bds_count share-count" id="j-topShareCount" data-cmd="count">0</span>
+</a>
+</div>
+</div>
+<div style="width:0;height:0;clear:both"></div><dl class="lemmaWgt-lemmaTitle lemmaWgt-lemmaTitle-">
+<dd class="lemmaWgt-lemmaTitle-title">
+<h1 >perl</h1>
+<a href="javascript:;" class="edit-lemma cmn-btn-hover-blue cmn-btn-28 j-edit-link"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+<a class="lock-lemma" target="_blank" href="/view/10812319.htm" title="锁定"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_lock-lemma"></em>锁定</a>
+</dd>
+</dl><div class="promotion-declaration">
+</div><div class="lemma-summary" label-module="lemmaSummary">
+<div class="para" label-module="para">Perl，一种功能丰富的计算机程序语言，运行在超过100种计算机平台上，适用广泛，从大型机到便携设备，从快速原型创建到大规模可扩展开发。<sup>[1]</sup><a class="sup-anchor" name="ref_[1]_46614">&nbsp;</a>
+</div><div class="para" label-module="para">Perl最初的设计者为<a target=_blank href="/view/598064.htm">拉里·沃尔</a>（Larry Wall），于1987年12月18日发表。现在的版本为Perl 6，于2015年12月25日更新。</div><div class="para" label-module="para">Perl借取了C、sed、awk、shell 脚本语言以及很多其他程序语言的特性，其中最重要的特性是它内部集成了<a target=_blank href="/view/94238.htm">正则表达式</a>的功能，以及巨大的第三方代码库CPAN。简而言之，Perl像C一样强大，像awk、sed等脚本描述语言一样方便，被Perl语言爱好者称之为“一种拥有各种语言功能的梦幻脚本语言”、“Unix 中的王牌工具”。</div><div class="para" label-module="para">Perl 一般被称为“实用报表提取语言”（Practical Extraction and Report Language），你也可能看到“perl”，所有的字母都是小写的。一般，“Perl”，有大写的 P，是指语言本身，而“perl”，小写的 p，是指程序运行的<a target=_blank href="/view/592974.htm">解释器</a>。</div>
+</div>
+<div class="configModuleBanner">
+</div><div class="basic-info cmn-clearfix">
+<dl class="basicInfo-block basicInfo-left">
+<dt class="basicInfo-item name">中文名</dt>
+<dd class="basicInfo-item value">
+实际抽取与汇报语言
+</dd>
+<dt class="basicInfo-item name">外文名</dt>
+<dd class="basicInfo-item value">
+Perl(Practical Extraction and Reporting Language)
+</dd>
+</dl><dl class="basicInfo-block basicInfo-right">
+<dt class="basicInfo-item name">设计者</dt>
+<dd class="basicInfo-item value">
+<a target=_blank href="/view/598064.htm">拉里·沃尔</a>
+</dd>
+<dt class="basicInfo-item name">设计时间</dt>
+<dd class="basicInfo-item value">
+1987年12月18日
+</dd>
+<dt class="basicInfo-item name">借取程序语言</dt>
+<dd class="basicInfo-item value">
+C、awk、shell scripting等
+</dd>
+</dl></div>
+<div class="lemmaWgt-lemmaCatalog">
+<div class="lemma-catalog">
+<h2 class="block-title">目录</h2>
+<div class="catalog-list column-3">
+<ol>
+<li class="level1">
+<span class="index">1</span>
+<span class="text"><a href="#1">引言</a></span>
+</li>
+<li class="level1">
+<span class="index">2</span>
+<span class="text"><a href="#2">基本信息</a></span>
+</li>
+<li class="level1">
+<span class="index">3</span>
+<span class="text"><a href="#3">编程语言</a></span>
+</li>
+<li class="level1">
+<span class="index">4</span>
+<span class="text"><a href="#4">特点</a></span>
+</li>
+</ol><ol><li class="level1">
+<span class="index">5</span>
+<span class="text"><a href="#5">基本语法</a></span>
+</li>
+<li class="level1">
+<span class="index">6</span>
+<span class="text"><a href="#6">优点</a></span>
+</li>
+<li class="level1">
+<span class="index">7</span>
+<span class="text"><a href="#7">缺点</a></span>
+</li>
+<li class="level1">
+<span class="index">8</span>
+<span class="text"><a href="#8">相关文化</a></span>
+</li>
+</ol><ol><li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#8_1">时势造英雄</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#8_2">Perl 诗歌</a></span>
+</li>
+<li class="level1">
+<span class="index">9</span>
+<span class="text"><a href="#9">下载安装</a></span>
+</li>
+<li class="level1">
+<span class="index">10</span>
+<span class="text"><a href="#10">其他信息</a></span>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="anchor-list">
+<a name="1" class="lemma-anchor para-title" ></a>
+<a name="sub46614_1" class="lemma-anchor " ></a>
+<a name="引言" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">perl</span>引言</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="1" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">1987年<a target=_blank href="/view/873573.htm">Larry Wall</a>发布Perl1.0以来，用户数一直急剧增加，同时越来越多的程序员与软件开发者（商）参与Perl的开发。从最初被当做一种跨平台环境中书写可移植工具的高级语言开始，Perl被广泛地认为是一种工业级的强大工具，可以在任何地方用来完成你的工作。perl的前身是Unix系统管理的一个工具，被用在无数的小任务里。后逐渐发展成为一种功能强大的程序设计语言，用作Web编程、数据库处理、XML处理以及系统管理；在完成这些工作时，同时仍能处理日常细小工作，这是它的设计初衷。Perl特别适合系统管理和Web编程。实际上已经被用在所有Unix(包括Linux)捆绑在一起作为标准部件发布，同时也用于Microsoft Windows和几乎所有操作系统。Perl的应用非常广泛。<sup>[2]</sup><a class="sup-anchor" name="ref_[2]_46614">&nbsp;</a>
+</div><div class="anchor-list">
+<a name="2" class="lemma-anchor para-title" ></a>
+<a name="sub46614_2" class="lemma-anchor " ></a>
+<a name="基本信息" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">perl</span>基本信息</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="2" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">Perl 最初的设计者为<a target=_blank href="/view/598064.htm">拉里·沃尔</a>（<a target=_blank href="/view/873573.htm">Larry Wall</a>），他于1987年12月18日发表。Perl借取了C、sed、awk、shell 脚本语言以及很多其他程序语言的特性。其中最重要的特性是它内部集成了<a target=_blank href="/view/94238.htm">正则表达式</a>的功能，以及巨大的第三方代码库<a target=_blank href="/view/1783930.htm">CPAN</a>。</div>
+<div class="para" label-module="para">Perl 被称为“实用报表提取语言”（Practical Extraction and Report Language）。它是术语，而不仅仅是简写，Perl的创造者，Larry Wall提出第一个，但很快又扩展到第二个。那就是为什么“Perl”没有所有字母都大写。没必要争论哪一个正确，Larry 两个都认可。</div><div class="anchor-list">
+<a name="3" class="lemma-anchor para-title" ></a>
+<a name="sub46614_3" class="lemma-anchor " ></a>
+<a name="编程语言" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">perl</span>编程语言</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="3" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">Perl是由Larry Wall设计的，并由他不断更新和维护的编程语言。</div>
+<div class="para" label-module="para">Perl具有高级语言（如C）的强大能力和灵活性。事实上，你将看到，它的许多特性是从C语言中借用来的。</div>
+<div class="para" label-module="para">Perl与<a target=_blank href="/view/76320.htm">脚本语言</a>一样，Perl不需要编译器和链接器来运行代码，你要做的只是写出程序并告诉Perl来运行而已。这意味着Perl对于小的编程问题的快速解决方案和为大型事件创建原型来测试潜在的解决方案是十分理想的。</div>
+<div class="para" label-module="para">Perl提供脚本语言（如sed和awk）的所有功能，还具有它们所不具备的很多功能。Perl还支持sed到Perl及awk到Perl的翻译器。</div>
+<div class="para" label-module="para">简而言之，Perl像C一样强大，像awk、sed等脚本描述语言一样方便。</div><div class="anchor-list">
+<a name="4" class="lemma-anchor para-title" ></a>
+<a name="sub46614_4" class="lemma-anchor " ></a>
+<a name="特点" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">perl</span>特点</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="4" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">Perl的<a target=_blank href="/view/47200.htm">解释程序</a>是<a target=_blank href="/view/394804.htm">开放源码</a>的免费软件，使用Perl不必担心费用。Perl能在绝大多数操作系统运行，可以方便地向不同操作系统迁移。</div>
+<div class="para" label-module="para">Perl 是一种能完成任务的语言。从一开始，Perl 就设计成可以把简单工作简单化，同时又不失去处理困难问题能力的语言。它可以很容易操作数字，文本，文件和目录，计算机和网络，特别是程序的语言。这种语言应该很容易运行外部的程序并且扫描这些程序的输出获取感兴趣的东西。而且它还应该很容易能把这些你感兴趣的东西交给其它程序做特殊的处理。当然，这种语言还应该很容易在任何现代的操作系统上可以移植地编译和运行。</div><div class="anchor-list">
+<a name="5" class="lemma-anchor para-title" ></a>
+<a name="sub46614_5" class="lemma-anchor " ></a>
+<a name="基本语法" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">perl</span>基本语法</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="5" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">变量定义，以$号开头，如：$num =1;</div>
+<div class="para" label-module="para"><a target=_blank href="/view/209670.htm">数组</a>定义，以@开头，如：@array = (1,2,3);</div>
+<div class="para" label-module="para">数组元素调用 $array[index]，其中index表示数组下标，如上例，$array[0]的值是1</div>
+<div class="para" label-module="para"><a target=_blank href="/view/559384.htm">散列</a>定义，以%开头，如：%hash=(&quot;a&quot;,1,&quot;b&quot;,2);</div>
+<div class="para" label-module="para">散列调用 %hash，其中keys表示键值，多用字符串表示，注意hash的key必须具有唯一性，但value可以不唯一，为此hash的key经常被用来做唯一化处理，如上例中的&quot;a&quot;, &quot;b&quot;, values是keys对应的值，如1，2。$hash{&quot;b&quot;}的值是2。</div><div class="anchor-list">
+<a name="6" class="lemma-anchor para-title" ></a>
+<a name="sub46614_6" class="lemma-anchor " ></a>
+<a name="优点" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">perl</span>优点</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="6" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">Perl追求的是简单, 解决一个一般的问题用它几行代码就完成了. 一个稍复杂一点的问题代码也不会超过一屏! 在软件测试中，Perl通常是非常重要的角色。一般一个测试通用函数库就要分十几个文件，甚至更多，包含多达上千个定制功能。而这些函数将在<a target=_blank href="/view/2052719.htm">主函数</a>运行时，不定数量的被调用。几乎可以说，一切自动过程都是由Perl自己完成的，可见其功能的强大和在当今计算机技术高速发展的时期仍然发挥着重要的作用。</div>
+<div class="para" label-module="para">Perl 最初是当做一种 Unix 的<a target=_blank href="/view/76320.htm">脚本语言</a>设计的，但是它早就移植到大多数其它操作系统里了。因为 Perl 几乎可以在任何地方运行，所以 Perl 可以说是当今最具有移植性的<a target=_blank href="/view/1405990.htm">编程环境</a>；要想写可移植的 C/C++ 程序，你得在程序里加上一大堆 #ifdef 标签来区分不同的系统；要想写可移植的 Java 程序，你必须理解每种新的 Java 实现的特质；要想写可移植的shell，你可能要记住每条命令在每种操作系统上的语法，走运的时候你可能可以找到一些公共的东西；要想写可移植的 Visual Basic 程序，需要对“移植”有个更灵活的定义。</div>
+<div class="para" label-module="para">让我们很高兴的是 Perl 避免了所有这些问题，同时还保留了这些语言中的许多优点，同时还有一些自己的特色。Perl 的特色来自许多方面：它的特性集的工具，Perl 社区的创造性，以及<a target=_blank href="/view/5932867.htm">开源运动</a>的大环境。不过，许多这些特性都是混合的东西；Perl 的身世复杂，它总是把事物看成是优点的不同方面，而不是弱点。Perl 是“背黑锅我来”的语言。如果你觉得自己陷入一团乱麻之中，非常渴望自由，那么请使用 Perl。</div>
+<div class="para" label-module="para">Perl 是跨文化的。Perl 的爆炸性增长很大程度上是因为那些前 Unix 系统程序员的渴望，他们希望从他们的“老家”带着尽可能多的东西。对于他们而言，Perl 是可移植的 Unix 文化蒸馏器，是"此路不通"的沙漠中的绿洲。从另外一个角度来看，Perl 还可以从另外一个方向运转：在 Windows 上工作的 web 设计者通常会非常开心地发现他们的 Perl 程序可以不加修改地在 Unix 服务器上跑。</div>
+<div class="para" label-module="para">尽管 Perl 在系统程序员和 web 设计师中间非常流行，但这只是因为是他们最早发现 Perl 的，Perl 可以用于更广泛的用途。从 Perl 最早的文本处理语言开始，它已经发展成为一种非常复杂的，通用的编程语言，以及完整的开发环境，包括调试器，调节器，交叉引用，编译器，库，语法提示编辑器，以及所有其它“真正”的编程语言所具有的所有挂勾，只要你需要。当然这些东西都是让我们可能处理难的问题的东西，而且很多其它语言也可以做到这一点。Perl 之所以成为 Perl 是因为它从来不会因为保持简单事情简单化而丢失其他方面的特性。</div>
+<div class="para" label-module="para">因为 Perl 既强大又好用，所以它被广泛地用于日常生活的方方面面，从宇航工程到分子生物学，从数学到语言学，从图形处理到文档处理，从数据库操作到网络管理。很多人用 Perl 进行快速处理那些很难分析或转换的大批量数据，不管你是处理 DNA 序列，网页，还是猪肚皮的未来都无所谓。实际上，在 Perl 社区有一个笑话就是，下次股市大崩盘就很有可能是哪个家伙写的脚本里头有<a target=_blank href="/subview/1743/9375561.htm" data-lemmaid="3353935">bug</a>造成的。（不过，乐观点来看就是，任何还在失业的股票分析师仍然有可以利用的技巧。）</div>
+<div class="para" label-module="para">Perl 的成功有许多原因。Perl 早在开源软件的名字出现之前就已经是一个成功的<a target=_blank href="/view/188327.htm">开源项目</a>了。Perl 是自由的，并将永远自由下去。你可以在任何合适的场合使用 Perl，只需要遵守一个非常自由的版权就可以了。如果你在从事商业活动并且还想使用 Perl，那么用就是了。你可以把 Perl 嵌入到你写的商业软件中而不需要支付任何费用也没有任何限制。如果你碰上一个 Perl 社区解决不了的问题，那你也还有最后的一招：源程序本身。 Perl 社区不会在“升级”的伪装下租给你它们的商业秘密。而且 Perl 社区也不会“停业 ”，更不会让你孤立无援。</div>
+<div class="para" label-module="para">Perl 是自由软件这一点无疑对它是有帮助的。但这一条并不足以解释 Perl 现象，因为许多自由软件包没有能繁荣起来。Perl 不仅自由；而且好玩。人们觉得自己在 Perl 里可以有创造力，因为它们有表达的自由：他们可以选择是为计算机速度优化还是为程序员的速度优化，是冗长还是简洁，是选择可读性还是可维护性，或者选择复用性，移植性，接受性和传授性等等。假如你进入一次模糊的 Perl 比赛，甚至你还可以为模糊性做优化。</div>
+<div class="para" label-module="para">Perl 可以给予你所有这些自由，因为它是一门有着分裂人格的语言。Perl 同时是很简单并且很富有的语言。Perl 从其它地方拿来好主意，然后把它们安装到易用的框架里面。对于只是喜欢她的人来说，Perl 是实用抽取和报表语言（Practical Extractoin and Report Language）。对那些热爱她的人而言，她是变态电子垃圾制造者（Pathologically Electric Rubbish Lister）。在少数人眼里，Perl 是毫无意义的重复练习。不过世界需要一点点冗余。精简主义者总是想把事物分隔开。而我们则总是企图把它们合并到一起。</div>
+<div class="para" label-module="para">Perl 之所以是简单的语言是有很多原因的。比如你用不着知道什么特殊的指令就可以编译 Perl 程序--只要把它当做<a target=_blank href="/view/80110.htm">批处理</a>或者 shell 脚本执行就可以了。Perl 的类型和结构很容易使用和理解。Perl 对你的数据没有任何限制--你的字串和<a target=_blank href="/view/209670.htm">数组</a>可以要多长就多长（只要你有足够的内存），而且它们都会自动增长。Perl 不会强迫你学习新的语法和语意，Perl 改从许多其它你已经熟悉的语言里（比如 C, awk, BASIC 和 Python, 英文，希腊语等）借来语法。实际上，任何程序员都可以从书写良好的 Perl <a target=_blank href="/view/1315853.htm">代码段</a>中读懂它的含义。</div>
+<div class="para" label-module="para">最重要的是，你不用先学习所有 Perl 的东西就可以开始写有用的程序。你可以写很小的 Perl 程序。你也可以象小孩那样写 Perl 程序，我们保证不会笑话你。或者更准确地说是，我们绝不会笑话小孩做事情的创造性。Perl 里的许多观点都是从自然语言中借来的，其中一条最好的观点就是只要你能把自己的意思表述清楚，那么你就可以使用这些语言的一个子集。Perl 文化可以接受任何熟练程度的成员。我们不会在你背后放个语言警察。如果你的老板不炒你，而且你的 Perl 脚本也能完成工作，那么它就是“正确”的。</div>
+<div class="para" label-module="para">尽管 Perl 很简单，但它仍然是一种特性很丰富的语言，如果你想用那些特性的话，那你就要学习一些东西。这也是把难题变简单的学费。虽然你要想把所有 Perl 能做的事情吸收还需要一些时间，但到你需要这些功能的时候你就会非常开心地发现 Perl 已经可以做这些事情了。</div>
+<div class="para" label-module="para">由于 Perl 的继承性，就算它只是用做数据归纳语言的时候也有丰富的特性，Perl 一开始就设计成可以浏览文件，扫描大量文本并且生成动态数据以及打印出这些数据的良好格式化的报表。不过，随后 Perl 就开始风行，于是它就成了可以操作文件系统，进程管理，数据库管理，进行 C/S 编程和安全编程，web 信息管理，甚至可以进行<a target=_blank href="/view/125370.htm">面向对象</a>和面向功能的编程的语言。而且这些功能并非只是在 Perl 这边，每种新功能都和其它东西交流得很好，别忘了 Perl 从一开始就是设计成<a target=_blank href="/view/2993364.htm">胶水语言</a>的。</div>
+<div class="para" label-module="para">而且 Perl 并不仅仅只能黏合它自己的特性。Perl 是设计成可以用模块扩展的语言。你可以用 Perl 快速设计，编写，调试和部署 Perl 应用，并且你还可以在需要的时候很方便地扩展这些应用。你可以在其它语言里嵌入 Perl，而且你也可以在 Perl 里嵌入其它语言。通过模块输入机制，你可以把这些外部的扩展当做内置于 Perl 的特性。那些<a target=_blank href="/view/125370.htm">面向对象</a>的外部库在 Perl 内部仍然保持面向对象的特征。</div>
+<div class="para" label-module="para">Perl 还在许多其它方面协助你。和严格的每次执行一条命令的命令文件和 shell 脚本不同的是，Perl 先把你的程序快速编译成一种内部格式。和其它任何<a target=_blank href="/view/487018.htm">编译器</a>一样，这个时候还进行各种优化，同时把碰到的任何问题反馈给你。一旦 Perl 的编译器前端对你的程序表示满意了，它就把这些<a target=_blank href="/view/8477702.htm">中间代码</a>交给<a target=_blank href="/view/592974.htm">解释器</a>执行（或者是给其它的能生成 C 或者字节码的模块后端）。听起来挺复杂，不过 Perl 的编译器和解释器干这些活效率相当高，我们的编译-运行-修改的过程几乎都是以秒计。再加上 Perl 的许多其他开发特性，这种快速的角色转换很适合做<a target=_blank href="/view/408667.htm">快速原型</a>设计。然后随着你的程序的成熟，你可以逐步拧紧身上的螺母，减少散漫增强纪律。如果你做得好，Perl 也能帮你这个忙。</div>
+<div class="para" label-module="para">Perl 还可以帮你写更安全的程序。除了其它语言提供的典型的安全接口之外，Perl 还通过一种跟踪数据的机制给你提供预防意外安全错误的保护，这样就可以在灾害发生之前预防其发生。最后，Perl 还可以让你设置一个特殊的防护隔段运行那些来源不明的 Perl 代码，以此来杜绝危险操作。</div>
+<div class="para" label-module="para">不过，偏执一点儿说，Perl 帮你的大部分内容和 Perl 本身没有什么关系，而是和使用 Perl 的人有关。坦率地说，Perl 社区的人们可以说是地球上最热心的人了。如果 Perl 运动里面有那么一点点宗教色彩的话，那么这就是它的核心了。Larry 希望 Perl 社区像一小片天堂那样运转，目前看来他的愿望基本上是实现了。我们也请你为此做出自己的努力。</div>
+<div class="para" label-module="para">Perl之所以强大, 是因为有<a target=_blank href="/view/1783930.htm"><b>CPAN</b></a>, CPAN上面有无数的开源模块, 从科学计算到桌面应用到网络等等各个方面都有大量的模块! 并且世界上也还有无数的人在向上面添加模块! 如果你想要用PERL实现某功能, 不用自己做, 在CPAN上面搜一搜, 多半都会得到已有的结果! CPAN（"the Comprehensive Perl Archive Network"全面的 Perl 存档网络）是查找任何 Perl 有关的东西的中心仓库。它包含从整个 Perl 社区收集来的智慧：成百上千的 Perl 模块和脚本，相当于好几本书的文档，以及整个 Perl 发布。如果有东西是用 Perl 写的，而且这个东西很有用而且是自由的，那么它很有可能就在 CPAN 上。</div><div class="anchor-list">
+<a name="7" class="lemma-anchor para-title" ></a>
+<a name="sub46614_7" class="lemma-anchor " ></a>
+<a name="缺点" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">perl</span>缺点</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="7" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">也正是因为Perl的灵活性和“过度”的冗余语法，也因此获得了write-only的“美誉”，因为许多Perl程序的代码令人难以阅读，实现相同功能的程序代码长度可以相差十倍百倍。但Perl同样可以将代码书写得像Python或Ruby等语言一样优雅。</div>
+<div class="para" label-module="para">很多时候，perl.exe进程会占用很多的内存空间，虽然只是一时，但是感觉不好。</div><div class="anchor-list">
+<a name="8" class="lemma-anchor para-title" ></a>
+<a name="sub46614_8" class="lemma-anchor " ></a>
+<a name="相关文化" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">perl</span>相关文化</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="8" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="anchor-list">
+<a name="8_1" class="lemma-anchor para-title" ></a>
+<a name="sub46614_8_1" class="lemma-anchor " ></a>
+<a name="时势造英雄" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">perl</span>时势造英雄</h3>
+</div>
+<div class="para" label-module="para">为了理解 Perl 为什么用现在这样的样子定义（或者为什么不定义成其他的样子），我们必须首先明白为什么会有 Perl。所以，让我们先挖掘一下布满尘灰的历史书....</div>
+<div class="para" label-module="para">退回到 1986 年，Larry 是一个系统程序员，在做一个多层安全的<a target=_blank href="/view/21956.htm">广域网</a>项目的开发。他负责这么一个系统，这个系统由西海岸的三台 VAX 和三台 sun 机器，通过一条加密了的 1200 波特的串行线路和东海岸类似配置的系统连接组成的，因为 Larry 的主要工作是支持（他不是该项目的程序员，只是系统专家），所以他就有机会利用他的三种优点（懒惰，不耐心，和狂傲）来开发和提高所有有用的工具——比如 rn，patch，和 warp。（注：正是在这个时候，Larry 被划入了“计算机动物”的范畴，这是以那些人的不可遏止的“再加一个特性”的渴望为基础评判的，因为这种行为几乎成了生物必须。毕竟，如果生活就是太复杂的话，难道程序就不会吗？尤其是想 rn 这样的程序，它真是应该当作一个高级的人工智能项目来看待，因为他们就可以为你阅读新闻。当然，有些人已经在说 patch 程序太复杂了。）</div>
+<div class="para" label-module="para">一天，Larry 刚刚把 rn 撕成碎片，把它一片一片地放在他的目录里，大管理员就跑进来说， “Larry，我们需要一个管理配置，用它控制所有六台 VAX 和六台 sun。我们想在一个月里就要它。你做一个吧！”</div>
+<div class="para" label-module="para">所以，从不逃避工作的 Larry，开始问自己做一个两个海岸的 CM 系统的最好的方法是什么，它必须不用自己从头开始写，并且还可以查阅两个海岸的问题报告以及核准和控制。他想到的答案只有一个词：B-news。（注：也就是 Usenet 传输软件的第二种实现。）</div>
+<div class="para" label-module="para">Larry 着手在这些机器上安装了新闻软件并且增加了两条控制命令：一条“append”命令用于向现有的文章追加内容，和一条“synchronize”命令保持两个海岸的文章数目相同。CM 可以用 RCS （版本控制系统）做，而核准和控制可以用新闻和 rn 来做。</div>
+<div class="para" label-module="para">然后大管理员让他生成报告。新闻是在核心机器里的一个独立的文件里维护的，里面有许多文件间的交叉引用。Larry 的第一个反应是“用 awk。”糟糕的是，那个时候的 awk 无法做到以文件里的信息为基础打开和关闭多个文件。Larry 不想编写一个特殊目的的工具。结果就是产生了一种新的语言。</div>
+<div class="para" label-module="para">最初这种新的语言并不叫 Perl。Larry 和他的同事及亲友（Dan Faigin，写这段历史的人，和 Mark Biggar，他的妻弟，在初始设计阶段帮了大忙）交换了一大堆名字。实际上 Larry 考虑并抛弃了字典里的所有三个或四个字母的单词。最早的名字是“Gloria”，以他的宝贝（和老婆）命名。但他很快就发现这样会产生太多家庭混乱。</div>
+<div class="para" label-module="para">然后名字就成了“Pearl”，它变成了“Perl”，部分原因是 Larry 看到另外一种叫 PEARL 的语言的介绍，但最主要的原因是他懒得总要敲五个键。当然，这样 Perl 就可以用做一个四字母的词。（不过，你会注意到，这里有以前首字缩写的残余： “Practical Extraction And Report Language”。）</div>
+<div class="para" label-module="para">最早的 Perl 没有今天的 Perl 那么多的特性。那时候有模式匹配和<a target=_blank href="/view/1706628.htm">文件句柄</a>，有标量，有格式化，但是很少有函数，没有相关的<a target=_blank href="/view/209670.htm">数组</a>，而且只有一个实现得不怎么样的<a target=_blank href="/view/94238.htm">正则表达式</a>，（从 rn 借来的）。手册页也只有 15 页。但是 Perl 比 sed 和 awk 快，并且开始在该项目的其他应用里使用。</div>
+<div class="para" label-module="para">但是其他地方又开始需要 Larry 了。有一天另外一个大经理来了并且说：“Larry，给 R&amp;D 做支持。”并且 Larry 说，<a target=_blank href="/view/1215208.htm">好吧</a>。他带上 Perl 并且很快发现它逐渐成为系统管理的好工具。他借来 Henry Spencer 漂亮的<a target=_blank href="/view/94238.htm">正则表达式</a>软件包并且把它变成更有男人味（不过 Henry 可能不会愿意在正餐的时候考虑这些特性。）然后 Larry 增加了大部分他想要的特性，以及一些别人想要的特性。然后它就把 Perl 发布到网络上。（注：更让人吃惊的是，他先后工作于喷气推进实验室（JPL），然后是 NetLabs? 和 Seagate 之后，仍然不断发布新 Perl。其他人做了大部分工作，而 Larry 假装为 O'Reilly &amp; Associates（一个小公司，印刷关于计算机和相关事物的小册子。）其余的就是历史了。（注：而这些东西，是历史的一个注解。当开始 Perl 的工作的时候，Larry 已经把 rn 分解成碎片，并且准备做一次全面的重写。但因为他开始在 Perl 上干活，所以 Larry 没有再碰 rn。它仍然是碎片。有时候 Larry 说要用 Perl 重写 rn，但是从来没当真。）</div>
+<div class="para" label-module="para">然后事情的发展就是这样的：Perl 1.0 在 1987 年十二月十八日发布；有些人仍然很认真地对待 Perl 的生日。Perl 2.0 在 1988 年六月发布，并且 Randal Schwartz 开始了“另外一个 Perl 黑客”的签名的传奇。在 1989 年，Tom Christiansen 在巴尔的摩 Usenix 拿出了第一个公开的 Perl 教程。1989 年十月的 Perl 3.0开始，这门语言第一次以 GNU 公众版权（GPL）发布和分发。</div>
+<div class="para" label-module="para">1990 年三月，Larry 写了第一首 Perl 小诗（见下一节）。然后他和 Randal 写了本书的第一版，The Pink Camel；该书在 1991 年早期发行。然后 Perl 4.0 就立即发布了；除 GPL 之外，它还包括了 Artistic License（艺术版权）。</div>
+<div class="para" label-module="para">万众期待的 Perl 5 在 1994 年十月发布。这是一个完全重写的 Perl 版本，它包括对象和模块。 Perl 5 的到来甚至连 The Ecomomist 杂志都提到。到了 1995 年，正式向 Perl 社区引入 CPAN。在 1996 年，Jon Orwant 开始出版 The Perl Journal 杂志。在长时间的猜测之后，本书的第二版，The Blue Camel，在那年的年末出版。第一次 O'Reilly Perl 大会（TPC） 1997 年夏季在加州 San Jose 举行。重大事件几乎是每天都在发生，所以，关于历史的其他部分，请检查 CPAST （Comprehensive Perl Arcana Society Tapestry （history.perl. org））上的 Perl 纪年表。</div><div class="anchor-list">
+<a name="8_2" class="lemma-anchor para-title" ></a>
+<a name="sub46614_8_2" class="lemma-anchor " ></a>
+<a name="Perl 诗歌" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">perl</span>Perl 诗歌</h3>
+</div>
+<div class="para" label-module="para">在助手框里的诗歌的仿制品是在1990年的四月一日愚人节张贴到 Usenet 上的。我们不加注释的把它放在这里，只是想表示典型的编程语言的隐喻真的是多么让人作呕。对所有有文学价值的东西大概都是这样的吧。Larry 在最初为 Perl 3 写的那些“Black Perl”到了 Perl 5 不能分析通过之后，真是感觉轻松许多。</div>
+<div class="para" label-module="para">不过，Larry 自己的文集很幸运地被 Perl 诗歌的王后，Sharon Hopkins 的光芒所掩盖。她写了相当多的 Perl 诗歌，以及一些她在 1992 年 Usenet 冬季技术大会上拿出来的关于 Perl 诗歌的文章，标题是“Camels and Needles: Computer Poetry Meets the Perl Programming Language”。（这篇文章可以在 CAPN 的 misc/poetry. ps 找到。）除了是最多产的 Perl 诗人之外，Sharon 还是下面这首诗歌的作者，这首诗是发表得最广泛的一首，并且曾经在 Economist 和 Guardian 杂志上刊登：</div>
+<div class="para" label-module="para">#!/usr/bin/perl</div>
+<div class="para" label-module="para">APPEAL:</div>
+<div class="para" label-module="para">listen (please, please);</div>
+<div class="para" label-module="para">open yourself, wide;</div>
+<div class="para" label-module="para">join (you, me),</div>
+<div class="para" label-module="para">connect (us,together),</div>
+<div class="para" label-module="para">tell me.</div>
+<div class="para" label-module="para">do something if distressed;</div>
+<div class="para" label-module="para">@dawn, dance;</div>
+<div class="para" label-module="para">@evening, sing;</div>
+<div class="para" label-module="para">read (books,$poems,stories) until peaceful;</div>
+<div class="para" label-module="para">study if able;</div>
+<div class="para" label-module="para">write me if-you-please;</div>
+<div class="para" label-module="para">sort your feelings, reset goals, seek (friends, family, anyone);</div>
+<div class="para" label-module="para">do*not*die (like this)</div>
+<div class="para" label-module="para">if sin abounds;</div>
+<div class="para" label-module="para">keys (hidden), xXyz (locks, doors), tell secrets;</div>
+<div class="para" label-module="para">do not, I-beg-you, close them, yet.</div>
+<div class="para" label-module="para">accept (yourself, changes),</div>
+<div class="para" label-module="para">bind (grief, despair);</div>
+<div class="para" label-module="para">require truth, goodness if-you-will, each moment;</div>
+<div class="para" label-module="para">select (always), length(of-days)</div>
+<div class="para" label-module="para"># listen (a perl poem)</div>
+<div class="para" label-module="para"># Sharon Hopkins</div>
+<div class="para" label-module="para"># rev. June 19, 1995</div>
+<div class="para" label-module="para">Perl Poetry</div>
+<div class="para" label-module="para">Article 970 of comp.lang.perl:</div>
+<div class="para" label-module="para">Path: jpl-devvax!pl-dexxav!lwall</div>
+<div class="para" label-module="para">From: lwall@jpl-dexxav.JPL.NASA. GOV(Larry Wall)</div>
+<div class="para" label-module="para">Newsgroups: news.groups,rec.arts.poems,comp.lang.perl</div>
+<div class="para" label-module="para">Subject: CALL FOR DISCUSSION: comp.lang.perl.poems</div>
+<div class="para" label-module="para">Message-ID: &lt;0401@jpl-devvax.JPL.NASA. GOV&gt;</div>
+<div class="para" label-module="para">Date: 1 Apr 90 00:00:00 GMT</div>
+<div class="para" label-module="para">Reply-To: lwall@jpl-devvax.JPL.NSAS. GOV(Larry Wall)</div>
+<div class="para" label-module="para">Organization: Jet Prepulsion Laboratory, Pasadena, CA</div>
+<div class="para" label-module="para">Lines: 61</div>
+<div class="para" label-module="para">It has come to my attention that there is a crying need for a place for people to express both their emotional</div>
+<div class="para" label-module="para">and technical natures simultaneously. Several people have sent me some items which don't fit into any</div>
+<div class="para" label-module="para">newsgroup. Perhaps it's because I recently posted to both comp.lang.perl and to rec.arts.poems, but people</div>
+<div class="para" label-module="para">seem to be writing poems in Perl, and they're asking me where they should post them. Here is a sampling:</div>
+<div class="para" label-module="para">From a graduate student (in finals week), the following haiku:</div>
+<div class="para" label-module="para">study, write, study,</div>
+<div class="para" label-module="para">do review (each word) if time.</div>
+<div class="para" label-module="para">close book. sleep? what's that?</div>
+<div class="para" label-module="para">And someone writing from Fort Lauderdale writes:</div>
+<div class="para" label-module="para">sleep, close together,</div>
+<div class="para" label-module="para">sort of sin each spring &amp; wait;</div>
+<div class="para" label-module="para">50% die</div>
+<div class="para" label-module="para">A person who wishes to remain anonymous wrote the following example of "Black Perl". (The Pearl poet</div>
+<div class="para" label-module="para">would have been shocked, no doubt.)</div>
+<div class="para" label-module="para">BEFOREHAND: close door, each window &amp; exit; wait until time.</div>
+<div class="para" label-module="para">open spellbook, study, read (scan, select, tell us);</div>
+<div class="para" label-module="para">write it, print the hex while each watches,</div>
+<div class="para" label-module="para">reverse its length, write again;</div>
+<div class="para" label-module="para">kill spiders, pop them, <a target=_blank href="/view/2426104.htm">chop</a>, split, kill them.</div>
+<div class="para" label-module="para">unlink arms, shift, wait &amp; listen (listening, wait),</div>
+<div class="para" label-module="para">sort the flock (then, warn the "goats" &amp; kill the "sheep");</div>
+<div class="para" label-module="para">kill them, dump qualms, shift moralities,</div>
+<div class="para" label-module="para">values aside, each one;</div>
+<div class="para" label-module="para">die sheep! die to reverse the system</div>
+<div class="para" label-module="para">you accept (reject, respect);</div>
+<div class="para" label-module="para">next step,</div>
+<div class="para" label-module="para">kill the next sacrifice, each sacrifice,</div>
+<div class="para" label-module="para">wait, redo ritual until "all the spirits are pleased";</div>
+<div class="para" label-module="para">do it ("as they say").</div>
+<div class="para" label-module="para">do it(*everyone***must***participate***in***forbidden**s*e*x*).</div>
+<div class="para" label-module="para">return last victim; package body;</div>
+<div class="para" label-module="para">exit crypt (time, times &amp; "half a time") &amp; close it,</div>
+<div class="para" label-module="para">select (quickly) &amp; warn your next victim;</div>
+<div class="para" label-module="para">AFTERWORDS: tell nobody.</div>
+<div class="para" label-module="para">wait, wait until time;</div>
+<div class="para" label-module="para">wait until next year, next decade;</div>
+<div class="para" label-module="para">sleep, sleep, die yourself,</div>
+<div class="para" label-module="para">die at last</div>
+<div class="para" label-module="para">I tried that, and it actually parses in Perl. It doesn't appear to do anything useful, however. I think I'm glad,</div>
+<div class="para" label-module="para">actually... I hereby propose the creation of comp.lang.perl.poems as a place for such items, so we don't <a target=_blank href="/view/2838495.htm">clutter</a></div>
+<div class="para" label-module="para">the perl or poems newsgroups with things that may be of interest to neither. Or, alternately, we should</div>
+<div class="para" label-module="para">create rec.arts.poems.perl for items such as those above which merely parse, and don't do anything useful.</div>
+<div class="para" label-module="para">(There is precedent in rec.arts.poems, after all.) Then also create comp.lang.perl.poems for poems that</div>
+<div class="para" label-module="para">actually do something, such as this haiku of my own:</div>
+<div class="para" label-module="para">print STDOUT q</div>
+<div class="para" label-module="para">Just another Perl hacker,</div>
+<div class="para" label-module="para">unless $spring</div>
+<div class="para" label-module="para">Larry Wall lwall@jpl-devvax.jpl.nasa. gov</div><div class="anchor-list">
+<a name="9" class="lemma-anchor para-title" ></a>
+<a name="sub46614_9" class="lemma-anchor " ></a>
+<a name="下载安装" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">perl</span>下载安装</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="9" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">在Linux 系统下、大部分类UNIX 系统(包括Mac OS X)，perl是随系统安装的，可在命令行终端输入命令perl -v，查看版本，对于Windows有两种版本可用：Strawberry Perl 与 ActivePerl。</div><div class="anchor-list">
+<a name="10" class="lemma-anchor para-title" ></a>
+<a name="sub46614_10" class="lemma-anchor " ></a>
+<a name="其他信息" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">perl</span>其他信息</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="10" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para"><b>Perl语言诞生25周年</b></div>
+<div class="para" label-module="para">1987年12月18日，Larry Wall在新闻组comp.sources.misc发布了Perl脚本语言1.0版，当时他是Unisys公司的一名程序员。Perl借鉴了sh、Awk和Sed等脚本语言的特性，试图成为一个能简化报告处理的通用 Unix脚本语言。</div>
+<div class="para" label-module="para">Perl 2在1988年发布，增加了更多特性，拥有更好的正则表达式引擎。Perl 3和 Perl 4分别在1989年和1991年发布，而1994年发布的 Perl 5则是最重要的一个版本，至今仍在开发中。2000年启动的Perl 6则完全重写了Perl，基于不同的原则，开发者决定先制定语言规格。Perl 6的发布日期被认为是圣诞节，但没有指定哪一年的圣诞节。Perl 5公布了16个版本，Perl 5.6在2000年发布，Perl 5.8的持续开发贯穿了2002-2008年，5.10在2007年发布，5.12在2010年发布，此后 Perl开始采用每月发布一个版本，每年发布一个稳定版本的发布周期。5.14在2011年发布，5.16于2012年发布，5.18于2013年发布。</div>
+<div class="para" label-module="para">（美国）施瓦茨（Randal L.Schwartz） （美国）福瓦（Brian D Foy） （美国） 菲尼克斯（Tom Phoenix） 译者：盛春 <br/>　　Randal L.Schwartz、brian d foy和DTom Phoenix共同编著了数本Perl编程方面的“必读”图书，包括《Effective Perl Programming》（由Addison—Wesley出版）、《Learning Perl》、《ProgrammingPerl》、《Intermediate Perl》以及《Mastering Perl》（原版均由O’Reilly出版）。</div>
+<dl class="lemma-reference collapse nslog-area log-set-param" data-nslog-type="2" log-set-param="ext_reference">
+<dt class="reference-title">参考资料<em class="toggle"></em></dt>
+<dd class="reference-list-wrap">
+<ul class="reference-list">
+<li class="reference-item " id="reference-[1]-46614-wrap">
+<span class="index">1.</span>
+<a class="gotop anchor"  name="refIndex_1_46614" id="refIndex_1_46614" title="向上跳转" href="#ref_[1]_46614">&nbsp;&nbsp;</a>
+<a rel="nofollow" href="http://baike.baidu.com/redirect/00ebr99yqu91rLg9MEIbVSPl8KywzXtCE-qxOoIOasUfRAmOGNU_jSMkuWW6EA4B_puCN40LTLOamAD_" target="_blank" class="text">About Perl<span class="linkout">&nbsp;</span></a>
+<span class="site">．Perl官网</span><span>&#91;引用日期2015-08-26&#93;</span></li><li class="reference-item " id="reference-[2]-46614-wrap">
+<span class="index">2.</span>
+<a class="gotop anchor"  name="refIndex_2_46614" id="refIndex_2_46614" title="向上跳转" href="#ref_[2]_46614">&nbsp;&nbsp;</a>
+<span class="text">Perl编程</span>
+</li></ul>
+</dd>
+</dl>
+<div id="open-tag">
+<div class="open-tag-title">词条标签：</div>
+<dd id="open-tag-item">
+<span class="taglist">
+软件
+</span>
+</dd>
+<div class="open-tag-collapse" id="open-tag-collapse"></div>
+</div>
+<div class="clear"></div>
+</div>
+<div class="side-content">
+<div class="summary-pic" >
+<a href="/pic/perl/851577/0/10dfa9ec8a1363276eb7eb74928fa0ec08fac71a?fr=lemma&amp;ct=single" target="_blank" nslog-type="10002401">
+<img src="http://e.hiphotos.baidu.com/baike/w%3D268%3Bg%3D0/sign=45331554de54564ee565e33f8be5fbbf/10dfa9ec8a1363276eb7eb74928fa0ec08fac71a.jpg" />
+<button class="picAlbumBtn"><em></em><span>图集</span></button>
+<div>perl图册</div>
+</a>
+</div>
+<div id="promotion_xunke"></div>
+<div class="lemmaWgt-promotion-vbaike">
+<div class="promotion_title">V百科<a href="/vbaike#gallary" target="_blank">往期回顾</a></div>
+<div class="promotion_viewport">
+<dl>
+</dl>
+<div class="promotion_viewport_pager"></div>
+</div>
+</div><div class="lemmaWgt-promotion-rightPreciseAd" data-lemmaId="851577" data-lemmaTitle="perl"></div><div class="lemmaWgt-sideRecommend">
+<a name="zhixinWrap" class="qnAnchor"></a>
+<div class="zhixin-box" id="zhixinWrap" data-source="" data-newLemmaId="851577">
+</div>
+<form id="zhixinErrorForm" class="hidden" action="http://f3.baidu.com/index.php/feedback/zx/baikeJC" target="zhixinSubErr" method="post">
+<input class="js-url" name="fb_html_url" type="hidden" />
+<input class="js-query" name="fb_query" type="hidden" />
+<input class="js-title" name="fb_card_title" type="hidden" />
+<input class="js-content" name="fb_content" type="hidden" />
+<input class="js-souceId" name="fb_source_id" type="hidden" />
+</form>
+<iframe id="zhixinSubErr" name="zhixinSubErr" style="display:none" frameborder="0"></iframe>
+</div><div class="lemmaWgt-promotion-slide">
+<div class="promotion_viewport">
+<dl>
+</dl>
+<div class="promotion_viewport_pager"></div>
+</div>
+</div><div class="lemmaWgt-promotion-rightBigAd">
+</div><dl class="side-box lemma-statistics">
+<dt class="title">词条统计</dt>
+<dd class="description">
+<ul>
+<li>浏览次数：<span id="j-lemmaStatistics-pv"></span>次</li>
+<li>编辑次数：84次<a href="/historylist/perl/851577" class="nslog:1021" target="_blank">历史版本</a></li>
+<li>最近更新：<span class="j-modified-time" style="display:none">2016-08-25</span></li>
+<li>创建者：<a class="show-userCard" data-uid="6052594" title="查看此用户资料" target="_blank" href="http://www.baidu.com/p/logo0775" nslog-type="1022">logo0775</a></li>
+</ul>
+</dd>
+</dl>
+<div class="side-catalog" style="visibility:hidden">
+<div class="side-bar">
+<em class="circle start"></em>
+<em class="circle end"></em>
+</div>
+<div class="catalog-scroller">
+<dl class="catalog-list">
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#1" class="title-link">
+<span class="text">
+<span class="title-index">1</span>
+<span class="title-link" nslog-type="1026">引言</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#2" class="title-link">
+<span class="text">
+<span class="title-index">2</span>
+<span class="title-link" nslog-type="1026">基本信息</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#3" class="title-link">
+<span class="text">
+<span class="title-index">3</span>
+<span class="title-link" nslog-type="1026">编程语言</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#4" class="title-link">
+<span class="text">
+<span class="title-index">4</span>
+<span class="title-link" nslog-type="1026">特点</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#5" class="title-link">
+<span class="text">
+<span class="title-index">5</span>
+<span class="title-link" nslog-type="1026">基本语法</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#6" class="title-link">
+<span class="text">
+<span class="title-index">6</span>
+<span class="title-link" nslog-type="1026">优点</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#7" class="title-link">
+<span class="text">
+<span class="title-index">7</span>
+<span class="title-link" nslog-type="1026">缺点</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#8" class="title-link">
+<span class="text">
+<span class="title-index">8</span>
+<span class="title-link" nslog-type="1026">相关文化</span>
+</span>
+</a>
+</dt>
+<dd class="catalog-title level2">
+<a href="#8_1" class="title-link">
+<span class="text">
+<span class="title-index">8.1</span>
+<span class="title-link" nslog-type="1026">时势造英雄</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#8_2" class="title-link">
+<span class="text">
+<span class="title-index">8.2</span>
+<span class="title-link" nslog-type="1026">Perl 诗歌</span>
+</span>
+</a>
+</dd>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#9" class="title-link">
+<span class="text">
+<span class="title-index">9</span>
+<span class="title-link" nslog-type="1026">下载安装</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#10" class="title-link">
+<span class="text">
+<span class="title-index">10</span>
+<span class="title-link" nslog-type="1026">其他信息</span>
+</span>
+</a>
+</dt>
+<a class="arrow" href="javascript:void(0);"></a>
+</dl>
+</div>
+<div class="right-wrap">
+<a class="go-up disable" href="javascript:void(0);"></a>
+<a class="go-down" href="javascript:void(0);"></a>
+</div>
+<div class="bottom-wrap">
+<a class="toggle-button" href="javascript:void(0);"></a>
+<a class="gotop-button" href="javascript:void(0);"></a>
+</div>
+</div>
+<div class="unionAd_fromPs side-box" id="unionAd_fromPs">
+<script type="BAIDU_HH">
+    {
+        type : 'pageembed',
+        di   : 'u2140330',
+        rsi0 : 270,
+        rsi1 : 175
+    }
+    </script>
+</div>
+<div id="side_box_fengchao" class="fengchao side-box" nslog="area" nslog-type="10000902">
+</div>
+<div id="side_box_unionAd" class="unionAd side-box">
+<div class="union-content"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="after-content">
+<div class="fc-guess-like new" id="fc_guess_like_new">
+<span class="logo-du">
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+</span>
+<h6>猜你喜欢</h6>
+<ul class="cmn-clearfix">
+</ul>
+</div>
+<div class="bottom-promotion" id="bottom-promotion">
+<div id="BOTTOM_PRO_AD"></div>
+</div></div>
+</div>
+
+<div class="wgt-footer-main">
+<div class="content">
+<dl class="fresh">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-fresh"></em>新手上路</dt>
+<dd>
+<div><a target="_blank" href="/usercenter/tasks#guide">成长任务</a></div>
+<div><a target="_blank" href="/help#main01">编辑入门</a></div>
+<div><a target="_blank" href="/help#main06">编辑规则</a></div>
+<div><a target="_blank" href="/help#main05">百科术语</a></div>
+</dd>
+</dl>
+<dl class="question">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-question"></em>我有疑问</dt>
+<dd>
+<div><a target="_blank" href="/wikiui/doubt?lemmaId=851577&fr=lemma"
+            nslog-type="10070001">我要质疑</a></div>
+<div><a target="_blank" href="http://ikefu.baidu.com/baidubaike/chat.html" nslog-type="10000003">我要提问</a></div>
+<div><a target="_blank" href="http://tieba.baidu.com/f?ie=utf-8&fr=bks0000&kw=%E7%99%BE%E5%BA%A6%E7%99%BE%E7%A7%91">参加讨论</a></div>
+<div><a target="_blank" href="/feedback">意见反馈</a></div>
+</dd>
+</dl>
+<dl class="suggestion">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-suggestion"></em>投诉建议</dt>
+<dd>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#1">举报不良信息</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#2">未通过词条申诉</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#4">投诉侵权信息</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#3">封禁查询与解封</a></div>
+</dd>
+</dl>
+</div>
+<div class="copyright">©2016Baidu&nbsp;<a href="http://www.baidu.com/duty/" target="_blank">使用百度前必读</a>&nbsp;|&nbsp;<a href="http://help.baidu.com/question?prod_en=baike&class=159&id=1047" target="_blank">百科协议</a>&nbsp;|&nbsp;<a href="/operation/cooperation" target="_blank">百度百科合作平台</a></div>
+</div>
+
+<div class="lemmaWgt-searchHeader">
+<div class="layout">
+<div class="logo-container">
+<a class="logo cmn-inline-block" title="到百科首页" href="/">
+<span class="cmn-baike-logo">
+<em class="cmn-icon cmn-icons cmn-icons_logo-bai"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-baike"></em>
+</span>
+</a>
+</div>
+<div class="search">
+<div class="form">
+<form id="searchForm" action="/search/word" method="GET" target="_self">
+<input id="query" name="word" type="text" autocomplete="off" autocorrect="off" value="perl" /><a id="search" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_search" nslog-type="10010004"></em></a>
+</form>
+<ul id="suggestion" class="suggestion">
+<div></div>
+<li class="extra">
+<span id="close">关闭</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="tool-buttons">
+<a class="toolButtons-edit button j-edit-link" href="javascript:;" nslog-type="10010001"></a>
+<a class="toolButtons-collect button" href="javascript:;" nslog-type="10010002"></a>
+<a class="toolButtons-vote button" href="javascript:;" nslog-type="10010003"></a>
+</div>
+<div class="user-info">
+<a class="user-link unlogin" href="javascript:;" nslog-type="10010005" target="_blank">登录</a>
+</div>
+</div></div>
+<div class="new-bdsharebuttonbox new-side-share" id="side-share">
+<span class="title">分享</span>
+<div class="side-border">
+<div class="triangle"></div>
+<a class="bds_qzone"  href="javascript:void(0);" nslog-type="10060101">
+<em class="cmn-icon cmn-icons cmn-icons_logo-qzone"></em>
+</a>
+<a class="bds_tsina" href="javascript:void(0);" nslog-type="10060301">
+<em class="cmn-icon cmn-icons cmn-icons_logo-sina-weibo"></em>
+</a>
+<a class="bds_wechat"  href="javascript:void(0);" nslog-type="10060001">
+<em class="cmn-icon cmn-icons cmn-icons_logo-wechat"></em>
+</a>
+<a class="bds_tqq"  href="javascript:void(0);" nslog-type="10060201">
+<em class="cmn-icon cmn-icons cmn-icons_logo-qq"></em>
+</a>
+</div>
+</div>
+<div class="qrcode-wrapper" id="layer" style="display: none">
+<div class="bd_weixin_popup_header">
+<em class="cmn-icon cmn-icons cmn-icons_close"></em>
+<span>分享到微信朋友圈</span>
+</div>
+<div id="wechat-qrcode-img"></div>
+<div class="bd_weixin_popup_footer">打开微信“扫一扫”即可将网页分享至朋友圈</div>
+</div>
+<div></div><div></div>
+</body><script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_0_29c88fe.js"></script>
+<script type="text/javascript">require.resourceMap({"res":{"wiki-lemma:widget/lemma_content/mainContent/lemmaRelation/lemmaInsert.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/lemmaInsert_17d225d.js","pkg":"wiki-lemma:p5","deps":["wiki-common:widget/component/nslog/nslog.js"]},"wiki-lemma:widget/lemma_content/mainContent/lemmaRelation/tangram.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/tangram_1e4b3aa.js","pkg":"wiki-lemma:p5"},"wiki-lemma:widget/lemma_content/mainContent/lemmaReference/lemmaReferenceTip/lemmaReferenceTip.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaReference/lemmaReferenceTip/lemmaReferenceTip_d50e02d.js","deps":["wiki-common:widget/lib/jquery/jquery.js","wiki-common:widget/util/string.js"]}},"pkg":{"wiki-lemma:p5":{"url":"http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma-module-lemmaRelation_782158b.js"}}});</script><script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/widget/lib/jsmart/PHPJS_3347e0a.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_1_ec0cd21.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_2_7a24e62.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_5_62d9343.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma_02a4d83.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/configModule/zhixin/zhixin_d2befc8.js"></script>
+<script type="text/javascript">!function(){  var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+    userbar = require('wiki-common:widget/component/userbar/userbar.js');
+    
+  $(function() {
+    userbar.buildUserbar($('.wgt-userbar'), null);
+  });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+      initSearchbar = require('wiki-common:widget/component/searchbar/searchbar.js');  
+    initSearchbar($('.wgt-searchbar-main'));
+  }();
+!function(){  var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+
+  var timer = '';
+
+  $('.wgt-navbar').on('mouseenter', 'dl', function() {
+  clearTimeout(timer);
+  timer = setTimeout(function() {
+  $('.wgt-navbar').addClass('wgt-navbar-hover');
+}, 300);
+}).on('mouseleave', function() {
+clearTimeout(timer);
+$('.wgt-navbar').removeClass('wgt-navbar-hover');
+}).on('click', 'a', function() {
+clearTimeout(timer);
+$('.wgt-navbar').removeClass('wgt-navbar-hover');
+});
+}();
+!function(){                var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+                var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+                // 展现策略
+                rightCheck.editView('851577', function(res) {
+                    if (!res.errno) {
+                        if (res.data.edit) {
+                            $('.lemmaWgt-lemmaTitle .add-subLemma').css('display', 'inline-block');
+                            $('.top-tool .add-sub-icon').css('display', 'inline-block');
+                        }
+                    } else {
+                        if ('1') {
+                            $('.lemmaWgt-lemmaTitle .add-subLemma').css('display', 'inline-block');
+                            $('.top-tool .add-sub-icon').css('display', 'inline-block');
+                        }
+                    }
+                });
+                require('wiki-lemma:widget/basicElement/addSub/addSub.js')({                    lemmaId: '851577',                    lemmaTitle: 'perl',                    lemmaDesc: '',                    versionId: '112003737',                    subLemmaId: '46614'                });
+            }();
+!function(){        var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+        var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+        // 展现策略
+        rightCheck.editView('851577', function(res) {
+            if (!res.errno) {
+                if (res.data.divide) {
+                    $('.top-tool .split-icon').css('display', 'block');
+                }
+            }
+        });
+    }();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	require.async("wiki-lemma:widget/basicElement/collect/collect.js",function(collect){
+		collect({
+            newLemmaId:"851577",
+			lemmaId:"46614",
+			subLemmaId:"46614"
+		});
+	});
+}();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	require.async("wiki-lemma:widget/basicElement/vote/vote.js",function(vote){
+		vote({
+			lemmaId:"46614",
+            subLemmaId:"46614",
+            newLemmaId:"851577"
+		});
+	});
+}();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	!!window.BKShare && window.BKShare.regist({
+		"tag" : "top-share",
+		"bdSize" : 32,
+		"bdMini":1
+	});
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.lemmaWgt-lemmaTitle .edit-lemma').css('display', 'inline-block');
+            } else {
+                $('.lemmaWgt-lemmaTitle .lock-lemma').show();
+            }
+        } else {
+            if ('1') {
+                $('.lemmaWgt-lemmaTitle .edit-lemma').css('display', 'inline-block');
+            } else {
+                $('.lemmaWgt-lemmaTitle .lock-lemma').show();
+            }
+        }
+    });
+}();
+!function(){	require('wiki-lemma:widget/lemma_content/mainContent/basicInfo/basicInfo.js')();
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('851577', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){		require.async(["wiki-lemma:widget/lemma_content/mainContent/lemmaReference/lemmaReference.js", "wiki-lemma:widget/lemma_content/mainContent/lemmaReference/lemmaReferenceTip/lemmaReferenceTip.js"],function(Reference,ReferenceTip){
+			new Reference({
+				subLemmaId:"46614"
+			});
+			new ReferenceTip({
+				subLemmaId:"46614"
+			});
+		});
+	}();
+!function(){        require.async("wiki-common:widget/lib/jquery/jquery.js",function($){
+            function openTagToggle(node) {
+                if ($(node).hasClass("collapse")) {
+                    $(node).removeClass("collapse");
+                    $("#open-tag").css("height", '22px');
+                } else {
+                    $(node).addClass("collapse");
+                    $("#open-tag").css("height", $("#open-tag-item").css("height"));
+                }
+            }
+            if (parseInt($("#open-tag-item").css("height")) <= 30) {
+                $('#open-tag-collapse').hide();
+            }
+            $("#open-tag-collapse").on("click", function () {
+                openTagToggle($("#open-tag")[0]);
+            });
+        });
+    }();
+!function(){    require.async('wiki-lemma:widget/promotion/xunke/xunke.js', function (app) {
+        app.init({
+            lemmaTitle: 'perl',
+            adManager: null
+        });
+    });
+}();
+!function(){        require('wiki-lemma:widget/lemma_content/configModule/zhixin/zhixin.js')(
+            851577,
+            'perl'
+        );
+    }();
+!function(){    require.async("wiki-lemma:widget/lemma_content/mainContent/lemmaStatistics/lemmaStatistics.js",function(init){
+        init({
+            newLemmaIdEnc:"afa769b98847c941c8cfd75b"
+        });
+    });
+}();
+!function(){	require.async("wiki-lemma:widget/lemma_content/mainContent/sideCatalog/sideCatalog.js",function(SideCatalog){
+		new SideCatalog();
+	});
+}();
+!function(){        require.async(['wiki-lemma:widget/promotion/unionAdFromPs/unionAdFromPs.js'], function (init) {
+            init({
+                adManager: null
+            });
+        });
+    }();
+!function(){    require.async(["wiki-lemma:widget/promotion/fengchao/fengchao.js", "wiki-lemma:widget/promotion/unionAd/unionAd.js"], function (init, unionAd) {
+        init({
+            newLemmaId: "851577",
+            lemmaTitle: "perl",
+            encodeLemmaTitle: "perl",
+            adManager: null
+        }, {
+            errFn: unionAd,
+            dom: $('#side_box_unionAd')
+        });
+    });
+}();
+!function(){    require.async('wiki-lemma:widget/promotion/guessLike/guessLike.js', function (app) {
+        app.init({
+            lemmaTitle: 'perl',
+            adManager: null
+        });
+    });
+}();
+!function(){        require.async('wiki-lemma:widget/promotion/bottomAd/bottomAd.js', function (init) {
+            init({
+                sId: 'BOTTOM_PRO_AD',
+                adManager: null
+            });
+        });
+    }();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var Dialog = require("wiki-common:widget/ui/dialog/dialog.js");
+    var userLogin = require('wiki-common:widget/component/userLogin/userLogin.js');
+    var unameFiller = require('wiki-common:widget/component/unameFiller/unameFiller.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+            var isEnterprise = false;
+        var enterpriseOwnerUserId = 0;
+    
+    var userId = 0;
+    var editUrl = '/edit/' + encodeURIComponent('perl') + '/' + '851577';
+    var pgcUrl = '/enterprise/editpgc?lemmaId=851577';
+
+    userLogin.regist({
+        onLogin: function(user) {
+            userId = user ? user.uid : 0;
+        }
+    });
+
+    function gotoEdit(url, isMidNight) {
+        if (isMidNight) {
+            Dialog.alert({
+                title: '编辑提示',
+                subMsg: '晚23:00至次日8:00，因审核系统例行维护，您提交的版本可能需要较长时间才能通过，望您谅解。',
+                onConfirm: function() {
+                    window.location.href = url;
+                }
+            });
+        } else {
+            window.location.href = url;
+        }    
+    }
+
+    function showChoseEditDialog(pgcCallback, ugcCallback) {
+        new Dialog({
+            title: '编辑提示',
+            subMsg: '<p>您已开通企业百科服务，推荐您直接编辑“官方资料”，官方资料仅限企业百科绑定的百科账号修改，其他用户账号不可修改。</p><p>如果您想修改其他网友编辑的普通词条内容，请注意遵守百科百科编辑规则。<p>',
+            btns: [{
+            key: 'pgc',
+            text: '编辑官方资料'
+            }, {
+            style: 'white',
+            text: '修改普通词条',
+            key: 'ugc'
+            }],
+            onBtnClick: function(btnKey){
+                if (btnKey === 'pgc') {
+                    pgcCallback && pgcCallback();
+                } else if (btnKey === 'ugc') {
+                    ugcCallback && ugcCallback();
+                }
+            }
+        }).show();
+    }
+
+    function checkUserLegal(res) {
+        var legal = false;
+        switch (res.errno) {
+            case 100001:
+                userLogin.showLoginPop();
+                break;
+            case 100006:
+                unameFiller.show();
+                break;
+            default:
+                legal = true;
+        }
+        return true;
+    }
+
+    function checkUgc(res, url) {
+        if (res.errno) {
+            switch (res.errno) {
+                case 100005:
+                    alert('对不起，您目前被封禁');
+                    break;
+                case 110001:
+                    alert('对不起，该词条被锁定');
+                    break;
+                case 110007:
+                    alert('对不起，消歧页无法编辑');
+                    break;
+                case 110005:
+                    Dialog.alert({
+                    title: '编辑提示',
+                    mainMsg: '对不起，您暂时没有权限编辑该词条。',
+                    subMsg: '<p>您好，该词条内容已较丰富，现仅对百科等级达到<b>四级</b>且通过率达到<b>85%</b>的科友开放编辑。</p><p>当您通过努力达到以上要求，就可以参与编辑该词条了。</p><p><img src="http://img.baidu.com/img/baike/usercenter/growuptask/star.gif" class="star" />参加<a target="_blank" href="/usercenter#guide">成长任务</a>，更快掌握百科编辑技巧，加速升级！</p>'
+                    });
+                    break;
+                case 110008:
+                    Dialog.alert({
+                    title: '编辑提示',
+                    mainMsg: '对不起，您暂时没有权限编辑该词条。',
+                    subMsg: '<p>您好，该词条内容已较丰富，现仅对百科等级达到<b>六级</b>且通过率达到<b>85%</b>的科友开放编辑。</p><p>当您通过努力达到以上要求，就可以参与编辑该词条了。</p><p><img src="http://img.baidu.com/img/baike/usercenter/growuptask/star.gif" class="star" />参加<a target="_blank" href="/usercenter#guide">成长任务</a>，更快掌握百科编辑技巧，加速升级！</p>'
+                    });
+                    break;
+                case 470001:
+                    alert('系统错误，请刷新重试');
+                    break;
+            }
+        } else {
+            if (!res.data.right.noAudit) {
+                Dialog.alert({
+                    title: '编辑提示',
+                    subMsg: '很抱歉，该词条有其他用户编辑的版本正在提交，您暂时无法编辑。<br/>百科建议您晚些时候再编辑该词条，或者尝试编辑其他的词条。'
+                });
+                return;
+            }
+            gotoEdit(url, res.data.notice.isMidNight);
+        }
+    }
+
+    $(document.body).on('click', '.j-edit-link', function() {
+        var dl = $(this).attr('data-edit-dl');
+        if (dl) {
+            var url = editUrl + '?dl=' + dl;
+        } else {
+            var url = editUrl;
+        }
+
+        rightCheck.preeditCheck('851577', 'perl', 'perl', '112003737', function(res) {
+            if (!checkUserLegal(res)) {
+                return;
+            }
+            if (isEnterprise && enterpriseOwnerUserId === userId) {
+                showChoseEditDialog(function() {
+                    location.href = pgcUrl;
+                }, function() {
+                    checkUgc(res, url);
+                });
+            } else {
+                checkUgc(res, url);
+            }
+        });
+    });
+}();
+!function(){    require.async("wiki-lemma:widget/tools/searchHeader/toolButtons/toolButtons.js",function(init){
+        init({
+            lemmaId:"46614",
+            subLemmaId:"46614",
+            newLemmaId:"851577"
+        });
+    });
+}();
+!function(){    require('wiki-lemma:widget/tools/searchHeader/toolButtons/userInfo.js')();
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+      animation = require('wiki-common:widget/util/animation.js'),
+      nslog = require('wiki-common:widget/component/nslog/nslog.js'),
+      initSearchbar = require('wiki-common:widget/component/searchbar/searchbar.js');
+
+    var isFadeIn = false,
+        isFadeOut = false;
+
+    var fadeInAni, fadeOutAni;
+
+    $(window).on('scroll', function(e) {
+        var scrollTop = $(this).scrollTop();
+
+        if (scrollTop > 200 && !isFadeIn && $('.lemmaWgt-searchHeader').css('display') == 'none') {
+            fadeOutAni && fadeOutAni.stop();
+            fadeInAni = animation({
+                duration: 200,
+                easing: 'linear',
+                onStart: function() {
+                    isFadeOut = false;
+                    isFadeIn = true;
+                    $('.lemmaWgt-searchHeader').css('display', 'block');
+                },
+                onStep: function(progress) {
+                    $('.lemmaWgt-searchHeader').css('opacity', progress)
+                },
+                onComplete: function(progress) {
+                    isFadeIn = false;
+                    nslog(10010006);
+                }
+            });
+        } else if (scrollTop <= 200 && !isFadeOut && $('.lemmaWgt-searchHeader').css('display') == 'block') {
+            fadeInAni && fadeInAni.stop();
+            fadeOutAni = animation({
+                duration: 300,
+                easing: 'linear',
+                onStart: function() {
+                    $('.lemmaWgt-searchHeader #suggestion').hide();
+                    isFadeIn = false;
+                    isFadeOut = true;
+                },
+                onStep: function(progress) {
+                    $('.lemmaWgt-searchHeader').css('opacity', 1 - progress);
+                },
+                onComplete: function(progress) {
+                    isFadeOut = false;
+                    $('.lemmaWgt-searchHeader').css('display', 'none');
+                }
+            });
+        }
+    });
+
+    initSearchbar($('.lemmaWgt-searchHeader'));
+}();
+!function(){    require('wiki-lemma:widget/tools/newSideShare/qzopensl.js');
+    require.async("wiki-lemma:widget/tools/newSideShare/taskSideShare.js",function(taskShare){
+        taskShare.init({
+            title: 'perl',
+            desc: "Perl\uff0c\u4e00\u79cd\u529f\u80fd\u4e30\u5bcc\u7684\u8ba1\u7b97\u673a\u7a0b\u5e8f\u8bed\u8a00\uff0c\u8fd0\u884c\u5728\u8d85\u8fc7100\u79cd\u8ba1\u7b97\u673a\u5e73\u53f0\u4e0a\uff0c\u9002\u7528\u5e7f\u6cdb\uff0c\u4ece\u5927\u578b\u673a\u5230\u4fbf\u643a\u8bbe\u5907\uff0c\u4ece\u5feb\u901f\u539f\u578b\u521b\u5efa\u5230\u5927\u89c4\u6a21\u53ef\u6269\u5c55\u5f00\u53d1\u3002Perl\u6700\u521d\u7684\u8bbe\u8ba1\u8005\u4e3a\u62c9\u91cc\u00b7\u6c83\u5c14\uff08Larry Wall\uff09\uff0c\u4e8e1987\u5e7412\u670818\u65e5\u53d1\u8868\u3002\u73b0\u5728\u7684\u7248\u672c\u4e3aPerl 6\uff0c\u4e8e2015\u5e7412\u670825\u65e5\u66f4\u65b0\u3002Perl\u501f\u53d6\u4e86C\u3001sed\u3001awk\u3001shell \u811a\u672c\u8bed\u8a00\u4ee5\u53ca\u5f88\u591a\u5176\u4ed6",
+            pic: 'http:\/\/e.hiphotos.baidu.com\/baike\/w%3D268\/sign=fa646ffaaa773912c4268267c0188675\/10dfa9ec8a1363276eb7eb74928fa0ec08fac71a.jpg',
+            url: '',
+            qqPic: 'http:\/\/e.hiphotos.baidu.com\/baike\/whfpf%3D300%2C300%2C0\/sign=c6e7794f0fd79123e0b5c734cb096ab2\/10dfa9ec8a1363276eb7eb74928fa0ec08fac71a.jpg'
+        });
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var nslog = require("wiki-common:widget/component/nslog/nslog.js");
+    var testElem = require('wiki-common:widget/component/testElem/testElem.js');
+    var cmsModuleLoader = require('wiki-common:widget/component/cmsModuleLoader/cmsModuleLoader.js');
+
+    function requireAsync() {
+        require.async('wiki-lemma:widget/tools/announcement/announcement.js');
+    }
+
+    cmsModuleLoader('/cms/global/lemma_config.json', [{
+        name: 'announcement',
+        script: 'wiki-lemma:widget/tools/announcement/announcement.js'
+    }]);
+
+    require.async("wiki-lemma:widget/tools/lazyLoad/lazyLoad.js", function(LazyLoad) {
+        new LazyLoad();
+    });
+
+    require.async(['wiki-common:widget/component/nslog/nslog.js', 'wiki-common:widget/lib/jquery/jquery.js'], function(nslog, $) {
+        nslog().setGlobal({
+            lemmaId: "46614",
+            newLemmaId: "851577",
+            subLemmaId: "46614",
+            lemmaTitle: "perl"
+        });
+
+        // 词条页 pv
+        nslog(9322);
+
+        // 新版头部pv（小流量）
+        if ($('.pc-header-new').length > 0) {
+            nslog(9069);
+        }
+
+        // 链接点击 pv
+        var lemmaPageRegExp = new RegExp(/\/subview\/\d+|\/view\/\d+|\/item\//i);
+        $('body').on('mousedown', 'a', function() {
+            var href = $(this).attr('href');
+            if (href && href.indexOf('/') >= 0 && href.indexOf('#') !== 0) {
+                // 链接点击 pv
+                nslog(10000001);
+                if (lemmaPageRegExp.test(href)) {
+                    // 词条页链接点击 pv
+                    nslog(10000002, window.location.href, {
+                        targetTitle: $(this).text()
+                    });
+                }
+            }
+        });
+
+        /****** 词条页站内流转需求统计 start ******/
+        (function () {
+            // 各种统计配置
+            var circulationLinkCfg = {
+                innerLink: [ // 内链
+                    '.para',
+                    '.lemmaWgt-baseInfo-simple-largeMovie',
+                    '.lemmaWgt-baseInfo-simple-largeStar',
+                    '.basic-info .basicInfo-block',
+                    '.lemma-summary',
+                    '.lemmaWgt-lemmaSummary',
+                    '.view-tip-panel',
+                    '.horizontal-module',
+                    '.lemmaWgt-roleIntroduction',
+                    '.dramaSeries .dramaSerialList',
+                    '.module-music',
+                    '.table-view',
+                    '[log-set-param="table_view"]',
+                    '.list-module',
+                    '.cell-module',
+                    '.baseBox .dl-baseinfo', // 配置后台字段
+                    '.pvBtn-box .leadPVBtnWrapper',
+                    '.drama-actor',
+                    '#staffList',
+                    '.starMovieAndTvplay',
+                    '.main_tab:not(.main_tab-defaultTab)' // 除去词条tab外的tab
+                ],
+                relationTable: '.rs-container-foot', // 关系表
+                peopleRelation: '.star-info-block.relations, .lemmaWgt-focusAndRelation', // 人物关系（明星+普通）
+                moduleActors: '.featureBaseInfo .actors, .lemmaWgt-majorActors', // 主要演员、嘉宾、主持人
+                moduleWorks: '.featureBaseInfo .works, .large-feature .works', // 代表作品
+                moduleQuarterly: '.featureBaseInfo .po_quarterly, .mian_quarterly', // 分季介绍
+                rankStar: '.rank-list.stars-rank', // 明星榜
+                rankDrama: '.drama-rank-list', // 电视剧榜
+                specialTopic: '.special-topic', // 专题模块
+                modDetailTable: '#modDetailTable', // 关系表出图
+                chuizhitu: '.chuizhitu', // 垂直化模块
+                polysemantList: '.polysemantList-wrapper' // 义项切换
+            };
+            /****** 连接统计 ******/
+            function clickNslogFn() {
+                for (var k in circulationLinkCfg) {
+                    if (k === 'innerLink') {
+                        // 词条内链到词条页
+                        var tempArr = circulationLinkCfg[k];
+                        for (var i = 0, l = tempArr.length; i < l; i++) {
+                            tempArr[i] += ' a';
+                        }
+                        var sSelector = tempArr.join(', ');
+
+                        $('body').on('mousedown', sSelector, {key: k},function(e) {
+                            var key = e.data.key;
+                            var href = $(this).attr('href');
+                            var tar = $(this).attr('target') || '';
+                            if (href && href.indexOf('/') >= 0 && href.indexOf('#') !== 0
+                            && tar === '_blank' && lemmaPageRegExp.test(href)) {
+                                // 词条页普通内链点击 pv
+                                nslog(10000004, null ,{division: key});
+                            }
+                        });
+                    } else {
+                        // 模块到词条页链接
+                        $(circulationLinkCfg[k]).on('mousedown', 'a', {key: k}, function (e) {
+                            var key = e.data.key;
+                            var href = $(this).attr('href');
+                            if (href && href.indexOf('#') !== 0 && lemmaPageRegExp.test(href)) {
+                                // 词条页配置模块链接点击 pv
+                                nslog(10000004, null, {division: key});
+                            }
+                        });
+                    }
+                }
+            }
+            // 发起统计请求
+            clickNslogFn();
+
+            /****** 各模块展现量pv ******/
+            function checkModuleIsShow() {
+                var result = [];
+                for (var k in circulationLinkCfg) {
+                    if (k !== 'innerLink' && k !== 'relationTable') {
+                        !!$(circulationLinkCfg[k]).html() && result.push(k);
+                    }
+                }
+                if (result.length > 0) {
+                    nslog(10000005, null, {showModules: result.join(',')});
+                }
+            }
+            checkModuleIsShow();
+
+        })();
+        /****** 词条页站内流转需求统计 end ******/
+
+    });
+
+    // 广告接入 wikiad 统一加载
+    // log 词条页广告被拦截情况（此处 log 请求行为）
+    nslog(70000101, window.location.href, {
+        api: 'lemma-ad',
+        action: 'request'
+    });
+    $.ajax({
+        type: 'GET',
+        url: '/api/wikiad/getsquirrels',
+        data: {
+            lemmaId: 851577
+        },
+        cache: false,
+        dataType: 'JSON',
+        success: function (res) {
+            // log 词条页广告被拦截情况（此处 log 请求成功）
+            nslog(70000101, window.location.href, {
+                api: 'lemma-ad',
+                action: 'success'
+            });
+
+            if (!res.errno) {
+                if (res.data[5]) {
+                    require.async(['wiki-lemma:widget/promotion/rightPreciseAd/rightPreciseAd.js'], function(rightPreciseAd) {
+                        rightPreciseAd(res.data[5]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[5][0].adId,
+                            adTitle: res.data[5][0].name,
+                            adPos: 5
+                        });
+                    });
+                } else if (res.data[1]) {
+                    require.async(['wiki-lemma:widget/promotion/vbaike/vbaike.js'], function(vbaike) {
+                        vbaike(res.data[1]);
+                        for(var i in res.data[1]) {
+                            nslog(10002201, location.href, {
+                                adId: res.data[1][i].adId,
+                                adTitle: res.data[1][i].name,
+                                adPos: 1
+                            });
+                        }
+                    });
+                }
+                if (res.data[9]) {
+                    require.async(['wiki-lemma:widget/promotion/rightBigAd/rightBigAd.js'], function(rightBigAd) {
+                        rightBigAd(res.data[9]);
+                            nslog(10002201, location.href, {
+                                adId: res.data[9][0].adId,
+                                adTitle: res.data[9][0].name,
+                                adPos: 9
+                            });
+                    });
+                } else if(res.data[2]) {
+                    require.async(['wiki-lemma:widget/promotion/slide/slide.js'], function(slide) {
+                        slide(res.data[2]);
+                        for(var i in res.data[2]) {
+                            nslog(10002201, location.href, {
+                                adId: res.data[2][i].adId,
+                                adTitle: res.data[2][i].name,
+                                adPos: 2
+                            });
+                        }
+                    });
+                }
+                if (res.data[3]) {
+                    require.async(['wiki-lemma:widget/promotion/topAd/topAd.js'], function(topAd) {
+                        topAd(res.data[3]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[3][0].adId,
+                            adTitle: res.data[3][0].name,
+                            adPos: 3
+                        });
+                    });
+                }
+                if (res.data[4]) {
+                    require.async(['wiki-lemma:widget/promotion/rightAd/rightAd.js'], function(rightAd) {
+                        rightAd(res.data[4]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[4][0].adId,
+                            adTitle: res.data[4][0].name,
+                            adPos: 4
+                        });
+                    });
+                }
+                if (res.data[15]) {
+                    require.async(['wiki-lemma:widget/promotion/banner/banner.js'], function(banner) {
+                        banner(res.data[15]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[15][0].adId,
+                            adTitle: res.data[15][0].name,
+                            adPos: 15
+                        });
+                    });
+                }
+                if (res.data[16]) {
+                    require.async(['wiki-lemma:widget/promotion/declaration/declaration.js'], function(declaration) {
+                        declaration(res.data[16]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[16][0].adId,
+                            adTitle: res.data[16][0].name,
+                            adPos: 16
+                        });
+                    })
+                }
+            } else {
+                return;
+            }
+
+            setTimeout(function () {
+                var elemArr = {};
+                res.data[1] && res.data[1].length > 0 && (elemArr['lemma-vbaike-ad'] = $('.lemmaWgt-promotion-vbaike .promotion_viewport a:eq(0) img').get(0));
+                res.data[2] && res.data[2].length > 0 && (elemArr['lemma-slide-ad'] = $('.lemmaWgt-promotion-slide .promotion_viewport a:eq(0) img').get(0));
+                res.data[3] && res.data[3].length > 0 && (elemArr['lemma-navbar-ad'] = {
+                    node: $('.header [nslog-type="10002202"]').get(0),
+                    validations: {
+                        'noBackgroundImage': function() {
+                            return $('.header [nslog-type="10002202"]').css('background-image').indexOf(res.data[3][0].picUrl) < 0
+                        }
+                    }
+                });
+                res.data[4] && res.data[4].length > 0 && (elemArr['lemma-side-ad'] = {
+                    node: $('.right-ad img').get(0),
+                    validations: {
+                        'noBackgroundImage': function() {
+                            return $('.right-ad img').attr('src').indexOf(res.data[4][0].picUrl) < 0
+                        }
+                    }
+                });
+                res.data[15] && res.data[15].length > 0 && (elemArr['lemma-configModule-banner'] = $('.configModuleBanner').get(0));
+                res.data[16] && res.data[16].length > 0 && (elemArr['lemma-configModule-declaration'] = $('.lemmaWgt-declaration').get(0));
+
+                testElem.log(elemArr, 70000102);
+            }, 1000);
+        },
+        error: function () {
+            // log 词条页广告被拦截情况（此处 log 请求失败）
+            nslog(70000101, window.location.href, {
+                api: 'lemma-ad',
+                action: 'error'
+            });
+        }
+    });
+
+    // 设置分享内容
+    window.BKShare.setCommon({
+        bdText: "\u3010perl_\u767e\u5ea6\u767e\u79d1\u3011Perl\uff0c\u4e00\u79cd\u529f\u80fd\u4e30\u5bcc\u7684\u8ba1\u7b97\u673a\u7a0b\u5e8f\u8bed\u8a00\uff0c\u8fd0\u884c\u5728\u8d85\u8fc7100\u79cd\u8ba1\u7b97\u673a\u5e73\u53f0\u4e0a\uff0c\u9002\u7528\u5e7f\u6cdb\uff0c\u4ece\u5927\u578b\u673a\u5230\u4fbf\u643a\u8bbe\u5907\uff0c\u4ece\u5feb\u901f\u539f\u578b\u521b\u5efa\u5230\u5927\u89c4\u6a21\u53ef\u6269\u5c55\u5f00\u53d1\u3002Perl\u6700\u521d\u7684\u8bbe\u8ba1\u8005\u4e3a\u62c9\u91cc\u00b7\u6c83\u5c14\uff08Larry Wall\uff09\uff0c\u4e8e1987\u5e7412\u670818\u65e5\u53d1\u8868\u3002\u73b0\u5728\u7684\u7248\u672c\u4e3aPerl 6\uff0c\u4e8e2015\u5e7412\u670825\u65e5\u66f4\u65b0\u3002Perl\u501f\u53d6\u4e86C\u3001sed\u3001awk\u3001shell \u811a\u672c\u8bed\u8a00\u4ee5\u53ca\u5f88\u591a\u5176\u4ed6.....\uff08\u5206\u4eab\u81ea@\u767e\u5ea6\u767e\u79d1\uff09",
+        bdDesc: '',
+        bdUrl: 'http:\/\/baike.baidu.com\/subview\/46614\/46614.htm',
+        bdPic: '',
+        onBeforeClick: function (){
+            $('.bdshare_dialog_box').hide();
+        }
+    });
+
+    // 底部投诉带入当前页面 url
+    var map = [1, 2, 4, 3];
+    $('.wgt-footer-main .suggestion').find('a').each(function(i) {
+        $(this).attr('href', 'http://tousu.baidu.com/baike/add?word=perl' + '&&submit_link=' + encodeURIComponent(window.location.href) + '#' + map[i]);
+    });
+}();
+!function(){      require('wiki-common:widget/component/psLink/psLink.js');
+    }();</script>
+<script type="text/javascript">
+  var Hunter = window.Hunter || {};
+  Hunter.userConfig = Hunter.userConfig || [];
+  </script>
+<script type="text/javascript" src="https://gss0.baidu.com/70cFsjip0QIZ8tyhnq/hunter/baike.js?st=17158" defer></script><script type="text/javascript">
+  // DOM Ready时，统计用户可操作时间。
+  alog('speed.set', 'drt', +new Date);
+
+  void function(a,b,c,d,e,f){function g(b){a.attachEvent?a.attachEvent("onload",b,!1):a.addEventListener&&a.addEventListener("load",b)}function h(a,c,d){d=d||15;var e=new Date;e.setTime((new Date).getTime()+1e3*d),b.cookie=a+"="+escape(c)+";path=/;expires="+e.toGMTString()}function i(a){var c=b.cookie.match(new RegExp("(^| )"+a+"=([^;]*)(;|$)"));return null!=c?unescape(c[2]):null}function j(){var a=i("PMS_JT");if(a){h("PMS_JT","",-1);try{a=a.match(/{["']s["']:(\d+),["']r["']:["']([\s\S]+)["']}/),a=a&&a[1]&&a[2]?{s:parseInt(a[1]),r:a[2]}:{}}catch(c){a={}}a.r&&b.referrer.replace(/#.*/,"")!=a.r||alog("speed.set","wt",a.s)}}if(a.alogObjectConfig){var k=a.alogObjectConfig.sample,l=a.alogObjectConfig.rand;if("https:"===a.location.protocol){if(d="https://gss2.bdstatic.com/70cFsjip0QIZ8tyhnq"+d,!k||!l)return}else d="http://img.baidu.com"+d;k&&l&&l>k||(g(function(){alog("speed.set","lt",+new Date),e=b.createElement(c),e.async=!0,e.src=d+"?v="+~(new Date/864e5),f=b.getElementsByTagName(c)[0],f.parentNode.insertBefore(e,f)}),j())}}(window,document,"script","/hunter/alog/dp.min.js");
+</script>
+</html>

@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<!--STATUS OK-->
+<html>
+
+
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta name="referrer" content="always" />
+<meta name="description" content="zlib是提供数据压缩用的函式库，由Jean-loup Gailly与Mark Adler所开发，初版0.9版在1995年5月1日发表。zlib使用DEFLATE算法，最初是为libpng函式库所写的，后来普遍为许多软件所使用。此函式库为自由软件，使用zlib授权。截至2007年3月，zlib是包含在Coverity的美国国土安全部赞助者选择继续审查的开源项目。...">
+<title>zlib_百度百科</title>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="icon" sizes="any" mask href="//www.baidu.com/img/baidu.svg">
+
+<meta name="keywords" content="zlib zlib特性 zlib业界应用 zlib使用范例 zlibzlib许可">
+<meta name="image" content="http://baike.bdimg.com/cms/static/baike.png">
+<script type="text/javascript">
+  // 配置 PD 监控。
+  window.alogObjectConfig = {
+    product: '103',
+    page: '103_',
+    monkey_page: '',
+    speed_page: '',
+    speed: {
+      sample: '1'
+    },
+    monkey: {
+      sample: '1',
+      hid: '1533'
+    },
+    exception: { 
+      sample: '1'
+    },
+    feature: {
+      sample: '1'
+    },
+    csp: {
+      sample: '1',
+      'default-src': [
+        {match: '*.baidu.com,*.bdimg.com,localhost', target: 'Accept'},
+        {match: '*', target: 'Accept,Warn'}
+      ]
+    }
+  };
+
+  void function(a,b,c,d,e,f,g){if(a.alogObjectName=e,a[e]=a[e]||function(){(a[e].q=a[e].q||[]).push(arguments)},a[e].l=a[e].l||+new Date,"https:"===a.location.protocol){if(d="https://gss2.bdstatic.com/70cFsjip0QIZ8tyhnq"+d,!a.alogObjectConfig||!a.alogObjectConfig.sample)return}else d="http://img.baidu.com"+d;var h=!0;if(a.alogObjectConfig&&a.alogObjectConfig.sample){var i=Math.random();a.alogObjectConfig.rand=i,i>a.alogObjectConfig.sample&&(h=!1)}h&&(f=b.createElement(c),f.async=!0,f.src=d,g=b.getElementsByTagName(c)[0],g.parentNode.insertBefore(f,g))}(window,document,"script","/hunter/alog/alog.min.js","alog"),void function(){function a(){}window.PDC={mark:function(a,b){alog("speed.set",a,b||+new Date),alog.fire&&alog.fire("mark")},init:function(a){alog("speed.set","options",a)},view_start:a,tti:a,page_ready:a}}();void function(n){var o=!1;n.onerror=function(n,e,t,c){var i=!0;return!e&&/^script error/i.test(n)&&(o?i=!1:o=!0),i&&alog("exception.send","exception",{msg:n,js:e,ln:t,col:c}),!1},alog("exception.on","catch",function(n){alog("exception.send","exception",{msg:n.msg,js:n.path,ln:n.ln,method:n.method,flag:"catch"})})}(window);
+</script>
+<meta name="csrf-token" content="">
+
+<!--[if lte IE 9]>
+<script>
+    (function() {
+      var e = "abbr,article,aside,audio,canvas,datalist,details,dialog,eventsource,figure,footer,header,hgroup,mark,menu,meter,nav,output,progress,section,time,video".split(","),
+        i = e.length;
+      while (i--) {
+        document.createElement(e[i]);
+      }
+    })();
+  </script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma_7850da5.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common-base_b4e62b7.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/userbar/userbar_9fb5389.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/searchbar/searchbar_main_f9c7c20.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/navbar/navbar_0697c78.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/announcement/announcement_b0d7681.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/unameFiller/unameFiller_d631c34.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/label/label_461cbe0.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/newSideShare/sideShare_ebee986.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/praise/praise_2120cd2.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/video/pageMask/pageMask_ff9a193.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma-module_1709cbf.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/userCard/userCard_2402f1f.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/mainContent_1a67233.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/lemmaRelation_9f629f5.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/configModule/zhixin/zhixin_1c34583.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/footer/footer_main_eb7bd79.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/searchHeader/toolButtons/toolButtons-o_a2c470f.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/searchHeader/toolButtons/userInfo-o_9ba20c1.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/searchHeader/searchHeader-o_e786bfb.css"/></head>
+
+<script type="text/javascript">
+    alog('speed.set', 'ht', +new Date);
+</script>
+
+<body class="wiki-lemma normal">
+
+
+
+<div class="header-wrapper">
+<ul class="wgt-userbar">
+<li>
+<a href="http://www.baidu.com/">百度首页</a>
+</li>
+</ul>
+<div class="header">
+<div class="layout">
+<div class="wgt-searchbar wgt-searchbar-main cmn-clearfix">
+<div class="logo-container">
+<a class="logo cmn-inline-block" title="到百科首页" href="/">
+<span class="cmn-baike-logo">
+<em class="cmn-icon cmn-icons cmn-icons_logo-bai"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-baike"></em>
+</span>
+</a>
+</div>
+<div class="search">
+<div class="nav">
+<a href="http://news.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://news.baidu.com/ns?tn=news&cl=2&rn=20&ct=1&fr=bks0000&ie=utf-8&word=">新闻</a>
+<a href="http://www.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://www.baidu.com/s?ie=utf-8&fr=bks0000&wd=">网页</a>
+<a href="http://tieba.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://tieba.baidu.com/f?ie=utf-8&fr=bks0000&kw=">贴吧</a>
+<a href="http://zhidao.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://zhidao.baidu.com/search?pn=0&&rn=10&lm=0&fr=bks0000&word=">知道</a>
+<a href="http://music.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://music.baidu.com/search?f=ms&ct=134217728&ie=utf-8&rn=&lm=-1&pn=30fr=bks0000&key=">音乐</a>
+<a href="http://image.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://image.baidu.com/search/index?tn=baiduimage&ct=201326592&lm=-1&cl=2&nc=1&ie=utf-8&word=">图片</a>
+<a href="http://v.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://v.baidu.com/v?ct=301989888&rn=20&pn=0&db=0&s=22&ie=utf-8&fr=bks0000&word=">视频</a>
+<a href="http://map.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://map.baidu.com/m?ie=utf-8&fr=bks0000&word=">地图</a>
+<a class="baike" nslog="normal" nslog-type="10080001" >百科</a>
+<a href="http://wenku.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://wenku.baidu.com/search?lm=0&od=0&ie=utf-8&fr=bks0000&word=">文库</a>
+</div>
+<div class="form">
+<form id="searchForm" action="/search/word" method="GET" target="_self">
+<input id="query" nslog="normal" nslog-type="10080005" name="word" type="text" autocomplete="off" autocorrect="off" value="zlib" /><button id="search" nslog="normal" nslog-type="10080002" type="button">进入词条</button><button id="searchLemma" nslog="normal" nslog-type="10080003" type="button">搜索词条</button><a class="help" nslog="normal" nslog-type="10080004" href="/help" target="_blank">帮助</a>
+</form>
+<form id="searchLemmaForm" action="/search" method="GET" target="_self">
+<input id="searchLemmaQuery" name="word" type="hidden" />
+<input name="pn" type="hidden" value="0" />
+<input name="rn" type="hidden" value="0" />
+<input name="enc" type="hidden" value="utf8" />
+</form>
+<ul id="suggestion" class="suggestion">
+<div class="sug"></div>
+<li class="extra">
+<span id="close" nslog="normal" nslog-type="10080006" >关闭</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="navbar-wrapper">
+<div class="wgt-navbar">
+<div class="navbar-bg">
+<div class="navbar-bg-top">
+<div class="navbar-content layout">
+<div class="navbar-content-box">
+<dl class="index ">
+<dt><a href="/">首页</a></dt>
+</dl>
+<dl class="cat ">
+<dt><a>分类</a></dt>
+<dd>
+<div><a href="/art" target="_blank" class="art">艺术</a></div>
+<div><a href="/science" target="_blank" class="technology">科学</a></div>
+<div><a href="/ziran" target="_blank">自然</a></div>
+<div><a href="/wenhua" target="_blank">文化</a></div>
+<div><a href="/dili" target="_blank">地理</a></div>
+<div><a href="/shenghuo" target="_blank">生活</a></div>
+<div><a href="/shehui" target="_blank">社会</a></div>
+<div><a href="/renwu" target="_blank">人物</a></div>
+<div><a href="/jingji" target="_blank">经济</a></div>
+<div><a href="/tiyu" target="_blank">体育</a></div>
+<div><a href="/lishi" target="_blank">历史</a></div>
+</dd>
+</dl>
+<dl class="special ">
+<dt><a>特色百科</a></dt>
+<dd>
+<div><a href="/calendar/" target="_blank">历史上的今天</a></div>
+<div><a href="/museum/" target="_blank">数字博物馆</a></div>
+<div><a href="/shiji/2015?fr=navbar" target="_blank">史记·2015</a></div>
+<div><a href="/city/" target="_blank">城市百科</a></div>
+<div><a href="/operation/worldwar2" target="_blank">二战百科</a></div>
+<div><a href="/feiyi?fr=dhlfeiyi" target="_blank">非遗百科</a></div>
+</dd>
+</dl>
+<dl class="user" >
+<dt><a>用户</a></dt>
+<dd>
+<div><a href="/kedou/" target="_blank">蝌蚪团</a></div>
+<div><a href="/event/ranmeng/" target="_blank">燃梦计划</a></div>
+<div><a href="/task/" target="_blank">百科任务</a></div>
+<div><a href="/mall/" target="_blank">百科商城</a></div>
+</dd>
+</dl>
+<dl class="cooperation" >
+<dt><a>权威合作</a></dt>
+<dd>
+<div><a href="/operation/cooperation#joint" target="_blank">合作模式</a></div>
+<div><a href="/operation/cooperation#issue" target="_blank">常见问题</a></div>
+<div><a href="/operation/cooperation#connection" target="_blank">联系方式</a></div>
+</dd>
+</dl>
+<dl class="mobile" >
+<dt><a>手机百科</a></dt>
+<dd>
+<div><a href="/m#wap" target="_blank">网页版</a></div>
+</dd>
+</dl>
+<div class="usercenter">
+<div><a href="/usercenter" target="_blank"><em class="cmn-icon cmn-icons cmn-icons_navbar-usercenter"></em>个人中心</a></div>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="body-wrapper">
+<div class="before-content">
+</div>
+<div class="content-wrapper">
+<div class="content">
+<div class="personal-content">
+</div>
+<div class="main-content">
+<div class="top-tool">
+<a class="add-sub-icon" href="javascript:;" title="添加义项" nslog-type="50000101"></a>
+<a href="/divideload/zlib" title="拆分词条" target="_blank" class="split-icon" style="display:none;" nslog-type="50000104"></a>
+<div class="top-collect" nslog="area" nslog-type="50000102">
+<span class="collect-text">收藏</span>
+<div class="collect-tip">查看<a href="/uc/favolemma" target="_blank">我的收藏</a></div>
+</div>
+<a href="javascript:void(0);" class="top-vote" nslog-type="50000103">
+<span class="vote-count">0</span>
+<span class="vote-tip">有用+1</span>
+<span class="voted-tip">已投票</span>
+</a>
+<div class="bdsharebuttonbox top-share" data-tag="top-share">
+<a class="bds_more top-share-icon" data-cmd="more" nslog-type="9067">
+<span class="bds_count share-count" id="j-topShareCount" data-cmd="count">0</span>
+</a>
+</div>
+</div>
+<div style="width:0;height:0;clear:both"></div><dl class="lemmaWgt-lemmaTitle lemmaWgt-lemmaTitle-">
+<dd class="lemmaWgt-lemmaTitle-title">
+<h1 >zlib</h1>
+<a href="javascript:;" class="edit-lemma cmn-btn-hover-blue cmn-btn-28 j-edit-link"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+<a class="lock-lemma" target="_blank" href="/view/10812319.htm" title="锁定"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_lock-lemma"></em>锁定</a>
+</dd>
+</dl><div class="promotion-declaration">
+</div><div class="lemma-summary" label-module="lemmaSummary">
+<div class="para" label-module="para">zlib是提供<a target=_blank href="/view/286827.htm">数据压缩</a>用的函式库，由Jean-loup Gailly与Mark Adler所开发，初版0.9版在1995年5月1日发表。zlib使用DEFLATE算法，最初是为libpng函式库所写的，后来普遍为许多软件所使用。此函式库为自由软件，使用zlib授权。截至2007年3月，zlib是包含在Coverity的<a target=_blank href="/view/415125.htm">美国国土安全部</a>赞助者选择继续审查的开源项目。</div>
+</div>
+<div class="configModuleBanner">
+</div><div class="basic-info cmn-clearfix">
+<dl class="basicInfo-block basicInfo-left">
+<dt class="basicInfo-item name">中文名</dt>
+<dd class="basicInfo-item value">
+zlib
+</dd>
+<dt class="basicInfo-item name">外文名</dt>
+<dd class="basicInfo-item value">
+zlib
+</dd>
+</dl><dl class="basicInfo-block basicInfo-right">
+<dt class="basicInfo-item name">定&nbsp;&nbsp;&nbsp;&nbsp;义</dt>
+<dd class="basicInfo-item value">
+提供<a target=_blank href="/view/286827.htm">数据压缩</a>用的函数库
+</dd>
+<dt class="basicInfo-item name">开&nbsp;&nbsp;&nbsp;&nbsp;发</dt>
+<dd class="basicInfo-item value">
+Jean-loup Gailly与Mark Adler
+</dd>
+</dl></div>
+<div class="lemmaWgt-lemmaCatalog">
+<div class="lemma-catalog">
+<h2 class="block-title">目录</h2>
+<div class="catalog-list column-3">
+<ol>
+<li class="level1">
+<span class="index">1</span>
+<span class="text"><a href="#1">特性</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#1_1">数据头(header)</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#1_2">算法</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#1_3">使用资源</a></span>
+</li>
+</ol><ol><li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#1_4">策略</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#1_5">错误处理</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#1_6">数据长度</a></span>
+</li>
+<li class="level1">
+<span class="index">2</span>
+<span class="text"><a href="#2">业界应用</a></span>
+</li>
+</ol><ol><li class="level1">
+<span class="index">3</span>
+<span class="text"><a href="#3">使用范例</a></span>
+</li>
+<li class="level1">
+<span class="index">4</span>
+<span class="text"><a href="#4">zlib许可</a></span>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="anchor-list">
+<a name="1" class="lemma-anchor para-title" ></a>
+<a name="sub2258413_1" class="lemma-anchor " ></a>
+<a name="特性" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">zlib</span>特性</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="1" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="anchor-list">
+<a name="1_1" class="lemma-anchor para-title" ></a>
+<a name="sub2258413_1_1" class="lemma-anchor " ></a>
+<a name="数据头(header)" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">zlib</span>数据头(header)</h3>
+</div>
+<div class="para" label-module="para">zlib能使用一个gzip数据头，zlib数据头或者不使用数据头压缩数据。</div>
+<div class="para" label-module="para">通常情况下，<a target=_blank href="/view/286827.htm">数据压缩</a>使用zlib数据头，因为这提供错误数据检测。当数据不使用数据头写入时，结果是没有任何错误检测的原始DEFLATE数据，那么<a target=_blank href="/view/51.htm">解压缩软件</a>的调用者不知道压缩数据在什么地方结束。</div>
+<div class="para" label-module="para">gzip数据头比zlib数据头要大，因为它保存了文件名和其他文件系统信息，事实上这是广泛使用的gzip文件的数据头格式。注意zlib函式库本身不能创建一个gzip文件，但是它相当轻松的通过把压缩数据写入到一个有gzip<a target=_blank href="/view/1606305.htm">文件头</a>的文件中。</div><div class="anchor-list">
+<a name="1_2" class="lemma-anchor para-title" ></a>
+<a name="sub2258413_1_2" class="lemma-anchor " ></a>
+<a name="算法" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">zlib</span>算法</h3>
+</div>
+<div class="para" label-module="para">目前zlib仅支持一个LZ77的变种算法，DEFLATE的算法。</div>
+<div class="para" label-module="para">这个算法使用很少的系统资源，对各种数据提供很好的压缩效果。这也是在ZIP档案中无一例外的使用这个算法。（尽管zip文件格式也支持几种其他的算法）。</div>
+<div class="para" label-module="para">看起来zlib格式将不会被扩展使用任何其他算法，尽管数据头可以有这种可能性。</div><div class="anchor-list">
+<a name="1_3" class="lemma-anchor para-title" ></a>
+<a name="sub2258413_1_3" class="lemma-anchor " ></a>
+<a name="使用资源" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">zlib</span>使用资源</h3>
+</div>
+<div class="para" label-module="para">函数库提供了对处理器和内存使用控制的能力</div>
+<div class="para" label-module="para">不同的压缩级别数值可以指示不同的压缩执行速度。</div>
+<div class="para" label-module="para">还有内存控制管理的功能。这在一些诸如<a target=_blank href="/view/6115.htm">嵌入式系统</a>这样内存有限制的环境中是有用的。</div><div class="anchor-list">
+<a name="1_4" class="lemma-anchor para-title" ></a>
+<a name="sub2258413_1_4" class="lemma-anchor " ></a>
+<a name="策略" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">zlib</span>策略</h3>
+</div>
+<div class="para" label-module="para">压缩可以针对特定类型的数据进行优化</div>
+<div class="para" label-module="para">如果你总是使用zlib库压缩压缩特定类型的数据，那么可以使用有针对性的策略可以提高压缩效率和性能。例如，如果你的数据包含很长的重复数据，那么可以用RLE（运行长度编码）策略，可能会有更好的结果。</div>
+<div class="para" label-module="para">对于一般的数据，默认的策略是首选。</div><div class="anchor-list">
+<a name="1_5" class="lemma-anchor para-title" ></a>
+<a name="sub2258413_1_5" class="lemma-anchor " ></a>
+<a name="错误处理" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">zlib</span>错误处理</h3>
+</div>
+<div class="para" label-module="para">错误可以被发现和跳过</div>
+<div class="para" label-module="para">数据混乱可以被检测（只要数据和zlib或者gzip数据头一起被写入－参见上面）</div>
+<div class="para" label-module="para">此外，如果全刷新点（full-flush points）被写入到压缩后的数据流中，那么错误数据是可以被跳过的，并且<a target=_blank href="/view/845020.htm">解压缩</a>将重新同步到下个全刷新点。（错误数据的无错恢复被提供）。全刷新点技术对于在不可靠的通道上的大数据流是很有用的，一些过去的数据丢失是不重要的（例如多媒体数据），但是建立太多的全刷新点会极大的影响速度和压缩。</div><div class="anchor-list">
+<a name="1_6" class="lemma-anchor para-title" ></a>
+<a name="sub2258413_1_6" class="lemma-anchor " ></a>
+<a name="数据长度" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">zlib</span>数据长度</h3>
+</div>
+<div class="para" label-module="para">对于压缩和<a target=_blank href="/view/845020.htm">解压缩</a>，没有数据长度的限制</div>
+<div class="para" label-module="para">重复调用<a target=_blank href="/view/905012.htm">库函数</a>允许处理无限的<a target=_blank href="/view/702806.htm">数据块</a>。一些辅助代码（计数变量）可能会溢出，但是不影响实际的压缩和解压缩。</div>
+<div class="para" label-module="para">当压缩一个长（无限）数据流时，最好写入全刷新点。</div><div class="anchor-list">
+<a name="2" class="lemma-anchor para-title" ></a>
+<a name="sub2258413_2" class="lemma-anchor " ></a>
+<a name="业界应用" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">zlib</span>业界应用</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="2" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">今天，zlib是一种事实上的业界标准，以至于在标准文档中，zlib和DEFLATE常常互换使用。数以千计的应用程序直接或间接依靠zlib压缩函式库，包括：</div>
+<div class="para" label-module="para">* Linux核心：使用zlib以实作网络协定的压缩、档案系统的压缩以及开机时<a target=_blank href="/view/845020.htm">解压缩</a>自身的核心。</div>
+<div class="para" label-module="para">* libpng，用于PNG图形格式的一个实现，对bitmap数据规定了DEFLATE作为流压缩方法。</div>
+<div class="para" label-module="para">* Apache：使用zlib实作http 1.1。</div>
+<div class="para" label-module="para">* OpenSSH、OpenSSL：以zlib达到最佳化加密网络传输。</div>
+<div class="para" label-module="para">* FFmpeg：以zlib读写Matroska等以DEFLATE算法压缩的多媒体串流格式。</div>
+<div class="para" label-module="para">* rsync：以zlib最佳化远端同步时的传输。</div>
+<div class="para" label-module="para">* The dpkg and RPM package managers, which use zlib to unpack files from compressed software packages.</div>
+<div class="para" label-module="para">* Subversion 、Git和 CVS <a target=_blank href="/view/183136.htm">版本控制</a> 系统，使用zlib来压缩和远端仓库的通讯流量。</div>
+<div class="para" label-module="para">* dpkg和RPM等包管理软件：以zlib<a target=_blank href="/view/845020.htm">解压缩</a>RPM或者其他<a target=_blank href="/view/111761.htm">封包</a>。</div>
+<div class="para" label-module="para">因为其代码的可移植性，宽松的许可以及较小的内存占用，zlib在许多<a target=_blank href="/view/2778983.htm">嵌入式设备</a>中也有应用。</div><div class="anchor-list">
+<a name="3" class="lemma-anchor para-title" ></a>
+<a name="sub2258413_3" class="lemma-anchor " ></a>
+<a name="使用范例" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">zlib</span>使用范例</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="3" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">以下代码可直接用于解压HTTP gzip</div>
+<div class="para" label-module="para">#include &lt;stdlib.h&gt;</div>
+<div class="para" label-module="para">#include &lt;string.h&gt;</div>
+<div class="para" label-module="para">#include &lt;errno.h&gt;</div>
+<div class="para" label-module="para">#include &lt;zlib.h&gt;</div>
+<div class="para" label-module="para">/* Compress data */</div>
+<div class="para" label-module="para">int zcompress(Bytef *data, uLong ndata,</div>
+<div class="para" label-module="para">Bytef *zdata, uLong *nzdata)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">z_stream c_stream;</div>
+<div class="para" label-module="para">int err = 0;</div>
+<div class="para" label-module="para">if(data &amp;&amp; ndata &gt; 0)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">c_stream.zalloc = (alloc_func)0;</div>
+<div class="para" label-module="para">c_stream.zfree = (free_func)0;</div>
+<div class="para" label-module="para">c_stream.opaque = (voidpf)0;</div>
+<div class="para" label-module="para">if(deflateInit(&amp;c_stream, Z_DEFAULT_COMPRESSION) != Z_OK) return -1;</div>
+<div class="para" label-module="para">c_stream.next_in = data;</div>
+<div class="para" label-module="para">c_stream.avail_in = ndata;</div>
+<div class="para" label-module="para">c_stream.next_out = zdata;</div>
+<div class="para" label-module="para">c_stream.avail_out = *nzdata;</div>
+<div class="para" label-module="para">while (c_stream.avail_in != 0 &amp;&amp; c_stream.total_out &lt; *nzdata)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">if(deflate(&amp;c_stream, Z_NO_FLUSH) != Z_OK) return -1;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">if(c_stream.avail_in != 0) return c_stream.avail_in;</div>
+<div class="para" label-module="para">for (;;) {</div>
+<div class="para" label-module="para">if((err = deflate(&amp;c_stream, Z_FINISH)) == Z_STREAM_END) break;</div>
+<div class="para" label-module="para">if(err != Z_OK) return -1;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">if(deflateEnd(&amp;c_stream) != Z_OK) return -1;</div>
+<div class="para" label-module="para">*nzdata = c_stream.total_out;</div>
+<div class="para" label-module="para">return 0;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">return -1;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">/* Compress gzip data */</div>
+<div class="para" label-module="para">int gzcompress(Bytef *data, uLong ndata,</div>
+<div class="para" label-module="para">Bytef *zdata, uLong *nzdata)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">z_stream c_stream;</div>
+<div class="para" label-module="para">int err = 0;</div>
+<div class="para" label-module="para">if(data &amp;&amp; ndata &gt; 0)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">c_stream.zalloc = (alloc_func)0;</div>
+<div class="para" label-module="para">c_stream.zfree = (free_func)0;</div>
+<div class="para" label-module="para">c_stream.opaque = (voidpf)0;</div>
+<div class="para" label-module="para">if(deflateInit2(&amp;c_stream, Z_DEFAULT_COMPRESSION, Z_DEFLATED,</div>
+<div class="para" label-module="para">-MAX_WBITS, 8, Z_DEFAULT_STRATEGY) != Z_OK) return -1;</div>
+<div class="para" label-module="para">c_stream.next_in = data;</div>
+<div class="para" label-module="para">c_stream.avail_in = ndata;</div>
+<div class="para" label-module="para">c_stream.next_out = zdata;</div>
+<div class="para" label-module="para">c_stream.avail_out = *nzdata;</div>
+<div class="para" label-module="para">while (c_stream.avail_in != 0 &amp;&amp; c_stream.total_out &lt; *nzdata)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">if(deflate(&amp;c_stream, Z_NO_FLUSH) != Z_OK) return -1;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">if(c_stream.avail_in != 0) return c_stream.avail_in;</div>
+<div class="para" label-module="para">for (;;) {</div>
+<div class="para" label-module="para">if((err = deflate(&amp;c_stream, Z_FINISH)) == Z_STREAM_END) break;</div>
+<div class="para" label-module="para">if(err != Z_OK) return -1;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">if(deflateEnd(&amp;c_stream) != Z_OK) return -1;</div>
+<div class="para" label-module="para">*nzdata = c_stream.total_out;</div>
+<div class="para" label-module="para">return 0;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">return -1;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">/* Uncompress data */</div>
+<div class="para" label-module="para">int zdecompress(Byte *zdata, uLong nzdata,</div>
+<div class="para" label-module="para">Byte *data, uLong *ndata)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">int err = 0;</div>
+<div class="para" label-module="para">z_stream d_stream; /* decompression stream */</div>
+<div class="para" label-module="para">d_stream.zalloc = (alloc_func)0;</div>
+<div class="para" label-module="para">d_stream.zfree = (free_func)0;</div>
+<div class="para" label-module="para">d_stream.opaque = (voidpf)0;</div>
+<div class="para" label-module="para">d_stream.next_in = zdata;</div>
+<div class="para" label-module="para">d_stream.avail_in = 0;</div>
+<div class="para" label-module="para">d_stream.next_out = data;</div>
+<div class="para" label-module="para">if(inflateInit(&amp;d_stream) != Z_OK) return -1;</div>
+<div class="para" label-module="para">while (d_stream.total_out &lt; *ndata &amp;&amp; d_stream.total_in &lt; nzdata) {</div>
+<div class="para" label-module="para">d_stream.avail_in = d_stream.avail_out = 1; /* force small buffers */</div>
+<div class="para" label-module="para">if((err = inflate(&amp;d_stream, Z_NO_FLUSH)) == Z_STREAM_END) break;</div>
+<div class="para" label-module="para">if(err != Z_OK) return -1;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">if(inflateEnd(&amp;d_stream) != Z_OK) return -1;</div>
+<div class="para" label-module="para">*ndata = d_stream.total_out;</div>
+<div class="para" label-module="para">return 0;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">/* HTTP gzip decompress */</div>
+<div class="para" label-module="para">int httpgzdecompress(Byte *zdata, uLong nzdata,</div>
+<div class="para" label-module="para">Byte *data, uLong *ndata)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">int err = 0;</div>
+<div class="para" label-module="para">z_stream d_stream = {0}; /* decompression stream */</div>
+<div class="para" label-module="para">static char dummy_head[2] =</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">0x8 + 0x7 * 0x10,</div>
+<div class="para" label-module="para">(((0x8 + 0x7 * 0x10) * 0x100 + 30) / 31 * 31) &amp; 0xFF,</div>
+<div class="para" label-module="para">};</div>
+<div class="para" label-module="para">d_stream.zalloc = (alloc_func)0;</div>
+<div class="para" label-module="para">d_stream.zfree = (free_func)0;</div>
+<div class="para" label-module="para">d_stream.opaque = (voidpf)0;</div>
+<div class="para" label-module="para">d_stream.next_in = zdata;</div>
+<div class="para" label-module="para">d_stream.avail_in = 0;</div>
+<div class="para" label-module="para">d_stream.next_out = data;</div>
+<div class="para" label-module="para">if(inflateInit2(&amp;d_stream, 47) != Z_OK) return -1;</div>
+<div class="para" label-module="para">while (d_stream.total_out &lt; *ndata &amp;&amp; d_stream.total_in &lt; nzdata) {</div>
+<div class="para" label-module="para">d_stream.avail_in = d_stream.avail_out = 1; /* force small buffers */</div>
+<div class="para" label-module="para">if((err = inflate(&amp;d_stream, Z_NO_FLUSH)) == Z_STREAM_END) break;</div>
+<div class="para" label-module="para">if(err != Z_OK )</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">if(err == Z_DATA_ERROR)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">d_stream.next_in = (Bytef*) dummy_head;</div>
+<div class="para" label-module="para">d_stream.avail_in = sizeof(dummy_head);</div>
+<div class="para" label-module="para">if((err = inflate(&amp;d_stream, Z_NO_FLUSH)) != Z_OK)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">return -1;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">else return -1;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">if(inflateEnd(&amp;d_stream) != Z_OK) return -1;</div>
+<div class="para" label-module="para">*ndata = d_stream.total_out;</div>
+<div class="para" label-module="para">return 0;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">/* Uncompress gzip data */</div>
+<div class="para" label-module="para">int gzdecompress(Byte *zdata, uLong nzdata,</div>
+<div class="para" label-module="para">Byte *data, uLong *ndata)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">int err = 0;</div>
+<div class="para" label-module="para">z_stream d_stream = {0}; /* decompression stream */</div>
+<div class="para" label-module="para">static char dummy_head[2] =</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">0x8 + 0x7 * 0x10,</div>
+<div class="para" label-module="para">(((0x8 + 0x7 * 0x10) * 0x100 + 30) / 31 * 31) &amp; 0xFF,</div>
+<div class="para" label-module="para">};</div>
+<div class="para" label-module="para">d_stream.zalloc = (alloc_func)0;</div>
+<div class="para" label-module="para">d_stream.zfree = (free_func)0;</div>
+<div class="para" label-module="para">d_stream.opaque = (voidpf)0;</div>
+<div class="para" label-module="para">d_stream.next_in = zdata;</div>
+<div class="para" label-module="para">d_stream.avail_in = 0;</div>
+<div class="para" label-module="para">d_stream.next_out = data;</div>
+<div class="para" label-module="para">if(inflateInit2(&amp;d_stream, -MAX_WBITS) != Z_OK) return -1;</div>
+<div class="para" label-module="para">//if(inflateInit2(&amp;d_stream, 47) != Z_OK) return -1;</div>
+<div class="para" label-module="para">while (d_stream.total_out &lt; *ndata &amp;&amp; d_stream.total_in &lt; nzdata) {</div>
+<div class="para" label-module="para">d_stream.avail_in = d_stream.avail_out = 1; /* force small buffers */</div>
+<div class="para" label-module="para">if((err = inflate(&amp;d_stream, Z_NO_FLUSH)) == Z_STREAM_END) break;</div>
+<div class="para" label-module="para">if(err != Z_OK )</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">if(err == Z_DATA_ERROR)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">d_stream.next_in = (Bytef*) dummy_head;</div>
+<div class="para" label-module="para">d_stream.avail_in = sizeof(dummy_head);</div>
+<div class="para" label-module="para">if((err = inflate(&amp;d_stream, Z_NO_FLUSH)) != Z_OK)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">return -1;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">else return -1;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">if(inflateEnd(&amp;d_stream) != Z_OK) return -1;</div>
+<div class="para" label-module="para">*ndata = d_stream.total_out;</div>
+<div class="para" label-module="para">return 0;</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">#ifdef _DEBUG_ZSTREAM</div>
+<div class="para" label-module="para">#define BUF_SIZE 65535</div>
+<div class="para" label-module="para">int main()</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">char *data = "kjdalkfjdflkjdlkfjdklfjdlkfjlkdjflkdjflddajfkdjfkdfaskf;ldsfk;ldakf;ldskfl;dskf;ld";</div>
+<div class="para" label-module="para">uLong ndata = strlen(data);</div>
+<div class="para" label-module="para">Bytef zdata[BUF_SIZE];</div>
+<div class="para" label-module="para">uLong nzdata = BUF_SIZE;</div>
+<div class="para" label-module="para">Bytef odata[BUF_SIZE];</div>
+<div class="para" label-module="para">uLong nodata = BUF_SIZE;</div>
+<div class="para" label-module="para">memset(zdata, 0, BUF_SIZE);</div>
+<div class="para" label-module="para">//if(zcompress((Bytef *)data, ndata, zdata, &amp;nzdata) == 0)</div>
+<div class="para" label-module="para">if(gzcompress((Bytef *)data, ndata, zdata, &amp;nzdata) == 0)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">fprintf(stdout, "nzdata:%d %s\n", nzdata, zdata);</div>
+<div class="para" label-module="para">memset(<a target=_blank href="/view/3358034.htm">odata</a>, 0, BUF_SIZE);</div>
+<div class="para" label-module="para">//if(zdecompress(zdata, ndata, odata, &amp;nodata) == 0)</div>
+<div class="para" label-module="para">if(gzdecompress(zdata, ndata, odata, &amp;nodata) == 0)</div>
+<div class="para" label-module="para">{</div>
+<div class="para" label-module="para">fprintf(stdout, "%d %s\n", nodata, odata);</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">}</div>
+<div class="para" label-module="para">#endif</div><div class="anchor-list">
+<a name="4" class="lemma-anchor para-title" ></a>
+<a name="sub2258413_4" class="lemma-anchor " ></a>
+<a name="zlib许可" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">zlib</span>zlib许可</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="4" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">zlib许可<sup>[1]</sup><a class="sup-anchor" name="ref_[1]_2258413">&nbsp;</a>
+是一个自由软件授权协议，但并非<a target=_blank href="/view/20996.htm">copyleft</a>。Box2D就使用了zlib许可。</div>
+<dl class="lemma-reference collapse nslog-area log-set-param" data-nslog-type="2" log-set-param="ext_reference">
+<dt class="reference-title">参考资料<em class="toggle"></em></dt>
+<dd class="reference-list-wrap">
+<ul class="reference-list">
+<li class="reference-item " id="reference-[1]-2258413-wrap">
+<span class="index">1.</span>
+<a class="gotop anchor"  name="refIndex_1_2258413" id="refIndex_1_2258413" title="向上跳转" href="#ref_[1]_2258413">&nbsp;&nbsp;</a>
+<a rel="nofollow" href="http://baike.baidu.com/redirect/82c9l0lRUYqFWkI_p8VqDG-atCkl9VgvdlQ4gI3G0uef8Woq5ftZcZuL2s3IaNvjNjpyk4Ac8I37P4UCjD0oTn5NS1IbbJA" target="_blank" class="text">zlib许可原文<span class="linkout">&nbsp;</span></a>
+</li></ul>
+</dd>
+</dl>
+</div>
+<div class="side-content">
+<div class="summary-pic" >
+<a href="/pic/zlib/2432726/0/b58f8c5494eef01f197b5defe2fe9925bc317da8?fr=lemma&amp;ct=single" target="_blank" nslog-type="10002401">
+<img src="http://d.hiphotos.baidu.com/baike/w%3D268%3Bg%3D0/sign=930388038418367aad8978db1648ece9/b58f8c5494eef01f197b5defe2fe9925bc317da8.jpg" />
+<button class="picAlbumBtn"><em></em><span>图集</span></button>
+<div>zlib图册</div>
+</a>
+</div>
+<div id="promotion_xunke"></div>
+<div class="lemmaWgt-promotion-vbaike">
+<div class="promotion_title">V百科<a href="/vbaike#gallary" target="_blank">往期回顾</a></div>
+<div class="promotion_viewport">
+<dl>
+</dl>
+<div class="promotion_viewport_pager"></div>
+</div>
+</div><div class="lemmaWgt-promotion-rightPreciseAd" data-lemmaId="2432726" data-lemmaTitle="zlib"></div><div class="lemmaWgt-sideRecommend">
+<a name="zhixinWrap" class="qnAnchor"></a>
+<div class="zhixin-box" id="zhixinWrap" data-source="" data-newLemmaId="2432726">
+</div>
+<form id="zhixinErrorForm" class="hidden" action="http://f3.baidu.com/index.php/feedback/zx/baikeJC" target="zhixinSubErr" method="post">
+<input class="js-url" name="fb_html_url" type="hidden" />
+<input class="js-query" name="fb_query" type="hidden" />
+<input class="js-title" name="fb_card_title" type="hidden" />
+<input class="js-content" name="fb_content" type="hidden" />
+<input class="js-souceId" name="fb_source_id" type="hidden" />
+</form>
+<iframe id="zhixinSubErr" name="zhixinSubErr" style="display:none" frameborder="0"></iframe>
+</div><div class="lemmaWgt-promotion-slide">
+<div class="promotion_viewport">
+<dl>
+</dl>
+<div class="promotion_viewport_pager"></div>
+</div>
+</div><div class="lemmaWgt-promotion-rightBigAd">
+</div><dl class="side-box lemma-statistics">
+<dt class="title">词条统计</dt>
+<dd class="description">
+<ul>
+<li>浏览次数：<span id="j-lemmaStatistics-pv"></span>次</li>
+<li>编辑次数：19次<a href="/historylist/zlib/2432726" class="nslog:1021" target="_blank">历史版本</a></li>
+<li>最近更新：<span class="j-modified-time" style="display:none">2015-07-07</span></li>
+<li>创建者：<a class="show-userCard" data-uid="2800793" title="查看此用户资料" target="_blank" href="http://www.baidu.com/p/tyeken8" nslog-type="1022">tyeken8</a></li>
+</ul>
+</dd>
+</dl>
+<div class="side-catalog" style="visibility:hidden">
+<div class="side-bar">
+<em class="circle start"></em>
+<em class="circle end"></em>
+</div>
+<div class="catalog-scroller">
+<dl class="catalog-list">
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#1" class="title-link">
+<span class="text">
+<span class="title-index">1</span>
+<span class="title-link" nslog-type="1026">特性</span>
+</span>
+</a>
+</dt>
+<dd class="catalog-title level2">
+<a href="#1_1" class="title-link">
+<span class="text">
+<span class="title-index">1.1</span>
+<span class="title-link" nslog-type="1026">数据头(header)</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#1_2" class="title-link">
+<span class="text">
+<span class="title-index">1.2</span>
+<span class="title-link" nslog-type="1026">算法</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#1_3" class="title-link">
+<span class="text">
+<span class="title-index">1.3</span>
+<span class="title-link" nslog-type="1026">使用资源</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#1_4" class="title-link">
+<span class="text">
+<span class="title-index">1.4</span>
+<span class="title-link" nslog-type="1026">策略</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#1_5" class="title-link">
+<span class="text">
+<span class="title-index">1.5</span>
+<span class="title-link" nslog-type="1026">错误处理</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#1_6" class="title-link">
+<span class="text">
+<span class="title-index">1.6</span>
+<span class="title-link" nslog-type="1026">数据长度</span>
+</span>
+</a>
+</dd>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#2" class="title-link">
+<span class="text">
+<span class="title-index">2</span>
+<span class="title-link" nslog-type="1026">业界应用</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#3" class="title-link">
+<span class="text">
+<span class="title-index">3</span>
+<span class="title-link" nslog-type="1026">使用范例</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#4" class="title-link">
+<span class="text">
+<span class="title-index">4</span>
+<span class="title-link" nslog-type="1026">zlib许可</span>
+</span>
+</a>
+</dt>
+<a class="arrow" href="javascript:void(0);"></a>
+</dl>
+</div>
+<div class="right-wrap">
+<a class="go-up disable" href="javascript:void(0);"></a>
+<a class="go-down" href="javascript:void(0);"></a>
+</div>
+<div class="bottom-wrap">
+<a class="toggle-button" href="javascript:void(0);"></a>
+<a class="gotop-button" href="javascript:void(0);"></a>
+</div>
+</div>
+<div class="unionAd_fromPs side-box" id="unionAd_fromPs">
+<script type="BAIDU_HH">
+    {
+        type : 'pageembed',
+        di   : 'u2140330',
+        rsi0 : 270,
+        rsi1 : 175
+    }
+    </script>
+</div>
+<div id="side_box_fengchao" class="fengchao side-box" nslog="area" nslog-type="10000902">
+</div>
+<div id="side_box_unionAd" class="unionAd side-box">
+<div class="union-content"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="after-content">
+<div class="fc-guess-like new" id="fc_guess_like_new">
+<span class="logo-du">
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+</span>
+<h6>猜你喜欢</h6>
+<ul class="cmn-clearfix">
+</ul>
+</div>
+<div class="bottom-promotion" id="bottom-promotion">
+<div id="BOTTOM_PRO_AD"></div>
+</div></div>
+</div>
+
+<div class="wgt-footer-main">
+<div class="content">
+<dl class="fresh">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-fresh"></em>新手上路</dt>
+<dd>
+<div><a target="_blank" href="/usercenter/tasks#guide">成长任务</a></div>
+<div><a target="_blank" href="/help#main01">编辑入门</a></div>
+<div><a target="_blank" href="/help#main06">编辑规则</a></div>
+<div><a target="_blank" href="/help#main05">百科术语</a></div>
+</dd>
+</dl>
+<dl class="question">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-question"></em>我有疑问</dt>
+<dd>
+<div><a target="_blank" href="/wikiui/doubt?lemmaId=2432726&fr=lemma"
+            nslog-type="10070001">我要质疑</a></div>
+<div><a target="_blank" href="http://ikefu.baidu.com/baidubaike/chat.html" nslog-type="10000003">我要提问</a></div>
+<div><a target="_blank" href="http://tieba.baidu.com/f?ie=utf-8&fr=bks0000&kw=%E7%99%BE%E5%BA%A6%E7%99%BE%E7%A7%91">参加讨论</a></div>
+<div><a target="_blank" href="/feedback">意见反馈</a></div>
+</dd>
+</dl>
+<dl class="suggestion">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-suggestion"></em>投诉建议</dt>
+<dd>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#1">举报不良信息</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#2">未通过词条申诉</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#4">投诉侵权信息</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#3">封禁查询与解封</a></div>
+</dd>
+</dl>
+</div>
+<div class="copyright">©2016Baidu&nbsp;<a href="http://www.baidu.com/duty/" target="_blank">使用百度前必读</a>&nbsp;|&nbsp;<a href="http://help.baidu.com/question?prod_en=baike&class=159&id=1047" target="_blank">百科协议</a>&nbsp;|&nbsp;<a href="/operation/cooperation" target="_blank">百度百科合作平台</a></div>
+</div>
+
+<div class="lemmaWgt-searchHeader">
+<div class="layout">
+<div class="logo-container">
+<a class="logo cmn-inline-block" title="到百科首页" href="/">
+<span class="cmn-baike-logo">
+<em class="cmn-icon cmn-icons cmn-icons_logo-bai"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-baike"></em>
+</span>
+</a>
+</div>
+<div class="search">
+<div class="form">
+<form id="searchForm" action="/search/word" method="GET" target="_self">
+<input id="query" name="word" type="text" autocomplete="off" autocorrect="off" value="zlib" /><a id="search" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_search" nslog-type="10010004"></em></a>
+</form>
+<ul id="suggestion" class="suggestion">
+<div></div>
+<li class="extra">
+<span id="close">关闭</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="tool-buttons">
+<a class="toolButtons-edit button j-edit-link" href="javascript:;" nslog-type="10010001"></a>
+<a class="toolButtons-collect button" href="javascript:;" nslog-type="10010002"></a>
+<a class="toolButtons-vote button" href="javascript:;" nslog-type="10010003"></a>
+</div>
+<div class="user-info">
+<a class="user-link unlogin" href="javascript:;" nslog-type="10010005" target="_blank">登录</a>
+</div>
+</div></div>
+<div class="new-bdsharebuttonbox new-side-share" id="side-share">
+<span class="title">分享</span>
+<div class="side-border">
+<div class="triangle"></div>
+<a class="bds_qzone"  href="javascript:void(0);" nslog-type="10060101">
+<em class="cmn-icon cmn-icons cmn-icons_logo-qzone"></em>
+</a>
+<a class="bds_tsina" href="javascript:void(0);" nslog-type="10060301">
+<em class="cmn-icon cmn-icons cmn-icons_logo-sina-weibo"></em>
+</a>
+<a class="bds_wechat"  href="javascript:void(0);" nslog-type="10060001">
+<em class="cmn-icon cmn-icons cmn-icons_logo-wechat"></em>
+</a>
+<a class="bds_tqq"  href="javascript:void(0);" nslog-type="10060201">
+<em class="cmn-icon cmn-icons cmn-icons_logo-qq"></em>
+</a>
+</div>
+</div>
+<div class="qrcode-wrapper" id="layer" style="display: none">
+<div class="bd_weixin_popup_header">
+<em class="cmn-icon cmn-icons cmn-icons_close"></em>
+<span>分享到微信朋友圈</span>
+</div>
+<div id="wechat-qrcode-img"></div>
+<div class="bd_weixin_popup_footer">打开微信“扫一扫”即可将网页分享至朋友圈</div>
+</div>
+<div></div><div></div>
+</body><script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_0_29c88fe.js"></script>
+<script type="text/javascript">require.resourceMap({"res":{"wiki-lemma:widget/lemma_content/mainContent/lemmaRelation/lemmaInsert.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/lemmaInsert_17d225d.js","pkg":"wiki-lemma:p5","deps":["wiki-common:widget/component/nslog/nslog.js"]},"wiki-lemma:widget/lemma_content/mainContent/lemmaRelation/tangram.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/tangram_1e4b3aa.js","pkg":"wiki-lemma:p5"},"wiki-lemma:widget/lemma_content/mainContent/lemmaReference/lemmaReferenceTip/lemmaReferenceTip.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaReference/lemmaReferenceTip/lemmaReferenceTip_d50e02d.js","deps":["wiki-common:widget/lib/jquery/jquery.js","wiki-common:widget/util/string.js"]}},"pkg":{"wiki-lemma:p5":{"url":"http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma-module-lemmaRelation_782158b.js"}}});</script><script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/widget/lib/jsmart/PHPJS_3347e0a.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_1_ec0cd21.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_2_7a24e62.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_5_62d9343.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma_921f707.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/configModule/zhixin/zhixin_d2befc8.js"></script>
+<script type="text/javascript">!function(){  var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+    userbar = require('wiki-common:widget/component/userbar/userbar.js');
+    
+  $(function() {
+    userbar.buildUserbar($('.wgt-userbar'), null);
+  });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+      initSearchbar = require('wiki-common:widget/component/searchbar/searchbar.js');  
+    initSearchbar($('.wgt-searchbar-main'));
+  }();
+!function(){  var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+
+  var timer = '';
+
+  $('.wgt-navbar').on('mouseenter', 'dl', function() {
+  clearTimeout(timer);
+  timer = setTimeout(function() {
+  $('.wgt-navbar').addClass('wgt-navbar-hover');
+}, 300);
+}).on('mouseleave', function() {
+clearTimeout(timer);
+$('.wgt-navbar').removeClass('wgt-navbar-hover');
+}).on('click', 'a', function() {
+clearTimeout(timer);
+$('.wgt-navbar').removeClass('wgt-navbar-hover');
+});
+}();
+!function(){                var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+                var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+                // 展现策略
+                rightCheck.editView('2432726', function(res) {
+                    if (!res.errno) {
+                        if (res.data.edit) {
+                            $('.lemmaWgt-lemmaTitle .add-subLemma').css('display', 'inline-block');
+                            $('.top-tool .add-sub-icon').css('display', 'inline-block');
+                        }
+                    } else {
+                        if ('1') {
+                            $('.lemmaWgt-lemmaTitle .add-subLemma').css('display', 'inline-block');
+                            $('.top-tool .add-sub-icon').css('display', 'inline-block');
+                        }
+                    }
+                });
+                require('wiki-lemma:widget/basicElement/addSub/addSub.js')({                    lemmaId: '2432726',                    lemmaTitle: 'zlib',                    lemmaDesc: '',                    versionId: '80818810',                    subLemmaId: '2258413'                });
+            }();
+!function(){        var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+        var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+        // 展现策略
+        rightCheck.editView('2432726', function(res) {
+            if (!res.errno) {
+                if (res.data.divide) {
+                    $('.top-tool .split-icon').css('display', 'block');
+                }
+            }
+        });
+    }();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	require.async("wiki-lemma:widget/basicElement/collect/collect.js",function(collect){
+		collect({
+            newLemmaId:"2432726",
+			lemmaId:"2258413",
+			subLemmaId:"2258413"
+		});
+	});
+}();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	require.async("wiki-lemma:widget/basicElement/vote/vote.js",function(vote){
+		vote({
+			lemmaId:"2258413",
+            subLemmaId:"2258413",
+            newLemmaId:"2432726"
+		});
+	});
+}();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	!!window.BKShare && window.BKShare.regist({
+		"tag" : "top-share",
+		"bdSize" : 32,
+		"bdMini":1
+	});
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2432726', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.lemmaWgt-lemmaTitle .edit-lemma').css('display', 'inline-block');
+            } else {
+                $('.lemmaWgt-lemmaTitle .lock-lemma').show();
+            }
+        } else {
+            if ('1') {
+                $('.lemmaWgt-lemmaTitle .edit-lemma').css('display', 'inline-block');
+            } else {
+                $('.lemmaWgt-lemmaTitle .lock-lemma').show();
+            }
+        }
+    });
+}();
+!function(){	require('wiki-lemma:widget/lemma_content/mainContent/basicInfo/basicInfo.js')();
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2432726', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2432726', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2432726', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2432726', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2432726', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2432726', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2432726', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2432726', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2432726', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2432726', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){		require.async(["wiki-lemma:widget/lemma_content/mainContent/lemmaReference/lemmaReference.js", "wiki-lemma:widget/lemma_content/mainContent/lemmaReference/lemmaReferenceTip/lemmaReferenceTip.js"],function(Reference,ReferenceTip){
+			new Reference({
+				subLemmaId:"2258413"
+			});
+			new ReferenceTip({
+				subLemmaId:"2258413"
+			});
+		});
+	}();
+!function(){    require.async('wiki-lemma:widget/promotion/xunke/xunke.js', function (app) {
+        app.init({
+            lemmaTitle: 'zlib',
+            adManager: null
+        });
+    });
+}();
+!function(){        require('wiki-lemma:widget/lemma_content/configModule/zhixin/zhixin.js')(
+            2432726,
+            'zlib'
+        );
+    }();
+!function(){    require.async("wiki-lemma:widget/lemma_content/mainContent/lemmaStatistics/lemmaStatistics.js",function(init){
+        init({
+            newLemmaIdEnc:"cb22cd3734912825ce5c6904"
+        });
+    });
+}();
+!function(){	require.async("wiki-lemma:widget/lemma_content/mainContent/sideCatalog/sideCatalog.js",function(SideCatalog){
+		new SideCatalog();
+	});
+}();
+!function(){        require.async(['wiki-lemma:widget/promotion/unionAdFromPs/unionAdFromPs.js'], function (init) {
+            init({
+                adManager: null
+            });
+        });
+    }();
+!function(){    require.async(["wiki-lemma:widget/promotion/fengchao/fengchao.js", "wiki-lemma:widget/promotion/unionAd/unionAd.js"], function (init, unionAd) {
+        init({
+            newLemmaId: "2432726",
+            lemmaTitle: "zlib",
+            encodeLemmaTitle: "zlib",
+            adManager: null
+        }, {
+            errFn: unionAd,
+            dom: $('#side_box_unionAd')
+        });
+    });
+}();
+!function(){    require.async('wiki-lemma:widget/promotion/guessLike/guessLike.js', function (app) {
+        app.init({
+            lemmaTitle: 'zlib',
+            adManager: null
+        });
+    });
+}();
+!function(){        require.async('wiki-lemma:widget/promotion/bottomAd/bottomAd.js', function (init) {
+            init({
+                sId: 'BOTTOM_PRO_AD',
+                adManager: null
+            });
+        });
+    }();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var Dialog = require("wiki-common:widget/ui/dialog/dialog.js");
+    var userLogin = require('wiki-common:widget/component/userLogin/userLogin.js');
+    var unameFiller = require('wiki-common:widget/component/unameFiller/unameFiller.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+            var isEnterprise = false;
+        var enterpriseOwnerUserId = 0;
+    
+    var userId = 0;
+    var editUrl = '/edit/' + encodeURIComponent('zlib') + '/' + '2432726';
+    var pgcUrl = '/enterprise/editpgc?lemmaId=2432726';
+
+    userLogin.regist({
+        onLogin: function(user) {
+            userId = user ? user.uid : 0;
+        }
+    });
+
+    function gotoEdit(url, isMidNight) {
+        if (isMidNight) {
+            Dialog.alert({
+                title: '编辑提示',
+                subMsg: '晚23:00至次日8:00，因审核系统例行维护，您提交的版本可能需要较长时间才能通过，望您谅解。',
+                onConfirm: function() {
+                    window.location.href = url;
+                }
+            });
+        } else {
+            window.location.href = url;
+        }    
+    }
+
+    function showChoseEditDialog(pgcCallback, ugcCallback) {
+        new Dialog({
+            title: '编辑提示',
+            subMsg: '<p>您已开通企业百科服务，推荐您直接编辑“官方资料”，官方资料仅限企业百科绑定的百科账号修改，其他用户账号不可修改。</p><p>如果您想修改其他网友编辑的普通词条内容，请注意遵守百科百科编辑规则。<p>',
+            btns: [{
+            key: 'pgc',
+            text: '编辑官方资料'
+            }, {
+            style: 'white',
+            text: '修改普通词条',
+            key: 'ugc'
+            }],
+            onBtnClick: function(btnKey){
+                if (btnKey === 'pgc') {
+                    pgcCallback && pgcCallback();
+                } else if (btnKey === 'ugc') {
+                    ugcCallback && ugcCallback();
+                }
+            }
+        }).show();
+    }
+
+    function checkUserLegal(res) {
+        var legal = false;
+        switch (res.errno) {
+            case 100001:
+                userLogin.showLoginPop();
+                break;
+            case 100006:
+                unameFiller.show();
+                break;
+            default:
+                legal = true;
+        }
+        return true;
+    }
+
+    function checkUgc(res, url) {
+        if (res.errno) {
+            switch (res.errno) {
+                case 100005:
+                    alert('对不起，您目前被封禁');
+                    break;
+                case 110001:
+                    alert('对不起，该词条被锁定');
+                    break;
+                case 110007:
+                    alert('对不起，消歧页无法编辑');
+                    break;
+                case 110005:
+                    Dialog.alert({
+                    title: '编辑提示',
+                    mainMsg: '对不起，您暂时没有权限编辑该词条。',
+                    subMsg: '<p>您好，该词条内容已较丰富，现仅对百科等级达到<b>四级</b>且通过率达到<b>85%</b>的科友开放编辑。</p><p>当您通过努力达到以上要求，就可以参与编辑该词条了。</p><p><img src="http://img.baidu.com/img/baike/usercenter/growuptask/star.gif" class="star" />参加<a target="_blank" href="/usercenter#guide">成长任务</a>，更快掌握百科编辑技巧，加速升级！</p>'
+                    });
+                    break;
+                case 110008:
+                    Dialog.alert({
+                    title: '编辑提示',
+                    mainMsg: '对不起，您暂时没有权限编辑该词条。',
+                    subMsg: '<p>您好，该词条内容已较丰富，现仅对百科等级达到<b>六级</b>且通过率达到<b>85%</b>的科友开放编辑。</p><p>当您通过努力达到以上要求，就可以参与编辑该词条了。</p><p><img src="http://img.baidu.com/img/baike/usercenter/growuptask/star.gif" class="star" />参加<a target="_blank" href="/usercenter#guide">成长任务</a>，更快掌握百科编辑技巧，加速升级！</p>'
+                    });
+                    break;
+                case 470001:
+                    alert('系统错误，请刷新重试');
+                    break;
+            }
+        } else {
+            if (!res.data.right.noAudit) {
+                Dialog.alert({
+                    title: '编辑提示',
+                    subMsg: '很抱歉，该词条有其他用户编辑的版本正在提交，您暂时无法编辑。<br/>百科建议您晚些时候再编辑该词条，或者尝试编辑其他的词条。'
+                });
+                return;
+            }
+            gotoEdit(url, res.data.notice.isMidNight);
+        }
+    }
+
+    $(document.body).on('click', '.j-edit-link', function() {
+        var dl = $(this).attr('data-edit-dl');
+        if (dl) {
+            var url = editUrl + '?dl=' + dl;
+        } else {
+            var url = editUrl;
+        }
+
+        rightCheck.preeditCheck('2432726', 'zlib', 'zlib', '80818810', function(res) {
+            if (!checkUserLegal(res)) {
+                return;
+            }
+            if (isEnterprise && enterpriseOwnerUserId === userId) {
+                showChoseEditDialog(function() {
+                    location.href = pgcUrl;
+                }, function() {
+                    checkUgc(res, url);
+                });
+            } else {
+                checkUgc(res, url);
+            }
+        });
+    });
+}();
+!function(){    require.async("wiki-lemma:widget/tools/searchHeader/toolButtons/toolButtons.js",function(init){
+        init({
+            lemmaId:"2258413",
+            subLemmaId:"2258413",
+            newLemmaId:"2432726"
+        });
+    });
+}();
+!function(){    require('wiki-lemma:widget/tools/searchHeader/toolButtons/userInfo.js')();
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+      animation = require('wiki-common:widget/util/animation.js'),
+      nslog = require('wiki-common:widget/component/nslog/nslog.js'),
+      initSearchbar = require('wiki-common:widget/component/searchbar/searchbar.js');
+
+    var isFadeIn = false,
+        isFadeOut = false;
+
+    var fadeInAni, fadeOutAni;
+
+    $(window).on('scroll', function(e) {
+        var scrollTop = $(this).scrollTop();
+
+        if (scrollTop > 200 && !isFadeIn && $('.lemmaWgt-searchHeader').css('display') == 'none') {
+            fadeOutAni && fadeOutAni.stop();
+            fadeInAni = animation({
+                duration: 200,
+                easing: 'linear',
+                onStart: function() {
+                    isFadeOut = false;
+                    isFadeIn = true;
+                    $('.lemmaWgt-searchHeader').css('display', 'block');
+                },
+                onStep: function(progress) {
+                    $('.lemmaWgt-searchHeader').css('opacity', progress)
+                },
+                onComplete: function(progress) {
+                    isFadeIn = false;
+                    nslog(10010006);
+                }
+            });
+        } else if (scrollTop <= 200 && !isFadeOut && $('.lemmaWgt-searchHeader').css('display') == 'block') {
+            fadeInAni && fadeInAni.stop();
+            fadeOutAni = animation({
+                duration: 300,
+                easing: 'linear',
+                onStart: function() {
+                    $('.lemmaWgt-searchHeader #suggestion').hide();
+                    isFadeIn = false;
+                    isFadeOut = true;
+                },
+                onStep: function(progress) {
+                    $('.lemmaWgt-searchHeader').css('opacity', 1 - progress);
+                },
+                onComplete: function(progress) {
+                    isFadeOut = false;
+                    $('.lemmaWgt-searchHeader').css('display', 'none');
+                }
+            });
+        }
+    });
+
+    initSearchbar($('.lemmaWgt-searchHeader'));
+}();
+!function(){    require('wiki-lemma:widget/tools/newSideShare/qzopensl.js');
+    require.async("wiki-lemma:widget/tools/newSideShare/taskSideShare.js",function(taskShare){
+        taskShare.init({
+            title: 'zlib',
+            desc: "zlib\u662f\u63d0\u4f9b\u6570\u636e\u538b\u7f29\u7528\u7684\u51fd\u5f0f\u5e93\uff0c\u7531Jean-loup Gailly\u4e0eMark Adler\u6240\u5f00\u53d1\uff0c\u521d\u72480.9\u7248\u57281995\u5e745\u67081\u65e5\u53d1\u8868\u3002zlib\u4f7f\u7528DEFLATE\u7b97\u6cd5\uff0c\u6700\u521d\u662f\u4e3alibpng\u51fd\u5f0f\u5e93\u6240\u5199\u7684\uff0c\u540e\u6765\u666e\u904d\u4e3a\u8bb8\u591a\u8f6f\u4ef6\u6240\u4f7f\u7528\u3002\u6b64\u51fd\u5f0f\u5e93\u4e3a\u81ea\u7531\u8f6f\u4ef6\uff0c\u4f7f\u7528zlib\u6388\u6743\u3002\u622a\u81f32007\u5e743\u6708\uff0czlib\u662f\u5305\u542b\u5728Coverity\u7684\u7f8e\u56fd\u56fd\u571f\u5b89\u5168\u90e8\u8d5e\u52a9\u8005\u9009\u62e9\u7ee7\u7eed\u5ba1\u67e5\u7684\u5f00\u6e90\u9879\u76ee\u3002",
+            pic: 'http:\/\/d.hiphotos.baidu.com\/baike\/w%3D268\/sign=91e5a0b80ef431adbcd2443f7336ac0f\/b58f8c5494eef01f197b5defe2fe9925bc317da8.jpg',
+            url: '',
+            qqPic: 'http:\/\/d.hiphotos.baidu.com\/baike\/whfpf%3D261%2C261%2C50\/sign=fe9621c083cb39dbc1953416b62b3b12\/b58f8c5494eef01f197b5defe2fe9925bc317da8.jpg'
+        });
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var nslog = require("wiki-common:widget/component/nslog/nslog.js");
+    var testElem = require('wiki-common:widget/component/testElem/testElem.js');
+    var cmsModuleLoader = require('wiki-common:widget/component/cmsModuleLoader/cmsModuleLoader.js');
+
+    function requireAsync() {
+        require.async('wiki-lemma:widget/tools/announcement/announcement.js');
+    }
+
+    cmsModuleLoader('/cms/global/lemma_config.json', [{
+        name: 'announcement',
+        script: 'wiki-lemma:widget/tools/announcement/announcement.js'
+    }]);
+
+    require.async("wiki-lemma:widget/tools/lazyLoad/lazyLoad.js", function(LazyLoad) {
+        new LazyLoad();
+    });
+
+    require.async(['wiki-common:widget/component/nslog/nslog.js', 'wiki-common:widget/lib/jquery/jquery.js'], function(nslog, $) {
+        nslog().setGlobal({
+            lemmaId: "2258413",
+            newLemmaId: "2432726",
+            subLemmaId: "2258413",
+            lemmaTitle: "zlib"
+        });
+
+        // 词条页 pv
+        nslog(9322);
+
+        // 新版头部pv（小流量）
+        if ($('.pc-header-new').length > 0) {
+            nslog(9069);
+        }
+
+        // 链接点击 pv
+        var lemmaPageRegExp = new RegExp(/\/subview\/\d+|\/view\/\d+|\/item\//i);
+        $('body').on('mousedown', 'a', function() {
+            var href = $(this).attr('href');
+            if (href && href.indexOf('/') >= 0 && href.indexOf('#') !== 0) {
+                // 链接点击 pv
+                nslog(10000001);
+                if (lemmaPageRegExp.test(href)) {
+                    // 词条页链接点击 pv
+                    nslog(10000002, window.location.href, {
+                        targetTitle: $(this).text()
+                    });
+                }
+            }
+        });
+
+        /****** 词条页站内流转需求统计 start ******/
+        (function () {
+            // 各种统计配置
+            var circulationLinkCfg = {
+                innerLink: [ // 内链
+                    '.para',
+                    '.lemmaWgt-baseInfo-simple-largeMovie',
+                    '.lemmaWgt-baseInfo-simple-largeStar',
+                    '.basic-info .basicInfo-block',
+                    '.lemma-summary',
+                    '.lemmaWgt-lemmaSummary',
+                    '.view-tip-panel',
+                    '.horizontal-module',
+                    '.lemmaWgt-roleIntroduction',
+                    '.dramaSeries .dramaSerialList',
+                    '.module-music',
+                    '.table-view',
+                    '[log-set-param="table_view"]',
+                    '.list-module',
+                    '.cell-module',
+                    '.baseBox .dl-baseinfo', // 配置后台字段
+                    '.pvBtn-box .leadPVBtnWrapper',
+                    '.drama-actor',
+                    '#staffList',
+                    '.starMovieAndTvplay',
+                    '.main_tab:not(.main_tab-defaultTab)' // 除去词条tab外的tab
+                ],
+                relationTable: '.rs-container-foot', // 关系表
+                peopleRelation: '.star-info-block.relations, .lemmaWgt-focusAndRelation', // 人物关系（明星+普通）
+                moduleActors: '.featureBaseInfo .actors, .lemmaWgt-majorActors', // 主要演员、嘉宾、主持人
+                moduleWorks: '.featureBaseInfo .works, .large-feature .works', // 代表作品
+                moduleQuarterly: '.featureBaseInfo .po_quarterly, .mian_quarterly', // 分季介绍
+                rankStar: '.rank-list.stars-rank', // 明星榜
+                rankDrama: '.drama-rank-list', // 电视剧榜
+                specialTopic: '.special-topic', // 专题模块
+                modDetailTable: '#modDetailTable', // 关系表出图
+                chuizhitu: '.chuizhitu', // 垂直化模块
+                polysemantList: '.polysemantList-wrapper' // 义项切换
+            };
+            /****** 连接统计 ******/
+            function clickNslogFn() {
+                for (var k in circulationLinkCfg) {
+                    if (k === 'innerLink') {
+                        // 词条内链到词条页
+                        var tempArr = circulationLinkCfg[k];
+                        for (var i = 0, l = tempArr.length; i < l; i++) {
+                            tempArr[i] += ' a';
+                        }
+                        var sSelector = tempArr.join(', ');
+
+                        $('body').on('mousedown', sSelector, {key: k},function(e) {
+                            var key = e.data.key;
+                            var href = $(this).attr('href');
+                            var tar = $(this).attr('target') || '';
+                            if (href && href.indexOf('/') >= 0 && href.indexOf('#') !== 0
+                            && tar === '_blank' && lemmaPageRegExp.test(href)) {
+                                // 词条页普通内链点击 pv
+                                nslog(10000004, null ,{division: key});
+                            }
+                        });
+                    } else {
+                        // 模块到词条页链接
+                        $(circulationLinkCfg[k]).on('mousedown', 'a', {key: k}, function (e) {
+                            var key = e.data.key;
+                            var href = $(this).attr('href');
+                            if (href && href.indexOf('#') !== 0 && lemmaPageRegExp.test(href)) {
+                                // 词条页配置模块链接点击 pv
+                                nslog(10000004, null, {division: key});
+                            }
+                        });
+                    }
+                }
+            }
+            // 发起统计请求
+            clickNslogFn();
+
+            /****** 各模块展现量pv ******/
+            function checkModuleIsShow() {
+                var result = [];
+                for (var k in circulationLinkCfg) {
+                    if (k !== 'innerLink' && k !== 'relationTable') {
+                        !!$(circulationLinkCfg[k]).html() && result.push(k);
+                    }
+                }
+                if (result.length > 0) {
+                    nslog(10000005, null, {showModules: result.join(',')});
+                }
+            }
+            checkModuleIsShow();
+
+        })();
+        /****** 词条页站内流转需求统计 end ******/
+
+    });
+
+    // 广告接入 wikiad 统一加载
+    // log 词条页广告被拦截情况（此处 log 请求行为）
+    nslog(70000101, window.location.href, {
+        api: 'lemma-ad',
+        action: 'request'
+    });
+    $.ajax({
+        type: 'GET',
+        url: '/api/wikiad/getsquirrels',
+        data: {
+            lemmaId: 2432726
+        },
+        cache: false,
+        dataType: 'JSON',
+        success: function (res) {
+            // log 词条页广告被拦截情况（此处 log 请求成功）
+            nslog(70000101, window.location.href, {
+                api: 'lemma-ad',
+                action: 'success'
+            });
+
+            if (!res.errno) {
+                if (res.data[5]) {
+                    require.async(['wiki-lemma:widget/promotion/rightPreciseAd/rightPreciseAd.js'], function(rightPreciseAd) {
+                        rightPreciseAd(res.data[5]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[5][0].adId,
+                            adTitle: res.data[5][0].name,
+                            adPos: 5
+                        });
+                    });
+                } else if (res.data[1]) {
+                    require.async(['wiki-lemma:widget/promotion/vbaike/vbaike.js'], function(vbaike) {
+                        vbaike(res.data[1]);
+                        for(var i in res.data[1]) {
+                            nslog(10002201, location.href, {
+                                adId: res.data[1][i].adId,
+                                adTitle: res.data[1][i].name,
+                                adPos: 1
+                            });
+                        }
+                    });
+                }
+                if (res.data[9]) {
+                    require.async(['wiki-lemma:widget/promotion/rightBigAd/rightBigAd.js'], function(rightBigAd) {
+                        rightBigAd(res.data[9]);
+                            nslog(10002201, location.href, {
+                                adId: res.data[9][0].adId,
+                                adTitle: res.data[9][0].name,
+                                adPos: 9
+                            });
+                    });
+                } else if(res.data[2]) {
+                    require.async(['wiki-lemma:widget/promotion/slide/slide.js'], function(slide) {
+                        slide(res.data[2]);
+                        for(var i in res.data[2]) {
+                            nslog(10002201, location.href, {
+                                adId: res.data[2][i].adId,
+                                adTitle: res.data[2][i].name,
+                                adPos: 2
+                            });
+                        }
+                    });
+                }
+                if (res.data[3]) {
+                    require.async(['wiki-lemma:widget/promotion/topAd/topAd.js'], function(topAd) {
+                        topAd(res.data[3]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[3][0].adId,
+                            adTitle: res.data[3][0].name,
+                            adPos: 3
+                        });
+                    });
+                }
+                if (res.data[4]) {
+                    require.async(['wiki-lemma:widget/promotion/rightAd/rightAd.js'], function(rightAd) {
+                        rightAd(res.data[4]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[4][0].adId,
+                            adTitle: res.data[4][0].name,
+                            adPos: 4
+                        });
+                    });
+                }
+                if (res.data[15]) {
+                    require.async(['wiki-lemma:widget/promotion/banner/banner.js'], function(banner) {
+                        banner(res.data[15]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[15][0].adId,
+                            adTitle: res.data[15][0].name,
+                            adPos: 15
+                        });
+                    });
+                }
+                if (res.data[16]) {
+                    require.async(['wiki-lemma:widget/promotion/declaration/declaration.js'], function(declaration) {
+                        declaration(res.data[16]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[16][0].adId,
+                            adTitle: res.data[16][0].name,
+                            adPos: 16
+                        });
+                    })
+                }
+            } else {
+                return;
+            }
+
+            setTimeout(function () {
+                var elemArr = {};
+                res.data[1] && res.data[1].length > 0 && (elemArr['lemma-vbaike-ad'] = $('.lemmaWgt-promotion-vbaike .promotion_viewport a:eq(0) img').get(0));
+                res.data[2] && res.data[2].length > 0 && (elemArr['lemma-slide-ad'] = $('.lemmaWgt-promotion-slide .promotion_viewport a:eq(0) img').get(0));
+                res.data[3] && res.data[3].length > 0 && (elemArr['lemma-navbar-ad'] = {
+                    node: $('.header [nslog-type="10002202"]').get(0),
+                    validations: {
+                        'noBackgroundImage': function() {
+                            return $('.header [nslog-type="10002202"]').css('background-image').indexOf(res.data[3][0].picUrl) < 0
+                        }
+                    }
+                });
+                res.data[4] && res.data[4].length > 0 && (elemArr['lemma-side-ad'] = {
+                    node: $('.right-ad img').get(0),
+                    validations: {
+                        'noBackgroundImage': function() {
+                            return $('.right-ad img').attr('src').indexOf(res.data[4][0].picUrl) < 0
+                        }
+                    }
+                });
+                res.data[15] && res.data[15].length > 0 && (elemArr['lemma-configModule-banner'] = $('.configModuleBanner').get(0));
+                res.data[16] && res.data[16].length > 0 && (elemArr['lemma-configModule-declaration'] = $('.lemmaWgt-declaration').get(0));
+
+                testElem.log(elemArr, 70000102);
+            }, 1000);
+        },
+        error: function () {
+            // log 词条页广告被拦截情况（此处 log 请求失败）
+            nslog(70000101, window.location.href, {
+                api: 'lemma-ad',
+                action: 'error'
+            });
+        }
+    });
+
+    // 设置分享内容
+    window.BKShare.setCommon({
+        bdText: "\u3010zlib_\u767e\u5ea6\u767e\u79d1\u3011zlib\u662f\u63d0\u4f9b\u6570\u636e\u538b\u7f29\u7528\u7684\u51fd\u5f0f\u5e93\uff0c\u7531Jean-loup Gailly\u4e0eMark Adler\u6240\u5f00\u53d1\uff0c\u521d\u72480.9\u7248\u57281995\u5e745\u67081\u65e5\u53d1\u8868\u3002zlib\u4f7f\u7528DEFLATE\u7b97\u6cd5\uff0c\u6700\u521d\u662f\u4e3alibpng\u51fd\u5f0f\u5e93\u6240\u5199\u7684\uff0c\u540e\u6765\u666e\u904d\u4e3a\u8bb8\u591a\u8f6f\u4ef6\u6240\u4f7f\u7528\u3002\u6b64\u51fd\u5f0f\u5e93\u4e3a\u81ea\u7531\u8f6f\u4ef6\uff0c\u4f7f\u7528zlib\u6388\u6743\u3002\u622a\u81f32007\u5e743\u6708\uff0czlib\u662f\u5305\u542b\u5728Coverity\u7684\u7f8e\u56fd\u56fd\u571f\u5b89\u5168\u90e8\u8d5e\u52a9\u8005\u9009\u62e9\u7ee7\u7eed\u5ba1\u67e5\u7684\u5f00\u6e90\u9879\u76ee\u3002.....\uff08\u5206\u4eab\u81ea@\u767e\u5ea6\u767e\u79d1\uff09",
+        bdDesc: '',
+        bdUrl: 'http:\/\/baike.baidu.com\/subview\/2258413\/2258413.htm',
+        bdPic: '',
+        onBeforeClick: function (){
+            $('.bdshare_dialog_box').hide();
+        }
+    });
+
+    // 底部投诉带入当前页面 url
+    var map = [1, 2, 4, 3];
+    $('.wgt-footer-main .suggestion').find('a').each(function(i) {
+        $(this).attr('href', 'http://tousu.baidu.com/baike/add?word=zlib' + '&&submit_link=' + encodeURIComponent(window.location.href) + '#' + map[i]);
+    });
+}();
+!function(){      require('wiki-common:widget/component/psLink/psLink.js');
+    }();</script>
+<script type="text/javascript">
+  var Hunter = window.Hunter || {};
+  Hunter.userConfig = Hunter.userConfig || [];
+  </script>
+<script type="text/javascript" src="https://gss0.baidu.com/70cFsjip0QIZ8tyhnq/hunter/baike.js?st=17155" defer></script><script type="text/javascript">
+  // DOM Ready时，统计用户可操作时间。
+  alog('speed.set', 'drt', +new Date);
+
+  void function(a,b,c,d,e,f){function g(b){a.attachEvent?a.attachEvent("onload",b,!1):a.addEventListener&&a.addEventListener("load",b)}function h(a,c,d){d=d||15;var e=new Date;e.setTime((new Date).getTime()+1e3*d),b.cookie=a+"="+escape(c)+";path=/;expires="+e.toGMTString()}function i(a){var c=b.cookie.match(new RegExp("(^| )"+a+"=([^;]*)(;|$)"));return null!=c?unescape(c[2]):null}function j(){var a=i("PMS_JT");if(a){h("PMS_JT","",-1);try{a=a.match(/{["']s["']:(\d+),["']r["']:["']([\s\S]+)["']}/),a=a&&a[1]&&a[2]?{s:parseInt(a[1]),r:a[2]}:{}}catch(c){a={}}a.r&&b.referrer.replace(/#.*/,"")!=a.r||alog("speed.set","wt",a.s)}}if(a.alogObjectConfig){var k=a.alogObjectConfig.sample,l=a.alogObjectConfig.rand;if("https:"===a.location.protocol){if(d="https://gss2.bdstatic.com/70cFsjip0QIZ8tyhnq"+d,!k||!l)return}else d="http://img.baidu.com"+d;k&&l&&l>k||(g(function(){alog("speed.set","lt",+new Date),e=b.createElement(c),e.async=!0,e.src=d+"?v="+~(new Date/864e5),f=b.getElementsByTagName(c)[0],f.parentNode.insertBefore(e,f)}),j())}}(window,document,"script","/hunter/alog/dp.min.js");
+</script>
+</html>
