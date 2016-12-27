@@ -1,0 +1,910 @@
+<script type="text/javascript">
+    var username = "shaerdong";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/shaerdong";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+
+    var fileName = '8071114';
+    var commentscount = 2;
+    var islock = false
+
+   window.quickReplyflag = true;
+            
+             var isBole = false;
+            
+
+</script>
+
+<!DOCTYPE html>
+<html>
+  <head>    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+   
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script> 
+   <!-- <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>-->
+     <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />    
+     <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+
+
+    <script src="http://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+
+     <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/tracking.js"></script>
+    <!-- ad end-->
+
+      <script src="//csdnimg.cn/rabbit/tracking-ad/main.js"></script>
+
+    <link rel="stylesheet" href="http://static.csdn.net/public/common/toolbar/css/index.css">
+    <link rel="stylesheet" href="http://csdnimg.cn/public/common/libs/bootstrap/css/bootstrap.css">
+ 	<link rel="stylesheet" href="http://csdnimg.cn/public/static/css/avatar.css">
+    <link rel="stylesheet" href="http://static.blog.csdn.net/skin/skin2-template/css/common.css">
+    <!-- [if IE 7]-->
+    <link rel="stylesheet" href="http://static.blog.csdn.net/skin/skin2-template/css/font-awesome.min.css">
+    <!-- [endif]-->
+    <link rel="stylesheet" href="http://static.blog.csdn.net/skin/skin2-template/css/main.css">
+    
+     <link rel="stylesheet" href="http://static.blog.csdn.net/skin/skin2-template/css/jquery.rollbar.css">
+    <link rel="stylesheet" href="http://static.blog.csdn.net/skin/skin2-template/css/style.css">
+    
+    
+    <!-- [if lt IE 9]-->
+    <script src="http://static.blog.csdn.net/skin/skin2-template/js/libs/html5shiv.min.js"></script>
+    <!-- [endif]-->
+	<script src="http://static.blog.csdn.net/scripts/skintemplatecommon.js" type="text/javascript"></script>
+
+    <script src="http://static.blog.csdn.net/scripts/skintemplateprovider.js" type="text/javascript"></script>      
+	<script src="http://static.blog.csdn.net/scripts/skintemplatecomment.js" type="text/javascript"></script>
+
+    <script src="http://c.csdnimg.cn/rabbit/cnick/cnick.js" type="text/javascript"></script>      
+   
+       
+    
+
+      <script type="text/javascript">
+          $(function () {
+              setTimeout(function () {
+                  $(".mess_name").each(function (index, item) {
+                      var u = $(this).text().split('：')[0].toString().replace("回复", "")
+                      var thisComment = $(this);
+                      if (u) {
+                          $.getJSON("https://passport.csdn.net/get/nick?callback=?", { users: u }, function (a) {
+                              if (a != null && a.data != null && a.data.length > 0) {
+                                  nick = a.data[0].n;
+                                  if (u != nick) {
+                                      thisComment.text(thisComment.text().replace(u, nick));
+                                  }
+                              }
+                          });
+                      }
+                  });
+
+                  $(".username").each(function (index, item) {
+                      var u = $(this).text().split('：')[0].toString().replace("回复", "")
+                      var thisComment = $(this);
+                      if (u) {
+                          $.getJSON("https://passport.csdn.net/get/nick?callback=?", { users: u }, function (a) {
+                              if (a != null && a.data != null && a.data.length > 0) {
+                                  nick = a.data[0].n;
+                                  if (u != nick) {
+                                      thisComment.text(thisComment.text().replace(u, nick));
+                                  }
+                              }
+                          });
+                      }
+                  });
+
+              }, 200);
+
+          });
+      </script>
+
+    <title>服务器端包含SSI(Server Side Include)简介 - 博客频道 - CSDN.NET</title>	
+  </head>
+  <body>
+
+       <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+   <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+    <div class="blog_left">
+      <div class="blog_l_c">
+        <h2 class="blog_l_t">二東的专栏[人就是需要不断的激发自己]</h2>
+        <h6 class="blog_l_sign">在这个世界上，没有永远的绝对的强者，只有不敢勇于挑战强者的弱者！</h6>
+        <div class="item_wrap">
+          <dl class="item_l">
+            <dt class="item">55</dt>
+            <dd class="item_name">原创</dd>
+          </dl>
+          <dl class="item_l">
+            <dt class="item">42</dt>
+            <dd class="item_name">转载</dd>
+          </dl>
+          <dl class="item_l">
+            <dt class="item">0</dt>
+            <dd class="item_name">译文</dd>
+          </dl>
+          <dl class="item_l">
+            <dt class="item">15</dt>
+            <dd class="item_name">评论</dd>
+          </dl>
+          <dl class="item_l">
+            <dt class="item">175374</dt>
+            <dd class="item_name">访问</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="blog_copyright">
+        <p><span>京 ICP 证 070598 号</span><img src="http://static.blog.csdn.net/skin/skin2-template/images/copyright.png" alt="img"></p>
+        <p>
+          Copyright © 1999-2016,
+          <br/>
+          CSDN.NET, All Rights Reserved
+        </p>
+       </div>
+    </div>
+    <div id="skin_m" class="skin_m">
+      <div id="skin_center" class="skin_center">
+          <div class="skin_center_t">
+                <h2 class="mod_most"></h2>
+                <!--include ../modules/mod_list.jade-->
+                <div class="skin_list">
+                  <dl class="list_c clearfix detail_list">
+                    <dt>
+                      <div class="date">
+                        <div class="date_t"><span>2012</span><em>十月</em></div>
+                        <div class="date_b">14</div>
+                      </div>
+                    </dt>
+                    <dd>
+                      <div class="skin_icon"><a href="javascript:;" class="set_reprint">转</a></div>
+                      <h3 class="list_c_t"><a href="/shaerdong/article/details/8071114">服务器端包含SSI(Server Side Include)简介</a></h3>  
+                        <div class="list_c_Title">
+                          <p class="detail_p">
+                            <label><span>分类：</span><em onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">服务器</em></label>
+                         </p>
+                         <p class="read_r">
+                            <label><i class="fa fa-eye" style="cursor:default"></i><span style="cursor:default"> （5511）</span></label>
+                            <label><i class="fa fa-comment-o"style="cursor:default"></i><span  style="cursor:default"> （2）</span></label>
+                             
+                             
+
+                             
+                          </p>
+                        </div>
+                      <div class="skin_detail" id="article_content">
+                        
+<p class="margin">服务器端包含 SSI，是英文 Server Side Includes的简写。SSI是一种可以指挥服务器动态声称网页内容的HTML指令。</p>
+<p class="margin">通常SSI可以用来确保网页中的一些通用内容，比如版权信息、联系方式、或导航信息在全站所有网页中保持一致。使用SSI显示这些通用内容还可以减轻网站维护的工作量，因为当需要修改这些通用信息的时候，只需要改一个地方就可以了，而不需要逐个修改每一个网页。</p>
+<p class="margin">各个服务器对SSI命令的支持各有不同，但 #include 和 #exec 是通用的。使用 SSI 的页面文件通常都使用扩展名.shtml，而不是.html 或 .htm，这样以便服务器能够辨认出哪些页面包含SSI指令，这些页面需要先经过服务器处理，翻译执行其中的SSI指令，然后才发送给客户端浏览器。&nbsp; (当然有些服务器还是支持.html,.htm文件中有SSI指令的)。</p>
+<p class="margin"><span id="more-83"></span></p>
+<p class="margin"></p>
+<p><strong>如何辨别你的服务器是否支持 SSI?</strong></p>
+<p class="margin">多数网站寄存服务都支持 SSI – 但是也有一些不支持，特别是一些免费的网站寄存服务。你可以联系你的网站寄存公司询问他们是否支持SSI，也可以通过以下方式来自己测试一下你的服务器是否支持SSI:</p>
+<p>1. 拷贝以下HTML内容，保存为文件名test.shtml</p>
+<p><strong><span style="color:#ff6633">&lt;html&gt;&lt;head&gt;&lt;/head&gt;</span></strong></p>
+<p><strong><span style="color:#ff6633">&lt;body&gt;&lt;!–#echo var=”DATE_LOCAL” –&gt;&lt;/body&gt;</span></strong></p>
+<p><strong><span style="color:#ff6633">&lt;/html&gt;<br>
+</span></strong></p>
+<p class="margin">2. 将这个文件上载到你的服务器上，然后用浏览器浏览服务器上的这个网页。</p>
+<p>3. 如果看到网页显示当前日期，则你的服务器支持 SSI。否则，多半可能你的服务器不支持SSI。你可以尝试与你的网站寄存公司联系看他们是否可以为你开通SSI服务。</p>
+<p class="margin"><strong>练习1: 显示版权信息</strong></p>
+<p class="margin">1. 拷贝以下内容并存为copyright.html文件名 （你可以把链接和网站名称修改为你的网站）：</p>
+<blockquote>
+<p class="margin"><strong><span style="color:#ff6600">&amp;copy;2007 &lt;a href=”http://www.prglab.com”&gt; 程序员实验室&lt;/a&gt; 版权所有。
+</span></strong></p>
+</blockquote>
+<p class="margin" style="padding-left:30px">在浏览器中它应该显示为</p>
+<blockquote>
+<p class="margin"><strong><span style="color:#6699cc">©2007 <a href="http://www.prglab.com">
+程序员实验室</a> 版权所有。<br>
+</span></strong></p>
+</blockquote>
+<p class="margin" style="padding-left:30px"><strong>注意：</strong>在这个文件代码中不能够出现 &lt;html&gt;, &lt;head&gt; 和 &lt;body&gt; 这些标签，否则包含它的页面会出错。</p>
+<p class="margin">2. 将这个文件copyright.html上传到你的服务器上。</p>
+<p class="margin">3. 在要显示版权信息的页面底部&lt;/body&gt;标签之前插入以下代码：<br>
+<strong></strong></p>
+<blockquote>
+<p class="margin"><strong><span style="color:#ff6600">&lt;!–#include virtual=”/copyright.html” –&gt;</span></strong></p>
+</blockquote>
+<p class="margin">4.将修改后的文件上传到服务器上，然后用浏览器打开服务器上的文件，你应该看到页面的底部显示版权信息。</p>
+<p class="margin" style="padding-left:30px"><strong>注意：</strong> 写有包含指令(#include)代码的文件可能要保存为扩展名为.shtml的文件名，代码才能生效。</p>
+<p class="margin"></p>
+<p class="margin"><strong>练习 2: 简单的导航条</strong></p>
+<p class="margin">1. 比如我们要写一个如下所示的导航条<br>
+<strong></strong></p>
+<p class="margin" style="padding-left:30px"><strong>主页| 联系方式 | 产品介绍 | 订单<br>
+</strong></p>
+<p class="margin" style="padding-left:30px">可以用以下HTML代码来实现：</p>
+<blockquote>
+<p class="margin"><strong><span style="color:#ff6600">&lt;p align=”center”&gt;&lt;font face=”Geneva, Arial, Helvetica, sans-serif” size=”2″&gt;</span></strong></p>
+<p class="margin"><strong><span style="color:#ff6600">&lt;a href=”home.htm”&gt;主页&lt;/a&gt;</span></strong></p>
+<p class="margin"><strong><span style="color:#ff6600">| &lt;a href=”mailto:myemail@address.com”&gt;联系方式&lt;/a&gt;</span></strong></p>
+<p class="margin"><strong><span style="color:#ff6600">| &lt;a href=”ｐｒｏｄｕｃｔｓ.htm”&gt;产品介绍</span><span style="color:#ff6600">&lt;/a&gt;</span></strong></p>
+<p class="margin"><strong><span style="color:#ff6600">| &lt;a href=”orders.htm”&gt;订单&lt;/a&gt;&lt;/font&gt;&lt;/p&gt;</span></strong></p>
+</blockquote>
+<p class="margin"><span style="color:#6699cc"><strong></strong></span></p>
+<p class="margin">２.　保存这些代码为文件 navigation.shtml 或 navigation.shtm.</p>
+<p class="margin">３.　打开要插入导航条的页面，在要显示导航条的位置插入以下代码：</p>
+<blockquote>
+<p class="margin"><strong><span style="color:#ff6600">&lt;!–#include virtual=”/navigation.shtml” –&gt;</span></strong></p>
+</blockquote>
+<p class="margin">４.　将所有文件上载到服务器上，并用浏览器检查导航条是否如你所设想的显示。</p>
+<p class="margin">以上只是两个很简单的SSI使用的例子，你还可以自由发挥写出更复杂的网页。如果需要修改SSI包含的内容，只需要打开写有通用内容的网页，比如上面的copyright.html或navigation.shtml，修改其中的内容，那么所有包含这个文件的网页相应内容都会被自动修改。</p>
+<p class="margin">SSI 相对来说比较容易掌握，并能提高网站维护效率，不妨一试。</p>
+<br>
+
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="skin_nav">        
+                     <div class="skin_edit"><i class="fa fa-th-list"></i>
+                     <div class="nav_list nav_list_edit"><a href="/shaerdong">文章列表</a></div>
+                  </div>
+                     
+                </div>
+                <div class="rssFix">
+        	        <a href="http://blog.csdn.net/shaerdong/rss/list" class="column"  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])"><i class="fa fa-rss"></i></a>
+                </div>        
+
+                <div id="goTopBtn" class="skin_backTop"><i class="fa fa-chevron-up"></i></div>
+        </div>
+        <div class="detail_b">
+          <p class="reprint_copy" style="display:none" id="copyright"></p>  
+		   <!--      
+          <div class="bole" style="display:none">
+            <h2 class="bole_t clearfix"><span>伯乐推荐</span>
+              <label>一共有<em>{bolecount}</em>位博乐进行推荐</label>
+            </h2>
+           {bolecomment}              
+          </div>		
+          -->  
+           <!-- style=""style=""-->
+          <h2 class="praise" >
+            <label id="digg" ArticleId="8071114" onclick="btndigga();" ><span id="btnDigg">顶</span><em>0</em></label>
+            <label id="bury" onclick="btnburya();"><span id="btnBury"   >踩</span><em>0</em></label>
+          </h2>           
+                <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+                <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+           
+             <script type="text/javascript">
+                 function btndigga() {
+                     $(".tracking-ad[data-mod='popu_222'] a").click();
+                 }
+                 function btnburya() {
+                     $(".tracking-ad[data-mod='popu_223'] a").click();
+                 }
+
+                 $(function () {
+                     if ($(".markdown_views").length > 0) {
+                         $('pre.prettyprint code').each(function () {
+                             var lines = $(this).text().split('\n').length;
+                             var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                             $(this).addClass('has-numbering').parent().append($numbering);
+                             for (i = 1; i <= lines; i++) {
+                                 $numbering.append($('<li/>').text(i));
+                             };
+                             $numbering.fadeIn(1700);
+                         });
+                     }
+                     else {
+                         $("#article_content pre").each(function () {
+                             var $this = $(this);
+                             if ($this.attr("class") != undefined) {
+                                 if ($this.attr("class").indexOf("brush:") != -1) {
+                                     var lang = $this.attr("class").split(';')[0].split(':')[1];
+                                     $this.attr('name', 'code');
+                                     $this.attr('class', lang);
+                                 }
+                                 if ($this.attr("class")) {
+                                     $this.attr('name', 'code');
+                                 }
+                             }
+                         });
+                         $('#article_content textarea[name=code]').each(function () {
+                             var $this = $(this);
+                             if ($this.attr("class").indexOf(":") != -1) {
+                                 $this.attr("class", $this.attr("class").split(':')[0]);
+                             }
+                         });
+                         dp.SyntaxHighlighter.HighlightAll('code');
+                         $('.highlighter').addClass('dp-highlighter');
+                         if (!window.clipboardData) {
+                             setTimeout("setCopyBtn()", 500);
+                         }
+
+                         function __get_code_toolbar(snippet_id) {
+                             return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                                     + snippet_id
+                                     + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                                     + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                                     + snippet_id
+                                     + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+                         }
+
+                         $("[code_snippet_id]").each(function () {
+                             __s_id = $(this).attr("code_snippet_id");
+                             if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                                 __code_tool = __get_code_toolbar(__s_id);
+                                 $(this).prev().find(".tools").append(__code_tool);
+                             }
+                         });
+
+                         $(".bar").show();
+                     }
+                 });
+            </script>
+          <div class="blog_share">
+              <!--<i class="fa fa-qq"></i><i class="fa fa-weixin"></i><i class="fa fa-weibo"></i><i class="fa fa-renren"></i><i class="fa fa-qq"></i><i class="fa fa-weixin"></i>
+              <i class="fa fa-weibo"></i><i class="fa fa-renren"></i>-->                
+               <div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+                <a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+                <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+                <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+                <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+                <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+                <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+                </div>
+                <script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+                <!-- Baidu Button END -->
+          </div>
+          <div class="forward_back">
+            <div class="back fl"><a href="javascript:void(0);" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/shaerdong/article/details/8071092';"><span><i class="fa fa-arrow-left"></i></span><em>Web前端开发体会十日谈</em></a></div><div class="forward fr"><a href="javascript:void(0);" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/shaerdong/article/details/8071123';"><em>如何将一个HTML页面嵌套在另一个页面中</em><span><i class="fa fa-arrow-right"></i></span></a></div>
+          </div>
+            <div>
+                <ins data-revive-zoneid="71" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+            </div>            
+        <!--  
+		{articleinsamecategory}
+            -->
+          <div class="comment" id="comment_form">
+              <div id="commentsbmitarear">
+                    <h2 class="comment_t">发表评论</h2>
+                    <dl class="publish_comment clearfix" id="commentbox">
+                      <dt><a href="http://my.csdn.net/"><img src=""></a></dt>
+                      <dd>                 
+			          <form action="/shaerdong/comment/submit?id=8071114" method="post" onsubmit="return subform(this);" id="commentform">
+					        <textarea class="publish_txt" id="comment_content"></textarea>
+					        <div class="publish clearfix">
+					
+					          <div class="publish_l"><i class="fa fa-code J_code"></i></div>
+
+					          <input type="hidden" id="comment_replyId" name="comment_replyId">
+					          <input type="hidden" id="comment_userId" name="comment_userId" value="">
+					          <input type="hidden" id="commentId" name="commentId" value="">
+					  
+					          <a href="javascript:void(0);" class="publish_btn"> 发表评论</a>&nbsp;&nbsp;<span id="tip_comment" style="color: Red; display: none;"></span>
+					
+					          <div class="comment-code-pop J_lang_list" id="lang_list" code="code"><a href="#html" style="width:95px;" class="long_name">HTML/XML</a><a href="#objc" style="width:95px;" class="long_name">objective-c</a><a href="#delphi" style="width:58px;" class="zhong_name">Delphi</a><a href="#ruby" class="zhong_name">Ruby</a><a href="#php">PHP</a><a href="#csharp" class="duan_name">C#</a><a style=" border-right: none;" href="#cpp" class="duan_name">C++</a><a style=" border-bottom:none;width:95px;" href="#javascript" class="long_name">JavaScript</a><a style=" border-bottom:none;width:95px;" href="#vb" class="long_name">Visual Basic</a><a style=" border-bottom:none;" href="#python" class="zhong_name">Python</a><a style=" border-bottom:none;" href="#java" class="zhong_name">Java</a><a style="border-bottom:none;" href="#css" class="duan_name">CSS</a><a style="border-bottom:none;" href="#sql" class="duan_name">SQL</a><a style="border:none; " href="#plain" class="duan_name">其它</a><span class="arrb"></span></div>
+					        </div>
+			         </form>
+                      </dd>
+                    </dl>
+               </div>
+              <a name="comments"></a>
+            <div class="comment_list" id="comment_list"></div>
+            <div  style="height:60px">&nbsp;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="skin_right">
+      <div id="skin_r_wrap" class="skin_r_wrap">
+        <div id="skin_r" class="skin_r"><i id="arrow_r" class="fa fa-arrow-right"></i>
+          <div class="mess"><a href="http://my.csdn.net/shaerdong"><img src="http://avatar.csdn.net/1/D/D/1_shaerdong.jpg" alt="img" class="head"></a>
+            <p class="mess_name">shaerdong</p>
+            <div class="grade">
+                <p  title="积分：2017"><span>等级：</span><img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog5.png"></p>
+                <p><span>排名：</span><span>第15240名</span></p>
+            </div>
+            <div class="blog_medal"><a href="http://blog.csdn.net/experts/rule.html"></a>
+              <div class="medal_c"></div>
+              <div class="attention">
+			  <a href="javascript:void(0);" id="span_add_follow"><i class="fa fa-plus"></i><span>加关注</span></a>
+			  <a href="javascript:void(0);" onClick="window.open('http://msg.csdn.net/letters/model?receiver=shaerdong','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"><i class="fa fa-envelope-o"></i><span>发私信</span></a>			  			 
+			  </div>   
+			   <div class="contact"></div>         
+            </div>
+          </div>
+          <div class="classify">     
+             <!--
+            <dl class="classify_list js_list">
+	             <dt>
+	                  <div class="js_column"><i class="fa fa-th"></i><a href="#" class="column">文章分类</a></div>
+	            </dt>
+            </dl>
+
+                  <dl class="classify_list">
+              <dt><i class="fa fa-play-circle"></i><a  href="/shaerdong/blog/course" class="column">我的课程</a></dt>
+            </dl> 
+		    -->	    	
+            
+            
+                
+               
+               <dl class="classify_list">
+                     <div class="article_search">
+                         <div class="article_search_c">
+                            <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+                                <input type="text" id="inputSearch" placeholder="文章搜索"><i class="fa fa-search" id="btnSubmit"></i>
+                            </form>
+                         </div>
+                     </div>
+               </dl>  
+                    
+            <dl class="classify_list">
+              <dt><i class="fa fa-file-text"></i><a  href="/shaerdong/blog/column" class="column">博客专栏</a> </dt>
+            </dl>  
+                    
+           <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-th"></i><span class="column">文章分类</span></div>
+                <ul id="article_list0" class="article_list">
+				  <li><a href="/shaerdong/article/category/1554065" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">mongoDB</a><span>（2）</span></li><li><a href="/shaerdong/article/category/1554067" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">MySql</a><span>（8）</span></li><li><a href="/shaerdong/article/category/1554069" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">css</a><span>（13）</span></li><li><a href="/shaerdong/article/category/1554073" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">PHP</a><span>（48）</span></li><li><a href="/shaerdong/article/category/1554075" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">JavaScript</a><span>（9）</span></li><li><a href="/shaerdong/article/category/1554083" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">其它文章</a><span>（6）</span></li><li><a href="/shaerdong/article/category/1554097" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">服务器</a><span>（3）</span></li><li><a href="/shaerdong/article/category/1554103" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">HTMl</a><span>（4）</span></li><li><a href="/shaerdong/article/category/1554107" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">vim</a><span>（2）</span></li><li><a href="/shaerdong/article/category/1554111" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Linux</a><span>（3）</span></li><li><a href="/shaerdong/article/category/2693811" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">工具篇</a><span>（3）</span></li><li><a href="/shaerdong/article/category/5937545" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">redis</a><span>（1）</span></li>                  
+                </ul>
+              </dt>
+              <dd style="display:none"><a href="#" class="article_add"><i class="fa fa-plus"></i></a></dd>
+            </dl>
+            
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-calendar"></i><span class="column">文章存档</span></div>
+                <ul id="article_list1" class="article_list">
+                 
+                    <li><a href="/shaerdong/article/month/2016/12">2016年12月</a><span>(3)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2016/11">2016年11月</a><span>(1)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2015/12">2015年12月</a><span>(3)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2015/11">2015年11月</a><span>(2)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2015/10">2015年10月</a><span>(1)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2015/07">2015年07月</a><span>(1)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2015/06">2015年06月</a><span>(4)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2015/05">2015年05月</a><span>(2)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2015/04">2015年04月</a><span>(2)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2015/03">2015年03月</a><span>(1)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2015/02">2015年02月</a><span>(1)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2015/01">2015年01月</a><span>(1)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2014/12">2014年12月</a><span>(3)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2014/11">2014年11月</a><span>(2)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2014/08">2014年08月</a><span>(3)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2014/07">2014年07月</a><span>(6)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2014/02">2014年02月</a><span>(1)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2013/08">2013年08月</a><span>(2)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2013/05">2013年05月</a><span>(1)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2013/04">2013年04月</a><span>(3)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2013/03">2013年03月</a><span>(2)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2013/02">2013年02月</a><span>(7)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2013/01">2013年01月</a><span>(8)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2012/12">2012年12月</a><span>(4)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2012/11">2012年11月</a><span>(5)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2012/10">2012年10月</a><span>(6)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2012/09">2012年09月</a><span>(12)</span></li>
+                
+                    <li><a href="/shaerdong/article/month/2012/08">2012年08月</a><span>(10)</span></li>
+                
+                </ul>
+              </dt>
+            </dl>
+                 
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-eye"></i><span class="column">阅读排行</span></div>
+                <ul class="article_list">
+                
+                 <li><a href="/shaerdong/article/details/42045731">Adobe 安装程序无法初始化，请下载Adobe Support Advisor检测该问题</a><span>（30084）</span></li>
+                 
+                 <li><a href="/shaerdong/article/details/8540986">jQuery实现当拉动滚动条到底部加载数据</a><span>（27401）</span></li>
+                 
+                 <li><a href="/shaerdong/article/details/8212143">网页右侧的漂浮广告代码，随滚动条滚动</a><span>（7660）</span></li>
+                 
+                 <li><a href="/shaerdong/article/details/45096833">PHP 判断客户端是IOS还是Android</a><span>（6334）</span></li>
+                 
+                 <li><a href="/shaerdong/article/details/7924170">jquery 获取元素在浏览器中的位置</a><span>（6157）</span></li>
+                 
+                 <li><a href="/shaerdong/article/details/8071114">服务器端包含SSI(Server Side Include)简介</a><span>（5506）</span></li>
+                 
+                 <li><a href="/shaerdong/article/details/8332769">IE6,IE7绝对定位元素神秘消失或被遮挡的解决</a><span>（4088）</span></li>
+                 
+                 <li><a href="/shaerdong/article/details/44944353">PHP 免费获取手机号码归属地</a><span>（3849）</span></li>
+                 
+                 <li><a href="/shaerdong/article/details/46453909">google镜像站</a><span>（3836）</span></li>
+                 
+                 <li><a href="/shaerdong/article/details/7923511">Ecmall MySql 数据库调用的常用方法</a><span>（3792）</span></li>
+                 
+                </ul>
+              </dt>
+            </dl>
+            
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-comments"></i><span class="column">评论排行</span></div>
+                <ul class="article_list">
+                  
+                  <li><a href="/shaerdong/article/details/8071092">Web前端开发体会十日谈</a><span>（4）</span></li>
+                  
+                  <li><a href="/shaerdong/article/details/8540986">jQuery实现当拉动滚动条到底部加载数据</a><span>（4）</span></li>
+                  
+                  <li><a href="/shaerdong/article/details/46453909">google镜像站</a><span>（2）</span></li>
+                  
+                  <li><a href="/shaerdong/article/details/8071114">服务器端包含SSI(Server Side Include)简介</a><span>（2）</span></li>
+                  
+                  <li><a href="/shaerdong/article/details/42045731">Adobe 安装程序无法初始化，请下载Adobe Support Advisor检测该问题</a><span>（2）</span></li>
+                  
+                  <li><a href="/shaerdong/article/details/8009922">让IE浏览器支持CSS3圆角属性的方法</a><span>（1）</span></li>
+                  
+                  <li><a href="/shaerdong/article/details/8212143">网页右侧的漂浮广告代码，随滚动条滚动</a><span>（1）</span></li>
+                  
+                  <li><a href="/shaerdong/article/details/7924441">CSS中很好的区分FF，IE7，IE6</a><span>（0）</span></li>
+                  
+                  <li><a href="/shaerdong/article/details/7924413">解决IE6 下 position:fixed 绝对定位的问题</a><span>（0）</span></li>
+                  
+                  <li><a href="/shaerdong/article/details/7924170">jquery 获取元素在浏览器中的位置</a><span>（0）</span></li>
+                  
+                </ul>
+              </dt>
+            </dl>
+                
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-list-ol"></i><span class="column">推荐文章</span></div>
+                <ul class="article_list">
+                 <ul>
+<li><a href="http://blog.csdn.net/lmj623565791/article/details/53370414" target="_blank">* Android 反编译初探 应用是如何被注入广告的</a></li>
+<li><a href="http://blog.csdn.net/foruok/article/details/53500801" 
+target="_blank">* 凭兴趣求职80%会失败，为什么</a></li>
+<li><a href="http://blog.csdn.net/AndroidMsky/article/details/53490459" 
+target="_blank">* 安卓微信自动抢红包插件优化和实现</a></li>
+<li><a href="http://blog.csdn.net/poem_qianmo/article/details/53240330" target="_blank">* 【游戏设计模式】之四 《游戏编程模式》全书内容提炼总结</a></li>
+<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/53404018" 
+target="_blank">* 带你开发一款给Apk中自动注入代码工具icodetools(完善篇)</a></li>
+
+
+</ul>
+                </ul>
+              </dt>
+            </dl>
+                  
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-commenting"></i><span class="column">最新评论</span></div>
+                <ul class="article_list new_comment">
+                  
+                    <li>                    
+                    <p><a href="/shaerdong/article/details/46453909">google镜像站</a></p>                   
+                    <p><a href="/shaerdong" class="reply_name">shaerdong</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>@psz1992:用的多了，还是花钱翻墙靠谱</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="/shaerdong/article/details/8071092">Web前端开发体会十日谈</a></p>                   
+                    <p><a href="/greatpage" class="reply_name">greatpage</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>感谢分享！</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="/shaerdong/article/details/42045731">Adobe 安装程序无法初始化，请下载Adobe Support Advisor检测该问题</a></p>                   
+                    <p><a href="/u012112434" class="reply_name">u012112434</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>太感谢了，两台电脑都是这样，正在愁眉苦恼看到你的方案，简单有效。</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="">Adobe 安装程序无法初始化，请下载Adobe Support Advisor检测该问题</a></p>                   
+                    <p><a href="/qq_34474208" class="reply_name">qq_34474208</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>牛啊</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="">Web前端开发体会十日谈</a></p>                   
+                    <p><a href="/u013047005" class="reply_name">u013047005</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>很细致呢，感谢分享！</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="/shaerdong/article/details/8071114">服务器端包含SSI(Server Side Include)简介</a></p>                   
+                    <p><a href="/bruce2922" class="reply_name">bruce2922</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>格式有误，应该是，其它的也是这样。大家不要直接粘贴过来用，这是官网的正确格式https://tomc...</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="/shaerdong/article/details/8009922">让IE浏览器支持CSS3圆角属性的方法</a></p>                   
+                    <p><a href="/qq_25949185" class="reply_name">qq_25949185</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>这个效果楼主试过吗？我试过，如果套着用的话，就有问题。比如一个圆角的方框表单，里面放着一行圆角的文本...</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="">Web前端开发体会十日谈</a></p>                   
+                    <p><a href="/elva762959379" class="reply_name">elva762959379</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>好文章，虽然自己技术很烂，但还是感觉自己又前进了一小步</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="">Web前端开发体会十日谈</a></p>                   
+                    <p><a href="/yygreat" class="reply_name">yygreat</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>真的很久没有将一篇这么长的文章一口气读完了，真的是好文章，让我受益很多，也明确了我做前端的路，坚定了...</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="">服务器端包含SSI(Server Side Include)简介</a></p>                   
+                    <p><a href="/zhurizhiyiing" class="reply_name">zhurizhiyiing</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>写的很棒，赞一个！</i></p>                    
+                  </li>      
+                           
+                </ul>
+              </dt>
+            </dl>
+                
+
+            <!--
+           [startblogcolumn]            
+             [startsearch]   
+               <dl class="classify_list">
+                     <div class="article_search">
+                         <div class="article_search_c">
+                            <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+                                <input type="text" id="inputSearch" placeholder="文章搜索"><i class="fa fa-search" id="btnSubmit"></i>
+                            </form>
+                         </div>
+                     </div>
+               </dl>  
+            [endsearch]   
+            
+            [startspecialcolumn]        
+            <dl class="classify_list">
+              <dt><i class="fa fa-file-text"></i><a  href="/shaerdong/blog/column" class="column">博客专栏</a> </dt>
+            </dl>  
+            [endspecialcolumn]   
+            
+             [startcategory]        
+           <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-th"></i><span class="column">文章分类</span></div>
+                <ul id="article_list0" class="article_list">
+				  {articlecategorys}                  
+                </ul>
+              </dt>
+              <dd style="display:none"><a href="#" class="article_add"><i class="fa fa-plus"></i></a></dd>
+            </dl>
+            [endcategory]
+
+            [startarchive]
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-calendar"></i><span class="column">文章存档</span></div>
+                <ul id="article_list1" class="article_list">
+                 [startlist]
+                    <li><a href="/{0}/article/month/{1}/{2}">{1}年{2}月</a><span>({3})</span></li>
+                [endlist]
+                </ul>
+              </dt>
+            </dl>
+             [endarchive]    
+                [startviewcountarticles]    
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-eye"></i><span class="column">阅读排行</span></div>
+                <ul class="article_list">
+                [startlist]
+                 <li><a href="{columnarticleurl}">{columnarticletitle}</a><span>（{columnarticlecount}）</span></li>
+                 [endlist]
+                </ul>
+              </dt>
+            </dl>
+            [endviewcountarticles]
+                [startcommentcountarticles]
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-comments"></i><span class="column">评论排行</span></div>
+                <ul class="article_list">
+                  [startlist]
+                  <li><a href="{columnarticleurl}">{columnarticletitle}</a><span>（{columnarticlecommentcount}）</span></li>
+                  [endlist]
+                </ul>
+              </dt>
+            </dl>
+                [endcommentcountarticles]
+                [starthomepagearticles]
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-list-ol"></i><span class="column">推荐文章</span></div>
+                <ul class="article_list">
+                 {cloumcontent}
+                </ul>
+              </dt>
+            </dl>
+                  [endhomepagearticles]
+                [startnewcomments]
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-commenting"></i><span class="column">最新评论</span></div>
+                <ul class="article_list new_comment">
+                  [startlist]
+                    <li>                    
+                    <p><a href="{articleurl}">服务器端包含SSI(Server Side Include)简介</a></p>                   
+                    <p><a href="/{commentusername}" class="reply_name">{commentusername}</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>{commentcontent}</i></p>                    
+                  </li>      
+                 [endlist]          
+                </ul>
+              </dt>
+            </dl>
+                [endnewcomments]
+                [startcustom]
+                   <dl class="classify_list js_list">
+                      <dt>
+                        <div class="js_column_wrap"><i class="fa fa-cube"></i><span class="column">{columntitle}</span></div>
+                        <ul class="article_list">
+                         {columcontent}
+                        </ul>
+                      </dt>
+                    </dl>
+                [endcustom]
+         [endblogcolumn]    
+            -->
+
+            <!--
+            <dl class="classify_list">
+              <dt class="rss"><i class="fa fa-rss"></i>			 
+			  <span class="column">
+			   	<a href="http://blog.csdn.net/shaerdong/rss/list" class="column"  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">RSS订阅</a>
+			   </span>
+			  </dt>
+            </dl>
+            -->
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="skin_right_small" class="skin_right_small">
+      <div class="skin_r_small"><i id="faNavicon" class="fa fa-navicon"></i>
+        <div class="head_small"><a href="http://my.csdn.net/shaerdong"><img src="http://avatar.csdn.net/1/D/D/1_shaerdong.jpg" alt="img"></a></div>
+        <ul class="rSmallList">  
+           
+                
+                  <li class="small_article"><i class="fa fa-file-text"></i><a href="/shaerdong/blog/column" class="small_column">博客专栏</a></li>
+                    
+                  <li class="small_article js_smallArticle"><i class="fa fa-th"></i><a href="#" class="small_column">文章分类</a></li>
+                
+                  <li class="small_article js_smallArticle"><i class="fa fa-calendar"></i><a href="#" class="small_column">文章存档</a></li>
+                
+                  <li class="small_article js_smallArticle"><i class="fa fa-eye"></i><a href="#" class="small_column">阅读排行</a></li>
+              
+                  <li class="small_article js_smallArticle"><i class="fa fa-comments"></i><a href="#" class="small_column">评论排行</a></li>
+              
+                  <li class="small_article js_smallArticle"><i class="fa fa-list-ol"></i><a href="#" class="small_column">推荐文章</a></li>
+              
+                  <li class="small_article js_smallArticle"><i class="fa fa-commenting"></i><a href="#" class="small_column">最新评论</a></li>
+                      
+          <!-- 
+           [startblogcolumnsmall]   
+               [startspecialcolumn]    
+                  <li class="small_article"><i class="fa fa-file-text"></i><a href="/shaerdong/blog/column" class="small_column">博客专栏</a></li>
+               [endspecialcolumn]  
+                [startcategory]     
+                  <li class="small_article js_smallArticle"><i class="fa fa-th"></i><a href="#" class="small_column">文章分类</a></li>
+                [endcategory]     
+              [startarchive]
+                  <li class="small_article js_smallArticle"><i class="fa fa-calendar"></i><a href="#" class="small_column">文章存档</a></li>
+              [endarchive]
+              [startviewcountarticles]  
+                  <li class="small_article js_smallArticle"><i class="fa fa-eye"></i><a href="#" class="small_column">阅读排行</a></li>
+              [endviewcountarticles]  
+              [startcommentcountarticles]
+                  <li class="small_article js_smallArticle"><i class="fa fa-comments"></i><a href="#" class="small_column">评论排行</a></li>
+              [endcommentcountarticles]
+              [starthomepagearticles]
+                  <li class="small_article js_smallArticle"><i class="fa fa-list-ol"></i><a href="#" class="small_column">推荐文章</a></li>
+              [endhomepagearticles]
+              [startnewcomments]
+                  <li class="small_article js_smallArticle"><i class="fa fa-commenting"></i><a href="#" class="small_column">最新评论</a></li>
+              [endnewcomments]
+              [startcustom]
+                  <li class="small_article js_smallArticle"><i class="fa fa-cube"></i><a href="#" class="small_column">{columntitle}</a></li>
+              [endcustom]
+          [endblogcolumnsmall]    
+          -->         
+        </ul>        
+      </div>
+    </div>
+    <div id="mask"></div>
+    <script type="text/javascript" src="http://static.blog.csdn.net/skin/skin2-template/js/apps/accordion.js"></script>
+    
+    <script type="text/javascript" src="http://static.blog.csdn.net/skin/skin2-template/js/apps/jquery.mousewheel.js"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/skin/skin2-template/js/apps/jquery.rollbar.min.js"></script>
+    
+    <script type="text/javascript" src="http://static.blog.csdn.net/skin/skin2-template/js/apps/transition.js"></script>  
+     <script id="noticeScript" type="text/javascript" charset="utf-8" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" src="http://c.csdnimg.cn/public/common/toolbar/js/notify.js"></script>  
+    <!--script( type="text/javascript" src="http://csdnimg.cn/pubfooter/js/publib_footer.js" )-->
+    <!--script( type="text/javascript" src="http://static.csdn.net/public/common/toolbar/js/toolbar.js" )-->
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>
+
+     <div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+    </div>
+    <div id="report_dialog">
+    </div>
+
+    <div id="popup_mask"></div>
+    <style  type="text/css">
+        #popup_mask
+        {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            left: 0px;
+            top: 0px;
+            opacity: 0.3;
+            filter: alpha(opacity=30);
+            display: none;
+        }
+
+         .skin_list  dl dd div ol {  
+        margin-left:15px;
+            }  
+
+       .skin_list dl dd div ol li {  
+         display:list-item;list-style-type:decimal;margin-left:15px;
+            }       
+
+    </style>     
+      
+        <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+        </div> 
+
+       <!-- 广告位开始 -->
+        <ins data-revive-zoneid="72" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+   <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_code.css" />
+            <script type="text/javascript" src="http://static.blog.csdn.net/scripts/saveToCode.js"></script>     
+	<script type="text/javascript" src="//csdnimg.cn/rabbit/tracking-ad/main.js?75eacd8></script>
+  </body>
+</html>
+ <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/async_new.js"></script>      
+
+<script  type="text/javascript">
+    $(function(){
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },500);
+    });
+</script>
+

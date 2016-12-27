@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<!--STATUS OK-->
+<html>
+
+
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta name="referrer" content="always" />
+<meta name="description" content="Content-Type，内容类型，一般是指网页中存在的Content-Type，用于定义网络文件的类型和网页的编码，决定文件接收方将以什么形式、什么编码读取这个文件，这就是经常看到一些Asp网页点击的结果却是下载到的一个文件或一张图片的原因。...">
+<title>ContentType_百度百科</title>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="icon" sizes="any" mask href="//www.baidu.com/img/baidu.svg">
+
+<meta name="keywords" content="ContentType ContentType属性 ContentType语法规则 ContentType语法 ContentType参数 ContentType类型">
+<meta name="image" content="http://baike.bdimg.com/cms/static/baike.png">
+<script type="text/javascript">
+  // 配置 PD 监控。
+  window.alogObjectConfig = {
+    product: '103',
+    page: '103_',
+    monkey_page: '',
+    speed_page: '',
+    speed: {
+      sample: '1'
+    },
+    monkey: {
+      sample: '1',
+      hid: '1533'
+    },
+    exception: { 
+      sample: '1'
+    },
+    feature: {
+      sample: '1'
+    },
+    csp: {
+      sample: '1',
+      'default-src': [
+        {match: '*.baidu.com,*.bdimg.com,localhost', target: 'Accept'},
+        {match: '*', target: 'Accept,Warn'}
+      ]
+    }
+  };
+
+  void function(a,b,c,d,e,f,g){if(a.alogObjectName=e,a[e]=a[e]||function(){(a[e].q=a[e].q||[]).push(arguments)},a[e].l=a[e].l||+new Date,"https:"===a.location.protocol){if(d="https://gss2.bdstatic.com/70cFsjip0QIZ8tyhnq"+d,!a.alogObjectConfig||!a.alogObjectConfig.sample)return}else d="http://img.baidu.com"+d;var h=!0;if(a.alogObjectConfig&&a.alogObjectConfig.sample){var i=Math.random();a.alogObjectConfig.rand=i,i>a.alogObjectConfig.sample&&(h=!1)}h&&(f=b.createElement(c),f.async=!0,f.src=d,g=b.getElementsByTagName(c)[0],g.parentNode.insertBefore(f,g))}(window,document,"script","/hunter/alog/alog.min.js","alog"),void function(){function a(){}window.PDC={mark:function(a,b){alog("speed.set",a,b||+new Date),alog.fire&&alog.fire("mark")},init:function(a){alog("speed.set","options",a)},view_start:a,tti:a,page_ready:a}}();void function(n){var o=!1;n.onerror=function(n,e,t,c){var i=!0;return!e&&/^script error/i.test(n)&&(o?i=!1:o=!0),i&&alog("exception.send","exception",{msg:n,js:e,ln:t,col:c}),!1},alog("exception.on","catch",function(n){alog("exception.send","exception",{msg:n.msg,js:n.path,ln:n.ln,method:n.method,flag:"catch"})})}(window);
+</script>
+<meta name="csrf-token" content="">
+
+<!--[if lte IE 9]>
+<script>
+    (function() {
+      var e = "abbr,article,aside,audio,canvas,datalist,details,dialog,eventsource,figure,footer,header,hgroup,mark,menu,meter,nav,output,progress,section,time,video".split(","),
+        i = e.length;
+      while (i--) {
+        document.createElement(e[i]);
+      }
+    })();
+  </script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma_7850da5.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common-base_b4e62b7.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/userbar/userbar_9fb5389.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/searchbar/searchbar_main_f9c7c20.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/navbar/navbar_0697c78.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/announcement/announcement_b0d7681.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/unameFiller/unameFiller_d631c34.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/label/label_461cbe0.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/newSideShare/sideShare_ebee986.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/praise/praise_2120cd2.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/video/pageMask/pageMask_ff9a193.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma-module_1709cbf.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/userCard/userCard_2402f1f.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/mainContent_1a67233.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/lemmaRelation_9f629f5.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/configModule/zhixin/zhixin_1c34583.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-common/widget/component/footer/footer_main_eb7bd79.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/searchHeader/toolButtons/toolButtons-o_a2c470f.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/searchHeader/toolButtons/userInfo-o_9ba20c1.css"/><link rel="stylesheet" type="text/css" href="http://baike.bdimg.com/static/wiki-lemma/widget/tools/searchHeader/searchHeader-o_e786bfb.css"/></head>
+
+<script type="text/javascript">
+    alog('speed.set', 'ht', +new Date);
+</script>
+
+<body class="wiki-lemma normal">
+
+
+
+<div class="header-wrapper">
+<ul class="wgt-userbar">
+<li>
+<a href="http://www.baidu.com/">百度首页</a>
+</li>
+</ul>
+<div class="header">
+<div class="layout">
+<div class="wgt-searchbar wgt-searchbar-main cmn-clearfix">
+<div class="logo-container">
+<a class="logo cmn-inline-block" title="到百科首页" href="/">
+<span class="cmn-baike-logo">
+<em class="cmn-icon cmn-icons cmn-icons_logo-bai"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-baike"></em>
+</span>
+</a>
+</div>
+<div class="search">
+<div class="nav">
+<a href="http://news.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://news.baidu.com/ns?tn=news&cl=2&rn=20&ct=1&fr=bks0000&ie=utf-8&word=">新闻</a>
+<a href="http://www.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://www.baidu.com/s?ie=utf-8&fr=bks0000&wd=">网页</a>
+<a href="http://tieba.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://tieba.baidu.com/f?ie=utf-8&fr=bks0000&kw=">贴吧</a>
+<a href="http://zhidao.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://zhidao.baidu.com/search?pn=0&&rn=10&lm=0&fr=bks0000&word=">知道</a>
+<a href="http://music.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://music.baidu.com/search?f=ms&ct=134217728&ie=utf-8&rn=&lm=-1&pn=30fr=bks0000&key=">音乐</a>
+<a href="http://image.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://image.baidu.com/search/index?tn=baiduimage&ct=201326592&lm=-1&cl=2&nc=1&ie=utf-8&word=">图片</a>
+<a href="http://v.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://v.baidu.com/v?ct=301989888&rn=20&pn=0&db=0&s=22&ie=utf-8&fr=bks0000&word=">视频</a>
+<a href="http://map.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://map.baidu.com/m?ie=utf-8&fr=bks0000&word=">地图</a>
+<a class="baike" nslog="normal" nslog-type="10080001" >百科</a>
+<a href="http://wenku.baidu.com/" nslog="normal" nslog-type="10080001" data-href="http://wenku.baidu.com/search?lm=0&od=0&ie=utf-8&fr=bks0000&word=">文库</a>
+</div>
+<div class="form">
+<form id="searchForm" action="/search/word" method="GET" target="_self">
+<input id="query" nslog="normal" nslog-type="10080005" name="word" type="text" autocomplete="off" autocorrect="off" value="ContentType" /><button id="search" nslog="normal" nslog-type="10080002" type="button">进入词条</button><button id="searchLemma" nslog="normal" nslog-type="10080003" type="button">搜索词条</button><a class="help" nslog="normal" nslog-type="10080004" href="/help" target="_blank">帮助</a>
+</form>
+<form id="searchLemmaForm" action="/search" method="GET" target="_self">
+<input id="searchLemmaQuery" name="word" type="hidden" />
+<input name="pn" type="hidden" value="0" />
+<input name="rn" type="hidden" value="0" />
+<input name="enc" type="hidden" value="utf8" />
+</form>
+<ul id="suggestion" class="suggestion">
+<div class="sug"></div>
+<li class="extra">
+<span id="close" nslog="normal" nslog-type="10080006" >关闭</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="navbar-wrapper">
+<div class="wgt-navbar">
+<div class="navbar-bg">
+<div class="navbar-bg-top">
+<div class="navbar-content layout">
+<div class="navbar-content-box">
+<dl class="index ">
+<dt><a href="/">首页</a></dt>
+</dl>
+<dl class="cat ">
+<dt><a>分类</a></dt>
+<dd>
+<div><a href="/art" target="_blank" class="art">艺术</a></div>
+<div><a href="/science" target="_blank" class="technology">科学</a></div>
+<div><a href="/ziran" target="_blank">自然</a></div>
+<div><a href="/wenhua" target="_blank">文化</a></div>
+<div><a href="/dili" target="_blank">地理</a></div>
+<div><a href="/shenghuo" target="_blank">生活</a></div>
+<div><a href="/shehui" target="_blank">社会</a></div>
+<div><a href="/renwu" target="_blank">人物</a></div>
+<div><a href="/jingji" target="_blank">经济</a></div>
+<div><a href="/tiyu" target="_blank">体育</a></div>
+<div><a href="/lishi" target="_blank">历史</a></div>
+</dd>
+</dl>
+<dl class="special ">
+<dt><a>特色百科</a></dt>
+<dd>
+<div><a href="/calendar/" target="_blank">历史上的今天</a></div>
+<div><a href="/museum/" target="_blank">数字博物馆</a></div>
+<div><a href="/shiji/2015?fr=navbar" target="_blank">史记·2015</a></div>
+<div><a href="/city/" target="_blank">城市百科</a></div>
+<div><a href="/operation/worldwar2" target="_blank">二战百科</a></div>
+<div><a href="/feiyi?fr=dhlfeiyi" target="_blank">非遗百科</a></div>
+</dd>
+</dl>
+<dl class="user" >
+<dt><a>用户</a></dt>
+<dd>
+<div><a href="/kedou/" target="_blank">蝌蚪团</a></div>
+<div><a href="/event/ranmeng/" target="_blank">燃梦计划</a></div>
+<div><a href="/task/" target="_blank">百科任务</a></div>
+<div><a href="/mall/" target="_blank">百科商城</a></div>
+</dd>
+</dl>
+<dl class="cooperation" >
+<dt><a>权威合作</a></dt>
+<dd>
+<div><a href="/operation/cooperation#joint" target="_blank">合作模式</a></div>
+<div><a href="/operation/cooperation#issue" target="_blank">常见问题</a></div>
+<div><a href="/operation/cooperation#connection" target="_blank">联系方式</a></div>
+</dd>
+</dl>
+<dl class="mobile" >
+<dt><a>手机百科</a></dt>
+<dd>
+<div><a href="/m#wap" target="_blank">网页版</a></div>
+</dd>
+</dl>
+<div class="usercenter">
+<div><a href="/usercenter" target="_blank"><em class="cmn-icon cmn-icons cmn-icons_navbar-usercenter"></em>个人中心</a></div>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="body-wrapper">
+<div class="before-content">
+</div>
+<div class="content-wrapper">
+<div class="content">
+<div class="personal-content">
+</div>
+<div class="main-content">
+<div class="top-tool">
+<a class="add-sub-icon" href="javascript:;" title="添加义项" nslog-type="50000101"></a>
+<a href="/divideload/ContentType" title="拆分词条" target="_blank" class="split-icon" style="display:none;" nslog-type="50000104"></a>
+<div class="top-collect" nslog="area" nslog-type="50000102">
+<span class="collect-text">收藏</span>
+<div class="collect-tip">查看<a href="/uc/favolemma" target="_blank">我的收藏</a></div>
+</div>
+<a href="javascript:void(0);" class="top-vote" nslog-type="50000103">
+<span class="vote-count">0</span>
+<span class="vote-tip">有用+1</span>
+<span class="voted-tip">已投票</span>
+</a>
+<div class="bdsharebuttonbox top-share" data-tag="top-share">
+<a class="bds_more top-share-icon" data-cmd="more" nslog-type="9067">
+<span class="bds_count share-count" id="j-topShareCount" data-cmd="count">0</span>
+</a>
+</div>
+</div>
+<div style="width:0;height:0;clear:both"></div><dl class="lemmaWgt-lemmaTitle lemmaWgt-lemmaTitle-">
+<dd class="lemmaWgt-lemmaTitle-title">
+<h1 >ContentType</h1>
+<a href="javascript:;" class="edit-lemma cmn-btn-hover-blue cmn-btn-28 j-edit-link"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+<a class="lock-lemma" target="_blank" href="/view/10812319.htm" title="锁定"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_lock-lemma"></em>锁定</a>
+</dd>
+</dl><div class="promotion-declaration">
+</div><div class="lemma-summary" label-module="lemmaSummary">
+<div class="para" label-module="para">Content-Type，内容类型，一般是指网页中存在的<b>Content-Type</b>，用于定义网络文件的类型和网页的编码，决定文件接收方将以什么形式、什么编码读取这个文件，这就是经常看到一些Asp网页点击的结果却是下载到的一个文件或一张图片的原因。</div>
+</div>
+<div class="configModuleBanner">
+</div><div class="basic-info cmn-clearfix">
+<dl class="basicInfo-block basicInfo-left">
+<dt class="basicInfo-item name">中文名</dt>
+<dd class="basicInfo-item value">
+内容类型
+</dd>
+<dt class="basicInfo-item name">外文名</dt>
+<dd class="basicInfo-item value">
+Content-Type
+</dd>
+</dl><dl class="basicInfo-block basicInfo-right">
+<dt class="basicInfo-item name">应用学科</dt>
+<dd class="basicInfo-item value">
+计算机软件
+</dd>
+<dt class="basicInfo-item name">适用范围</dt>
+<dd class="basicInfo-item value">
+浏览器文件
+</dd>
+<dt class="basicInfo-item name">文件属性</dt>
+<dd class="basicInfo-item value">
+ASP HTML
+</dd>
+</dl></div>
+<div class="lemmaWgt-lemmaCatalog">
+<div class="lemma-catalog">
+<h2 class="block-title">目录</h2>
+<div class="catalog-list column-3">
+<ol>
+<li class="level1">
+<span class="index">1</span>
+<span class="text"><a href="#1">属性</a></span>
+</li>
+<li class="level1">
+<span class="index">2</span>
+<span class="text"><a href="#2">语法规则</a></span>
+</li>
+<li class="level1">
+<span class="index">3</span>
+<span class="text"><a href="#3">语法</a></span>
+</li>
+</ol><ol><li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#3_1">HTML</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#3_2">ASP</a></span>
+</li>
+<li class="level1">
+<span class="index">4</span>
+<span class="text"><a href="#4">参数</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#4_1">HTML</a></span>
+</li>
+</ol><ol><li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="#4_2">ASP</a></span>
+</li>
+<li class="level1">
+<span class="index">5</span>
+<span class="text"><a href="#5">类型</a></span>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="anchor-list">
+<a name="1" class="lemma-anchor para-title" ></a>
+<a name="sub1547292_1" class="lemma-anchor " ></a>
+<a name="属性" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">ContentType</span>属性</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="1" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para"><b>ContentType</b>属性指定<a target=_blank href="/view/1876454.htm">响应</a>的 <a target=_blank href="/view/9472.htm">HTTP</a>内容类型。如果未指定 ContentType，默认为<a target=_blank href="/view/127071.htm">TEXT</a>/<a target=_blank href="/view/692.htm">HTML</a>。</div><div class="anchor-list">
+<a name="2" class="lemma-anchor para-title" ></a>
+<a name="sub1547292_2" class="lemma-anchor " ></a>
+<a name="语法规则" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">ContentType</span>语法规则</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="2" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">GZIP中的　Content-Type=text/ht*/js/css/php</div><div class="anchor-list">
+<a name="3" class="lemma-anchor para-title" ></a>
+<a name="sub1547292_3" class="lemma-anchor " ></a>
+<a name="语法" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">ContentType</span>语法</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="3" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="anchor-list">
+<a name="3_1" class="lemma-anchor para-title" ></a>
+<a name="sub1547292_3_1" class="lemma-anchor " ></a>
+<a name="HTML" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">ContentType</span>HTML</h3>
+</div>
+<div class="para" label-module="para">&lt;<a target=_blank href="/view/953191.htm">meta</a> content=&quot;text/<a target=_blank href="/view/692.htm">html</a>; charset=<b>gb2312</b>&quot; http-equiv=&quot;Content-Type&quot;/&gt;</div><div class="anchor-list">
+<a name="3_2" class="lemma-anchor para-title" ></a>
+<a name="sub1547292_3_2" class="lemma-anchor " ></a>
+<a name="ASP" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">ContentType</span>ASP</h3>
+</div>
+<div class="para" label-module="para"><i><b>Response.ContentType </b></i>[= ContentType]</div>
+<div class="para" label-module="para">Java Servlet</div>
+<div class="para" label-module="para">response.setContentType(String);</div><div class="anchor-list">
+<a name="4" class="lemma-anchor para-title" ></a>
+<a name="sub1547292_4" class="lemma-anchor " ></a>
+<a name="参数" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">ContentType</span>参数</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="4" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="anchor-list">
+<a name="4_1" class="lemma-anchor para-title" ></a>
+<a name="sub1547292_4_1" class="lemma-anchor " ></a>
+<a name="HTML" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">ContentType</span>HTML</h3>
+</div>
+<div class="para" label-module="para"><i><b>content</b></i></div>
+<div class="para" label-module="para">即为类型，具体参照下文的“ContentType的类型”</div>
+<div class="para" label-module="para"><i><b>charset</b></i></div>
+<div class="para" label-module="para">决定网页的编码，一般为<a target=_blank href="/view/25492.htm">gb2312</a>、<a target=_blank href="/view/25412.htm">UTF-8</a>等</div><div class="anchor-list">
+<a name="4_2" class="lemma-anchor para-title" ></a>
+<a name="sub1547292_4_2" class="lemma-anchor " ></a>
+<a name="ASP" class="lemma-anchor " ></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">ContentType</span>ASP</h3>
+</div>
+<div class="para" label-module="para"><i><b>ContentType </b></i></div>
+<div class="para" label-module="para">描述内容类型的<a target=_blank href="/view/56072.htm">字符串</a>。该字符串通常被<a target=_blank href="/view/902.htm">格式化</a>为类型/子类型，其中类型是常规内容范畴而子类为特定内容类型。有关支持内容类型的完整列表，请参阅 Web 浏览器文档或当前的 HTTP 规格说明。</div>
+<div class="para" label-module="para">示例</div>
+<div class="para" label-module="para">下面的示例将内容类型设置为 Channel Definition Format（CDF）。</div>
+<div class="para" label-module="para">&lt;% Response.ContentType = &quot;application/x-cdf&quot; %&gt;</div>
+<div class="para" label-module="para">下面的示例将 ContentType 属性设置为其他的常见值。</div>
+<div class="para" label-module="para">&lt;% Response.ContentType = &quot;text/HTML&quot; %&gt;</div>
+<div class="para" label-module="para">&lt;% Response.ContentType = &quot;image/GIF&quot; %&gt;</div>
+<div class="para" label-module="para">&lt;% Response.ContentType = &quot;image/JPEG&quot; %&gt;</div>
+<div class="para" label-module="para">应用于</div>
+<div class="para" label-module="para">Response 对象</div>
+<div class="para" label-module="para">关于详细的类型对应参看ContentType的类型。</div><div class="anchor-list">
+<a name="5" class="lemma-anchor para-title" ></a>
+<a name="sub1547292_5" class="lemma-anchor " ></a>
+<a name="类型" class="lemma-anchor " ></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">ContentType</span>类型</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="5" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">ContentType的</div>
+<div class="para" label-module="para">&quot;.*&quot;=&quot;application/octet-stream&quot;</div>
+<div class="para" label-module="para">&quot;.001&quot;=&quot;application/x-001&quot;</div>
+<div class="para" label-module="para">&quot;.301&quot;=&quot;application/x-301&quot;</div>
+<div class="para" label-module="para">&quot;.323&quot;=&quot;text/h323&quot;</div>
+<div class="para" label-module="para">&quot;.906&quot;=&quot;application/x-906&quot;</div>
+<div class="para" label-module="para">&quot;.907&quot;=&quot;drawing/907&quot;</div>
+<div class="para" label-module="para">&quot;.a11&quot;=&quot;application/x-a11&quot;</div>
+<div class="para" label-module="para">&quot;.acp&quot;=&quot;audio/x-mei-aac&quot;</div>
+<div class="para" label-module="para">&quot;.ai&quot;=&quot;application/postscript&quot;</div>
+<div class="para" label-module="para">&quot;.aif&quot;=&quot;audio/aiff&quot;</div>
+<div class="para" label-module="para">&quot;.aifc&quot;=&quot;audio/aiff&quot;</div>
+<div class="para" label-module="para">&quot;.aiff&quot;=&quot;audio/aiff&quot;</div>
+<div class="para" label-module="para">&quot;.anv&quot;=&quot;application/x-anv&quot;</div>
+<div class="para" label-module="para">&quot;.asa&quot;=&quot;text/asa&quot;</div>
+<div class="para" label-module="para">&quot;.asf&quot;=&quot;video/x-ms-asf&quot;</div>
+<div class="para" label-module="para">&quot;.asp&quot;=&quot;text/asp&quot;</div>
+<div class="para" label-module="para">&quot;.asx&quot;=&quot;video/x-ms-asf&quot;</div>
+<div class="para" label-module="para">&quot;.au&quot;=&quot;audio/basic&quot;</div>
+<div class="para" label-module="para">&quot;.avi&quot;=&quot;video/avi&quot;</div>
+<div class="para" label-module="para">&quot;.awf&quot;=&quot;application/vnd.adobe.workflow&quot;</div>
+<div class="para" label-module="para">&quot;.biz&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.bmp&quot;=&quot;application/x-bmp&quot;</div>
+<div class="para" label-module="para">&quot;.bot&quot;=&quot;application/x-bot&quot;</div>
+<div class="para" label-module="para">&quot;.c4t&quot;=&quot;application/x-c4t&quot;</div>
+<div class="para" label-module="para">&quot;.c90&quot;=&quot;application/x-c90&quot;</div>
+<div class="para" label-module="para">&quot;.cal&quot;=&quot;application/x-cals&quot;</div>
+<div class="para" label-module="para">&quot;.cat&quot;=&quot;application/s-pki.seccat&quot;</div>
+<div class="para" label-module="para">&quot;.cdf&quot;=&quot;application/x-netcdf&quot;</div>
+<div class="para" label-module="para">&quot;.cdr&quot;=&quot;application/x-cdr&quot;</div>
+<div class="para" label-module="para">&quot;.cel&quot;=&quot;application/x-cel&quot;</div>
+<div class="para" label-module="para">&quot;.cer&quot;=&quot;application/x-x509-ca-cert&quot;</div>
+<div class="para" label-module="para">&quot;.cg4&quot;=&quot;application/x-g4&quot;</div>
+<div class="para" label-module="para">&quot;.cgm&quot;=&quot;application/x-cgm&quot;</div>
+<div class="para" label-module="para">&quot;.cit&quot;=&quot;application/x-cit&quot;</div>
+<div class="para" label-module="para">&quot;.class&quot;=&quot;java/*&quot;</div>
+<div class="para" label-module="para">&quot;.cml&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.cmp&quot;=&quot;application/x-cmp&quot;</div>
+<div class="para" label-module="para">&quot;.cmx&quot;=&quot;application/x-cmx&quot;</div>
+<div class="para" label-module="para">&quot;.cot&quot;=&quot;application/x-cot&quot;</div>
+<div class="para" label-module="para">&quot;.crl&quot;=&quot;application/pkix-crl&quot;</div>
+<div class="para" label-module="para">&quot;.crt&quot;=&quot;application/x-x509-ca-cert&quot;</div>
+<div class="para" label-module="para">&quot;.csi&quot;=&quot;application/x-csi&quot;</div>
+<div class="para" label-module="para">&quot;.css&quot;=&quot;text/css&quot;</div>
+<div class="para" label-module="para">&quot;.cut&quot;=&quot;application/x-cut&quot;</div>
+<div class="para" label-module="para">&quot;.dbf&quot;=&quot;application/x-dbf&quot;</div>
+<div class="para" label-module="para">&quot;.dbm&quot;=&quot;application/x-dbm&quot;</div>
+<div class="para" label-module="para">&quot;.dbx&quot;=&quot;application/x-dbx&quot;</div>
+<div class="para" label-module="para">&quot;.dcd&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.dcx&quot;=&quot;application/x-dcx&quot;</div>
+<div class="para" label-module="para">&quot;.der&quot;=&quot;application/x-x509-ca-cert&quot;</div>
+<div class="para" label-module="para">&quot;.dgn&quot;=&quot;application/x-dgn&quot;</div>
+<div class="para" label-module="para">&quot;.dib&quot;=&quot;application/x-dib&quot;</div>
+<div class="para" label-module="para">&quot;.dll&quot;=&quot;application/x-msdownload&quot;</div>
+<div class="para" label-module="para">&quot;.doc&quot;=&quot;application/msword&quot;</div>
+<div class="para" label-module="para">&quot;.dot&quot;=&quot;application/msword&quot;</div>
+<div class="para" label-module="para">&quot;.drw&quot;=&quot;application/x-drw&quot;</div>
+<div class="para" label-module="para">&quot;.dtd&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.dwf&quot;=&quot;Model/vnd.dwf&quot;</div>
+<div class="para" label-module="para">&quot;.dwf&quot;=&quot;application/x-dwf&quot;</div>
+<div class="para" label-module="para">&quot;.dwg&quot;=&quot;application/x-dwg&quot;</div>
+<div class="para" label-module="para">&quot;.dxb&quot;=&quot;application/x-dxb&quot;</div>
+<div class="para" label-module="para">&quot;.dxf&quot;=&quot;application/x-dxf&quot;</div>
+<div class="para" label-module="para">&quot;.edn&quot;=&quot;application/vnd.adobe.edn&quot;</div>
+<div class="para" label-module="para">&quot;.emf&quot;=&quot;application/x-emf&quot;</div>
+<div class="para" label-module="para">&quot;.eml&quot;=&quot;message/rfc822&quot;</div>
+<div class="para" label-module="para">&quot;.ent&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.epi&quot;=&quot;application/x-epi&quot;</div>
+<div class="para" label-module="para">&quot;.eps&quot;=&quot;application/x-ps&quot;</div>
+<div class="para" label-module="para">&quot;.eps&quot;=&quot;application/postscript&quot;</div>
+<div class="para" label-module="para">&quot;.etd&quot;=&quot;application/x-ebx&quot;</div>
+<div class="para" label-module="para">&quot;.exe&quot;=&quot;application/x-msdownload&quot;</div>
+<div class="para" label-module="para">&quot;.fax&quot;=&quot;image/fax&quot;</div>
+<div class="para" label-module="para">&quot;.fdf&quot;=&quot;application/vnd.fdf&quot;</div>
+<div class="para" label-module="para">&quot;.fif&quot;=&quot;application/fractals&quot;</div>
+<div class="para" label-module="para">&quot;.fo&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.frm&quot;=&quot;application/x-frm&quot;</div>
+<div class="para" label-module="para">&quot;.g4&quot;=&quot;application/x-g4&quot;</div>
+<div class="para" label-module="para">&quot;.gbr&quot;=&quot;application/x-gbr&quot;</div>
+<div class="para" label-module="para">&quot;.gcd&quot;=&quot;application/x-gcd&quot;</div>
+<div class="para" label-module="para">&quot;.gif&quot;=&quot;image/gif&quot;</div>
+<div class="para" label-module="para">&quot;.gl2&quot;=&quot;application/x-gl2&quot;</div>
+<div class="para" label-module="para">&quot;.gp4&quot;=&quot;application/x-gp4&quot;</div>
+<div class="para" label-module="para">&quot;.hgl&quot;=&quot;application/x-hgl&quot;</div>
+<div class="para" label-module="para">&quot;.hmr&quot;=&quot;application/x-hmr&quot;</div>
+<div class="para" label-module="para">&quot;.hpg&quot;=&quot;application/x-hpgl&quot;</div>
+<div class="para" label-module="para">&quot;.hpl&quot;=&quot;application/x-hpl&quot;</div>
+<div class="para" label-module="para">&quot;.hqx&quot;=&quot;application/mac-binhex40&quot;</div>
+<div class="para" label-module="para">&quot;.hrf&quot;=&quot;application/x-hrf&quot;</div>
+<div class="para" label-module="para">&quot;.hta&quot;=&quot;application/hta&quot;</div>
+<div class="para" label-module="para">&quot;.htc&quot;=&quot;text/x-component&quot;</div>
+<div class="para" label-module="para">&quot;.htm&quot;=&quot;text/html&quot;</div>
+<div class="para" label-module="para">&quot;.html&quot;=&quot;text/html&quot;</div>
+<div class="para" label-module="para">&quot;.htt&quot;=&quot;text/webviewhtml&quot;</div>
+<div class="para" label-module="para">&quot;.htx&quot;=&quot;text/html&quot;</div>
+<div class="para" label-module="para">&quot;.icb&quot;=&quot;application/x-icb&quot;</div>
+<div class="para" label-module="para">&quot;.ico&quot;=&quot;image/x-icon&quot;</div>
+<div class="para" label-module="para">&quot;.ico&quot;=&quot;application/x-ico&quot;</div>
+<div class="para" label-module="para">&quot;.iff&quot;=&quot;application/x-iff&quot;</div>
+<div class="para" label-module="para">&quot;.ig4&quot;=&quot;application/x-g4&quot;</div>
+<div class="para" label-module="para">&quot;.igs&quot;=&quot;application/x-igs&quot;</div>
+<div class="para" label-module="para">&quot;.iii&quot;=&quot;application/x-iphone&quot;</div>
+<div class="para" label-module="para">&quot;.img&quot;=&quot;application/x-img&quot;</div>
+<div class="para" label-module="para">&quot;.ins&quot;=&quot;application/x-internet-signup&quot;</div>
+<div class="para" label-module="para">&quot;.isp&quot;=&quot;application/x-internet-signup&quot;</div>
+<div class="para" label-module="para">&quot;.IVF&quot;=&quot;video/x-ivf&quot;</div>
+<div class="para" label-module="para">&quot;.java&quot;=&quot;java/*&quot;</div>
+<div class="para" label-module="para">&quot;.jfif&quot;=&quot;image/jpeg&quot;</div>
+<div class="para" label-module="para">&quot;.jpe&quot;=&quot;image/jpeg&quot;</div>
+<div class="para" label-module="para">&quot;.jpe&quot;=&quot;application/x-jpe&quot;</div>
+<div class="para" label-module="para">&quot;.jpeg&quot;=&quot;image/jpeg&quot;</div>
+<div class="para" label-module="para">&quot;.jpg&quot;=&quot;image/jpeg&quot;</div>
+<div class="para" label-module="para">&quot;.jpg&quot;=&quot;application/x-jpg&quot;</div>
+<div class="para" label-module="para">&quot;.js&quot;=&quot;application/x-javascript&quot;</div>
+<div class="para" label-module="para">&quot;.jsp&quot;=&quot;text/html&quot;</div>
+<div class="para" label-module="para">&quot;.la1&quot;=&quot;audio/x-liquid-file&quot;</div>
+<div class="para" label-module="para">&quot;.lar&quot;=&quot;application/x-laplayer-reg&quot;</div>
+<div class="para" label-module="para">&quot;.latex&quot;=&quot;application/x-latex&quot;</div>
+<div class="para" label-module="para">&quot;.lavs&quot;=&quot;audio/x-liquid-secure&quot;</div>
+<div class="para" label-module="para">&quot;.lbm&quot;=&quot;application/x-lbm&quot;</div>
+<div class="para" label-module="para">&quot;.lmsff&quot;=&quot;audio/x-la-lms&quot;</div>
+<div class="para" label-module="para">&quot;.ls&quot;=&quot;application/x-javascript&quot;</div>
+<div class="para" label-module="para">&quot;.ltr&quot;=&quot;application/x-ltr&quot;</div>
+<div class="para" label-module="para">&quot;.m1v&quot;=&quot;video/x-mpeg&quot;</div>
+<div class="para" label-module="para">&quot;.m2v&quot;=&quot;video/x-mpeg&quot;</div>
+<div class="para" label-module="para">&quot;.m3u&quot;=&quot;audio/mpegurl&quot;</div>
+<div class="para" label-module="para">&quot;.m4e&quot;=&quot;video/<a target=_blank href="/view/25047.htm">mpeg4</a>&quot;</div>
+<div class="para" label-module="para">&quot;.mac&quot;=&quot;application/x-mac&quot;</div>
+<div class="para" label-module="para">&quot;.man&quot;=&quot;application/x-troff-man&quot;</div>
+<div class="para" label-module="para">&quot;.math&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.mdb&quot;=&quot;application/msaccess&quot;</div>
+<div class="para" label-module="para">&quot;.mdb&quot;=&quot;application/x-mdb&quot;</div>
+<div class="para" label-module="para">&quot;.mfp&quot;=&quot;application/x-shockwave-flash&quot;</div>
+<div class="para" label-module="para">&quot;.mht&quot;=&quot;message/rfc822&quot;</div>
+<div class="para" label-module="para">&quot;.mhtml&quot;=&quot;message/rfc822&quot;</div>
+<div class="para" label-module="para">&quot;.mi&quot;=&quot;application/x-mi&quot;</div>
+<div class="para" label-module="para">&quot;.mid&quot;=&quot;audio/mid&quot;</div>
+<div class="para" label-module="para">&quot;.midi&quot;=&quot;audio/mid&quot;</div>
+<div class="para" label-module="para">&quot;.mil&quot;=&quot;application/x-mil&quot;</div>
+<div class="para" label-module="para">&quot;.mml&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.mnd&quot;=&quot;audio/x-musicnet-download&quot;</div>
+<div class="para" label-module="para">&quot;.mns&quot;=&quot;audio/x-musicnet-stream&quot;</div>
+<div class="para" label-module="para">&quot;.mocha&quot;=&quot;application/x-javascript&quot;</div>
+<div class="para" label-module="para">&quot;.movie&quot;=&quot;video/x-sgi-movie&quot;</div>
+<div class="para" label-module="para">&quot;.mp1&quot;=&quot;audio/mp1&quot;</div>
+<div class="para" label-module="para">&quot;.mp2&quot;=&quot;audio/mp2&quot;</div>
+<div class="para" label-module="para">&quot;.mp2v&quot;=&quot;video/mpeg&quot;</div>
+<div class="para" label-module="para">&quot;.mp3&quot;=&quot;audio/mp3&quot;</div>
+<div class="para" label-module="para">&quot;.mp4&quot;=&quot;video/mp4&quot;</div>
+<div class="para" label-module="para">&quot;.mpa&quot;=&quot;video/x-mpg&quot;</div>
+<div class="para" label-module="para">&quot;.mpd&quot;=&quot;application/-project&quot;</div>
+<div class="para" label-module="para">&quot;.mpe&quot;=&quot;video/x-mpeg&quot;</div>
+<div class="para" label-module="para">&quot;.mpeg&quot;=&quot;video/mpg&quot;</div>
+<div class="para" label-module="para">&quot;.mpg&quot;=&quot;video/mpg&quot;</div>
+<div class="para" label-module="para">&quot;.mpga&quot;=&quot;audio/rn-mpeg&quot;</div>
+<div class="para" label-module="para">&quot;.mpp&quot;=&quot;application/-project&quot;</div>
+<div class="para" label-module="para">&quot;.mps&quot;=&quot;video/x-mpeg&quot;</div>
+<div class="para" label-module="para">&quot;.mpt&quot;=&quot;application/-project&quot;</div>
+<div class="para" label-module="para">&quot;.mpv&quot;=&quot;video/mpg&quot;</div>
+<div class="para" label-module="para">&quot;.mpv2&quot;=&quot;video/mpeg&quot;</div>
+<div class="para" label-module="para">&quot;.mpw&quot;=&quot;application/s-project&quot;</div>
+<div class="para" label-module="para">&quot;.mpx&quot;=&quot;application/-project&quot;</div>
+<div class="para" label-module="para">&quot;.mtx&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.mxp&quot;=&quot;application/x-mmxp&quot;</div>
+<div class="para" label-module="para">&quot;.net&quot;=&quot;image/pnetvue&quot;</div>
+<div class="para" label-module="para">&quot;.nrf&quot;=&quot;application/x-nrf&quot;</div>
+<div class="para" label-module="para">&quot;.nws&quot;=&quot;message/rfc822&quot;</div>
+<div class="para" label-module="para">&quot;.odc&quot;=&quot;text/x-ms-odc&quot;</div>
+<div class="para" label-module="para">&quot;.out&quot;=&quot;application/x-out&quot;</div>
+<div class="para" label-module="para">&quot;.p10&quot;=&quot;application/pkcs10&quot;</div>
+<div class="para" label-module="para">&quot;.p12&quot;=&quot;application/x-pkcs12&quot;</div>
+<div class="para" label-module="para">&quot;.p7b&quot;=&quot;application/x-pkcs7-certificates&quot;</div>
+<div class="para" label-module="para">&quot;.p7c&quot;=&quot;application/pkcs7-mime&quot;</div>
+<div class="para" label-module="para">&quot;.p7m&quot;=&quot;application/pkcs7-mime&quot;</div>
+<div class="para" label-module="para">&quot;.p7r&quot;=&quot;application/x-pkcs7-certreqresp&quot;</div>
+<div class="para" label-module="para">&quot;.p7s&quot;=&quot;application/pkcs7-signature&quot;</div>
+<div class="para" label-module="para">&quot;.pc5&quot;=&quot;application/x-pc5&quot;</div>
+<div class="para" label-module="para">&quot;.pci&quot;=&quot;application/x-pci&quot;</div>
+<div class="para" label-module="para">&quot;.pcl&quot;=&quot;application/x-pcl&quot;</div>
+<div class="para" label-module="para">&quot;.pcx&quot;=&quot;application/x-pcx&quot;</div>
+<div class="para" label-module="para">&quot;.pdf&quot;=&quot;application/pdf&quot;</div>
+<div class="para" label-module="para">&quot;.pdx&quot;=&quot;application/vnd.adobe.pdx&quot;</div>
+<div class="para" label-module="para">&quot;.pfx&quot;=&quot;application/x-pkcs12&quot;</div>
+<div class="para" label-module="para">&quot;.pgl&quot;=&quot;application/x-pgl&quot;</div>
+<div class="para" label-module="para">&quot;.pic&quot;=&quot;application/x-pic&quot;</div>
+<div class="para" label-module="para">&quot;.pko&quot;=&quot;application-pki.pko&quot;</div>
+<div class="para" label-module="para">&quot;.pl&quot;=&quot;application/x-perl&quot;</div>
+<div class="para" label-module="para">&quot;.plg&quot;=&quot;text/html&quot;</div>
+<div class="para" label-module="para">&quot;.pls&quot;=&quot;audio/scpls&quot;</div>
+<div class="para" label-module="para">&quot;.plt&quot;=&quot;application/x-plt&quot;</div>
+<div class="para" label-module="para">&quot;.png&quot;=&quot;image/png&quot;</div>
+<div class="para" label-module="para">&quot;.png&quot;=&quot;application/x-png&quot;</div>
+<div class="para" label-module="para">&quot;.pot&quot;=&quot;applications-powerpoint&quot;</div>
+<div class="para" label-module="para">&quot;.ppa&quot;=&quot;application/vs-powerpoint&quot;</div>
+<div class="para" label-module="para">&quot;.ppm&quot;=&quot;application/x-ppm&quot;</div>
+<div class="para" label-module="para">&quot;.pps&quot;=&quot;application-powerpoint&quot;</div>
+<div class="para" label-module="para">&quot;.ppt&quot;=&quot;applications-powerpoint&quot;</div>
+<div class="para" label-module="para">&quot;.ppt&quot;=&quot;application/x-ppt&quot;</div>
+<div class="para" label-module="para">&quot;.pr&quot;=&quot;application/x-pr&quot;</div>
+<div class="para" label-module="para">&quot;.prf&quot;=&quot;application/pics-rules&quot;</div>
+<div class="para" label-module="para">&quot;.prn&quot;=&quot;application/x-prn&quot;</div>
+<div class="para" label-module="para">&quot;.prt&quot;=&quot;application/x-prt&quot;</div>
+<div class="para" label-module="para">&quot;.ps&quot;=&quot;application/x-ps&quot;</div>
+<div class="para" label-module="para">&quot;.ps&quot;=&quot;application/postscript&quot;</div>
+<div class="para" label-module="para">&quot;.ptn&quot;=&quot;application/x-ptn&quot;</div>
+<div class="para" label-module="para">&quot;.pwz&quot;=&quot;application/powerpoint&quot;</div>
+<div class="para" label-module="para">&quot;.r3t&quot;=&quot;text/vnd.rn-realtext3d&quot;</div>
+<div class="para" label-module="para">&quot;.ra&quot;=&quot;audio/vnd.rn-realaudio&quot;</div>
+<div class="para" label-module="para">&quot;.ram&quot;=&quot;audio/x-pn-realaudio&quot;</div>
+<div class="para" label-module="para">&quot;.ras&quot;=&quot;application/x-ras&quot;</div>
+<div class="para" label-module="para">&quot;.rat&quot;=&quot;application/rat-file&quot;</div>
+<div class="para" label-module="para">&quot;.rdf&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.rec&quot;=&quot;application/vnd.rn-recording&quot;</div>
+<div class="para" label-module="para">&quot;.red&quot;=&quot;application/x-red&quot;</div>
+<div class="para" label-module="para">&quot;.rgb&quot;=&quot;application/x-rgb&quot;</div>
+<div class="para" label-module="para">&quot;.rjs&quot;=&quot;application/vnd.rn-realsystem-rjs&quot;</div>
+<div class="para" label-module="para">&quot;.rjt&quot;=&quot;application/vnd.rn-realsystem-rjt&quot;</div>
+<div class="para" label-module="para">&quot;.rlc&quot;=&quot;application/x-rlc&quot;</div>
+<div class="para" label-module="para">&quot;.rle&quot;=&quot;application/x-rle&quot;</div>
+<div class="para" label-module="para">&quot;.rm&quot;=&quot;application/vnd.rn-realmedia&quot;</div>
+<div class="para" label-module="para">&quot;.rmf&quot;=&quot;application/vnd.adobe.rmf&quot;</div>
+<div class="para" label-module="para">&quot;.rmi&quot;=&quot;audio/mid&quot;</div>
+<div class="para" label-module="para">&quot;.rmj&quot;=&quot;application/vnd.rn-realsystem-rmj&quot;</div>
+<div class="para" label-module="para">&quot;.rmm&quot;=&quot;audio/x-pn-realaudio&quot;</div>
+<div class="para" label-module="para">&quot;.rmp&quot;=&quot;application/vnd.rn-rn_music_package&quot;</div>
+<div class="para" label-module="para">&quot;.rms&quot;=&quot;application/vnd.rn-realmedia-secure&quot;</div>
+<div class="para" label-module="para">&quot;.rmvb&quot;=&quot;application/vnd.rn-realmedia-vbr&quot;</div>
+<div class="para" label-module="para">&quot;.rmx&quot;=&quot;application/vnd.rn-realsystem-rmx&quot;</div>
+<div class="para" label-module="para">&quot;.rnx&quot;=&quot;application/vnd.rn-realplayer&quot;</div>
+<div class="para" label-module="para">&quot;.rp&quot;=&quot;image/vnd.rn-realpix&quot;</div>
+<div class="para" label-module="para">&quot;.rpm&quot;=&quot;audio/x-pn-realaudio-plugin&quot;</div>
+<div class="para" label-module="para">&quot;.rsml&quot;=&quot;application/vnd.rn-rsml&quot;</div>
+<div class="para" label-module="para">&quot;.rt&quot;=&quot;text/vnd.rn-realtext&quot;</div>
+<div class="para" label-module="para">&quot;.rtf&quot;=&quot;application/msword&quot;</div>
+<div class="para" label-module="para">&quot;.rtf&quot;=&quot;application/x-rtf&quot;</div>
+<div class="para" label-module="para">&quot;.rv&quot;=&quot;video/vnd.rn-realvideo&quot;</div>
+<div class="para" label-module="para">&quot;.sam&quot;=&quot;application/x-sam&quot;</div>
+<div class="para" label-module="para">&quot;.sat&quot;=&quot;application/x-sat&quot;</div>
+<div class="para" label-module="para">&quot;.sdp&quot;=&quot;application/sdp&quot;</div>
+<div class="para" label-module="para">&quot;.sdw&quot;=&quot;application/x-sdw&quot;</div>
+<div class="para" label-module="para">&quot;.sit&quot;=&quot;application/x-stuffit&quot;</div>
+<div class="para" label-module="para">&quot;.slb&quot;=&quot;application/x-slb&quot;</div>
+<div class="para" label-module="para">&quot;.sld&quot;=&quot;application/x-sld&quot;</div>
+<div class="para" label-module="para">&quot;.slk&quot;=&quot;drawing/x-slk&quot;</div>
+<div class="para" label-module="para">&quot;.smi&quot;=&quot;application/smil&quot;</div>
+<div class="para" label-module="para">&quot;.smil&quot;=&quot;application/smil&quot;</div>
+<div class="para" label-module="para">&quot;.smk&quot;=&quot;application/x-smk&quot;</div>
+<div class="para" label-module="para">&quot;.snd&quot;=&quot;audio/basic&quot;</div>
+<div class="para" label-module="para">&quot;.sol&quot;=&quot;text/plain&quot;</div>
+<div class="para" label-module="para">&quot;.sor&quot;=&quot;text/plain&quot;</div>
+<div class="para" label-module="para">&quot;.spc&quot;=&quot;application/x-pkcs7-certificates&quot;</div>
+<div class="para" label-module="para">&quot;.spl&quot;=&quot;application/futuresplash&quot;</div>
+<div class="para" label-module="para">&quot;.spp&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.ssm&quot;=&quot;application/streamingmedia&quot;</div>
+<div class="para" label-module="para">&quot;.sst&quot;=&quot;application-pki.certstore&quot;</div>
+<div class="para" label-module="para">&quot;.stl&quot;=&quot;application/-pki.stl&quot;</div>
+<div class="para" label-module="para">&quot;.stm&quot;=&quot;text/html&quot;</div>
+<div class="para" label-module="para">&quot;.sty&quot;=&quot;application/x-sty&quot;</div>
+<div class="para" label-module="para">&quot;.svg&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.swf&quot;=&quot;application/x-shockwave-flash&quot;</div>
+<div class="para" label-module="para">&quot;.tdf&quot;=&quot;application/x-tdf&quot;</div>
+<div class="para" label-module="para">&quot;.tg4&quot;=&quot;application/x-tg4&quot;</div>
+<div class="para" label-module="para">&quot;.tga&quot;=&quot;application/x-tga&quot;</div>
+<div class="para" label-module="para">&quot;.tif&quot;=&quot;image/tiff&quot;</div>
+<div class="para" label-module="para">&quot;.tif&quot;=&quot;application/x-tif&quot;</div>
+<div class="para" label-module="para">&quot;.tiff&quot;=&quot;image/tiff&quot;</div>
+<div class="para" label-module="para">&quot;.tld&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.top&quot;=&quot;drawing/x-top&quot;</div>
+<div class="para" label-module="para">&quot;.torrent&quot;=&quot;application/x-bittorrent&quot;</div>
+<div class="para" label-module="para">&quot;.tsd&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.txt&quot;=&quot;text/plain&quot;</div>
+<div class="para" label-module="para">&quot;.uin&quot;=&quot;application/x-icq&quot;</div>
+<div class="para" label-module="para">&quot;.uls&quot;=&quot;text/iuls&quot;</div>
+<div class="para" label-module="para">&quot;.vcf&quot;=&quot;text/x-vcard&quot;</div>
+<div class="para" label-module="para">&quot;.vda&quot;=&quot;application/x-vda&quot;</div>
+<div class="para" label-module="para">&quot;.vdx&quot;=&quot;application/vnd.visio&quot;</div>
+<div class="para" label-module="para">&quot;.vml&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.vpg&quot;=&quot;application/x-vpeg005&quot;</div>
+<div class="para" label-module="para">&quot;.vsd&quot;=&quot;application/vnd.visio&quot;</div>
+<div class="para" label-module="para">&quot;.vsd&quot;=&quot;application/x-vsd&quot;</div>
+<div class="para" label-module="para">&quot;.vss&quot;=&quot;application/vnd.visio&quot;</div>
+<div class="para" label-module="para">&quot;.vst&quot;=&quot;application/vnd.visio&quot;</div>
+<div class="para" label-module="para">&quot;.vst&quot;=&quot;application/x-vst&quot;</div>
+<div class="para" label-module="para">&quot;.vsw&quot;=&quot;application/vnd.visio&quot;</div>
+<div class="para" label-module="para">&quot;.vsx&quot;=&quot;application/vnd.visio&quot;</div>
+<div class="para" label-module="para">&quot;.vtx&quot;=&quot;application/vnd.visio&quot;</div>
+<div class="para" label-module="para">&quot;.vxml&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.wav&quot;=&quot;audio/wav&quot;</div>
+<div class="para" label-module="para">&quot;.wax&quot;=&quot;audio/x-ms-wax&quot;</div>
+<div class="para" label-module="para">&quot;.wb1&quot;=&quot;application/x-wb1&quot;</div>
+<div class="para" label-module="para">&quot;.wb2&quot;=&quot;application/x-wb2&quot;</div>
+<div class="para" label-module="para">&quot;.wb3&quot;=&quot;application/x-wb3&quot;</div>
+<div class="para" label-module="para">&quot;.wbmp&quot;=&quot;image/vnd.wap.wbmp&quot;</div>
+<div class="para" label-module="para">&quot;.wiz&quot;=&quot;application/msword&quot;</div>
+<div class="para" label-module="para">&quot;.wk3&quot;=&quot;application/x-wk3&quot;</div>
+<div class="para" label-module="para">&quot;.wk4&quot;=&quot;application/x-wk4&quot;</div>
+<div class="para" label-module="para">&quot;.wkq&quot;=&quot;application/x-wkq&quot;</div>
+<div class="para" label-module="para">&quot;.wks&quot;=&quot;application/x-wks&quot;</div>
+<div class="para" label-module="para">&quot;.wm&quot;=&quot;video/x-ms-wm&quot;</div>
+<div class="para" label-module="para">&quot;.wma&quot;=&quot;audio/x-ms-wma&quot;</div>
+<div class="para" label-module="para">&quot;.wmd&quot;=&quot;application/x-ms-wmd&quot;</div>
+<div class="para" label-module="para">&quot;.wmf&quot;=&quot;application/x-wmf&quot;</div>
+<div class="para" label-module="para">&quot;.wml&quot;=&quot;text/vnd.wap.wml&quot;</div>
+<div class="para" label-module="para">&quot;.wmv&quot;=&quot;video/x-ms-wmv&quot;</div>
+<div class="para" label-module="para">&quot;.wmx&quot;=&quot;video/x-ms-wmx&quot;</div>
+<div class="para" label-module="para">&quot;.wmz&quot;=&quot;application/x-ms-wmz&quot;</div>
+<div class="para" label-module="para">&quot;.wp6&quot;=&quot;application/x-wp6&quot;</div>
+<div class="para" label-module="para">&quot;.wpd&quot;=&quot;application/x-wpd&quot;</div>
+<div class="para" label-module="para">&quot;.wpg&quot;=&quot;application/x-wpg&quot;</div>
+<div class="para" label-module="para">&quot;.wpl&quot;=&quot;application/-wpl&quot;</div>
+<div class="para" label-module="para">&quot;.wq1&quot;=&quot;application/x-wq1&quot;</div>
+<div class="para" label-module="para">&quot;.wr1&quot;=&quot;application/x-wr1&quot;</div>
+<div class="para" label-module="para">&quot;.wri&quot;=&quot;application/x-wri&quot;</div>
+<div class="para" label-module="para">&quot;.wrk&quot;=&quot;application/x-wrk&quot;</div>
+<div class="para" label-module="para">&quot;.ws&quot;=&quot;application/x-ws&quot;</div>
+<div class="para" label-module="para">&quot;.ws2&quot;=&quot;application/x-ws&quot;</div>
+<div class="para" label-module="para">&quot;.wsc&quot;=&quot;text/scriptlet&quot;</div>
+<div class="para" label-module="para">&quot;.wsdl&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.wvx&quot;=&quot;video/x-ms-wvx&quot;</div>
+<div class="para" label-module="para">&quot;.xdp&quot;=&quot;application/vnd.adobe.xdp&quot;</div>
+<div class="para" label-module="para">&quot;.xdr&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.xfd&quot;=&quot;application/vnd.adobe.xfd&quot;</div>
+<div class="para" label-module="para">&quot;.xfdf&quot;=&quot;application/vnd.adobe.xfdf&quot;</div>
+<div class="para" label-module="para">&quot;.xhtml&quot;=&quot;text/html&quot;</div>
+<div class="para" label-module="para">&quot;.xls&quot;=&quot;application/-excel&quot;</div>
+<div class="para" label-module="para">&quot;.xls&quot;=&quot;application/x-xls&quot;</div>
+<div class="para" label-module="para">&quot;.xlw&quot;=&quot;application/x-xlw&quot;</div>
+<div class="para" label-module="para">&quot;.xml&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.xpl&quot;=&quot;audio/scpls&quot;</div>
+<div class="para" label-module="para">&quot;.xq&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.xql&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.xquery&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.xsd&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.xsl&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.xslt&quot;=&quot;text/xml&quot;</div>
+<div class="para" label-module="para">&quot;.xwd&quot;=&quot;application/x-xwd&quot;</div>
+<div class="para" label-module="para">&quot;.x_b&quot;=&quot;application/x-x_b&quot;</div>
+<div class="para" label-module="para">&quot;.x_t&quot;=&quot;application/x-x_t&quot;</div>
+<div class="para" label-module="para">Office2007对应的值:</div>
+<div class="para" label-module="para">&quot;application/vnd.openxmlformats-officedocument.wordprocessingml.template&quot; (for .docx files)</div>
+<div class="para" label-module="para">&quot;application/vnd.openxmlformats-officedocument.presentationml.presentation&quot; (for .pptx files)</div>
+<div class="para" label-module="para">&quot;application/vnd.openxmlformats-officedocument.presentationml.slideshow&quot; (for .<a target=_blank href="/view/1137599.htm">ppsx</a> files)</div>
+<div class="para" label-module="para">&quot;application/vnd.openxmlformats-officedocument.presentationml.template&quot; (for .potx files)</div>
+<div class="para" label-module="para">&quot;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&quot; (for .xlsx files)</div>
+<div class="para" label-module="para">&quot;application/vnd.openxmlformats-officedocument.spreadsheetml.template&quot; (for .xltx files)</div>
+<div class="para" label-module="para">相对于Office2003是这样的</div>
+<div class="para" label-module="para">Response.ContentType = &quot;application/vnd.ms-excel&quot;</div>
+</div>
+<div class="side-content">
+<div class="summary-pic" >
+<a href="/pic/ContentType/1938445/0/2f738bd4b31c870135fafbfb247f9e2f0708ff5b?fr=lemma&amp;ct=single" target="_blank" nslog-type="10002401">
+<img src="http://e.hiphotos.baidu.com/baike/w%3D268%3Bg%3D0/sign=71ac9b3c93ef76c6d0d2fc2da52d9ac7/2f738bd4b31c870135fafbfb247f9e2f0708ff5b.jpg" />
+<button class="picAlbumBtn"><em></em><span>图集</span></button>
+<div>ContentType图册</div>
+</a>
+</div>
+<div id="promotion_xunke"></div>
+<div class="lemmaWgt-promotion-vbaike">
+<div class="promotion_title">V百科<a href="/vbaike#gallary" target="_blank">往期回顾</a></div>
+<div class="promotion_viewport">
+<dl>
+</dl>
+<div class="promotion_viewport_pager"></div>
+</div>
+</div><div class="lemmaWgt-promotion-rightPreciseAd" data-lemmaId="1938445" data-lemmaTitle="ContentType"></div><div class="lemmaWgt-sideRecommend">
+<a name="zhixinWrap" class="qnAnchor"></a>
+<div class="zhixin-box" id="zhixinWrap" data-source="" data-newLemmaId="1938445">
+</div>
+<form id="zhixinErrorForm" class="hidden" action="http://f3.baidu.com/index.php/feedback/zx/baikeJC" target="zhixinSubErr" method="post">
+<input class="js-url" name="fb_html_url" type="hidden" />
+<input class="js-query" name="fb_query" type="hidden" />
+<input class="js-title" name="fb_card_title" type="hidden" />
+<input class="js-content" name="fb_content" type="hidden" />
+<input class="js-souceId" name="fb_source_id" type="hidden" />
+</form>
+<iframe id="zhixinSubErr" name="zhixinSubErr" style="display:none" frameborder="0"></iframe>
+</div><div class="lemmaWgt-promotion-slide">
+<div class="promotion_viewport">
+<dl>
+</dl>
+<div class="promotion_viewport_pager"></div>
+</div>
+</div><div class="lemmaWgt-promotion-rightBigAd">
+</div><dl class="side-box lemma-statistics">
+<dt class="title">词条统计</dt>
+<dd class="description">
+<ul>
+<li>浏览次数：<span id="j-lemmaStatistics-pv"></span>次</li>
+<li>编辑次数：32次<a href="/historylist/ContentType/1938445" class="nslog:1021" target="_blank">历史版本</a></li>
+<li>最近更新：<span class="j-modified-time" style="display:none">2016-08-24</span></li>
+<li>创建者：<a class="show-userCard" data-uid="1103158" title="查看此用户资料" target="_blank" href="http://www.baidu.com/p/lightingnet" nslog-type="1022">lightingnet</a></li>
+</ul>
+</dd>
+</dl>
+<div class="side-catalog" style="visibility:hidden">
+<div class="side-bar">
+<em class="circle start"></em>
+<em class="circle end"></em>
+</div>
+<div class="catalog-scroller">
+<dl class="catalog-list">
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#1" class="title-link">
+<span class="text">
+<span class="title-index">1</span>
+<span class="title-link" nslog-type="1026">属性</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#2" class="title-link">
+<span class="text">
+<span class="title-index">2</span>
+<span class="title-link" nslog-type="1026">语法规则</span>
+</span>
+</a>
+</dt>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#3" class="title-link">
+<span class="text">
+<span class="title-index">3</span>
+<span class="title-link" nslog-type="1026">语法</span>
+</span>
+</a>
+</dt>
+<dd class="catalog-title level2">
+<a href="#3_1" class="title-link">
+<span class="text">
+<span class="title-index">3.1</span>
+<span class="title-link" nslog-type="1026">HTML</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#3_2" class="title-link">
+<span class="text">
+<span class="title-index">3.2</span>
+<span class="title-link" nslog-type="1026">ASP</span>
+</span>
+</a>
+</dd>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#4" class="title-link">
+<span class="text">
+<span class="title-index">4</span>
+<span class="title-link" nslog-type="1026">参数</span>
+</span>
+</a>
+</dt>
+<dd class="catalog-title level2">
+<a href="#4_1" class="title-link">
+<span class="text">
+<span class="title-index">4.1</span>
+<span class="title-link" nslog-type="1026">HTML</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="#4_2" class="title-link">
+<span class="text">
+<span class="title-index">4.2</span>
+<span class="title-link" nslog-type="1026">ASP</span>
+</span>
+</a>
+</dd>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="#5" class="title-link">
+<span class="text">
+<span class="title-index">5</span>
+<span class="title-link" nslog-type="1026">类型</span>
+</span>
+</a>
+</dt>
+<a class="arrow" href="javascript:void(0);"></a>
+</dl>
+</div>
+<div class="right-wrap">
+<a class="go-up disable" href="javascript:void(0);"></a>
+<a class="go-down" href="javascript:void(0);"></a>
+</div>
+<div class="bottom-wrap">
+<a class="toggle-button" href="javascript:void(0);"></a>
+<a class="gotop-button" href="javascript:void(0);"></a>
+</div>
+</div>
+<div class="unionAd_fromPs side-box" id="unionAd_fromPs">
+<script type="BAIDU_HH">
+    {
+        type : 'pageembed',
+        di   : 'u2140330',
+        rsi0 : 270,
+        rsi1 : 175
+    }
+    </script>
+</div>
+<div id="side_box_fengchao" class="fengchao side-box" nslog="area" nslog-type="10000902">
+</div>
+<div id="side_box_unionAd" class="unionAd side-box">
+<div class="union-content"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="after-content">
+<div class="fc-guess-like new" id="fc_guess_like_new">
+<span class="logo-du">
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+</span>
+<h6>猜你喜欢</h6>
+<ul class="cmn-clearfix">
+</ul>
+</div>
+<div class="bottom-promotion" id="bottom-promotion">
+<div id="BOTTOM_PRO_AD"></div>
+</div></div>
+</div>
+
+<div class="wgt-footer-main">
+<div class="content">
+<dl class="fresh">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-fresh"></em>新手上路</dt>
+<dd>
+<div><a target="_blank" href="/usercenter/tasks#guide">成长任务</a></div>
+<div><a target="_blank" href="/help#main01">编辑入门</a></div>
+<div><a target="_blank" href="/help#main06">编辑规则</a></div>
+<div><a target="_blank" href="/help#main05">百科术语</a></div>
+</dd>
+</dl>
+<dl class="question">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-question"></em>我有疑问</dt>
+<dd>
+<div><a target="_blank" href="/wikiui/doubt?lemmaId=1938445&fr=lemma"
+            nslog-type="10070001">我要质疑</a></div>
+<div><a target="_blank" href="http://ikefu.baidu.com/baidubaike/chat.html" nslog-type="10000003">我要提问</a></div>
+<div><a target="_blank" href="http://tieba.baidu.com/f?ie=utf-8&fr=bks0000&kw=%E7%99%BE%E5%BA%A6%E7%99%BE%E7%A7%91">参加讨论</a></div>
+<div><a target="_blank" href="/feedback">意见反馈</a></div>
+</dd>
+</dl>
+<dl class="suggestion">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-suggestion"></em>投诉建议</dt>
+<dd>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#1">举报不良信息</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#2">未通过词条申诉</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#4">投诉侵权信息</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike#3">封禁查询与解封</a></div>
+</dd>
+</dl>
+</div>
+<div class="copyright">©2016Baidu&nbsp;<a href="http://www.baidu.com/duty/" target="_blank">使用百度前必读</a>&nbsp;|&nbsp;<a href="http://help.baidu.com/question?prod_en=baike&class=159&id=1047" target="_blank">百科协议</a>&nbsp;|&nbsp;<a href="/operation/cooperation" target="_blank">百度百科合作平台</a></div>
+</div>
+
+<div class="lemmaWgt-searchHeader">
+<div class="layout">
+<div class="logo-container">
+<a class="logo cmn-inline-block" title="到百科首页" href="/">
+<span class="cmn-baike-logo">
+<em class="cmn-icon cmn-icons cmn-icons_logo-bai"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-baike"></em>
+</span>
+</a>
+</div>
+<div class="search">
+<div class="form">
+<form id="searchForm" action="/search/word" method="GET" target="_self">
+<input id="query" name="word" type="text" autocomplete="off" autocorrect="off" value="ContentType" /><a id="search" href="javascript:;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_search" nslog-type="10010004"></em></a>
+</form>
+<ul id="suggestion" class="suggestion">
+<div></div>
+<li class="extra">
+<span id="close">关闭</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="tool-buttons">
+<a class="toolButtons-edit button j-edit-link" href="javascript:;" nslog-type="10010001"></a>
+<a class="toolButtons-collect button" href="javascript:;" nslog-type="10010002"></a>
+<a class="toolButtons-vote button" href="javascript:;" nslog-type="10010003"></a>
+</div>
+<div class="user-info">
+<a class="user-link unlogin" href="javascript:;" nslog-type="10010005" target="_blank">登录</a>
+</div>
+</div></div>
+<div class="new-bdsharebuttonbox new-side-share" id="side-share">
+<span class="title">分享</span>
+<div class="side-border">
+<div class="triangle"></div>
+<a class="bds_qzone"  href="javascript:void(0);" nslog-type="10060101">
+<em class="cmn-icon cmn-icons cmn-icons_logo-qzone"></em>
+</a>
+<a class="bds_tsina" href="javascript:void(0);" nslog-type="10060301">
+<em class="cmn-icon cmn-icons cmn-icons_logo-sina-weibo"></em>
+</a>
+<a class="bds_wechat"  href="javascript:void(0);" nslog-type="10060001">
+<em class="cmn-icon cmn-icons cmn-icons_logo-wechat"></em>
+</a>
+<a class="bds_tqq"  href="javascript:void(0);" nslog-type="10060201">
+<em class="cmn-icon cmn-icons cmn-icons_logo-qq"></em>
+</a>
+</div>
+</div>
+<div class="qrcode-wrapper" id="layer" style="display: none">
+<div class="bd_weixin_popup_header">
+<em class="cmn-icon cmn-icons cmn-icons_close"></em>
+<span>分享到微信朋友圈</span>
+</div>
+<div id="wechat-qrcode-img"></div>
+<div class="bd_weixin_popup_footer">打开微信“扫一扫”即可将网页分享至朋友圈</div>
+</div>
+<div></div><div></div>
+</body><script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_0_29c88fe.js"></script>
+<script type="text/javascript">require.resourceMap({"res":{"wiki-lemma:widget/lemma_content/mainContent/lemmaRelation/lemmaInsert.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/lemmaInsert_17d225d.js","pkg":"wiki-lemma:p5","deps":["wiki-common:widget/component/nslog/nslog.js"]},"wiki-lemma:widget/lemma_content/mainContent/lemmaRelation/tangram.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/tangram_1e4b3aa.js","pkg":"wiki-lemma:p5"}},"pkg":{"wiki-lemma:p5":{"url":"http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma-module-lemmaRelation_782158b.js"}}});</script><script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/widget/lib/jsmart/PHPJS_3347e0a.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_1_ec0cd21.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_2_7a24e62.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-common/pkg/wiki-common_sync_js_5_62d9343.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma_02a4d83.js"></script>
+<script type="text/javascript" src="http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/configModule/zhixin/zhixin_d2befc8.js"></script>
+<script type="text/javascript">!function(){  var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+    userbar = require('wiki-common:widget/component/userbar/userbar.js');
+    
+  $(function() {
+    userbar.buildUserbar($('.wgt-userbar'), null);
+  });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+      initSearchbar = require('wiki-common:widget/component/searchbar/searchbar.js');  
+    initSearchbar($('.wgt-searchbar-main'));
+  }();
+!function(){  var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+
+  var timer = '';
+
+  $('.wgt-navbar').on('mouseenter', 'dl', function() {
+  clearTimeout(timer);
+  timer = setTimeout(function() {
+  $('.wgt-navbar').addClass('wgt-navbar-hover');
+}, 300);
+}).on('mouseleave', function() {
+clearTimeout(timer);
+$('.wgt-navbar').removeClass('wgt-navbar-hover');
+}).on('click', 'a', function() {
+clearTimeout(timer);
+$('.wgt-navbar').removeClass('wgt-navbar-hover');
+});
+}();
+!function(){                var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+                var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+                // 展现策略
+                rightCheck.editView('1938445', function(res) {
+                    if (!res.errno) {
+                        if (res.data.edit) {
+                            $('.lemmaWgt-lemmaTitle .add-subLemma').css('display', 'inline-block');
+                            $('.top-tool .add-sub-icon').css('display', 'inline-block');
+                        }
+                    } else {
+                        if ('1') {
+                            $('.lemmaWgt-lemmaTitle .add-subLemma').css('display', 'inline-block');
+                            $('.top-tool .add-sub-icon').css('display', 'inline-block');
+                        }
+                    }
+                });
+                require('wiki-lemma:widget/basicElement/addSub/addSub.js')({                    lemmaId: '1938445',                    lemmaTitle: 'ContentType',                    lemmaDesc: '',                    versionId: '111956878',                    subLemmaId: '1547292'                });
+            }();
+!function(){        var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+        var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+        // 展现策略
+        rightCheck.editView('1938445', function(res) {
+            if (!res.errno) {
+                if (res.data.divide) {
+                    $('.top-tool .split-icon').css('display', 'block');
+                }
+            }
+        });
+    }();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	require.async("wiki-lemma:widget/basicElement/collect/collect.js",function(collect){
+		collect({
+            newLemmaId:"1938445",
+			lemmaId:"1547292",
+			subLemmaId:"1547292"
+		});
+	});
+}();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	require.async("wiki-lemma:widget/basicElement/vote/vote.js",function(vote){
+		vote({
+			lemmaId:"1547292",
+            subLemmaId:"1547292",
+            newLemmaId:"1938445"
+		});
+	});
+}();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	!!window.BKShare && window.BKShare.regist({
+		"tag" : "top-share",
+		"bdSize" : 32,
+		"bdMini":1
+	});
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('1938445', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.lemmaWgt-lemmaTitle .edit-lemma').css('display', 'inline-block');
+            } else {
+                $('.lemmaWgt-lemmaTitle .lock-lemma').show();
+            }
+        } else {
+            if ('1') {
+                $('.lemmaWgt-lemmaTitle .edit-lemma').css('display', 'inline-block');
+            } else {
+                $('.lemmaWgt-lemmaTitle .lock-lemma').show();
+            }
+        }
+    });
+}();
+!function(){	require('wiki-lemma:widget/lemma_content/mainContent/basicInfo/basicInfo.js')();
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('1938445', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('1938445', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('1938445', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('1938445', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('1938445', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('1938445', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('1938445', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('1938445', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('1938445', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    require.async('wiki-lemma:widget/promotion/xunke/xunke.js', function (app) {
+        app.init({
+            lemmaTitle: 'ContentType',
+            adManager: null
+        });
+    });
+}();
+!function(){        require('wiki-lemma:widget/lemma_content/configModule/zhixin/zhixin.js')(
+            1938445,
+            'ContentType'
+        );
+    }();
+!function(){    require.async("wiki-lemma:widget/lemma_content/mainContent/lemmaStatistics/lemmaStatistics.js",function(init){
+        init({
+            newLemmaIdEnc:"702600885a876603991d3ab1"
+        });
+    });
+}();
+!function(){	require.async("wiki-lemma:widget/lemma_content/mainContent/sideCatalog/sideCatalog.js",function(SideCatalog){
+		new SideCatalog();
+	});
+}();
+!function(){        require.async(['wiki-lemma:widget/promotion/unionAdFromPs/unionAdFromPs.js'], function (init) {
+            init({
+                adManager: null
+            });
+        });
+    }();
+!function(){    require.async(["wiki-lemma:widget/promotion/fengchao/fengchao.js", "wiki-lemma:widget/promotion/unionAd/unionAd.js"], function (init, unionAd) {
+        init({
+            newLemmaId: "1938445",
+            lemmaTitle: "ContentType",
+            encodeLemmaTitle: "ContentType",
+            adManager: null
+        }, {
+            errFn: unionAd,
+            dom: $('#side_box_unionAd')
+        });
+    });
+}();
+!function(){    require.async('wiki-lemma:widget/promotion/guessLike/guessLike.js', function (app) {
+        app.init({
+            lemmaTitle: 'ContentType',
+            adManager: null
+        });
+    });
+}();
+!function(){        require.async('wiki-lemma:widget/promotion/bottomAd/bottomAd.js', function (init) {
+            init({
+                sId: 'BOTTOM_PRO_AD',
+                adManager: null
+            });
+        });
+    }();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var Dialog = require("wiki-common:widget/ui/dialog/dialog.js");
+    var userLogin = require('wiki-common:widget/component/userLogin/userLogin.js');
+    var unameFiller = require('wiki-common:widget/component/unameFiller/unameFiller.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+            var isEnterprise = false;
+        var enterpriseOwnerUserId = 0;
+    
+    var userId = 0;
+    var editUrl = '/edit/' + encodeURIComponent('ContentType') + '/' + '1938445';
+    var pgcUrl = '/enterprise/editpgc?lemmaId=1938445';
+
+    userLogin.regist({
+        onLogin: function(user) {
+            userId = user ? user.uid : 0;
+        }
+    });
+
+    function gotoEdit(url, isMidNight) {
+        if (isMidNight) {
+            Dialog.alert({
+                title: '编辑提示',
+                subMsg: '晚23:00至次日8:00，因审核系统例行维护，您提交的版本可能需要较长时间才能通过，望您谅解。',
+                onConfirm: function() {
+                    window.location.href = url;
+                }
+            });
+        } else {
+            window.location.href = url;
+        }    
+    }
+
+    function showChoseEditDialog(pgcCallback, ugcCallback) {
+        new Dialog({
+            title: '编辑提示',
+            subMsg: '<p>您已开通企业百科服务，推荐您直接编辑“官方资料”，官方资料仅限企业百科绑定的百科账号修改，其他用户账号不可修改。</p><p>如果您想修改其他网友编辑的普通词条内容，请注意遵守百科百科编辑规则。<p>',
+            btns: [{
+            key: 'pgc',
+            text: '编辑官方资料'
+            }, {
+            style: 'white',
+            text: '修改普通词条',
+            key: 'ugc'
+            }],
+            onBtnClick: function(btnKey){
+                if (btnKey === 'pgc') {
+                    pgcCallback && pgcCallback();
+                } else if (btnKey === 'ugc') {
+                    ugcCallback && ugcCallback();
+                }
+            }
+        }).show();
+    }
+
+    function checkUserLegal(res) {
+        var legal = false;
+        switch (res.errno) {
+            case 100001:
+                userLogin.showLoginPop();
+                break;
+            case 100006:
+                unameFiller.show();
+                break;
+            default:
+                legal = true;
+        }
+        return true;
+    }
+
+    function checkUgc(res, url) {
+        if (res.errno) {
+            switch (res.errno) {
+                case 100005:
+                    alert('对不起，您目前被封禁');
+                    break;
+                case 110001:
+                    alert('对不起，该词条被锁定');
+                    break;
+                case 110007:
+                    alert('对不起，消歧页无法编辑');
+                    break;
+                case 110005:
+                    Dialog.alert({
+                    title: '编辑提示',
+                    mainMsg: '对不起，您暂时没有权限编辑该词条。',
+                    subMsg: '<p>您好，该词条内容已较丰富，现仅对百科等级达到<b>四级</b>且通过率达到<b>85%</b>的科友开放编辑。</p><p>当您通过努力达到以上要求，就可以参与编辑该词条了。</p><p><img src="http://img.baidu.com/img/baike/usercenter/growuptask/star.gif" class="star" />参加<a target="_blank" href="/usercenter#guide">成长任务</a>，更快掌握百科编辑技巧，加速升级！</p>'
+                    });
+                    break;
+                case 110008:
+                    Dialog.alert({
+                    title: '编辑提示',
+                    mainMsg: '对不起，您暂时没有权限编辑该词条。',
+                    subMsg: '<p>您好，该词条内容已较丰富，现仅对百科等级达到<b>六级</b>且通过率达到<b>85%</b>的科友开放编辑。</p><p>当您通过努力达到以上要求，就可以参与编辑该词条了。</p><p><img src="http://img.baidu.com/img/baike/usercenter/growuptask/star.gif" class="star" />参加<a target="_blank" href="/usercenter#guide">成长任务</a>，更快掌握百科编辑技巧，加速升级！</p>'
+                    });
+                    break;
+                case 470001:
+                    alert('系统错误，请刷新重试');
+                    break;
+            }
+        } else {
+            if (!res.data.right.noAudit) {
+                Dialog.alert({
+                    title: '编辑提示',
+                    subMsg: '很抱歉，该词条有其他用户编辑的版本正在提交，您暂时无法编辑。<br/>百科建议您晚些时候再编辑该词条，或者尝试编辑其他的词条。'
+                });
+                return;
+            }
+            gotoEdit(url, res.data.notice.isMidNight);
+        }
+    }
+
+    $(document.body).on('click', '.j-edit-link', function() {
+        var dl = $(this).attr('data-edit-dl');
+        if (dl) {
+            var url = editUrl + '?dl=' + dl;
+        } else {
+            var url = editUrl;
+        }
+
+        rightCheck.preeditCheck('1938445', 'ContentType', 'ContentType', '111956878', function(res) {
+            if (!checkUserLegal(res)) {
+                return;
+            }
+            if (isEnterprise && enterpriseOwnerUserId === userId) {
+                showChoseEditDialog(function() {
+                    location.href = pgcUrl;
+                }, function() {
+                    checkUgc(res, url);
+                });
+            } else {
+                checkUgc(res, url);
+            }
+        });
+    });
+}();
+!function(){    require.async("wiki-lemma:widget/tools/searchHeader/toolButtons/toolButtons.js",function(init){
+        init({
+            lemmaId:"1547292",
+            subLemmaId:"1547292",
+            newLemmaId:"1938445"
+        });
+    });
+}();
+!function(){    require('wiki-lemma:widget/tools/searchHeader/toolButtons/userInfo.js')();
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+      animation = require('wiki-common:widget/util/animation.js'),
+      nslog = require('wiki-common:widget/component/nslog/nslog.js'),
+      initSearchbar = require('wiki-common:widget/component/searchbar/searchbar.js');
+
+    var isFadeIn = false,
+        isFadeOut = false;
+
+    var fadeInAni, fadeOutAni;
+
+    $(window).on('scroll', function(e) {
+        var scrollTop = $(this).scrollTop();
+
+        if (scrollTop > 200 && !isFadeIn && $('.lemmaWgt-searchHeader').css('display') == 'none') {
+            fadeOutAni && fadeOutAni.stop();
+            fadeInAni = animation({
+                duration: 200,
+                easing: 'linear',
+                onStart: function() {
+                    isFadeOut = false;
+                    isFadeIn = true;
+                    $('.lemmaWgt-searchHeader').css('display', 'block');
+                },
+                onStep: function(progress) {
+                    $('.lemmaWgt-searchHeader').css('opacity', progress)
+                },
+                onComplete: function(progress) {
+                    isFadeIn = false;
+                    nslog(10010006);
+                }
+            });
+        } else if (scrollTop <= 200 && !isFadeOut && $('.lemmaWgt-searchHeader').css('display') == 'block') {
+            fadeInAni && fadeInAni.stop();
+            fadeOutAni = animation({
+                duration: 300,
+                easing: 'linear',
+                onStart: function() {
+                    $('.lemmaWgt-searchHeader #suggestion').hide();
+                    isFadeIn = false;
+                    isFadeOut = true;
+                },
+                onStep: function(progress) {
+                    $('.lemmaWgt-searchHeader').css('opacity', 1 - progress);
+                },
+                onComplete: function(progress) {
+                    isFadeOut = false;
+                    $('.lemmaWgt-searchHeader').css('display', 'none');
+                }
+            });
+        }
+    });
+
+    initSearchbar($('.lemmaWgt-searchHeader'));
+}();
+!function(){    require('wiki-lemma:widget/tools/newSideShare/qzopensl.js');
+    require.async("wiki-lemma:widget/tools/newSideShare/taskSideShare.js",function(taskShare){
+        taskShare.init({
+            title: 'ContentType',
+            desc: "Content-Type\uff0c\u5185\u5bb9\u7c7b\u578b\uff0c\u4e00\u822c\u662f\u6307\u7f51\u9875\u4e2d\u5b58\u5728\u7684Content-Type\uff0c\u7528\u4e8e\u5b9a\u4e49\u7f51\u7edc\u6587\u4ef6\u7684\u7c7b\u578b\u548c\u7f51\u9875\u7684\u7f16\u7801\uff0c\u51b3\u5b9a\u6587\u4ef6\u63a5\u6536\u65b9\u5c06\u4ee5\u4ec0\u4e48\u5f62\u5f0f\u3001\u4ec0\u4e48\u7f16\u7801\u8bfb\u53d6\u8fd9\u4e2a\u6587\u4ef6\uff0c\u8fd9\u5c31\u662f\u7ecf\u5e38\u770b\u5230\u4e00\u4e9bAsp\u7f51\u9875\u70b9\u51fb\u7684\u7ed3\u679c\u5374\u662f\u4e0b\u8f7d\u5230\u7684\u4e00\u4e2a\u6587\u4ef6\u6216\u4e00\u5f20\u56fe\u7247\u7684\u539f\u56e0\u3002",
+            pic: 'http:\/\/e.hiphotos.baidu.com\/baike\/w%3D268\/sign=45620fdd81025aafd33279cdc3ecab8d\/2f738bd4b31c870135fafbfb247f9e2f0708ff5b.jpg',
+            url: '',
+            qqPic: 'http:\/\/e.hiphotos.baidu.com\/baike\/whfpf%3D459%2C459%2C50\/sign=98a6ed0e94dda144da5c3ff2d48ae497\/2f738bd4b31c870135fafbfb247f9e2f0708ff5b.jpg'
+        });
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var nslog = require("wiki-common:widget/component/nslog/nslog.js");
+    var testElem = require('wiki-common:widget/component/testElem/testElem.js');
+    var cmsModuleLoader = require('wiki-common:widget/component/cmsModuleLoader/cmsModuleLoader.js');
+
+    function requireAsync() {
+        require.async('wiki-lemma:widget/tools/announcement/announcement.js');
+    }
+
+    cmsModuleLoader('/cms/global/lemma_config.json', [{
+        name: 'announcement',
+        script: 'wiki-lemma:widget/tools/announcement/announcement.js'
+    }]);
+
+    require.async("wiki-lemma:widget/tools/lazyLoad/lazyLoad.js", function(LazyLoad) {
+        new LazyLoad();
+    });
+
+    require.async(['wiki-common:widget/component/nslog/nslog.js', 'wiki-common:widget/lib/jquery/jquery.js'], function(nslog, $) {
+        nslog().setGlobal({
+            lemmaId: "1547292",
+            newLemmaId: "1938445",
+            subLemmaId: "1547292",
+            lemmaTitle: "ContentType"
+        });
+
+        // 词条页 pv
+        nslog(9322);
+
+        // 新版头部pv（小流量）
+        if ($('.pc-header-new').length > 0) {
+            nslog(9069);
+        }
+
+        // 链接点击 pv
+        var lemmaPageRegExp = new RegExp(/\/subview\/\d+|\/view\/\d+|\/item\//i);
+        $('body').on('mousedown', 'a', function() {
+            var href = $(this).attr('href');
+            if (href && href.indexOf('/') >= 0 && href.indexOf('#') !== 0) {
+                // 链接点击 pv
+                nslog(10000001);
+                if (lemmaPageRegExp.test(href)) {
+                    // 词条页链接点击 pv
+                    nslog(10000002, window.location.href, {
+                        targetTitle: $(this).text()
+                    });
+                }
+            }
+        });
+
+        /****** 词条页站内流转需求统计 start ******/
+        (function () {
+            // 各种统计配置
+            var circulationLinkCfg = {
+                innerLink: [ // 内链
+                    '.para',
+                    '.lemmaWgt-baseInfo-simple-largeMovie',
+                    '.lemmaWgt-baseInfo-simple-largeStar',
+                    '.basic-info .basicInfo-block',
+                    '.lemma-summary',
+                    '.lemmaWgt-lemmaSummary',
+                    '.view-tip-panel',
+                    '.horizontal-module',
+                    '.lemmaWgt-roleIntroduction',
+                    '.dramaSeries .dramaSerialList',
+                    '.module-music',
+                    '.table-view',
+                    '[log-set-param="table_view"]',
+                    '.list-module',
+                    '.cell-module',
+                    '.baseBox .dl-baseinfo', // 配置后台字段
+                    '.pvBtn-box .leadPVBtnWrapper',
+                    '.drama-actor',
+                    '#staffList',
+                    '.starMovieAndTvplay',
+                    '.main_tab:not(.main_tab-defaultTab)' // 除去词条tab外的tab
+                ],
+                relationTable: '.rs-container-foot', // 关系表
+                peopleRelation: '.star-info-block.relations, .lemmaWgt-focusAndRelation', // 人物关系（明星+普通）
+                moduleActors: '.featureBaseInfo .actors, .lemmaWgt-majorActors', // 主要演员、嘉宾、主持人
+                moduleWorks: '.featureBaseInfo .works, .large-feature .works', // 代表作品
+                moduleQuarterly: '.featureBaseInfo .po_quarterly, .mian_quarterly', // 分季介绍
+                rankStar: '.rank-list.stars-rank', // 明星榜
+                rankDrama: '.drama-rank-list', // 电视剧榜
+                specialTopic: '.special-topic', // 专题模块
+                modDetailTable: '#modDetailTable', // 关系表出图
+                chuizhitu: '.chuizhitu', // 垂直化模块
+                polysemantList: '.polysemantList-wrapper' // 义项切换
+            };
+            /****** 连接统计 ******/
+            function clickNslogFn() {
+                for (var k in circulationLinkCfg) {
+                    if (k === 'innerLink') {
+                        // 词条内链到词条页
+                        var tempArr = circulationLinkCfg[k];
+                        for (var i = 0, l = tempArr.length; i < l; i++) {
+                            tempArr[i] += ' a';
+                        }
+                        var sSelector = tempArr.join(', ');
+
+                        $('body').on('mousedown', sSelector, {key: k},function(e) {
+                            var key = e.data.key;
+                            var href = $(this).attr('href');
+                            var tar = $(this).attr('target') || '';
+                            if (href && href.indexOf('/') >= 0 && href.indexOf('#') !== 0
+                            && tar === '_blank' && lemmaPageRegExp.test(href)) {
+                                // 词条页普通内链点击 pv
+                                nslog(10000004, null ,{division: key});
+                            }
+                        });
+                    } else {
+                        // 模块到词条页链接
+                        $(circulationLinkCfg[k]).on('mousedown', 'a', {key: k}, function (e) {
+                            var key = e.data.key;
+                            var href = $(this).attr('href');
+                            if (href && href.indexOf('#') !== 0 && lemmaPageRegExp.test(href)) {
+                                // 词条页配置模块链接点击 pv
+                                nslog(10000004, null, {division: key});
+                            }
+                        });
+                    }
+                }
+            }
+            // 发起统计请求
+            clickNslogFn();
+
+            /****** 各模块展现量pv ******/
+            function checkModuleIsShow() {
+                var result = [];
+                for (var k in circulationLinkCfg) {
+                    if (k !== 'innerLink' && k !== 'relationTable') {
+                        !!$(circulationLinkCfg[k]).html() && result.push(k);
+                    }
+                }
+                if (result.length > 0) {
+                    nslog(10000005, null, {showModules: result.join(',')});
+                }
+            }
+            checkModuleIsShow();
+
+        })();
+        /****** 词条页站内流转需求统计 end ******/
+
+    });
+
+    // 广告接入 wikiad 统一加载
+    // log 词条页广告被拦截情况（此处 log 请求行为）
+    nslog(70000101, window.location.href, {
+        api: 'lemma-ad',
+        action: 'request'
+    });
+    $.ajax({
+        type: 'GET',
+        url: '/api/wikiad/getsquirrels',
+        data: {
+            lemmaId: 1938445
+        },
+        cache: false,
+        dataType: 'JSON',
+        success: function (res) {
+            // log 词条页广告被拦截情况（此处 log 请求成功）
+            nslog(70000101, window.location.href, {
+                api: 'lemma-ad',
+                action: 'success'
+            });
+
+            if (!res.errno) {
+                if (res.data[5]) {
+                    require.async(['wiki-lemma:widget/promotion/rightPreciseAd/rightPreciseAd.js'], function(rightPreciseAd) {
+                        rightPreciseAd(res.data[5]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[5][0].adId,
+                            adTitle: res.data[5][0].name,
+                            adPos: 5
+                        });
+                    });
+                } else if (res.data[1]) {
+                    require.async(['wiki-lemma:widget/promotion/vbaike/vbaike.js'], function(vbaike) {
+                        vbaike(res.data[1]);
+                        for(var i in res.data[1]) {
+                            nslog(10002201, location.href, {
+                                adId: res.data[1][i].adId,
+                                adTitle: res.data[1][i].name,
+                                adPos: 1
+                            });
+                        }
+                    });
+                }
+                if (res.data[9]) {
+                    require.async(['wiki-lemma:widget/promotion/rightBigAd/rightBigAd.js'], function(rightBigAd) {
+                        rightBigAd(res.data[9]);
+                            nslog(10002201, location.href, {
+                                adId: res.data[9][0].adId,
+                                adTitle: res.data[9][0].name,
+                                adPos: 9
+                            });
+                    });
+                } else if(res.data[2]) {
+                    require.async(['wiki-lemma:widget/promotion/slide/slide.js'], function(slide) {
+                        slide(res.data[2]);
+                        for(var i in res.data[2]) {
+                            nslog(10002201, location.href, {
+                                adId: res.data[2][i].adId,
+                                adTitle: res.data[2][i].name,
+                                adPos: 2
+                            });
+                        }
+                    });
+                }
+                if (res.data[3]) {
+                    require.async(['wiki-lemma:widget/promotion/topAd/topAd.js'], function(topAd) {
+                        topAd(res.data[3]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[3][0].adId,
+                            adTitle: res.data[3][0].name,
+                            adPos: 3
+                        });
+                    });
+                }
+                if (res.data[4]) {
+                    require.async(['wiki-lemma:widget/promotion/rightAd/rightAd.js'], function(rightAd) {
+                        rightAd(res.data[4]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[4][0].adId,
+                            adTitle: res.data[4][0].name,
+                            adPos: 4
+                        });
+                    });
+                }
+                if (res.data[15]) {
+                    require.async(['wiki-lemma:widget/promotion/banner/banner.js'], function(banner) {
+                        banner(res.data[15]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[15][0].adId,
+                            adTitle: res.data[15][0].name,
+                            adPos: 15
+                        });
+                    });
+                }
+                if (res.data[16]) {
+                    require.async(['wiki-lemma:widget/promotion/declaration/declaration.js'], function(declaration) {
+                        declaration(res.data[16]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[16][0].adId,
+                            adTitle: res.data[16][0].name,
+                            adPos: 16
+                        });
+                    })
+                }
+            } else {
+                return;
+            }
+
+            setTimeout(function () {
+                var elemArr = {};
+                res.data[1] && res.data[1].length > 0 && (elemArr['lemma-vbaike-ad'] = $('.lemmaWgt-promotion-vbaike .promotion_viewport a:eq(0) img').get(0));
+                res.data[2] && res.data[2].length > 0 && (elemArr['lemma-slide-ad'] = $('.lemmaWgt-promotion-slide .promotion_viewport a:eq(0) img').get(0));
+                res.data[3] && res.data[3].length > 0 && (elemArr['lemma-navbar-ad'] = {
+                    node: $('.header [nslog-type="10002202"]').get(0),
+                    validations: {
+                        'noBackgroundImage': function() {
+                            return $('.header [nslog-type="10002202"]').css('background-image').indexOf(res.data[3][0].picUrl) < 0
+                        }
+                    }
+                });
+                res.data[4] && res.data[4].length > 0 && (elemArr['lemma-side-ad'] = {
+                    node: $('.right-ad img').get(0),
+                    validations: {
+                        'noBackgroundImage': function() {
+                            return $('.right-ad img').attr('src').indexOf(res.data[4][0].picUrl) < 0
+                        }
+                    }
+                });
+                res.data[15] && res.data[15].length > 0 && (elemArr['lemma-configModule-banner'] = $('.configModuleBanner').get(0));
+                res.data[16] && res.data[16].length > 0 && (elemArr['lemma-configModule-declaration'] = $('.lemmaWgt-declaration').get(0));
+
+                testElem.log(elemArr, 70000102);
+            }, 1000);
+        },
+        error: function () {
+            // log 词条页广告被拦截情况（此处 log 请求失败）
+            nslog(70000101, window.location.href, {
+                api: 'lemma-ad',
+                action: 'error'
+            });
+        }
+    });
+
+    // 设置分享内容
+    window.BKShare.setCommon({
+        bdText: "\u3010ContentType_\u767e\u5ea6\u767e\u79d1\u3011Content-Type\uff0c\u5185\u5bb9\u7c7b\u578b\uff0c\u4e00\u822c\u662f\u6307\u7f51\u9875\u4e2d\u5b58\u5728\u7684Content-Type\uff0c\u7528\u4e8e\u5b9a\u4e49\u7f51\u7edc\u6587\u4ef6\u7684\u7c7b\u578b\u548c\u7f51\u9875\u7684\u7f16\u7801\uff0c\u51b3\u5b9a\u6587\u4ef6\u63a5\u6536\u65b9\u5c06\u4ee5\u4ec0\u4e48\u5f62\u5f0f\u3001\u4ec0\u4e48\u7f16\u7801\u8bfb\u53d6\u8fd9\u4e2a\u6587\u4ef6\uff0c\u8fd9\u5c31\u662f\u7ecf\u5e38\u770b\u5230\u4e00\u4e9bAsp\u7f51\u9875\u70b9\u51fb\u7684\u7ed3\u679c\u5374\u662f\u4e0b\u8f7d\u5230\u7684\u4e00\u4e2a\u6587\u4ef6\u6216\u4e00\u5f20\u56fe\u7247\u7684\u539f\u56e0\u3002.....\uff08\u5206\u4eab\u81ea@\u767e\u5ea6\u767e\u79d1\uff09",
+        bdDesc: '',
+        bdUrl: 'http:\/\/baike.baidu.com\/subview\/1547292\/1547292.htm',
+        bdPic: '',
+        onBeforeClick: function (){
+            $('.bdshare_dialog_box').hide();
+        }
+    });
+
+    // 底部投诉带入当前页面 url
+    var map = [1, 2, 4, 3];
+    $('.wgt-footer-main .suggestion').find('a').each(function(i) {
+        $(this).attr('href', 'http://tousu.baidu.com/baike/add?word=ContentType' + '&&submit_link=' + encodeURIComponent(window.location.href) + '#' + map[i]);
+    });
+}();
+!function(){      require('wiki-common:widget/component/psLink/psLink.js');
+    }();</script>
+<script type="text/javascript">
+  var Hunter = window.Hunter || {};
+  Hunter.userConfig = Hunter.userConfig || [];
+  </script>
+<script type="text/javascript" src="https://gss0.baidu.com/70cFsjip0QIZ8tyhnq/hunter/baike.js?st=17158" defer></script><script type="text/javascript">
+  // DOM Ready时，统计用户可操作时间。
+  alog('speed.set', 'drt', +new Date);
+
+  void function(a,b,c,d,e,f){function g(b){a.attachEvent?a.attachEvent("onload",b,!1):a.addEventListener&&a.addEventListener("load",b)}function h(a,c,d){d=d||15;var e=new Date;e.setTime((new Date).getTime()+1e3*d),b.cookie=a+"="+escape(c)+";path=/;expires="+e.toGMTString()}function i(a){var c=b.cookie.match(new RegExp("(^| )"+a+"=([^;]*)(;|$)"));return null!=c?unescape(c[2]):null}function j(){var a=i("PMS_JT");if(a){h("PMS_JT","",-1);try{a=a.match(/{["']s["']:(\d+),["']r["']:["']([\s\S]+)["']}/),a=a&&a[1]&&a[2]?{s:parseInt(a[1]),r:a[2]}:{}}catch(c){a={}}a.r&&b.referrer.replace(/#.*/,"")!=a.r||alog("speed.set","wt",a.s)}}if(a.alogObjectConfig){var k=a.alogObjectConfig.sample,l=a.alogObjectConfig.rand;if("https:"===a.location.protocol){if(d="https://gss2.bdstatic.com/70cFsjip0QIZ8tyhnq"+d,!k||!l)return}else d="http://img.baidu.com"+d;k&&l&&l>k||(g(function(){alog("speed.set","lt",+new Date),e=b.createElement(c),e.async=!0,e.src=d+"?v="+~(new Date/864e5),f=b.getElementsByTagName(c)[0],f.parentNode.insertBefore(e,f)}),j())}}(window,document,"script","/hunter/alog/dp.min.js");
+</script>
+</html>
