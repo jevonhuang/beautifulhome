@@ -1,0 +1,1361 @@
+
+
+                        
+
+
+                                <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Language" content="zh-CN"/>
+    <meta name="robots" content="index, follow"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="那一剑的风情,fqing">
+            <meta name="keywords" content="那一剑的风情,fqing,开源中国博客">
+                <meta name="description" itemprop="description" content="nginx源码分析之设计之美"/>
+        <title>nginx源码分析之设计之美 - 那一剑的风情 - 开源中国社区</title>
+    <link rel="alternate" type="application/rss+xml" title="nginx源码分析之设计之美 - 那一剑的风情 - 开源中国社区" href="https://my.oschina.net/fqing/rss"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico?t=1451961935000"/>
+
+                        <meta itemprop="name" content="nginx源码分析之设计之美 - 那一剑的风情 - 开源中国社区"/>
+<meta itemprop="image" content="https://www.oschina.net/img/logo_s2.png" />
+
+
+            <link type="text/css" href="/dist/www/css/icon-svg.min.css?t=1474902522000" rel="stylesheet"/>
+                    <link type="text/css" href="/dist/www/css/blog.min.css?t=1482765316000" rel="stylesheet"/>
+            
+            <val data-name="isMobileDevice" data-value="false"></val>
+    
+    <x-foo-define data-define="blog_detail"></x-foo-define>
+    <val data-name="owner_id" data-value="737198"></val>
+    <val data-name="owner_home_url" data-value="https://my.oschina.net/fqing"></val>
+    <val data-name="this_page" data-value="https%3A%2F%2Fmy.oschina.net%2Ffqing%2Fblog%2F80317"></val>
+
+            <val data-name="g_user_login" data-value="false"></val>
+        <val data-name="goto_this_page" data-value="https://www.oschina.net/home/login?goto_page=https%3A%2F%2Fmy.oschina.net%2Ffqing%2Fblog%2F80317"></val>
+        <val data-name="is_owner" data-value="false"></val>
+            <val data-name="blog_id" data-value="80317"></val>
+                    </head>
+<body>
+            <header class="header-navbar">
+    <div class="layout-flex top-banner">
+        <div class="flex-grow">
+            <a href="https://www.oschina.net/" class="osc-logo"></a>
+            <div class="menus sm-hide">
+               <a class="menu-item" href="https://www.oschina.net/">首页</a>
+               <div class="menu-item menu-drop">
+                   <a href="https://www.oschina.net/project" class="project">
+                       开源项目
+                       <i class="icon-svg icon-arr-down-white"></i>
+                   </a>
+                   <div class="menu-drop-down">
+                       <ul class="drop-list">
+                           <li><a href="https://www.oschina.net/project/zh">国产开源项目</a></li>
+                           <li><a href="https://www.oschina.net/project/tags">项目分类</a></li>
+                           <li><a href="https://www.oschina.net/project/list?sort=time">最新收录项目</a></li>
+                           <li class="split"></li>
+                           <li><a href="https://www.oschina.net/project/lang/19/java">Java 开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/194/csharp">C# 开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/22/php">PHP 开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/21/c">C/C++ 开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/26/ruby">Ruby 开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/25/python">Python 开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/358/go">Go开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/28/javascript">JS开源软件</a></li>
+                       </ul>
+                   </div>
+               </div>
+               <div class="menu-item menu-drop">
+                   <a href="https://www.oschina.net/question" class="question">
+                       问答
+                       <i class="icon-svg icon-arr-down-white"></i>
+                   </a>
+                   <div class="menu-drop-down">
+                       <ul class="drop-list">
+                           <li><a href="https://www.oschina.net/question?catalog=1"> 技术问答</a></li>
+                           <li><a href="https://www.oschina.net/question?catalog=2"> 技术分享</a></li>
+                           <li><a href="https://www.oschina.net/question?catalog=3"> IT大杂烩</a></li>
+                           <li><a href="https://www.oschina.net/question?catalog=100"> 职业生涯</a></li>
+                           <li><a href="https://www.oschina.net/question?catalog=4"> 站务/建议</a></li>
+                           <li><a href="https://www.oschina.net/alipay"> 支付宝专区</a></li>
+                           <li><a href="https://www.oschina.net/mopaas"> MoPaaS专区</a></li>
+                           <li><a href="https://www.oschina.net/hardware"> 开源硬件专区</a></li>
+                       </ul>
+                   </div>
+               </div>
+               <a href="https://www.oschina.net/tweets" class="menu-item tweets">动弹</a>
+               <a href="https://www.oschina.net/blog" class="menu-item blog">博客</a>
+               <a href="https://www.oschina.net/translate" class="menu-item tran">翻译</a>
+               <a href="https://www.oschina.net/news" class="menu-item news">资讯</a>
+               <div class="menu-item menu-drop">
+                   <a href="https://www.oschina.net/android" class="mobile">
+                       专题
+                       <i class="icon-svg icon-arr-down-white"></i>
+                   </a>
+                   <div class="menu-drop-down">
+                       <ul class="drop-list drop-list-inline">
+                           <li><a href="https://www.oschina.net/event/ych" class="font-red">源创会</a> <a href="https://www.oschina.net/video">视频</a></li>
+                           <li><a href="https://www.oschina.net/question/tag/%E9%AB%98%E6%89%8B%E9%97%AE%E7%AD%94">高手问答</a> <a href="https://www.oschina.net/question/tag/%E5%BC%80%E6%BA%90%E8%AE%BF%E8%B0%88">访谈</a></li>
+                           <li><a href="https://www.oschina.net/question/tag/%E5%BC%80%E6%BA%90%E5%91%A8%E5%88%8A">周刊</a> <a href="https://my.oschina.net/xxiaobian/blog?catalog=547834">乱弹</a></li>
+                           <li><a href="https://www.oschina.net/company">公司开源导航页</a></li>
+                       </ul>
+                       <div class="split"></div>
+                       <ul class="drop-list mobile">
+                           <li class="android"><a href="https://www.oschina.net/android">Android开发专区</a></li>
+                           <li class="ios"><a href="https://www.oschina.net/ios/home">iOS开发专区</a></li>
+                           <li class="ios"><a href="https://www.oschina.net/ios/codingList">iOS代码库</a></li>
+                           <li class="wp7"><a href="https://www.oschina.net/wp">Windows Phone</a></li>
+                       </ul>
+                   </div>
+               </div>
+               <a href="https://www.oschina.net/event" class="menu-item event">活动</a>
+           </div>
+
+        </div>
+        <div class="user-bar">
+            <div class="user-info">
+                                                    [ <a href='https://www.oschina.net/home/login?goto_page=https%3A%2F%2Fmy.oschina.net%2Ffqing%2Fblog%2F80317'>登录</a> | <a
+                        href="https://www.oschina.net/home/reg">注册</a> ]
+                            </div>
+        </div>
+    </div>
+</header>    <div>
+                        
+
+
+<val data-name="is_login" data-value="false"></val>
+<val data-name="hljs_js_url" data-value="/dist/www/vendor/highlight/9.5.0/highlight.js?t=1475078300000"></val>
+<val data-name="hljs_css_url" data-value="/build/www/vendor/highlight/9.4.0/styles/zenburn.css?t=1474299593000"></val>
+
+<val data-name="atwho_js_url" data-value="/dist/www/vendor/jquery.atwho/jquery.atwho.js?t=1475078300000"></val>
+<val data-name="atwho_css_url" data-value="/dist/www/vendor/jquery.atwho/jquery.atwho.css?t=1471280191000"></val>
+<val data-name="user_follow_url" data-value="/action/user/follow"></val>
+<val data-name="user_unfollow_url" data-value="/action/user/unfollow"></val>
+
+<!-- content     -->
+<div class="blog blog-article">
+    <div class="">
+        <!-- 侧边栏-目录 -->
+                <div class="blog-wrapper">
+            <div class="back-list">
+                <a href="https://www.oschina.net/blog" class="font-green">博客专区</a> > <a href="https://my.oschina.net/fqing/blog" class="font-green">那一剑的风情的博客</a> > 那一剑的风情的博客详情
+            </div>
+        </div>
+
+        <!-- 广告 -->
+                <div class="blog-title-ad">
+            <div class="blog-wrapper">
+                
+<div id="blog-title-ad" data-traceid="blog_ali" data-tracepid="blogup" style=""><a href="http://click.aliyun.com/m/8199/
+" target="_blank" style="max-width:780px;"><img src="https://static.oschina.net/uploads/space/2016/1208/124327_Ke03_2982602.jpg"></a></div>
+<!--<script>
+    function success_jsonpCallback(data) {
+        var obj = eval(data);
+        if( obj.success ){
+            var contents = eval(obj.data[0].content);
+            if(contents.length > 0){
+                var content = contents[0];
+                $('#blog-title-ad').prepend("<a  href='"+ content.url +"' target='_blank' style='max-width:780px;'><img src='"+content.img+"'/></a>");
+                $('#blog-title-ad').show();
+            }
+            
+        }else {
+            $('#blog-title-ad').hide();
+        }
+    }
+    window.addEventListener("load", function() {
+         var url="https://promotion.aliyun.com/promotion/adv/getAliyunAdv.htm?cback=success_jsonpCallback&s=9cd174d9efd443e3982131f97b07e70f&p=page_1470989078421&pin=pos_1475239274174";
+        $.ajax({
+            type: 'POST',
+            url: url,
+            jsonp: "callback",
+            dataType: 'jsonp',
+            jsonpCallback: 'success_jsonpCallback',
+            contentType: "application/json; charset=utf-8",
+            success: function( response ) {
+                // do in callback
+            },
+            error:function(){
+                $('#blog-title-ad').hide();
+            }
+        });
+    }, false);
+</script>-->            </div>
+        </div>
+                <div class="float-heading">
+            <div class="blog-wrapper">
+                <div class="layout-flex">
+                    <div class="flex-grow">
+                        <div class="heading">nginx源码分析之设计之美</div>
+                        <div class="data-info">
+                            <a href="https://my.oschina.net/fqing/home" class="link-blue" target="_blank">那一剑的风情</a>
+                            发表于4年前
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="opr-btn">
+                            <div class="opr-btn-blog btn-reward-blog ">
+                                <a href="javascript:void(0)"  data-popupbox-model="reward">
+                                    <i class="icon-svg icon-reward-blog"></i>
+                                </a>
+                            </div>
+                            <!-- 点赞 -->
+                            <div class="opr-btn-blog btn-like-blog ">
+                                                                <a href="javascript:void(0);" class="" onclick="page.vote(80317);" >
+                                    <i class="icon-svg icon-thumbs-o-up-blog"></i>
+                                </a>
+                            </div>
+                                                            <!-- 收藏 -->
+                                <div class="opr-btn-blog btn-favor-blog  hover">
+                                    <a href="javascript:void(0);" class=" " data-blogid="80317" data-blogtype="3" data-userid="" data-thispage="https://my.oschina.net/fqing/blog/80317">
+                                        <i class="icon-svg icon-star-blog"></i>
+                                     </span>
+                                    </a>
+                                                                    </div>
+
+                                                        <!-- 分享 -->
+                            <div class="opr-btn-blog btn-share-blog hover">
+                                <a href="javascript:void(0);" class="">
+                                    <i class="icon-svg icon-share-o-blog"></i>
+                                </a>
+                                <div class="operate-dropdown share-dropdown">
+                                    <span class="share-title">分享到：</span>
+                                    <div class="bdsharebuttonbox">
+                                        <a href="#" class="bds_mshare" data-cmd="mshare" title="分享到一键分享">一键分享</a>
+                                        <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+                                        <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+                                        <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+                                        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+                                        <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友">QQ好友</a>
+                                        <a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记">有道云笔记</a>
+                                    </div>
+                                    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["mshare","qzone","tsina","weixin","tqq","sqq"],"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/js/bdshare_api/share.js?t=1466497475000'];</script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 文章内容 -->
+        <div class="blog-content">
+            <!-- 标题 -->
+            <div class="blog-heading">
+                <div class="title">
+                    <span class="status-tag original" title="原创博客">原</span>                    <span class="status-tag recommend" title="首页推荐过的博客">荐</span>                                                            nginx源码分析之设计之美
+                </div>
+                <div class="info-opr layout">
+                    <div class="layout-right">
+                                                    
+                                                                <!-- 收藏 -->
+                                <div class="opr-btn-blog btn-favor-blog favor hover">
+                                    <a href="javascript:void(0);" class="btn btn-black-blog " data-blogid="80317" data-blogtype="3" data-userid="" data-thispage="https://my.oschina.net/fqing/blog/80317">
+                                        <i class="icon-svg icon-star-blog"></i>
+                                     <span id="" class="operate_title">
+                                                                                    收藏
+                                                                             </span>
+                                    </a>
+                                                                    </div>
+                                                                        </div>
+                    <div class="layout-column">
+                        <div class="user-info">
+                                                                                                                <div class="name">
+                                <a href="https://my.oschina.net/fqing/home" target="_blank">那一剑的风情</a>
+                            </div>
+                        </div>
+                        <div class="data-info text-gary">
+                            <ul>
+                                <li class="time">发表于 <span id="">4年前</span></li>
+                                <li class="read">阅读 <span id="read">9512</span></li>
+                                <li class="favor">收藏 <span id="">132</span></li>
+                                <li class="vote">点赞 <span id="">5</span></li>
+                                <li class="comment">
+                                    <a href="#comment-list" data-href="#comment-list" class="link-blue">
+                                        评论 <span id="comment">19</span>
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                        
+                </div>
+            </div>
+            <!-- 摘要 -->
+                        <!-- 正文 -->
+            <div class="blog-body" id="blogBody">
+                                    <val data-name="blog_content_type" data-value="richtext"></val>
+                    <div class='BlogContent'>
+                        在这里向nginx的作者Igor Sysoev致敬，他开发了一个如此伟大的作品。 毫不夸张的说，nginx已经展现了一个成功的项目代码是应该如何架构的了。 本文将试图与读者分享这里面的设计之美。 
+<br> 
+<br> 
+<p> 大千世界，任何东西都有共通之处。当我们讨论一个东西时，首先要给它定义个边界， 在这边界里有两个东西：内核（Kernel）和用户（User）。nginx作为http服务器（其实远不止），我们给它定义边界：实现http服务器提供服务功能。项目名称为nginx，代号（或简称）为ngx，前缀为ngx_。 </p> 
+<b>一、一切从命名谈起 </b> 
+<br> 如果有人认为不具可读性的代码是可接受的，那他就是个'天才'。 
+<br> 刚提到任何东西在我们讨论的边界里，都有两个东西：内核(Kernel)和用户(User)。 Kernel作为基础设施存在，天生存在，User则是码农自定义并创造出来的。 比如函数 printf，这个是Kernel的一部分。ngx_write_console是nginx里自定义的一个函数。 Kernel和User的东西一定要区分，这非常有利于提高代码的可读性。 
+<br> 
+<p> 如何区分呢？ 就是给User的东西加上项目的前缀ngx_。为什么这样设计呢？比如log_error，这函数能确认是C提供的，还是自己自定义的呢？但是，换成 ngx_log_error，一目了然，肯定是nginx源码里的一个自定义的函数。<br> 所有的接口（全局和静态函数，全局和静态变量，自定义类型）应该遵守这一原则。在nginx里，自定义结构体看起来非常舒服，比如 ngx_command_t，t是typedef的代号。struct: command vs struct: ngx_command_t，您觉得呢？好的命名应该是在头脑里不假思索的就直取其意，而不用再经过一次智商运算，头脑风暴。 </p> 
+<p> <b>二、模块化思想<br> </b>nginx的整个代码像流水线一样工作着，这流水线上布满着各种模块，他们协同工作，共同完成提供服务。比如 ngx_core_module, ngx_epoll_module, ngx_http_core_module, ngx_http_static_module等，ngx_string.h(c), ngx_times.h(c)，在C世界里，文件即模块，你可以当它是基础设施，或工具，只是有的文件有变量，相当于文件访问入口，比如 ngx_http_core_module.h(c)里的ngx_http_core_module全局变量。<br> 没有任何独立存在，不跟任何人打交道的模块，因为那样，它就没有存在的意义，所以模块是有依赖关系的。 比如ngx_event.h(c)依赖于 ngx_string.h，谁维护着这些关系呢，Makefile。所以能掌握一个项目的人，肯定能手写Makefile文件。每个模块有出场顺序的，直到main函数return。nginx作者给模块设计了一个类型成员，可以是core, event, http的一种，很明显的会是这是 core(核心模块) -&gt; event(事件机制) -&gt; http(http业务处理) 这么一个流程。后面的依赖前面的，非常明了。<br> <br> <b>三、OO面向对象<br> </b>面向对象和面向过程之争从来没停过。我一向认为有争议的设计不应该融入语言里，语言应该假设程序员能做最正确的事，而不应该去约束程序员如何犯错误。比如goto是否应该存在，全局变量应该怎么样。C以最简洁的语法提供了程序员能秀的平台。废话点到即止。<br> nginx里有非常多的结构体，不知某大师曾说程序就是算法+数据结构，这里的数据结构不仅是是数组，列表，队列这些经典的，还包括用户自定义的，或封装的，我们称它为抽象是不是更好呢。结构体让某业务概念更具血肉，比如 ngx_listening_t, ngx_connection_t, ngx_event_t，非常高明的封装和命名。读过DDD书的，如果结合nginx源码去看，会发现OO最强烈的表达就是抽象（封装？多态？继承？）。<br> 一个结构体或类应该表达某个主题，比如ngx_connection_t抽象了连接这个业务，里面的成员应该表达两种属性：显性和隐性。很多人忽略了隐性的属性，以 ngx_url_t 为例，url里有 addr, port 这种显而易见的成员，大家都会。但是应该还包括 err，这个表示，一个url解析后的结果，是不是有点像冗余字段，是的，这就是隐性的属性，会让整个结构体更具表达力。读nginx源码，从结构体出现的顺序去理清是个好的方向。作者在设计时极具功力和细腻，比如 ngx_http_rewrite_module里对rewrite的处理，ngx_http_upstream里对upstream的处理。<br> 结构体代表了业务概念的一个方向，nginx在行为表现方向也设计的很精致，可以细看下日志是如何处理的，其中ngx_log_t的handler和ctx两个成员的设计。还有很明显的责任链模式，让人眼前一亮，参考ngx_http_core_run_phases<br> <br> <b>四、生命周期里秘密</b><br> 有两个东西是一直在整个项目代码里游荡的，日志和内存池。简单的讲，有3个重要概念：<br> cycle&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; : 代表了整个生命周期，只要进程还在，它就一直存活。<br> connection&nbsp;&nbsp;&nbsp;&nbsp; : 代表连接的生命周期，一个客户连接过来，它就开始诞生，连接结束，它就跟着终结。<br> request&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; : 代表请求，请求一发过来，它开始诞生，请求结束，它也就消亡。<br> 可能你认为connection和request很像，connection比request生命周期更长，request挂了，connection不一定会挂。keepalive就是最好的证明，有了keepalive，客户端刷新时，connection的fd还一直保持用着，服务端的socket是不会close的。<br> cycle有自己的pool，connection有自己的pool, request有自己的pool，除了cycle外，其余两个在消亡前，要释放内存。<br> log的表现也很活跃，从最开始的ngx_cycle有自己的log，然后设置成配置文件里指定的error_log，然后从listen开始分支，每个listen自己复制一份log，然后listen connection用了listen对应的fd, 继续再给 connection的两个event: read, write。<br> <b><br> 五、配置文件为何存在</b><br> 是先有项目代码，还是先有配置文件呢？我觉得，配置文件是因项目代码存在而存在的，这样讲似乎有点空白。<br> 项目之初，代码是可以硬编码的，比如实现守护进程。但是呢？这样缺少灵活性，所以用配置文件里的配置选项控制这个行为，也正因为如此，配置选项一定要依附，挂钩于某个模块，然后它的值应该解析到这个模块携带的配置结构体。<br> 现在还是单一的行为，由核心行为引起的。但是到了用户决定行为的时候，配置文件应该出现分支。你想到server, location了吗，不同的server有不同的配置，这也是虚拟主机的实现机制。<br> 这个分支非常的重要，原来的ngx_cycle有个void&nbsp; ****conf_ctx;很酷吧，4层指针。获取配置是这样的：<br> ccf = (ngx_core_conf_t *) ngx_get_conf(cycle-&gt;conf_ctx, ngx_core_module);<br> 其中，ngx_get_conf这样预定义：<br> #define ngx_get_conf(conf_ctx, module)&nbsp; conf_ctx[module.index]<br> 但是到了分支这里，从cycle-&gt;conf_ctx变成了r<br> cmcf = ngx_http_get_module_main_conf(r, ngx_http_core_module);<br> ngx_http_get_module_main_conf这样定义：<br> #define ngx_http_get_module_main_conf(r, module)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br> &nbsp;&nbsp;&nbsp; (r)-&gt;main_conf[module.ctx_index]<br> 当分析完用户的请求行为后，又会将分析完的配置定下来，比如虚拟主机如何实现的：<br> ngx_http_find_virtual_server(r, r-&gt;headers_in.server.data, r-&gt;headers_in.server.len) {<br> &nbsp;&nbsp;&nbsp; cscf = ngx_hash_find_combined(&amp;r-&gt;virtual_names-&gt;names,<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ngx_hash_key(host, len), host, len);<br> <br> &nbsp;&nbsp;&nbsp; if (cscf) {<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; r-&gt;srv_conf = cscf-&gt;ctx-&gt;srv_conf;&nbsp; // 以后直接找r要src_conf获取。<br> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; r-&gt;loc_conf = cscf-&gt;ctx-&gt;loc_conf;<br> &nbsp;&nbsp;&nbsp; }<br> }<br> <br> 天马行空的一口气写完，本文结束。 阅读原文：<a href="http://nglua.com/reads/3.html" rel="nofollow">http://nglua.com/reads/3.html</a> </p>
+                    </div>
+                            </div>
+            <div class="blog-opr">
+                <!-- 版权 -->
+                <div class="blog-copyright">
+                                            <span title="OSCHINA 博客文章版权属于作者，受法律保护。未经作者同意不得转载。">© 著作权归作者所有</span>
+                                    </div>
+                <!-- 分类、标签、字数 -->
+                <div class="related-info">
+                    <ul>
+                                                    <li class="classify">分类：<span id="classify"><a href="https://my.oschina.net/fqing/blog?catalog=232290">nginx源码分析</a></span></li>
+                                                <li class="Words">字数：<span id="Words">1978</span></li>
+                                            </ul>
+                </div>
+                <div class="tags">
+                                    </div>
+            </div>
+            <!-- 赞、收藏、分享 -->
+            <div class="operate">
+                <ul>
+                                                            <val data-name="isAllowBlogDonate" data-value="true"></val>
+                                        <!-- 打賞 -->
+                    <li class="opr-btn-blog btn-reward-blog ">
+                        <a href="javascript:void(0);" data-popupbox-model="reward" class="btn btn-black-blog">
+                            <i class="icon-svg icon-reward-blog"></i>
+                             <span id="" class="operate_title">
+                                打赏
+                             </span>
+                        </a>
+                    </li>
+                                        <!-- 点赞 -->
+                    <li class="opr-btn-blog btn-like-blog ">
+                                                <a href="javascript:void(0);" class="btn btn-black-blog" onclick="page.vote(80317);" >
+                            <i class="icon-svg icon-thumbs-o-up-blog"></i>
+                             <span id="" class="operate_title">
+                                                                    点赞
+                                                             </span>
+                        </a>
+                    </li>
+                                            <!-- 收藏 -->
+                        <li class="opr-btn-blog btn-favor-blog hover">
+                            <a href="javascript:void(0);" class="btn btn-black-blog " data-blogid="80317" data-blogtype="3" data-userid="" data-thispage="https://my.oschina.net/fqing/blog/80317">
+                                <i class="icon-svg icon-star-blog"></i>
+                             <span id="" class="operate_title">
+                                                                    收藏
+                                                             </span>
+                            </a>
+                                                    </li>
+
+                                        <!-- 分享 -->
+                    <li class="opr-btn-blog btn-share-blog hover">
+                        <a href="javascript:void(0);" class="btn btn-black-blog">
+                            <i class="icon-svg icon-share-o-blog"></i>
+                            分享
+                        </a>
+                        <div class="operate-dropdown share-dropdown">
+                            <span class="share-title">分享到：</span>
+                            <div class="bdsharebuttonbox">
+                                <a href="#" class="bds_mshare" data-cmd="mshare" title="分享到一键分享">一键分享</a>
+                                <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+                                <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+                                <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+                                <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+                                <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友">QQ好友</a>
+                                <a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记">有道云笔记</a>
+                            </div>
+                            <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["mshare","qzone","tsina","weixin","tqq","sqq"],"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/js/bdshare_api/share.js?t=1466497475000'];</script>
+                        </div>
+                    </li>
+                </ul>
+                <div data-type="tip" data-tip-type="fixed">
+                    <div  class="tooltips" id="error_tip"></div>
+                </div>
+
+            </div>
+                        <div class="reward-list hide">
+                <div class="reward-list-title">
+                    共有 <span id="reward-num"></span>  人打赏支持<span id="donate_money"></span>
+                </div>
+                                <div class="donate-user-list" id="donate_user_list">
+                    <p></p>
+                </div>
+            </div>
+                    </div>
+
+        <!-- 个人名片 -->
+        <div class="user-card">
+            <div class="blog-wrapper">
+                <div class="layout-flex">
+                    <div class="flex-grow">
+                        <div class="layout-flex">
+                            <div class="flex-left">
+                                <div class="user-info">
+                                    <div class="icon">
+                                        <a href="https://my.oschina.net/fqing/home" class="article_editor_head_img" target="_blank"><img src="https://static.oschina.net/uploads/user/368/737198_100.jpg?t=1348108930000" align="absmiddle" alt="那一剑的风情" title="那一剑的风情" class="LargePortrait"/></a>
+                                    </div>
+                                    <div class="follow-status">
+                                                                                    
+                                            <span class="btn btn-green btn-follow "
+                                             data-follow-value="1" 
+                                                                                        data-follow="btn" data-fansid="737198"> + 关注 </span>
+                                                                            </div>
+                                </div>
+                            </div>
+                            <div class="flex-grow">
+
+                                <div class="opus-info">
+                                    <div class="title">
+                                        <a href="https://my.oschina.net/fqing/home" class="name" target="_blank">那一剑的风情
+                                        </a>
+                                        <div class="medal medal-osc">
+                                                                                                                                                                                            <div class="medal-item">
+                                                        <a class="medal-logo" href="javascript:void(0);" target="_blank">
+                                                            <img src="https://static.oschina.net/uploads/medals/slogo1392108956172.png" alt="参与源创会" title="参与源创会"/>
+                                                        </a>
+                                                        <div class="dropdown tooltip-box">
+                                                            <div class="layout-flex">
+                                                                <div class="medal-logo">
+                                                                    <img src="https://static.oschina.net/uploads/medals/logo1392108956048.png" alt="参与源创会">
+                                                                </div>
+                                                                <div class="flex-start">
+                                                                    <span class="panel-row title">参与源创会</span>
+                                                                    <span class="panel-row font-green">领取时间：2014-02-12</span>
+                                                                    <span class="panel-row ">“<a href="http://www.oschina.net/events">源创会</a>”在线下联结了各位 OSCer，推广开源项目和理念，很荣幸有你的参与~</span>
+                                                                    <span class="panel-row"><span class="font-red">领取条件：</span><span class="font-gray">参与过开源中国“源创会”的 OSCer 可以领取</span></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                                                                                                                                                </div>
+                                    </div>
+                                    <div class="card-post-info">
+                                                                                <span class="card-post">
+                                            <i class="icon-svg icon-post-blog"></i>
+                                            程序员
+                                        </span>
+                                                                                                                        <span class="card-address">
+                                             <i class="icon-svg icon-address-blog"></i>
+                                             厦门
+                                        </span>
+                                                                            </div>
+                                    <div  class="opus-opr">
+                                        <div class="opus-opr-item">粉丝 <span>116</span></div>
+                                        <div class="opus-opr-item">博文 <span>20</span></div>
+                                        <div class="opus-opr-item">码字总数 <span>21879 </span></div>
+                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-right">
+                        <!-- 技能雷达 -->
+                        <div class="user-radar hide" data-user="737198">
+                            <div id="radar-skill" style="width: 200px;height: 120px; margin: auto;" data-detail="https://www.oschina.net/radar/fqing">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 相关博客 -->
+                        <div class="blog-related">
+            <div class="blog-wrapper">
+                 <div class="panel panel-related" id="blog-related">
+                     <div class="panel-heading">
+                          相关博客
+                     </div>
+                     <div class="panel-body">
+                         <div class="related-blogs-list flex-item">
+                                                                                            <div class="blog-item">
+                                    <div class="layout-flex">
+                                                                              <div class="flex-grow">
+                                            <a href="https://my.oschina.net/fqing/blog/79145" class="title" title="nginx源码分析之开篇" target="_self">
+                                                nginx源码分析之开篇
+                                            </a>
+                                            <div class="author-info">
+                                                <span class="icon">
+                                                    <img src="https://static.oschina.net/uploads/user/368/737198_50.jpg?t=1348108930000 " />
+                                                </span>
+                                                那一剑的风情
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="relation-data text-right">
+                                        <span class="view data-item"><i class="icon-svg icon-eye"></i>9848</span>
+                                        <a class="reply data-item" href="http://my.oschina.com:8888/J25/blog/190490#comment-list" target="_blank"><i class="icon-svg icon-reply"></i>14</a>
+                                    </div>
+                                </div>
+                                                                                                                            <div class="blog-item">
+                                    <div class="layout-flex">
+                                                                              <div class="flex-grow">
+                                            <a href="https://my.oschina.net/fqing/blog/79406" class="title" title="nginx源码分析之模块化" target="_self">
+                                                nginx源码分析之模块化
+                                            </a>
+                                            <div class="author-info">
+                                                <span class="icon">
+                                                    <img src="https://static.oschina.net/uploads/user/368/737198_50.jpg?t=1348108930000 " />
+                                                </span>
+                                                那一剑的风情
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="relation-data text-right">
+                                        <span class="view data-item"><i class="icon-svg icon-eye"></i>3342</span>
+                                        <a class="reply data-item" href="http://my.oschina.com:8888/J25/blog/190490#comment-list" target="_blank"><i class="icon-svg icon-reply"></i>10</a>
+                                    </div>
+                                </div>
+                                                                                                                            <div class="blog-item">
+                                    <div class="layout-flex">
+                                                                              <div class="flex-grow">
+                                            <a href="https://my.oschina.net/fqing/blog/83516" class="title" title="nginx源码分析之事件机制" target="_self">
+                                                nginx源码分析之事件机制
+                                            </a>
+                                            <div class="author-info">
+                                                <span class="icon">
+                                                    <img src="https://static.oschina.net/uploads/user/368/737198_50.jpg?t=1348108930000 " />
+                                                </span>
+                                                那一剑的风情
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="relation-data text-right">
+                                        <span class="view data-item"><i class="icon-svg icon-eye"></i>6200</span>
+                                        <a class="reply data-item" href="http://my.oschina.com:8888/J25/blog/190490#comment-list" target="_blank"><i class="icon-svg icon-reply"></i>2</a>
+                                    </div>
+                                </div>
+                                                                                     </div>
+                     </div>
+                 </div>
+            </div>
+        </div>
+                <!-- 评论 -->
+        <div class="blog-comments">
+            <div class="blog-wrapper">
+                <div class="panel panel-comments" id="comment-list">
+                    <div class="panel-heading" id="blog-comments-list">评论
+                        <em>
+                            (<span class="reply_count">19</span>)
+                        </em>
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel-comment-form">
+                            <!-- 发表评论表单 -->
+                                                            <!--  -->
+<val data-name="emoji_js_url" data-value="/build/www/vendor/emoji/emoji_github.js?t=1471884352000"></val>
+<val data-name="emoji_css_url" data-value="/build/www/vendor/emoji/emoji.min.css?t=1471884352000"></val>
+<div class='SpaceList'>
+    <a name="comments" id="postform"></a>
+        <div class="layout BlogCommentForm blog-comment-form comment-emoji">
+                    <form id="form_comment" action="/action/blog/add_comment?blog=80317" method="POST">
+                                                                                                <div class="comment_form layout-column">
+                    <textarea name="content" id="wmd-input" placeholder=""></textarea>
+                    <div class="layout">
+                        <div class="layout-right">
+                            <span class="text-muted">
+                                Ctrl+Enter
+                            </span>
+                            <button type="submit" class="btn btn-green blg_submit_btn">发表评论</button>
+                        </div>
+                        <div class="layout-column">
+                            <a href="javascript:;" class="blog_emotion">
+                                <i class="icon-svg icon-emotions-hollow-gray"></i>
+                                <div data-emoji="wrapper">
+                                    <ul data-emoji="nav">
+                                        <li data-emoji-nav="People" class="active">People</li>
+                                        <li data-emoji-nav="Nature">Nature</li>
+                                        <li data-emoji-nav="Objects">Objects</li>
+                                        <li data-emoji-nav="Places">Places</li>
+                                        <li data-emoji-nav="Symbols">Symbols</li>
+                                    </ul>
+                                    <div data-emoji="panel">
+                                        <div data-emoji-item="People" class="active"></div>
+                                        <div data-emoji-item="Nature"></div>
+                                        <div data-emoji-item="Objects"></div>
+                                        <div data-emoji-item="Places"></div>
+                                        <div data-emoji-item="Symbols"></div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:page.insert_projects();" class="blog_soft">
+                                <i class="icon-svg icon-project-hollow-gray"></i>
+                            </a>
+                            <span class="NoData" id="cmt_tip"></span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+                                                    </div>
+    </div>
+<div id='inline_reply_editor' style='display:none;'>
+    <div class="BlogCommentForm blog-comment-form">
+        <form id="form_inline_comment" action="/action/blog/add_comment?blog=80317" method="POST">
+          <input type='hidden' id='inline_reply_id' name='reply_id' value=''/>
+          <textarea name="content" id="ccom_content""></textarea>
+          <div class="layout">
+              <div class="layout-right">
+                <input type="button" value="关闭" class="btn btn-text" id='btn_close_inline_reply' />
+                <input type="submit" value="回复" id="btn_comment" class="btn btn-green"/> 
+              </div>
+              <div class="layout-column">
+                  插入：
+                    <a href="javascript:;" class="blog_emotion">
+                        <i class="icon-svg icon-emotions-hollow-gray"></i>
+                        <div data-emoji="wrapper">
+                            <ul data-emoji="nav">
+                                <li data-emoji-nav="People" class="active">People</li>
+                                <li data-emoji-nav="Nature">Nature</li>
+                                <li data-emoji-nav="Objects">Objects</li>
+                                <li data-emoji-nav="Places">Places</li>
+                                <li data-emoji-nav="Symbols">Symbols</li>
+                            </ul>
+                            <div data-emoji="panel">
+                                <div data-emoji-item="People" class="active"></div>
+                                <div data-emoji-item="Nature"></div>
+                                <div data-emoji-item="Objects"></div>
+                                <div data-emoji-item="Places"></div>
+                                <div data-emoji-item="Symbols"></div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="javascript:page.insert_projects_c();" class="blog_soft">
+                        <i class="icon-svg icon-project-hollow-gray"></i>
+                    </a>
+                    <span class="NoData" id="ficmp_msg" style="color:#F00"></span>
+              </div>
+          </div>
+        </form>
+    </div>
+</div>                                                    </div>
+                        <div class="panel-list" id="BlogComments">
+                                                            
+                    <div class="comment-item comment-emoji" id="cmt_80317_579297_269723310" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/xxwgcg" target="_blank"><img src="https://static.oschina.net/uploads/user/289/579297_50.jpg?t=1368521242000" align="absmiddle" alt="xxwgcg" title="xxwgcg" class="SmallPortrait" user="579297"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/xxwgcg" target="_blank" name="rpl_269723310" class="user">xxwgcg</a></div>
+                            <div class="user-info"><span>1</span>楼 2012/09/26 07:39</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        最后一句是不是错别字？
+                    </div>
+                    <div id='inline_reply_of_80317_579297_269723310' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_258929_269723457" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/u/258929" target="_blank"><img src="https://static.oschina.net/uploads/user/129/258929_50.jpg" align="absmiddle" alt="xeonwell" title="xeonwell" class="SmallPortrait" user="258929"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/u/258929" target="_blank" name="rpl_269723457" class="user">xeonwell</a></div>
+                            <div class="user-info"><span>2</span>楼 2012/09/26 07:52</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        我们曾它为抽象是不是更好呢，<br/>里面也有一个错别字 ：）
+                    </div>
+                    <div id='inline_reply_of_80317_258929_269723457' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_114686_269723970" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/wangzaixiang" target="_blank"><img src="https://static.oschina.net/uploads/user/57/114686_50.jpg?t=1367980325000" align="absmiddle" alt="王在祥" title="王在祥" class="SmallPortrait" user="114686"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/wangzaixiang" target="_blank" name="rpl_269723970" class="user">王在祥</a></div>
+                            <div class="user-info"><span>3</span>楼 2012/09/26 08:34</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        看来Linux应该是设计最差的系统之一了，没有哪个函数是使用 linux_ 前缀的，简单一点， lnx_ 也行啊。
+                    </div>
+                    <div id='inline_reply_of_80317_114686_269723970' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_149996_269724030" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/ezz" target="_blank"><img src="https://static.oschina.net/uploads/user/74/149996_50.jpg?t=1351228059000" align="absmiddle" alt="0day" title="0day" class="SmallPortrait" user="149996"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/ezz" target="_blank" name="rpl_269724030" class="user">0day</a></div>
+                            <div class="user-info"><span>4</span>楼 2012/09/26 08:39</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        多几个前缀字母就成最差了之一了。。。这帽子扣的
+                    </div>
+                    <div id='inline_reply_of_80317_149996_269724030' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_737198_269724085" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/fqing" target="_blank"><img src="https://static.oschina.net/uploads/user/368/737198_50.jpg?t=1348108930000" align="absmiddle" alt="那一剑的风情" title="那一剑的风情" class="SmallPortrait" user="737198"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/fqing" target="_blank" name="rpl_269724085" class="user">那一剑的风情</a></div>
+                            <div class="user-info"><span>5</span>楼 2012/09/26 08:44</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        <div class=ref><h4>引用来自“0day”的评论</h4><p>多几个前缀字母就成最差了之一了。。。这帽子扣的</p></div>加前缀是为了区分Kernel和User，有个相对，就是边界的概念。<br/>比如php语言，linux，这种你可视为内核，就没必要加前缀了。<br/>像平时大家开发的项目，这种都是基于某个Kernel的（你理解成语言也行）加个前缀不是很好吗
+                    </div>
+                    <div id='inline_reply_of_80317_737198_269724085' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_171472_269724648" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/u/171472" target="_blank"><img src="https://static.oschina.net/uploads/user/85/171472_50.jpg?t=1368753566000" align="absmiddle" alt="defu" title="defu" class="SmallPortrait" user="171472"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/u/171472" target="_blank" name="rpl_269724648" class="user">defu</a></div>
+                            <div class="user-info"><span>6</span>楼 2012/09/26 09:31</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        有时候真看不下去某些人评论（一到四楼），作者花精力，花时间，写出一篇博客来，有些人硬要吹毛求疵，鸡蛋里挑骨头地找出一些缺点来，真不知道是什么心理，非得通过讽刺，挖苦，打击，报复来满足内心的那点平衡吗？有你们这样的评论，作者还有心情写下一篇吗？
+                    </div>
+                    <div id='inline_reply_of_80317_171472_269724648' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_171472_269724668" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/u/171472" target="_blank"><img src="https://static.oschina.net/uploads/user/85/171472_50.jpg?t=1368753566000" align="absmiddle" alt="defu" title="defu" class="SmallPortrait" user="171472"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/u/171472" target="_blank" name="rpl_269724668" class="user">defu</a></div>
+                            <div class="user-info"><span>7</span>楼 2012/09/26 09:32</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        给作者顶一个，至少我从你的博文里受益了，期待下一篇。
+                    </div>
+                    <div id='inline_reply_of_80317_171472_269724668' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_256645_269724774" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/u/256645" target="_blank"><img src="https://static.oschina.net/uploads/user/128/256645_50.jpg?t=1435640713000" align="absmiddle" alt="九路" title="九路" class="SmallPortrait" user="256645"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/u/256645" target="_blank" name="rpl_269724774" class="user">九路</a></div>
+                            <div class="user-info"><span>8</span>楼 2012/09/26 09:41</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        看了你写的nginx,很受用，继续等待你的下一篇<br/>还有，能不能把nginx模块说一下，是哪个文件。比如http的模块，是http.h和http.c文件（只是举例啊），这样能更清楚一点，我看源代码的时候，不知道从何看起，也不知道那么多文件都是干什么用的
+                    </div>
+                    <div id='inline_reply_of_80317_256645_269724774' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_171472_269724821" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/u/171472" target="_blank"><img src="https://static.oschina.net/uploads/user/85/171472_50.jpg?t=1368753566000" align="absmiddle" alt="defu" title="defu" class="SmallPortrait" user="171472"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/u/171472" target="_blank" name="rpl_269724821" class="user">defu</a></div>
+                            <div class="user-info"><span>9</span>楼 2012/09/26 09:45</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        <div class=ref><h4>引用来自“张红军”的评论</h4><p>看了你写的nginx,很受用，继续等待你的下一篇<br/>还有，能不能把nginx模块说一下，是哪个文件。比如http的模块，是http.h和http.c文件（只是举例啊），这样能更清楚一点，我看源代码的时候，不知道从何看起，也不知道那么多文件都是干什么用的</p></div>兄弟，你可以参考下这位大牛的博客，比较图文并茂地讲解：http://blog.csdn.net/kenbinzhang/article/details/4653201
+                    </div>
+                    <div id='inline_reply_of_80317_171472_269724821' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_555160_269724993" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/u/555160" target="_blank"><img src="/img/portrait.gif?t=1451961935000" align="absmiddle" alt="刘海洋2" title="刘海洋2" class="SmallPortrait" user="555160"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/u/555160" target="_blank" name="rpl_269724993" class="user">刘海洋2</a></div>
+                            <div class="user-info"><span>10</span>楼 2012/09/26 09:59</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        nginx和redis的代码都不错。另外很多开源的代码质量不敢恭维。感觉不到所谓的大师。。。。
+                    </div>
+                    <div id='inline_reply_of_80317_555160_269724993' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_104197_269725180" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/mingyuejingque" target="_blank"><img src="https://static.oschina.net/uploads/user/52/104197_50.jpg?t=1368374035000" align="absmiddle" alt="明月惊鹊" title="明月惊鹊" class="SmallPortrait" user="104197"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/mingyuejingque" target="_blank" name="rpl_269725180" class="user">明月惊鹊</a></div>
+                            <div class="user-info"><span>11</span>楼 2012/09/26 10:15</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        openssl的源码也不错吧，也写写吧，O(∩_∩)O哈哈~
+                    </div>
+                    <div id='inline_reply_of_80317_104197_269725180' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_71435_269725194" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/321tiantian" target="_blank"><img src="https://static.oschina.net/uploads/user/35/71435_50.jpg?t=1437657572000" align="absmiddle" alt="tiantian_orz" title="tiantian_orz" class="SmallPortrait" user="71435"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/321tiantian" target="_blank" name="rpl_269725194" class="user">tiantian_orz</a></div>
+                            <div class="user-info"><span>12</span>楼 2012/09/26 10:16</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        <div class=ref><h4>引用来自“那一剑的风情”的评论</h4><p><div class=ref><h4>引用来自“0day”的评论</h4><p>多几个前缀字母就成最差了之一了。。。这帽子扣的</p></div>加前缀是为了区分Kernel和User，有个相对，就是边界的概念。<br/>比如php语言，linux，这种你可视为内核，就没必要加前缀了。<br/>像平时大家开发的项目，这种都是基于某个Kernel的（你理解成语言也行）加个前缀不是很好吗</p></div>自己用着习惯就好
+                    </div>
+                    <div id='inline_reply_of_80317_71435_269725194' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_81181_269725945" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/lxx" target="_blank"><img src="https://static.oschina.net/uploads/user/40/81181_50.jpg?t=1367912294000" align="absmiddle" alt="G." title="G." class="SmallPortrait" user="81181"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/lxx" target="_blank" name="rpl_269725945" class="user">G.</a></div>
+                            <div class="user-info"><span>13</span>楼 2012/09/26 11:19</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        <div class=ref><h4>引用来自“defu”的评论</h4><p>有时候真看不下去某些人评论（一到四楼），作者花精力，花时间，写出一篇博客来，有些人硬要吹毛求疵，鸡蛋里挑骨头地找出一些缺点来，真不知道是什么心理，非得通过讽刺，挖苦，打击，报复来满足内心的那点平衡吗？有你们这样的评论，作者还有心情写下一篇吗？</p></div>&quot;错别字&quot;的那两楼评论, 我认为不是挑刺, 是为帮助作者.<br/>至少我是这么认为的.
+                    </div>
+                    <div id='inline_reply_of_80317_81181_269725945' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_71435_269726078" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/321tiantian" target="_blank"><img src="https://static.oschina.net/uploads/user/35/71435_50.jpg?t=1437657572000" align="absmiddle" alt="tiantian_orz" title="tiantian_orz" class="SmallPortrait" user="71435"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/321tiantian" target="_blank" name="rpl_269726078" class="user">tiantian_orz</a></div>
+                            <div class="user-info"><span>14</span>楼 2012/09/26 11:30</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        <div class=ref><h4>引用来自“刘海洋2”的评论</h4><p>nginx和redis的代码都不错。另外很多开源的代码质量不敢恭维。感觉不到所谓的大师。。。。</p></div>能做出贡献的就是大师，代码只是一方面
+                    </div>
+                    <div id='inline_reply_of_80317_71435_269726078' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_96003_269726255" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/anthonychen" target="_blank"><img src="https://static.oschina.net/uploads/user/48/96003_50.jpg?t=1368158428000" align="absmiddle" alt="宏哥" title="宏哥" class="SmallPortrait" user="96003"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/anthonychen" target="_blank" name="rpl_269726255" class="user">宏哥</a></div>
+                            <div class="user-info"><span>15</span>楼 2012/09/26 11:45</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        naming convention 和 pipeline <br/>是一切软件设计之精华所在.
+                    </div>
+                    <div id='inline_reply_of_80317_96003_269726255' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_96003_269726257" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/anthonychen" target="_blank"><img src="https://static.oschina.net/uploads/user/48/96003_50.jpg?t=1368158428000" align="absmiddle" alt="宏哥" title="宏哥" class="SmallPortrait" user="96003"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/anthonychen" target="_blank" name="rpl_269726257" class="user">宏哥</a></div>
+                            <div class="user-info"><span>16</span>楼 2012/09/26 11:45</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        naming convention 和 pipeline <br/>是一切软件设计之精华所在.
+                    </div>
+                    <div id='inline_reply_of_80317_96003_269726257' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_48421_269727571" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/xufun" target="_blank"><img src="https://static.oschina.net/uploads/user/24/48421_50.jpg?t=1348640814000" align="absmiddle" alt="蓄丰" title="蓄丰" class="SmallPortrait" user="48421"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/xufun" target="_blank" name="rpl_269727571" class="user">蓄丰</a></div>
+                            <div class="user-info"><span>17</span>楼 2012/09/26 13:34</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        紧凑的文章，一口气拜读完成。<br/>好文，学习了！
+                    </div>
+                    <div id='inline_reply_of_80317_48421_269727571' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_271937_269729202" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/gschen" target="_blank"><img src="https://static.oschina.net/uploads/user/135/271937_50.jpg?t=1397376311000" align="absmiddle" alt="justin_cn" title="justin_cn" class="SmallPortrait" user="271937"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/gschen" target="_blank" name="rpl_269729202" class="user">justin_cn</a></div>
+                            <div class="user-info"><span>18</span>楼 2012/09/26 15:50</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        是不是可以把nginx的架构图或是流程图详细的介绍说明下？便于我们先从整体上了解，然后再深入下去
+                    </div>
+                    <div id='inline_reply_of_80317_271937_269729202' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+                            <div class="comment-item comment-emoji" id="cmt_80317_658073_283364681" >
+            <div class="layout">
+                <div class="layout-left">
+                    <!-- 头像 -->
+                    <div class="icon">
+                        <a href="https://my.oschina.net/jnuc093" target="_blank"><img src="https://static.oschina.net/uploads/user/329/658073_50.png?t=1380861033000" align="absmiddle" alt="jnuc093" title="jnuc093" class="SmallPortrait" user="658073"/></a>
+                    </div>
+                </div>
+                <div class="layout-column right">
+                    <div class="layout">
+                                                <div class="layout-column">
+                            <div class="user-name"><a href="https://my.oschina.net/jnuc093" target="_blank" name="rpl_283364681" class="user">jnuc093</a></div>
+                            <div class="user-info"><span>19</span>楼 2014/11/24 18:03</div>
+                        </div>
+                    </div>
+
+                    <!-- 评论内容 -->
+                    <div class="comment-content" data-emoji-render='true'>
+                        <div class='ref'><h4>引用来自“defu”的评论</h4>有时候真看不下去某些人评论（一到四楼），作者花精力，花时间，写出一篇博客来，有些人硬要吹毛求疵，鸡蛋里挑骨头地找出一些缺点来，真不知道是什么心理，非得通过讽刺，挖苦，打击，报复来满足内心的那点平衡吗？有你们这样的评论，作者还有心情写下一篇吗？</div>非常赞同
+                    </div>
+                    <div id='inline_reply_of_80317_658073_283364681' class='inline_reply'></div>
+                </div>
+            </div>
+        </div>
+            <div class="pages sm-hide">
+        </div>                                                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 微信分享二维码 -->
+       <!--  <div class="float-share md-hide">
+            <div class="weixin-share" id="weixin-share">
+            </div>
+            <span>微信分享</span>
+        </div> -->
+
+        <!-- 右侧工具条 -->
+        <div class="tool-bar blog-tool-bar md-hide">
+            <div class="item tool-top">
+                <a href="javascript:void(0)" class="over">
+                    <div class="icon">
+                        <i class="icon-svg icon-go-top"></i>
+                    </div>
+                    <div class="txt">顶部</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="reward-popups" data-popups-for="reward">
+    <span data-popups-close="true">×</span>
+    <div data-popups="body">
+        <form action="" method="post" id="blog_donate_form">
+            <div class="form-wapper">
+                <div class="blogger-info text-center">
+                    <span class="icon">
+                        <a href="https://my.oschina.net/fqing/home" class="article_editor_head_img" target="_blank"><img src="https://static.oschina.net/uploads/user/368/737198_100.jpg?t=1348108930000" align="absmiddle" alt="那一剑的风情" title="那一剑的风情" class="LargePortrait"/></a>
+                    </span>
+                    <div class="text">
+                        如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="form-label">
+                        <span class="font-red">*</span>
+                        金额(元)
+                    </div>
+                    <div class="form-ctrl">
+                        <div>
+                            <input name="payMoney" value="2" type="text" placeholder="请输入金额￥" />
+                            <input name="money" value="2" type="hidden" placeholder="请输入金额￥" />
+                        </div>
+                        <div class="reward-money-box">
+                            <span data-value="1" class="reward-money">￥1</span>
+                            <span data-value="5" class="reward-money">￥5</span>
+                            <span data-value="10" class="reward-money">￥10</span>
+                            <span data-value="20" class="reward-money">￥20</span>
+                            <span data-value="" class="reward-money other-money active">其他金额</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="form-label">
+                        打赏人
+                    </div>
+                    <div class="form-ctrl">
+                        <input type="text" name="donaterName" maxlength="100" value="" placeholder="请输入姓名/昵称/邮箱" />
+                    </div>
+                </div>
+                <div class="form-item items-center">
+                    <div class="form-label">
+                        留言
+                    </div>
+                    <div class="form-ctrl">
+                        <textarea maxlength="100" name="message" id="" cols="30" rows="3" placeholder="你想对TA说"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-item items-center">
+                    <div class="form-label">
+                        <span class="font-red">*</span>
+                        支付类型
+                    </div>
+                    <div class="form-ctrl">
+                        <div class="reward-way form-radios reward-alipay">
+                            <input type="radio" value="alipay" id="rewardAliPay" checked="checked" name="reward-way">
+                            <label for="rewardAliPay">
+                                <span class="hide">支付宝支付</span>
+                            </label>
+                        </div>
+                        <div class="reward-way form-radios reward-wechat">
+                            <input type="radio" value="wepay" id="rewardWechat" name="reward-way">
+                            <label for="rewardWechat">
+                                <i class="icon-svg icon-wechat"></i>
+                                <span class="">微信支付</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                                <div class="hide">
+                    <input name="objType" type="hidden" value="16344358">
+                    <input name="objId" type="hidden" value="80317">
+                    <input name="donater" type="hidden" value="0">
+                    <input name="subject" maxlength="50" type="hidden" value="nginx源码分析之设计之美">
+                    <input name="author" type="hidden" value="737198">
+                    <input name="returnUrl" maxlength="900" type="hidden" value="https://my.oschina.net/fqing/blog/80317">
+                    <input name="notifyUrl" maxlength="900" type="hidden" value="https://my.oschina.net/action/blog/paySuccess">
+                    <input name="sign" type="hidden" value="">
+                </div>
+                <div class="form-button text-right">
+                    <input type="button"  class="btn btn-orange" value="打赏" id="blog_donate_button"/>
+                </div>
+            </div>
+
+            <div class="reward-status reward-wechat-box text-center">
+                <span class="wechat-qr">
+                    <i class="icon-svg icon-scan-green"></i>
+                    微信扫码支付
+                </span>
+                <div class="wepay-amount">
+                    打赏金额: <span class="h1 font-green">￥<em id="wepayAmount"></em></span>
+                </div>
+                <span class="wechat-qr-img" id="result_area">
+                </span>
+            </div>
+
+            <div class="reward-status reward-success text-center">
+                <span class="wechat-qr">
+                    <i class="icon-svg icon-wechat"></i>
+                    已支付成功
+                </span>
+                <div>
+                    打赏金额: <span class="h1 font-green">￥<em id="wepayAmount"></em></span>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div data-popups="mask">
+
+</div>
+    <script type="text/javascript" src="/action/visit/blog?id=80317" defer="defer"></script>
+    <script type="text/javascript" src="/action/visit/space?id=737198"></script>
+
+<val data-name="radar_chart_js_url" data-value="/dist/www/vendor/radarChart/radarChart.js?t=1475078300000"></val>
+<script>
+    window.addEventListener("load", function() {
+        var radarChartJsUrl = $("val[data-name=radar_chart_js_url]").data("value");
+        if(radarChartJsUrl) {
+            require.requireJS(radarChartJsUrl, function() {
+                // 雷达图配置选项
+                function getRadarOption(skills, values, maxLevel) {
+                    var radarChartOptions = {},
+                        skillArr = skills ? skills : [],
+                        valuesArr = values ? values : [],
+                        maxLevelArr = [];
+                        valuesArr.forEach(function(element, index) {
+                            maxLevelArr.push(maxLevel);
+                        });
+
+                    radarChartOptions.data = {
+                        maxValue: maxLevelArr,
+                        value: valuesArr,
+                        description: skillArr
+                    };
+                    radarChartOptions.config = {
+                        scale: 0.9,
+                        dataFill: {
+                            fillStyle: "rgba(24, 236, 111, .4)"
+                        },
+                        bg: {
+                            layer: 4,
+                            evenFillStyle: "#828282",
+                            oddFillStyle: "#828282",
+                            evenStrokeStyle: "#ccc",
+                            oddStrokeStyle: "#ccc"
+                        },
+                        dataCircle: {
+                            r: 1,
+                            strokeStyle: "#18ec6f",
+                            fillStyle: "#18ec6f",
+                            lineWidth: 0.5
+                        },
+                        dataLine: {
+                            strokeStyle: "#18ec6f",
+                            lineWidth: 2
+                        },
+                        font: {
+                            fontColor: "#eee"
+                        }
+                    };
+                    return radarChartOptions;
+                }
+                var sendRequest = function () {
+                    var user_id = $("val[data-name='owner_id']").attr("data-value");
+                    $.ajax({
+                        type: "POST",
+                        url: "/action/radar/searchUserRadarMap",
+                        data: {user_id: user_id},
+                        dataType: "json",
+                        success: function (msg) {
+                            if (msg.result) {
+                                // 显示雷达面板
+                                $(".user-radar").show();
+                                radarChart.init(document.querySelector("#radar-skill"), getRadarOption(msg.data.skills, msg.data.skillsLevel, msg.data.maxSkillLevel));
+                                // 打开雷达详情页
+                                var radarDetailLink = $('#radar-skill').data("detail");
+                                if (radarDetailLink) {
+                                    $('#radar-skill').on('click', function (params) {
+                                        window.open(radarDetailLink);
+                                    });
+                                }
+                            }
+                        }
+                    });
+                }
+                sendRequest();
+            });
+        }
+    }, false);
+</script>
+
+            <script>
+        window.addEventListener("load", function() {
+            (function(){
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                }
+                else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        });
+    </script>
+    <script type="text/javascript">
+     (function (ww, dt) {
+         ww.__gac = {
+             domain: 'www.oschina.net'
+         };
+         if(!(/\/marketing\/ad-slice/.test(location.href))){
+             var script = dt.createElement('script');
+             script.setAttribute('type', 'text/javascript');
+             script.setAttribute('src', '//www.oschina.net/public/javascripts/cjl/ga.js?t=20160926');
+             dt.body.appendChild(script);
+         }
+     } (window, window.document));
+ </script>
+            </div>
+                        <script type="text/javascript" src="/dist/www/js/common.min.js?t=1479139314000"></script>
+            <script type="text/javascript" src="/dist/www/js/blog.min.js?t=1482336462000"></script>
+                <div class="footer">
+    <div class="container">
+        <div class="layout">
+            <div class="layout-right">
+                <div class="oscapp">
+                    <span>开源中国手机客户端：</span>
+                    <a href="https://www.oschina.net/app" class="android" title="Android客户端">Android</a>
+                    <a href="https://www.oschina.net/app" class="iphone" title="iPhone 客户端">iPhone</a>
+                    <a href="https://www.oschina.net/app" class="wp7" title="Windows Phone 客户端">WP7</a>
+                </div>
+            </div>
+            <div class="layout-column">
+                <div>
+                    &copy; 开源中国(OSChina.NET) | <a href="https://www.oschina.net/home/aboutosc">关于我们</a> | <a href="mailto:market@oschina.cn">广告联系</a> | <a href="http://weibo.com/oschina2010" target="_blank">@新浪微博</a> | <a href="https://m.oschina.net/">开源中国手机版</a> | <a href='http://www.miitbeian.gov.cn/' target='_blank' style='color:#737573;text-decoration:none;'>粤ICP备12009483号-3</a></div>
+                 <div>开源中国社区(OSChina.net)是工信部 <a href='http://www.copu.org.cn/' target='_blank'>开源软件推进联盟</a> 指定的官方社区</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+    
+<!-- Generated by OsChina.NET (init:0[ms],page:95[ms],ip:110.80.46.142) -->
