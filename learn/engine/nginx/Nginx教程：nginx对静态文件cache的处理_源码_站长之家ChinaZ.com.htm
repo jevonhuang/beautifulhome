@@ -1,0 +1,552 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Nginx教程：nginx对静态文件cache的处理_源码_站长之家ChinaZ.com</title>
+<meta name="keywords" content="nginx,nginx静态,nginx cache" />
+<meta name="description" content="Nginx 是一个高性能的 HTTP 和 反向代理 服务器，也是一个 IMAP/POP3/SMTP 代理服务器。本文介绍nginx对静态文件cache的处理。" />
+<meta http-equiv="x-ua-compatible" content="ie=7" />
+<link href="/style/article.css" rel="stylesheet" type="text/css">
+<link href="http://img.chinaz.com/max-templates/passport/styles/topbar.css" type="text/css" rel="Stylesheet" />
+<link rel="shortcut icon" type="image/ico" href="/favicon.ico">
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/amain.js"></script>
+<link type="text/css" rel="stylesheet" href="/shjs/css/sh_zellner.min.css">
+<script type="text/javascript" src="/shjs/sh_main.min.js"></script>
+<script src="/js/imgload.js" type="text/javascript"></script>
+<script src="/js/ips2.js" type="text/javascript"></script>
+<script language="javascript"> 
+<!--
+document.onkeydown=nextpage
+var prevpage="{prevpage}";
+var nextpage="{nextpage}";
+
+function nextpage() {
+	if (event.keyCode==37) location=prevpage;
+	if (event.keyCode==39) location=nextpage;
+}
+//-->
+</script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</head>
+
+<body onload="sh_highlightDocument('/shjs/lang/', '.min.js');">
+
+<div class="toolbar">
+    <div class="clearfix toolbar-inner">
+        <div class="quicklink">
+            <ul id="chinaz_website_links" class="accesslink">
+                <li><a href="http://www.chinaz.com"><span>站长之家</span></a></li>
+                <li onmouseover="chinazTopBarMenu.create(this,'chinaz_website_menu_1');" onmouseout="chinazTopBarMenu.clear(this);">
+                    <a class="item-expand" href="http://bbs.chinaz.com" target="_blank"><span>站长论坛</span></a>
+                </li>
+                <li onmouseover="chinazTopBarMenu.create(this,'chinaz_website_menu_2');" onmouseout="chinazTopBarMenu.clear(this);">
+                    <a class="item-expand" href="http://tool.chinaz.com" target="_blank"><span>站长工具</span></a>
+                </li>
+                
+                <li><a href="http://down.chinaz.com" target="_blank"><span>源码下载</span></a></li>
+                <li onmouseover="chinazTopBarMenu.create(this,'chinaz_website_menu_3');" onmouseout="chinazTopBarMenu.clear(this);">
+                    <a class="item-expand" href="http://sc.chinaz.com" target="_blank"><span>站长素材</span></a>
+                </li>
+                <li><a href="http://www.cnzz.com" target="_blank"><span>免费统计</span></a></li>
+                <li><a href="http://www.313.com" target="_blank"><span>建站大师</span></a></li>
+                <li><a href="http://www.idc123.com" target="_blank"><span>主机之家</span></a></li>
+                <li><a href="http://www.wangmeng.com" target="_blank"><span>广告联盟</span></a></li>
+                
+                
+            </ul>
+            <div id="chinaz_website_menu_1" class="topbar-hiddencontents">
+               <a href="http://bbs.chinaz.com/forum-51-1.html" target="_blank">站长俱乐部</a>
+                <a href="http://bbs.chinaz.com/forum-140-1.html" target="_blank">站长问答</a>
+                <a href="http://bbs.chinaz.com/forum-165-1.html" target="_blank">网站建设资源</a>
+                <a href="http://bbs.chinaz.com/forum-167-1.html" target="_blank">站长交易赚钱</a> 
+            </div>
+            <div id="chinaz_website_menu_2" class="topbar-hiddencontents">
+                <a href="http://alexa.chinaz.com" target="_blank">ALEXA排名查询</a>
+				<a href="http://mytool.chinaz.com/baidusort.aspx" target="_blank">百度权重查询</a>
+                <a href="http://seo.chinaz.com" target="_blank">SEO概况查询</a>
+                <a href="http://link.chinaz.com" target="_blank">友情链接查询</a>
+                <a href="http://pr.chinaz.com" target="_blank">Google PR查询</a>
+                <a href="http://whois.chinaz.com" target="_blank">Whois信息查询</a>
+                <a href="http://tool.chinaz.com/beian.aspx" target="_blank">域名备案查询</a>
+            </div>
+            <div id="chinaz_website_menu_3" class="topbar-hiddencontents">
+                <a href="http://font.chinaz.com/" target="_blank">字体下载</a>
+                <a href="http://desk.chinaz.com/" target="_blank">高清壁纸</a>
+                        <a href="http://sc.chinaz.com/jianli/" target="_blank">简历模板</a>
+                <a href="http://sc.chinaz.com/tupian/" target="_blank">高清图片</a>
+                <a href="http://sc.chinaz.com/shiliang/" target="_blank">矢量素材</a>
+                <a href="http://sc.chinaz.com/ppt/" target="_blank">PPT模板</a>
+                <a href="http://sc.chinaz.com/psd/" target="_blank">PSD素材</a>
+            </div>
+        </div>
+        <div id="chinaz_topbar"></div>
+    </div>
+</div>
+
+	
+	
+	<div class="contain">
+		<div class="header">
+			<div class="brand">
+	
+				<h1 class="logo"><a href="http://down.chinaz.com/news.htm">站长下载 down.chinaz.com</a></h1>
+			</div>
+			
+			        <div class="adtext">
+            <script src="http://stats.chinaz.com/2011code_images/topright.js" type="text/javascript"></script>
+        </div>
+        <div class="banner banner-top">
+            <script src="http://stats.chinaz.com/2011code_images/A_28.js" type="text/javascript"></script>
+
+        </div>
+		<div class="clear"></div>
+
+
+		</div>
+
+		<div class="nav">
+			<ul>
+		<li><a href="http://down.chinaz.com/news.htm" class="active"><span>报导首页</span></a></li>
+		<li><a href="http://down.chinaz.com/news/226_1.htm"><span>动态</span></a></li>
+		<li><a href="http://down.chinaz.com/try/227_1.htm"><span>调试</span></a></li>
+		<li><a href="http://down.chinaz.com/test/228_1.htm"><span>评测</span></a></li>
+		<li><a href="http://down.chinaz.com/server/225_1.htm"><span>环境</span></a></li>
+		<li><a href="http://down.chinaz.com/member/contribute.aspx" target="_blank"><span>投稿</span></a></li>
+		<li><a href="http://down.chinaz.com" target="_blank"><span>源码下载</span></a></li>
+				<div class="clear"></div>
+			</ul>
+			<div class="search">
+            <form name="searchform" method="get" action="/search.asp" target="_blank">
+                <input type="hidden" name="t" id="t" value="b" />
+<input name="q" type="text" id="key" onfocus="this.value='';this.style.color='#000';" class="text" value="BBSMAX" />
+<input class="submit" type="submit" value="" name="">
+ </form>
+</div>
+		</div>
+
+    <div class="banner banner-leaderboard">
+        <script  type="text/javascript" src="http://stats.chinaz.com/2011code_images/A_21.js"></script>
+    </div>
+		
+		<div class="dq">
+        <p class="page_nav">
+            
+            
+            您的位置: <a href="/">源码</a> -  <a href="/news.htm">源码报导</a> &raquo;  <a href="/server/225_1.htm">环境</a> &raquo; <strong>Nginx教程：nginx对静态文件cache的处理</strong>
+              
+
+            
+        </p>
+
+    </div>
+	<div class="text_left">
+		  <div class="banner banner-leaderboard">
+                 <script src="http://stats.chinaz.com/2011code_images/soft690.js" type="text/javascript"></script>
+            </div>
+
+		<div class="top_line"></div>
+		<div class="text_bd">
+			<div class="inners">
+				<h1>Nginx教程：nginx对静态文件cache的处理</h1>
+			</div>
+			<div class="times">
+
+				<span>作者：<em style="margin-right:60px;">匿名</em>
+
+<a href="javascript:;" class="hi" onclick="openDialog('/max-dialogs/hail.aspx?uid=749764')"><span>hi</span></a><a href="javascript:;" class="peo" onclick="openDialog('/max-dialogs/friend-tryadd.aspx?uid=749764')"><span>hi</span></a></span>
+
+				<span>来源：<em>ChinaZ源码报导</em></span>
+				<span>浏览：<em  id="allhits"><script src="/hits.asp?id=1473&t=5" language="javascript"></script>次</em></span>
+				<span>2011-12-12 14:38:24</span>
+				<span id='fonts'>字号：<a id='18px' href="javascript:;">大</a> <a id='14px' href="javascript:;">中</a> <a id='12px' href="javascript:;">小</a></span>
+				
+			</div>
+<div class='zyao'><span>[摘要]</span>Nginx 是一个高性能的 HTTP 和 反向代理 服务器，也是一个 IMAP/POP3/SMTP 代理服务器。本文介绍nginx对静态文件cache的处理。</div>
+
+
+			<div class="con">
+			
+			<div class="lisofttext">
+                          <p>　　Nginx中对静态文件进行了Cache，对应的命令就是open_file_cache,open_file_cache_min_uses以及open_file_cache_valid。这次我就来分析下nginx如何对静态文件进行cache的。</p><p>　　要注意一个就是open_file_cache的 inactive表示文件多久不被访问就会从cache中删除.</p><p>　　首先来描述一下Linux下是如何做的，因为这里nginx对于bsd版本有一个不同的做法，这是因为bsd中可以给kqueue监听文件改变的事件。而linux下，nginx并没有使用Inotify，而是每次都会判断文件的st_ino来得到文件是否被修改，不过这样会有个缺点就是如果你是使用open，然后write来修改文件的话，文件其实是相同的，因此st_ino是相同的，此时nginx是无法知道的，因此修改的话，最好使用会先删除再覆盖的命令(比如cp)。</p><p>　　首先，nginx的cache只是cache句柄，因为静态文件的发送，一般来说，nginx都是尽量使用sendfile进行发送的，因此之需要cache句柄就够了。</p><p>　　所有的cache对象包含在两个数据结构里面，整个机制最关键的也是这两个东西，一个是红黑树，一个是一个队列，其中红黑树是为了方便查找(需要根据文件名迅速得到fd),而队列为了方便超时管理（按照读取顺序插入，在头的就是最近存取的文件)，由于所有的句柄的超时时间都是一样的，因此每次只需要判断最后几个元素就够了，因为这个超时不需要那么实时.</p><p>　　假设现在客户端请求是GET test.html HTTP/1.1 ,则nginx是这么处理的，如果test.html在cache中存在，则从cache中取得这个句柄，然后正常返回，如果test.html不存在，则是打开这个文件，然后插入到cache中。不过这里有很多细节都需要处理，比如超时，比如红黑树的插入等等，接下来，我们就对照着代码来看这些都是如何处理的。</p><p>　　主要代码都是包含在ngx_open_cached_file中的。</p><p>　　首先，这里，cache的红黑树的key是一个hash值，是文件名的crc校验码：</p><pre>//计算hash<br />    hash = ngx_crc32_long(name-&gt;data, name-&gt;len);<br />//根据名字查找对应的file对象。<br />    file = ngx_open_file_lookup(cache, name, hash);</pre><p>　　首先我们来看如果没有找到cache对象的情况，此时nginx会open 这个文件，然后保存对应的信息到cache中。</p><pre>//打开文件，保存文件信息<br />    rc = ngx_open_and_stat_file(name-&gt;data, of, pool-&gt;log);  <br /><br />    if (rc != NGX_OK &amp;&amp; (of-&gt;err == 0 || !of-&gt;errors)) {<br />        goto failed;<br />    } <br /><br />create:<br />//max为open_file_cache命令中定义的那个max指令，而current也就是当前cache的文件个数<br />    if (cache-&gt;current &gt;= cache-&gt;max) {<br />//如果大于max，则需要强制expire几个元素<br />        ngx_expire_old_cached_files(cache, 0, pool-&gt;log);<br />    }<br />........................................................... <br /><br />      ngx_cpystrn(file-&gt;name, name-&gt;data, name-&gt;len + 1); <br /><br />      file-&gt;node.key = hash; <br /><br />//插入到红黑树中。 <br /><br />    ngx_rbtree_insert(&amp;cache-&gt;rbtree, &amp;file-&gt;node); <br /><br />//更新current <br /><br />    cache-&gt;current++;</pre><p>　　然后就是更新队列的部分，这里可以看到插入是每次都插入到队列的头，之所以插入到头，是为了超时操作更方便。还有一个需要注意的地方就是绑定ngx_pool_cleanup_t的handler，我们知道nginx中可以给pool绑定对应的handler，绑定后，当pool被释放的时候，就会调用这个handler，这里nginx给request pool绑定了一个handler，这里是为了处理超时的，后面我们会分析到。</p><pre>renew:<br />//更新创建时间<br />    file-&gt;created = now;<br />found:<br />//更新存取时间<br />    file-&gt;accessed = now;<br />//将文件插入到超时队列中。<br />    ngx_queue_insert_head(&amp;cache-&gt;expire_queue, &amp;file-&gt;queue);<br />    if (of-&gt;err == 0) {<br />        if (!of-&gt;is_dir) {<br />//这里很关键，将cln的handler<br />            cln-&gt;handler = ngx_open_file_cleanup;<br />            ofcln = cln-&gt;data;<br />            ofcln-&gt;cache = cache;<br />            ofcln-&gt;file = file;<br />            ofcln-&gt;min_uses = of-&gt;min_uses;<br />            ofcln-&gt;log = pool-&gt;log;<br />        }<br />        return NGX_OK;<br />    }<br />    return NGX_ERROR;</pre><p>　　然后就是超时机制是如何实现的。在nginx中并没有通过定时器什么的来实现，而是通过nginx的一个特性，那就是每个request结束的时候，都会清理掉他所分配的pool，而nginx就是给每个有打开文件的request都绑定了对应clean handler，当request pool被释放的时候，就会来根据时间来判断是否已经超时,这里的clean handler就是ngx_open_file_cleanup。</p><pre>static void<br />ngx_open_file_cleanup(void *data)<br />{<br />    ngx_open_file_cache_cleanup_t  *c = data;<br />    c-&gt;file-&gt;count--;<br />//关闭<br />    ngx_close_cached_file(c-&gt;cache, c-&gt;file, c-&gt;min_uses, c-&gt;log); <br /><br />    /* drop one or two expired open files */<br /><br />//处理超时<br />    ngx_expire_old_cached_files(c-&gt;cache, 1, c-&gt;log);<br />}</pre><p>　　这里ngx_cached_open_file_s有3个域需要注意，分别是uniq，count以及close。其中uniq也就是文件属性中的st_ino(同一个设备中的每个文件，这个值都是不同的），这个值主要用于判断文件是否被修改(不过这个修改是覆盖这类的，如果你用open打开，然后写入的话，这个值还是一样的).count是文件的引用计数，表示现在文件被几个请求使用中。close表示文件是否需要被关闭(比如。</p><p>　　ok，接下来就是nginx的超时处理测略了。首先来看ngx_close_cached_file，这个函数主要是尝试关闭当前的文件，对这代码我们来看流程。</p><pre>//判断是否需要关闭<br />    if (!file-&gt;close) {<br />//如果不需要，则更新存取时间<br />        file-&gt;accessed = ngx_time();<br />//然后将文件插入到队列头(先remove然后insert)<br />        ngx_queue_remove(&amp;file-&gt;queue);<br />        ngx_queue_insert_head(&amp;cache-&gt;expire_queue, &amp;file-&gt;queue);<br />//看文件的使用次数是否大于设置的最小次数，或者文件的引用技术是否大于0，如果有一个满足，则直接返回，因为此时不需要close文件.<br />        if (file-&gt;uses &gt;= min_uses || file-&gt;count) {<br />            return;<br />        }<br />    }<br />   ngx_open_file_del_event(file);<br />    if (file-&gt;count) {<br />        return;<br />    }<br />//到达这里说明文件需要被关闭。<br />    if (file-&gt;fd != NGX_INVALID_FILE) {<br />//关闭文件<br />        if (ngx_close_file(file-&gt;fd) == NGX_FILE_ERROR) {<br />            ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,<br />                          ngx_close_file_n &quot; \&quot;%s\&quot; failed&quot;, file-&gt;name);<br />        } <br /><br />        file-&gt;fd = NGX_INVALID_FILE;<br />    } <br /><br />    if (!file-&gt;close) {<br />        return; </pre><p>　　接下来是ngx_expire_old_cached_files，这个函数比较关键，主要是用来执行超时，或者强制超时cache中的元素(根据参数不同).主要的判断就是now – file-&gt;accessed &lt;= cache-&gt;inactive，这段，这段主要是看这个文件多久没有被使用，是否超过了我们设置的inactive时间.</p><pre>    while (n &lt; 3) {<br />//如果队列为空，则直接返回<br />        if (ngx_queue_empty(&amp;cache-&gt;expire_queue)) {<br />            return;<br />        }<br />//取出最后一个文件，也就是可能需要被超时的文件(因为尾部是最长时间没有操作的文件)<br />        q = ngx_queue_last(&amp;cache-&gt;expire_queue); <br /><br />        file = ngx_queue_data(q, ngx_cached_open_file_t, queue);<br />//n是控制是强制超时，还是按inactive超时，后一个判断是判断是否超时<br />        if (n++ != 0 &amp;&amp; now - file-&gt;accessed &lt;= cache-&gt;inactive) {<br />            return;<br />        }<br />//如果有超时的，或者需要强制超时，则开始从队列和红黑树中移除<br />        ngx_queue_remove(q); <br /><br />        ngx_rbtree_delete(&amp;cache-&gt;rbtree, &amp;file-&gt;node); <br /><br />        cache-&gt;current--; <br /><br />        ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0,<br />                       &quot;expire cached open file: %s&quot;, file-&gt;name); <br /><br />        if (!file-&gt;err &amp;&amp; !file-&gt;is_dir) {<br />//关闭文件<br />            file-&gt;close = 1;<br />            ngx_close_cached_file(cache, file, 0, log); <br /><br />        } else {<br />            ngx_free(file-&gt;name);<br />            ngx_free(file);<br />        }<br />    }</pre><p>　　最后来看，nginx里面如何判断文件被改变的。当需要打开一个文件，然后在cache中发现了文件，此时就需要判断文件是否被改变，这里nginx只能判断删除，然后覆盖的这类，而你如果只是简单的附加，则nginx无法知晓，来看代码，在ngx_open_and_stat_file里面的。判断很简单，就是看uniq是否相等，如果不等则说明文件被改变，此时需要重新打开文件，然后重新加入cache，否则直接返回。</p><pre>    if (of-&gt;fd != NGX_INVALID_FILE) { <br /><br />        if (ngx_file_info(name, &amp;fi) == NGX_FILE_ERROR) {<br />            of-&gt;failed = ngx_file_info_n;<br />            goto failed;<br />        }<br />//判断文件是否被改变<br />        if (of-&gt;uniq == ngx_file_uniq(&amp;fi)) {<br />            goto done;<br />        } <br /><br />    }<br />//否则重新打开<br />    if (!of-&gt;log) { <br /><br />        /*<br />         * Use non-blocking open() not to hang on FIFO files, etc.<br />         * This flag has no effect on a regular files.<br />         */<br /><br />        fd = ngx_open_file(name, NGX_FILE_RDONLY|NGX_FILE_NONBLOCK,<br />                           NGX_FILE_OPEN, 0); <br /><br />    } else {<br />        fd = ngx_open_file(name, NGX_FILE_APPEND, NGX_FILE_CREATE_OR_OPEN,<br />                           NGX_FILE_DEFAULT_ACCESS);<br />    }</pre>
+				
+				
+				</div>
+
+
+			
+		
+	
+
+
+			
+
+			
+			<div class="new_f">
+				<div class="close">
+					<a href="javascript:window.print();" class="print">打印</a>
+					<a href="javascript:;" class="copy">复制链接</a>
+					<a href="javascript:;" class="colle">收藏</a>
+					<a href="javascript:winClose()">关闭</a>
+				</div>
+				<div class="share"><span>分享到</span>
+				<a title='分享到新浪微博' href="javascript:void(0)" id="fxwb"><img src="/style/img/sina_w.gif" border="0" width="16" height="16" style="*margin-right:6px;" /></a>
+<a title='分享到腾讯微博' href='javascript:void(0)' onclick=posttoWb()><img src="/style/img/QQ_w.gif" border="0" width="16" height="16" style="*margin-right:6px;" /></a>
+<a title="分享到QQ空间" href="javascript:window.open('http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url='+encodeURIComponent(document.location.href));void(0)"><img src="/style/img/qzone_w.gif" border="0" width="16" height="16"  alt="分享到QQ空间" align="absmiddle" style="*margin-right:5px;" /></a>
+</div>
+				<div class="clear"></div>
+			</div>
+
+<span id="moods" name="moods"><img src="/images/load.gif" alt="" /><b>sssss</b></span>
+			
+			<div class="text_tag">
+				<h5>Tags：
+				
+				<b><em>nginx</em></b> &nbsp;
+				
+				<b><em>nginx静态</em></b> &nbsp;
+				
+				<b><em>nginx cache</em></b> &nbsp;
+				
+ </h5>
+		
+				<span>责任编辑：<em>190</em></span>
+				<div class="clear"></div>
+			
+			</div>
+			
+		</div>
+	</div>
+	<div class="xg">
+			<li style="white-space:nowrap;text-overflow:ellipsis;overflow: hidden;"><span>上一篇：</span><a href="/server/201112/1469_1.htm">配置Nginx防止直接用IP访问Web服务器</a><div class="clear"></div> </li>   
+			<li style="white-space:nowrap;text-overflow:ellipsis;overflow: hidden;"><span>下一篇：</span><a href="/server/201112/1476_1.htm">淘宝开源Web服务器Tengine基本安装步骤</a><div class="clear"></div> </li>
+			<div class="clear"></div>
+		</div>
+		<div class="relative">
+			<div class="rel_left">
+				<div class="title">相关报导</div>
+				<ul>
+
+
+<li>· <A href="/try/201212/2349_1.htm">修改thinkphp让他可以在nginx上运行</a></li>
+
+<li>· <A href="/try/201208/2169_1.htm">解决Nginx下WordPress后台404的问题</a></li>
+
+<li>· <A href="/try/201208/2122_1.htm">ThinkSAAS for Nginx 伪静态重写规则</a></li>
+
+<li>· <A href="/server/201206/1995_1.htm">Ubuntu/Debian上安装Nginx+php环境</a></li>
+
+<li>· <A href="/server/201204/1864_1.htm">详解Nginx + Tomcat HTTPS/SSL 配置</a></li>
+
+<li>· <A href="/try/201204/1828_1.htm">Web服务器Nginx常见的配置选项整理</a></li>
+
+<li>· <A href="/server/201203/1761_1.htm">实战Nginx与Perl、Java的安装与配置</a></li>
+
+
+					
+				</ul>
+			</div>
+			<div class="rel_right">
+				<div class="picatext">
+			
+             
+					<div class="lie">
+								<div class="titles"><a href="/server/201202/1665_1.htm" target="_blank" title="重要更新Apache v2.4 速度超越Nginx">重要更新Apache v2.4 速度超越Nginx</a></div>
+								<div class="liebd">
+									<a href="/server/201202/1665_1.htm" target="_blank" title="重要更新Apache v2.4 速度超越Nginx"><img src="/upload/2012/2/23/2012022340958321.jpg" onerror="this.src='/style/img/nopic2.GIF'"></a>
+									<p>最流行的Web Server Apache发布了一个重大升级版，Apache HTTP Server 2.4的一个重要目标是大幅改进性能。...<a href="/server/201202/1665_1.htm" target="_blank" title="重要更新Apache v2.4 速度超越Nginx" class="xp">详细</a>
+									</p>	
+								</div>
+								
+							</div>
+							<div class="clear"></div>
+				</div>
+					
+
+            
+
+
+
+
+				<ul>
+
+			
+             
+
+
+					<li><a href="/server/201405/2485_1.htm" target="_blank" title="如今Windows下的安卓开发环境如何？">·如今Windows下的安卓开发环境如何？</a></li>
+
+
+							
+					
+
+
+					<li><a href="/server/201404/2476_1.htm" target="_blank" title="工作易高端人才招聘系统IIS7、IIS8的伪静态设置方法">·工作易高端人才招聘系统IIS7、IIS8的伪静态设置方法</a></li>
+
+
+							
+					
+
+
+					<li><a href="/server/201308/2450_1.htm" target="_blank" title="WordPress技巧：解决 “wpdb::escape is deprecated” 错误提示">·WordPress技巧：解决 “wpdb::escape is deprecated” 错误提示</a></li>
+
+
+							
+					
+
+
+					<li><a href="/server/201302/2388_1.htm" target="_blank" title="解决IIS下访问需要输入密码的问题">·解决IIS下访问需要输入密码的问题</a></li>
+
+
+							
+					
+
+            
+
+
+				</ul>
+			</div>
+			<div class="clear"></div>
+			
+		</div>
+		<span id="commentjs" name="commentjs"><img src="/images/load.gif" alt="" /></span>
+
+
+		
+		</div>
+		
+		
+
+	<div class="text_right">
+		<div class="edit">
+			<div class="title">热门源码下载推荐</div>
+			<div class="edit_bd">
+				<div class="pic_text">	
+			
+				<ul>
+					<li><a href="http://down.chinaz.com/soft/26525.htm" target="_blank"><img src="http://z.down.chinaz.com/img/zentao.jpg" alt="禅道项目管理：国产开源软件"></a><h1><a href="http://down.chinaz.com/soft/26525.htm" target="_blank">禅道项目管理：国产开源软件</a></h1></li>
+					<li><a href="http://down.chinaz.com/soft/27453.htm" target="_blank"><img src="http://z.down.chinaz.com/post_rside/cmseasy.jpg" alt="cmseasy：免费营销型企业站"></a><h1><a href="http://down.chinaz.com/soft/27453.htm" target="_blank">cmseasy：免费营销型企业站</a></h1></li>
+					<li><a href="http://down.chinaz.com/soft/23511.htm" target="_blank"><img src="http://z.down.chinaz.com/upload/logo/bbsmax.png" alt="BBSMAX v5.0：最好的.net论坛"></a><h1><a href="http://down.chinaz.com/soft/23511.htm" target="_blank">BBSMAX v5.0：最好的.net论坛</a></h1></li>
+					<li><a href="http://down.chinaz.com/soft/27695.htm" target="_blank"><img src="http://z.down.chinaz.com/upload/logo/esp.jpg" alt="ESPcms：开源免费的企业站"></a><h1><a href="http://down.chinaz.com/soft/27695.htm" target="_blank" >ESPcms：开源免费的企业站</a></h1></li>
+					<div class="clear"></div>
+				</ul>
+				
+				</div>	
+				<div class="clear"></div>
+				<ul class="line">
+				 
+                        
+					<li>·<a href="/class/201_1.htm">企业政府</a>|<a href="/soft/36391.htm">高三中英繁企业网站系统高级版 v2.8</a></li>
+
+                        
+					<li>·<a href="/class/201_1.htm">企业政府</a>|<a href="/soft/36369.htm">高三中英繁企业网站系统标准版 v2.8</a></li>
+
+                        
+					<li>·<a href="/class/231_1.htm">协同办公</a>|<a href="/soft/37011.htm">PESCMS TEAM开源任务管理系统 v2.0.0</a></li>
+
+                        
+					<li>·<a href="/class/201_1.htm">企业政府</a>|<a href="/soft/37492.htm">腾和企业网站管理系统(多风格) v5.7</a></li>
+
+                        
+					<li>·<a href="/class/55_1.htm">电子商务</a>|<a href="/soft/37799.htm">物流条码管理系统 v1.0</a></li>
+
+                        
+					<li>·<a href="/class/206_1.htm">小偷采集</a>|<a href="/soft/31810.htm">大佬19楼论坛小偷程序 v5.6</a></li>
+
+                        
+					<li>·<a href="/class/59_1.htm">新闻文章</a>|<a href="/soft/37798.htm">织梦蓝色博客类网站模板 v1.0</a></li>
+
+                        
+                        
+					
+				</ul>
+				
+				
+				
+			</div>
+			
+		</div>	
+		<div class="edit">
+			<div class="title active_best">最受关注报导</div>
+			<div class="edit_bd">
+
+			<div class="pic_text pic2"><a href="http://down.chinaz.com/news/201109/1090_1.htm" target="_blank"><img src="http://z.down.chinaz.com/img/jishigou-2.jpg" alt="新一代社区系统记事狗v3功能预览"></a></div>
+
+				
+				<ul class="line lines">
+
+
+
+<li>·<a href="/news/201411/2496_1.htm" target="_blank" title="社区系统近乎(Spacebuilder)发布新版本v4.2">社区系统近乎(Spacebuilder)发布新版本v4.2</a></li>
+
+
+
+<li>·<a href="/try/201410/2495_1.htm" target="_blank" title="PageAdmin CMS关键词链接的使用方法">PageAdmin CMS关键词链接的使用方法</a></li>
+
+
+
+<li>·<a href="/try/201409/2494_1.htm" target="_blank" title="解决Dedecmsv5.7 SP1广告不能显示的问题">解决Dedecmsv5.7 SP1广告不能显示的问题</a></li>
+
+
+
+<li>·<a href="/news/201409/2493_1.htm" target="_blank" title="网页设计和平面设计怎么选择">网页设计和平面设计怎么选择</a></li>
+
+
+
+<li>·<a href="/try/201408/2492_1.htm" target="_blank" title="微信公众平台java开发详解（工程代码+解析）">微信公众平台java开发详解（工程代码+解析）</a></li>
+
+
+
+<li>·<a href="/test/201408/2491_1.htm" target="_blank" title="为什么tomcat要自定义classloader">为什么tomcat要自定义classloader</a></li>
+
+
+
+<li>·<a href="/news/201407/2490_1.htm" target="_blank" title="跨界店未来电商的雏形">跨界店未来电商的雏形</a></li>
+
+
+
+<li>·<a href="/news/201406/2489_1.htm" target="_blank" title="404页面的重要性">404页面的重要性</a></li>
+
+
+
+<li>·<a href="/try/201406/2488_1.htm" target="_blank" title="对于个人淘宝客网站优化与运营的建议">对于个人淘宝客网站优化与运营的建议</a></li>
+
+
+
+<li>·<a href="/try/201405/2487_1.htm" target="_blank" title="在IIS 7.5中调试LebiShop多语言网上商店系统">在IIS 7.5中调试LebiShop多语言网上商店系统</a></li>
+
+
+
+<li>·<a href="/try/201405/2486_1.htm" target="_blank" title="新浪SAE搭建WordPress网站固定链接设置url静态化">新浪SAE搭建WordPress网站固定链接设置url静态化</a></li>
+
+
+
+	
+					
+				</ul>
+				
+				
+				
+			</div>
+			
+		</div>
+		<div class="edit">
+			<div class="title">编辑推荐排行</div>
+			<div class="edit_bd">
+				<ul class="Sequence">
+
+				</ul>	
+			</div>
+			
+		</div>
+		
+		
+	</div>
+	<div class="clear"></div>
+	
+<script type="text/javascript"> 
+
+var description = jq('meta[name=description]').attr("content"); 
+
+
+
+   var sendT = {
+getHeader : function(){
+              var g_title=description;
+              var re = /<[^<>]*?font[^<>]*?>/gi;
+              g_title = g_title.replace(re,"");
+              return g_title;
+            },
+getFirstImgSrc : function(){
+                   var allPageTags=document.getElementsByTagName("div");
+                   for (var i=0; i<allPageTags.length;i++) {
+                     if (allPageTags[i].className=='lisofttext') {
+                       if (allPageTags[i].getElementsByTagName("img")[0] && allPageTags[i].getElementsByTagName("img")[0].width > 200)
+                       {
+                         return allPageTags[i].getElementsByTagName("img")[0].src;
+                       }
+                       else
+                       {
+                         return null;
+                       }
+ 
+                     }
+                   }
+                 },
+getContent : function(){
+               var allPageTagss=document.getElementsByTagName("div");	
+               for (var i=0; i<allPageTagss.length;i++) {
+                 if (allPageTagss[i].className=='lisofttext') {
+                   return allPageTagss[i].innerHTML;
+                 }
+               }
+             }
+  }
+ 
+
+
+document.getElementById("fxwb").onclick=function(){
+  (function(s,d,e,r,l,p,t,z,c){
+   var f='http://service.weibo.com/share/share.php?appkey=105148761&',u=z||d.location,p=['url=',e(u),'&title=',e(sendT.getHeader()),'&source=',e(r),'&sourceUrl=',e(l),'&content=',c||'gb2312','&pic=',e(p||'')].join('');
+   function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=440,height=430,left=',(s.width-440)/2,',top=',(s.height-430)/2].join('')))u.href=[f,p].join('');
+   };
+   if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else a();
+   })(screen,document,encodeURIComponent,'CHINAZ','http://down.chinaz.com/',sendT.getFirstImgSrc(),null,null,null);
+}
+ 
+
+function posttoWb() {
+  var _tt = description;
+  var _t = encodeURI(_tt.replace(/\s+$/, ''));
+  var _url = encodeURI(window.location);
+  var _appkey = encodeURI("258efff116d2466da9b7513cbae7de0b");
+  var _site = encodeURI('down.chinaz.com');
+  var _pic = '';
+  var _u = 'http://v.t.qq.com/share/share.php?title='+_t+'&url='+_url+'&appkey='+_appkey+'&site='+_site+'&pic='+_pic;
+  window.open( _u,'转播到腾讯微博', 'width=700, height=580, top=320, left=180, toolbar=no, menubar=no, scrollbars=no, location=yes, resizable=no, status=no' );
+}
+
+ 
+</script>
+
+
+<div class="footer">
+   <script src="/hz.js" type="text/javascript"></script>
+        <p class="footer-nav">
+            <a href="http://www.chinaz.com/aboutus/index.html" target="_blank">关于我们</a> |
+            <a href="http://www.chinaz.com/aboutus/contact.php?from=down" target="_blank">联系我们</a> |
+            <a href="http://www.chinaz.com/aboutus/ad.html" target="_blank">广告服务</a> |
+            <a href="http://www.chinaz.com/aboutus/link.html" target="_blank">友情链接</a> |
+            <a href="http://www.chinaz.com/aboutus/announce.html" target="_blank">版权声明</a> |
+            <a href="http://www.chinaz.com/aboutus/join.html" target="_blank">人才招聘</a> |
+            <a href="http://www.chinaz.com/aboutus/help.html" target="_blank">帮助</a> |
+            <a href="/member/submit.aspx" target="_blank">发布软件/源码</a> |
+            <a href="http://down.chinaz.com/member/contribute.aspx" target="_blank">发布文章/稿件</a>
+
+        </p>
+        <p>CopyRight 2002-2015  站长之家  Chinaz.Com ,All Rights Reserved </p>
+        <p>闽ICP备08105208号 增值电信业务经营许可证闽B2-20070004号</p>
+    </div>
+		
+	</div>
+<script language="javascript">
+var articleid = '1473';
+</script>
+
+<script type="text/javascript" src="/js/mood.js"></script>
+
+<script type="text/javascript" src="/comment.asp?style=article&category=article&id=1473&type=js"></script>
+<script language="javascript" type="text/javascript" src="/hits.asp?id=1473&t=4"></script>
+    <div style="display:none">
+    <script src="http://s23.cnzz.com/stat.php?id=749609&web_id=749609" language="JavaScript"></script>
+    <script type="text/javascript" src="http://my.chinaz.com/js/uc.js" charset="utf-8"></script>
+  </div>
+</body>
+</html>

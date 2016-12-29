@@ -1,0 +1,1022 @@
+<script type="text/javascript">
+    var username = "youbingchen";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/youbingchen";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "hfeng_2000";  
+
+    var fileName = '51769042';
+    var commentscount = 0;
+    var islock = false
+
+   window.quickReplyflag = true;
+            
+             var isBole = false;
+            
+
+</script>
+
+<!DOCTYPE html>
+<html>
+  <head>    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+   
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script> 
+   <!-- <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>-->
+     <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />    
+     <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+
+
+    <script src="http://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+
+     <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/tracking.js"></script>
+    <!-- ad end-->
+
+      <script src="//csdnimg.cn/rabbit/tracking-ad/main.js"></script>
+
+    <link rel="stylesheet" href="http://static.csdn.net/public/common/toolbar/css/index.css">
+    <link rel="stylesheet" href="http://csdnimg.cn/public/common/libs/bootstrap/css/bootstrap.css">
+ 	<link rel="stylesheet" href="http://csdnimg.cn/public/static/css/avatar.css">
+    <link rel="stylesheet" href="http://static.blog.csdn.net/skin/skin2-template/css/common.css">
+    <!-- [if IE 7]-->
+    <link rel="stylesheet" href="http://static.blog.csdn.net/skin/skin2-template/css/font-awesome.min.css">
+    <!-- [endif]-->
+    <link rel="stylesheet" href="http://static.blog.csdn.net/skin/skin2-template/css/main.css">
+    
+     <link rel="stylesheet" href="http://static.blog.csdn.net/skin/skin2-template/css/jquery.rollbar.css">
+    <link rel="stylesheet" href="http://static.blog.csdn.net/skin/skin2-template/css/style.css">
+    
+    
+    <!-- [if lt IE 9]-->
+    <script src="http://static.blog.csdn.net/skin/skin2-template/js/libs/html5shiv.min.js"></script>
+    <!-- [endif]-->
+	<script src="http://static.blog.csdn.net/scripts/skintemplatecommon.js" type="text/javascript"></script>
+
+    <script src="http://static.blog.csdn.net/scripts/skintemplateprovider.js" type="text/javascript"></script>      
+	<script src="http://static.blog.csdn.net/scripts/skintemplatecomment.js" type="text/javascript"></script>
+
+    <script src="http://c.csdnimg.cn/rabbit/cnick/cnick.js" type="text/javascript"></script>      
+   
+       
+    
+
+      <script type="text/javascript">
+          $(function () {
+              setTimeout(function () {
+                  $(".mess_name").each(function (index, item) {
+                      var u = $(this).text().split('：')[0].toString().replace("回复", "")
+                      var thisComment = $(this);
+                      if (u) {
+                          $.getJSON("https://passport.csdn.net/get/nick?callback=?", { users: u }, function (a) {
+                              if (a != null && a.data != null && a.data.length > 0) {
+                                  nick = a.data[0].n;
+                                  if (u != nick) {
+                                      thisComment.text(thisComment.text().replace(u, nick));
+                                  }
+                              }
+                          });
+                      }
+                  });
+
+                  $(".username").each(function (index, item) {
+                      var u = $(this).text().split('：')[0].toString().replace("回复", "")
+                      var thisComment = $(this);
+                      if (u) {
+                          $.getJSON("https://passport.csdn.net/get/nick?callback=?", { users: u }, function (a) {
+                              if (a != null && a.data != null && a.data.length > 0) {
+                                  nick = a.data[0].n;
+                                  if (u != nick) {
+                                      thisComment.text(thisComment.text().replace(u, nick));
+                                  }
+                              }
+                          });
+                      }
+                  });
+
+              }, 200);
+
+          });
+      </script>
+
+    <title>从流程解析Nginx对 Native aio支持 - 博客频道 - CSDN.NET</title>	
+  </head>
+  <body>
+
+       <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+   <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+    <div class="blog_left">
+      <div class="blog_l_c">
+        <h2 class="blog_l_t">youbingchen的博客</h2>
+        <h6 class="blog_l_sign">这个博客可能更新比较慢 ，主战场迁移到:http://youbingchenyoubing.leanote.com/</h6>
+        <div class="item_wrap">
+          <dl class="item_l">
+            <dt class="item">61</dt>
+            <dd class="item_name">原创</dd>
+          </dl>
+          <dl class="item_l">
+            <dt class="item">0</dt>
+            <dd class="item_name">转载</dd>
+          </dl>
+          <dl class="item_l">
+            <dt class="item">0</dt>
+            <dd class="item_name">译文</dd>
+          </dl>
+          <dl class="item_l">
+            <dt class="item">15</dt>
+            <dd class="item_name">评论</dd>
+          </dl>
+          <dl class="item_l">
+            <dt class="item">66606</dt>
+            <dd class="item_name">访问</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="blog_copyright">
+        <p><span>京 ICP 证 070598 号</span><img src="http://static.blog.csdn.net/skin/skin2-template/images/copyright.png" alt="img"></p>
+        <p>
+          Copyright © 1999-2016,
+          <br/>
+          CSDN.NET, All Rights Reserved
+        </p>
+       </div>
+    </div>
+    <div id="skin_m" class="skin_m">
+      <div id="skin_center" class="skin_center">
+          <div class="skin_center_t">
+                <h2 class="mod_most"></h2>
+                <!--include ../modules/mod_list.jade-->
+                <div class="skin_list">
+                  <dl class="list_c clearfix detail_list">
+                    <dt>
+                      <div class="date">
+                        <div class="date_t"><span>2016</span><em>六月</em></div>
+                        <div class="date_b">27</div>
+                      </div>
+                    </dt>
+                    <dd>
+                      <div class="skin_icon"><a href="javascript:;" class="set_old">原</a></div>
+                      <h3 class="list_c_t"><a href="/youbingchen/article/details/51769042">从流程解析Nginx对 Native aio支持</a></h3>  
+                        <div class="list_c_Title">
+                          <p class="detail_p">
+                            <label><span>分类：</span><em onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">nginx</em></label>
+                         </p>
+                         <p class="read_r">
+                            <label><i class="fa fa-eye" style="cursor:default"></i><span style="cursor:default"> （553）</span></label>
+                            <label><i class="fa fa-comment-o"style="cursor:default"></i><span  style="cursor:default"> （0）</span></label>
+                             
+                             
+                            <label><i class="fa fa-exclamation-triangle"></i><span onclick="javascript:report(51769042,2);return false;"> 举报</span></label>
+                            <label><i class="fa fa-bookmark-o"></i><span onclick="javascript:collectArticle('从流程解析Nginx对 Native aio支持','51769042');return false;"> 收藏</span></label>
+                             
+
+                             
+                          </p>
+                        </div>
+                      <div class="skin_detail" id="article_content">
+                        <div class="markdown_views"><p>强烈建议这篇博客和<a href="http://blog.csdn.net/youbingchen/article/details/51767587">从源码解析Nginx对 Native aio支持</a>一起阅读</p>
+
+
+
+<h1 id="aio真正的异步io简介">aio(真正的异步IO)简介</h1>
+
+<p>Linux-native aio 比传统的 POSIX aio 功能更丰富一些，重要的一点是能通过内核加速提供高性能。直接用 Linux-native aio API 比较晦涩，为了方便使用和开发 Linux-native aio 应用程序我们可以用 libaio/libaio-devel 库。不过 nginx 的作者没有用这些库，因为 nginx 需要 eventfd()，而 libaio 库里只有 0.3.107 版本起才支持 eventfd；nginx 也没有用 glibc，因为 glibc 要到 2.8 版本才支持 eventfd()，为了减少对库的依赖性，nginx 干脆直接用 Linux-native aio API (system calls).这里说到了 eventfd()，eventfd 是 Linux-native aio 其中的一个 API，用来生成 file descriptors，这些 file descriptors 可为应用程序提供更高效 “等待／通知” 的事件机制。和 pipe 作用相似，但比 pipe 更好，一方面它只用到一个 file descriptor（pipe 要用两个），节省了内核资源；另一方面，eventfd 的缓冲区管理要简单得多，pipe 需要不定长的缓冲区，而 eventfd 全部缓冲只有定长 8 bytes. </p>
+
+
+
+<h1 id="几种常见的aio">几种常见的aio</h1>
+
+
+
+<h3 id="gcc-aio">gcc AIO</h3>
+
+<p>是通过阻塞IO+线程池来实现的。主要的几个函数是aio_read/aio_write/aio_return。 <br>
+优点：支持平台多，兼容性好，无需依赖第三方库，阻塞IO可以利用到操作系统的PageCache。 <br>
+缺点：据说有一些bug和陷阱，一直未解决</p>
+
+
+
+<h3 id="libeio">Libeio</h3>
+
+<p>ibev的作者开发的AIO实现，与gcc aio类似也是使用阻塞IO+线程池实现的。优缺点类似上面</p>
+
+
+
+<h3 id="linux-native-aio">Linux Native Aio</h3>
+
+<p>由操作系统内核提供的AIO。NativeAio是真正的AIO，完全非阻塞异步的，而不是用阻塞IO和线程池模拟。主要的几个系统调用为io_submit/io_setup/io_getevents。 <br>
+优点：由操作系统提供，读写操作可以直接投递到硬件，不会浪费CPU。 <br>
+缺点：仅支持Linux，必须使用DirectIO，所以无法利用到操作系统的PageCache。对于写文件来说nativeaio的作用不大，应为本身写文件就是先写到PageCache上，直接返回，没有IO等待。</p>
+
+<h1 id="异步io">异步I/O</h1>
+
+<blockquote>
+  <p>异步IO就是把IO提交给系统，让系统替你做，做完了再用某种方式通知你(通过信号，或者其他异步方式通知，这时候，操作系统已经帮你完成IO操作，具体来说就是你那个作为传入参数的的buffer的指针所指向的空间已经读到了数据或者你的buffer的数据已经写出去了）</p>
+</blockquote>
+
+<hr>
+
+
+
+<h1 id="非阻塞io">非阻塞I/O</h1>
+
+<blockquote>
+  <p>非阻塞IO就是你要通过某种方式不定时地向系统询问你是否可以开始做某个IO(轮询啊)，当可以开始后，是要自己来完成IO(也就是说还要自己调用一次read来填充buffer或者write来不buffer的数据写出去)</p>
+</blockquote>
+
+
+
+<h1 id="小结">小结</h1>
+
+<p>所以异步I/O和 阻塞I/O之间没有必然关系。 <br>
+<strong><font color="red">注意：Linux内核级别的文件异步I/O是不支持缓存操作的，也就是说，即使需要操作的文件块在Linux文件缓存存在，也不会通过读取、更改缓存中的文件块来代替实际对磁盘的操作。目前，Nginx仅支持在读取文件时使用异步I/O，因为正常写入文件时往往是写入内存中就 立刻返回，而使用异步I/O写入时速度会明显下降</font></strong></p>
+
+<p>在Nginx中，文件异步I/O事件完成的通知也集成到epoll中，是通过IOCB_FLAG_RESFD标志位完成的。</p>
+
+
+
+<h1 id="流程">流程</h1>
+
+<p><img src="http://img.blog.csdn.net/20160627161112696" alt="nginx_aio" title=""></p>
+
+<blockquote>
+  <p>ngx_epoll_aio_init方法会把 异步I/O与epoll结合起来，当某一个异步事件完成后，ngx_eventfd句柄就处于可用的状态，这样epoll_wait在返回ngx_eventfd_event事件后就会调用它的 回调方法ngx_epoll_eventfd_handler处理已经完成的异步I/O事件 <br>
+  <img src="http://img.blog.csdn.net/20160627161151713" alt="nginx_aio2" title=""> <br>
+  那么，怎样向异步I/O上下文中提交异步I/O操作，就是利用ngx_linux_aio.read.c文件中的ngx_file_aio_read方法，在打开文件异步操作之后，这个方法将会负责磁盘文件的读取。</p>
+</blockquote>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-comment">// 文件名 ngx_linux_aio_read.c</span>
+ssize_t
+ngx_file_aio_read(ngx_file_t *file, u_char *buf, size_t size, off_t offset,
+    ngx_pool_t *pool)
+{
+    ngx_err_t         err;
+    <span class="hljs-keyword">struct</span> iocb      *piocb[<span class="hljs-number">1</span>];
+    ngx_event_t      *ev;
+    ngx_event_aio_t  *aio;
+
+    <span class="hljs-keyword">if</span> (!ngx_file_aio) {
+        <span class="hljs-keyword">return</span> ngx_read_file(file, buf, size, offset);
+    }
+
+    <span class="hljs-keyword">if</span> (file-&gt;aio == NULL &amp;&amp; ngx_file_aio_init(file, pool) != NGX_OK) {
+        <span class="hljs-keyword">return</span> NGX_ERROR;
+    }
+
+    aio = file-&gt;aio;
+    ev = &amp;aio-&gt;event;
+
+    <span class="hljs-keyword">if</span> (!ev-&gt;ready) {
+        ngx_log_error(NGX_LOG_ALERT, file-&gt;<span class="hljs-built_in">log</span>, <span class="hljs-number">0</span>,
+                      <span class="hljs-string">"second aio post for \"%V\""</span>, &amp;file-&gt;name);
+        <span class="hljs-keyword">return</span> NGX_AGAIN;
+    }
+
+    ngx_log_debug4(NGX_LOG_DEBUG_CORE, file-&gt;<span class="hljs-built_in">log</span>, <span class="hljs-number">0</span>,
+                   <span class="hljs-string">"aio complete:%d @%O:%uz %V"</span>,
+                   ev-&gt;complete, offset, size, &amp;file-&gt;name);
+
+    <span class="hljs-keyword">if</span> (ev-&gt;complete) {
+        ev-&gt;active = <span class="hljs-number">0</span>;
+        ev-&gt;complete = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">if</span> (aio-&gt;res &gt;= <span class="hljs-number">0</span>) {
+            ngx_set_errno(<span class="hljs-number">0</span>);
+            <span class="hljs-keyword">return</span> aio-&gt;res;
+        }
+
+        ngx_set_errno(-aio-&gt;res);
+
+        ngx_log_error(NGX_LOG_CRIT, file-&gt;<span class="hljs-built_in">log</span>, ngx_errno,
+                      <span class="hljs-string">"aio read \"%s\" failed"</span>, file-&gt;name.data);
+
+        <span class="hljs-keyword">return</span> NGX_ERROR;
+    }
+
+    ngx_memzero(&amp;aio-&gt;aiocb, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> iocb));
+    <span class="hljs-comment">/*这里设置的aiocb的成员就是iocb类型，aio_data设置为这个ngx_event_t事件的指针，这样，从io_getevents方法获取的io_event对象中data也是这个指针*/</span>
+    aio-&gt;aiocb.aio_data = (uint64_t) (uintptr_t) ev;
+    aio-&gt;aiocb.aio_lio_opcode = IOCB_CMD_PREAD;
+    aio-&gt;aiocb.aio_fildes = file-&gt;fd;
+    aio-&gt;aiocb.aio_buf = (uint64_t) (uintptr_t) buf;
+    aio-&gt;aiocb.aio_nbytes = size;
+    aio-&gt;aiocb.aio_offset = offset;
+    aio-&gt;aiocb.aio_flags = IOCB_FLAG_RESFD;
+    aio-&gt;aiocb.aio_resfd = ngx_eventfd;
+   <span class="hljs-comment">/*设置事件的回调函数为 ngx_file_aio_event_handler，它的调用关系是这样 :epoll_wait中调用ngx_epoll_eventfd_handler，方法将当前事件放入到ngx_posted_events队列，在延后执行的队列 中 调用ngx_file_aio_event_handler方法*/</span>
+    ev-&gt;handler = ngx_file_aio_event_handler;
+
+    piocb[<span class="hljs-number">0</span>] = &amp;aio-&gt;aiocb;
+   <span class="hljs-comment">/*调用io_submit向ngx_aio_ctx异步I/O上下文中添加1个事件，返回1表示成功*/</span>
+    <span class="hljs-keyword">if</span> (io_submit(ngx_aio_ctx, <span class="hljs-number">1</span>, piocb) == <span class="hljs-number">1</span>) {
+        ev-&gt;active = <span class="hljs-number">1</span>;
+        ev-&gt;ready = <span class="hljs-number">0</span>;
+        ev-&gt;complete = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">return</span> NGX_AGAIN;
+    }
+
+    err = ngx_errno;
+
+    <span class="hljs-keyword">if</span> (err == NGX_EAGAIN) {
+        <span class="hljs-keyword">return</span> ngx_read_file(file, buf, size, offset);
+    }
+
+    ngx_log_error(NGX_LOG_CRIT, file-&gt;<span class="hljs-built_in">log</span>, err,
+                  <span class="hljs-string">"io_submit(\"%V\") failed"</span>, &amp;file-&gt;name);
+
+    <span class="hljs-keyword">if</span> (err == NGX_ENOSYS) {
+        ngx_file_aio = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">return</span> ngx_read_file(file, buf, size, offset);
+    }
+
+    <span class="hljs-keyword">return</span> NGX_ERROR;
+}
+</code></pre>
+
+<p>ngx_event_aio_t 结构体的定义</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-comment">// 文件名 ngx_event.h</span>
+<span class="hljs-keyword">struct</span> ngx_event_aio_s {
+    <span class="hljs-keyword">void</span>                      *data;
+    <span class="hljs-comment">// 这是真正由业务模块实现的方法，在异步I/O事件完成后调用</span>
+    ngx_event_handler_pt       handler;
+    ngx_file_t                *file;
+
+<span class="hljs-preprocessor">#if (NGX_HAVE_AIO_SENDFILE)</span>
+    ssize_t                  (*preload_handler)(ngx_buf_t *file);
+<span class="hljs-preprocessor">#endif</span>
+
+    ngx_fd_t                   fd;
+
+<span class="hljs-preprocessor">#if (NGX_HAVE_EVENTFD)</span>
+    int64_t                    res;
+<span class="hljs-preprocessor">#endif</span>
+
+<span class="hljs-preprocessor">#if !(NGX_HAVE_EVENTFD) || (NGX_TEST_BUILD_EPOLL)</span>
+    ngx_err_t                  err;
+    size_t                     nbytes;
+<span class="hljs-preprocessor">#endif</span>
+
+    ngx_aiocb_t                aiocb;
+    ngx_event_t                event;
+};
+</code></pre>
+
+<blockquote>
+  <p>ngx_file_aio_read方法会向异步I/O上下文添加事件，epoll_wait在通过 ngx_eventfd描述符 检测到异步I/O事件后，会调用ngx_epoll_eventfd_handler方法将io_event事件取出来，放入ngx_posted_events队列中延后执行。ngx_posted_events队列 中 的事件执行时，则会调用ngx_file_aio_event_handler方法 。</p>
+</blockquote>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span>
+ngx_file_aio_event_handler(ngx_event_t *ev)
+{
+    ngx_event_aio_t  *aio;
+
+    aio = ev-&gt;data;
+
+    ngx_log_debug2(NGX_LOG_DEBUG_CORE, ev-&gt;<span class="hljs-built_in">log</span>, <span class="hljs-number">0</span>,
+                   <span class="hljs-string">"aio event handler fd:%d %V"</span>, aio-&gt;fd, &amp;aio-&gt;file-&gt;name);
+
+    aio-&gt;handler(ev);
+}</code></pre>
+
+<blockquote>
+  <p>这里 调用了 ngx_event_aio_t的结构体的handler回调的办法，这个 回调方法是由真正 的业务模块实现的 。也就是，任意一个业务模块要想使用文件异步I/O，就可以实现handler 方法，这样在文件 异步操作完成后，该方法就会被回调。</p>
+</blockquote>
+
+<p>对于http模块aio-&gt;handler回调指向函数ngx_http_copy_aio_event_handler(),而后续的流程主要将aio从磁盘读到缓存的数据发送到最终的客户端 <br>
+ngx_http_copy_aio_event_handler() -&gt; ngx_http_request_handler() -&gt; ngx_http_writer() -&gt; ngx_http_output_filter() -&gt; ngx_http_top_body_filter()</p></div><link rel="stylesheet" href="http://static.blog.csdn.net/public/res-min/markdown_views.css?v=1.0" />
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="skin_nav">        
+                     <div class="skin_edit"><i class="fa fa-th-list"></i>
+                     <div class="nav_list nav_list_edit"><a href="/youbingchen">文章列表</a></div>
+                  </div>
+                     
+                </div>
+                <div class="rssFix">
+        	        <a href="http://blog.csdn.net/youbingchen/rss/list" class="column"  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])"><i class="fa fa-rss"></i></a>
+                </div>        
+
+                <div id="goTopBtn" class="skin_backTop"><i class="fa fa-chevron-up"></i></div>
+        </div>
+        <div class="detail_b">
+          <p class="reprint_copy" style="display:none" id="copyright">版权声明：本文为博主原创文章，未经博主允许不得转载。</p>  
+		   <!--      
+          <div class="bole" style="display:none">
+            <h2 class="bole_t clearfix"><span>伯乐推荐</span>
+              <label>一共有<em>{bolecount}</em>位博乐进行推荐</label>
+            </h2>
+           {bolecomment}              
+          </div>		
+          -->  
+           <!-- style="color:#dd3737"style="color:#dd3737"-->
+          <h2 class="praise" >
+            <label id="digg" ArticleId="51769042" onclick="btndigga();" ><span id="btnDigg">顶</span><em>0</em></label>
+            <label id="bury" onclick="btnburya();"><span id="btnBury"   >踩</span><em>0</em></label>
+          </h2>           
+                <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+                <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+           
+             <script type="text/javascript">
+                 function btndigga() {
+                     $(".tracking-ad[data-mod='popu_222'] a").click();
+                 }
+                 function btnburya() {
+                     $(".tracking-ad[data-mod='popu_223'] a").click();
+                 }
+
+                 $(function () {
+                     if ($(".markdown_views").length > 0) {
+                         $('pre.prettyprint code').each(function () {
+                             var lines = $(this).text().split('\n').length;
+                             var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                             $(this).addClass('has-numbering').parent().append($numbering);
+                             for (i = 1; i <= lines; i++) {
+                                 $numbering.append($('<li/>').text(i));
+                             };
+                             $numbering.fadeIn(1700);
+                         });
+                     }
+                     else {
+                         $("#article_content pre").each(function () {
+                             var $this = $(this);
+                             if ($this.attr("class") != undefined) {
+                                 if ($this.attr("class").indexOf("brush:") != -1) {
+                                     var lang = $this.attr("class").split(';')[0].split(':')[1];
+                                     $this.attr('name', 'code');
+                                     $this.attr('class', lang);
+                                 }
+                                 if ($this.attr("class")) {
+                                     $this.attr('name', 'code');
+                                 }
+                             }
+                         });
+                         $('#article_content textarea[name=code]').each(function () {
+                             var $this = $(this);
+                             if ($this.attr("class").indexOf(":") != -1) {
+                                 $this.attr("class", $this.attr("class").split(':')[0]);
+                             }
+                         });
+                         dp.SyntaxHighlighter.HighlightAll('code');
+                         $('.highlighter').addClass('dp-highlighter');
+                         if (!window.clipboardData) {
+                             setTimeout("setCopyBtn()", 500);
+                         }
+
+                         function __get_code_toolbar(snippet_id) {
+                             return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                                     + snippet_id
+                                     + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                                     + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                                     + snippet_id
+                                     + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+                         }
+
+                         $("[code_snippet_id]").each(function () {
+                             __s_id = $(this).attr("code_snippet_id");
+                             if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                                 __code_tool = __get_code_toolbar(__s_id);
+                                 $(this).prev().find(".tools").append(__code_tool);
+                             }
+                         });
+
+                         $(".bar").show();
+                     }
+                 });
+            </script>
+          <div class="blog_share">
+              <!--<i class="fa fa-qq"></i><i class="fa fa-weixin"></i><i class="fa fa-weibo"></i><i class="fa fa-renren"></i><i class="fa fa-qq"></i><i class="fa fa-weixin"></i>
+              <i class="fa fa-weibo"></i><i class="fa fa-renren"></i>-->                
+               <div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+                <a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+                <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+                <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+                <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+                <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+                <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+                </div>
+                <script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+                <!-- Baidu Button END -->
+          </div>
+          <div class="forward_back">
+            <div class="back fl"><a href="javascript:void(0);" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/youbingchen/article/details/51767587';"><span><i class="fa fa-arrow-left"></i></span><em>从源码解析Nginx对 Native aio支持</em></a></div><div class="forward fr"><a href="javascript:void(0);" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/youbingchen/article/details/51782491';"><em>Nginx 模块自主开发六：源码剖析配置文件解析过程</em><span><i class="fa fa-arrow-right"></i></span></a></div>
+          </div>
+            <div>
+                <ins data-revive-zoneid="71" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+            </div>            
+        <!--  
+		{articleinsamecategory}
+            -->
+          <div class="comment" id="comment_form">
+              <div id="commentsbmitarear">
+                    <h2 class="comment_t">发表评论</h2>
+                    <dl class="publish_comment clearfix" id="commentbox">
+                      <dt><a href="http://my.csdn.net/hfeng_2000"><img src="http://avatar.csdn.net/8/8/7/1_hfeng_2000.jpg"></a></dt>
+                      <dd>                 
+			          <form action="/youbingchen/comment/submit?id=51769042" method="post" onsubmit="return subform(this);" id="commentform">
+					        <textarea class="publish_txt" id="comment_content"></textarea>
+					        <div class="publish clearfix">
+					
+					          <div class="publish_l"><i class="fa fa-code J_code"></i></div>
+
+					          <input type="hidden" id="comment_replyId" name="comment_replyId">
+					          <input type="hidden" id="comment_userId" name="comment_userId" value="">
+					          <input type="hidden" id="commentId" name="commentId" value="">
+					  
+					          <a href="javascript:void(0);" class="publish_btn"> 发表评论</a>&nbsp;&nbsp;<span id="tip_comment" style="color: Red; display: none;"></span>
+					
+					          <div class="comment-code-pop J_lang_list" id="lang_list" code="code"><a href="#html" style="width:95px;" class="long_name">HTML/XML</a><a href="#objc" style="width:95px;" class="long_name">objective-c</a><a href="#delphi" style="width:58px;" class="zhong_name">Delphi</a><a href="#ruby" class="zhong_name">Ruby</a><a href="#php">PHP</a><a href="#csharp" class="duan_name">C#</a><a style=" border-right: none;" href="#cpp" class="duan_name">C++</a><a style=" border-bottom:none;width:95px;" href="#javascript" class="long_name">JavaScript</a><a style=" border-bottom:none;width:95px;" href="#vb" class="long_name">Visual Basic</a><a style=" border-bottom:none;" href="#python" class="zhong_name">Python</a><a style=" border-bottom:none;" href="#java" class="zhong_name">Java</a><a style="border-bottom:none;" href="#css" class="duan_name">CSS</a><a style="border-bottom:none;" href="#sql" class="duan_name">SQL</a><a style="border:none; " href="#plain" class="duan_name">其它</a><span class="arrb"></span></div>
+					        </div>
+			         </form>
+                      </dd>
+                    </dl>
+               </div>
+              <a name="comments"></a>
+            <div class="comment_list" id="comment_list"></div>
+            <div  style="height:60px">&nbsp;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="skin_right">
+      <div id="skin_r_wrap" class="skin_r_wrap">
+        <div id="skin_r" class="skin_r"><i id="arrow_r" class="fa fa-arrow-right"></i>
+          <div class="mess"><a href="http://my.csdn.net/youbingchen"><img src="http://avatar.csdn.net/F/2/1/1_youbingchen.jpg" alt="img" class="head"></a>
+            <p class="mess_name">youbingchen</p>
+            <div class="grade">
+                <p  title="积分：1257"><span>等级：</span><img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog4.png"></p>
+                <p><span>排名：</span><span>千里之外</span></p>
+            </div>
+            <div class="blog_medal"><a href="http://blog.csdn.net/experts/rule.html"></a>
+              <div class="medal_c"></div>
+              <div class="attention">
+			  <a href="javascript:void(0);" id="span_add_follow"><i class="fa fa-plus"></i><span>加关注</span></a>
+			  <a href="javascript:void(0);" onClick="window.open('http://msg.csdn.net/letters/model?receiver=youbingchen','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"><i class="fa fa-envelope-o"></i><span>发私信</span></a>			  			 
+			  </div>   
+			   <div class="contact"></div>         
+            </div>
+          </div>
+          <div class="classify">     
+             <!--
+            <dl class="classify_list js_list">
+	             <dt>
+	                  <div class="js_column"><i class="fa fa-th"></i><a href="#" class="column">文章分类</a></div>
+	            </dt>
+            </dl>
+
+                  <dl class="classify_list">
+              <dt><i class="fa fa-play-circle"></i><a  href="/youbingchen/blog/course" class="column">我的课程</a></dt>
+            </dl> 
+		    -->	    	
+            
+            
+                
+               
+               <dl class="classify_list">
+                     <div class="article_search">
+                         <div class="article_search_c">
+                            <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+                                <input type="text" id="inputSearch" placeholder="文章搜索"><i class="fa fa-search" id="btnSubmit"></i>
+                            </form>
+                         </div>
+                     </div>
+               </dl>  
+                    
+            <dl class="classify_list">
+              <dt><i class="fa fa-file-text"></i><a  href="/youbingchen/blog/column" class="column">博客专栏</a> </dt>
+            </dl>  
+                    
+           <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-th"></i><span class="column">文章分类</span></div>
+                <ul id="article_list0" class="article_list">
+				  <li><a href="/youbingchen/article/category/6243383" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C++ 模型对象</a><span>（3）</span></li><li><a href="/youbingchen/article/category/6243831" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">面试经典题</a><span>（3）</span></li><li><a href="/youbingchen/article/category/6244865" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Shell脚本</a><span>（2）</span></li><li><a href="/youbingchen/article/category/6246384" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">git</a><span>（1）</span></li><li><a href="/youbingchen/article/category/6247390" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C++</a><span>（7）</span></li><li><a href="/youbingchen/article/category/6248569" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据结构</a><span>（0）</span></li><li><a href="/youbingchen/article/category/6259318" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">go语言</a><span>（4）</span></li><li><a href="/youbingchen/article/category/6260691" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">虚拟机</a><span>（1）</span></li><li><a href="/youbingchen/article/category/6260822" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">linux</a><span>（9）</span></li><li><a href="/youbingchen/article/category/6262200" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Hadoop</a><span>（6）</span></li><li><a href="/youbingchen/article/category/6263213" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">nginx</a><span>（26）</span></li><li><a href="/youbingchen/article/category/6264544" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Linux网络编程</a><span>（4）</span></li><li><a href="/youbingchen/article/category/6281733" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">NoSQL数据库</a><span>（0）</span></li><li><a href="/youbingchen/article/category/6281734" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Spark</a><span>（0）</span></li><li><a href="/youbingchen/article/category/6297513" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">常用但不常见的数据结构</a><span>（0）</span></li><li><a href="/youbingchen/article/category/6349966" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据库</a><span>（1）</span></li>                  
+                </ul>
+              </dt>
+              <dd style="display:none"><a href="#" class="article_add"><i class="fa fa-plus"></i></a></dd>
+            </dl>
+            
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-calendar"></i><span class="column">文章存档</span></div>
+                <ul id="article_list1" class="article_list">
+                 
+                    <li><a href="/youbingchen/article/month/2016/08">2016年08月</a><span>(5)</span></li>
+                
+                    <li><a href="/youbingchen/article/month/2016/07">2016年07月</a><span>(8)</span></li>
+                
+                    <li><a href="/youbingchen/article/month/2016/06">2016年06月</a><span>(38)</span></li>
+                
+                    <li><a href="/youbingchen/article/month/2016/05">2016年05月</a><span>(10)</span></li>
+                
+                </ul>
+              </dt>
+            </dl>
+                 
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-eye"></i><span class="column">阅读排行</span></div>
+                <ul class="article_list">
+                
+                 <li><a href="/youbingchen/article/details/51489154">bulong_filter</a><span>（10628）</span></li>
+                 
+                 <li><a href="/youbingchen/article/details/51789088">Nginx 模块自主开发七：源码剖析整个Nginx框架</a><span>（8873）</span></li>
+                 
+                 <li><a href="/youbingchen/article/details/51518092">海量数据（面向面试）</a><span>（7124）</span></li>
+                 
+                 <li><a href="/youbingchen/article/details/51720983">四：深入Nginx之事件和连接 （之一）</a><span>（6386）</span></li>
+                 
+                 <li><a href="/youbingchen/article/details/51754986">Nginx 缓存机制 详解之一 缓存管理进程</a><span>（6332）</span></li>
+                 
+                 <li><a href="/youbingchen/article/details/51782491">Nginx 模块自主开发六：源码剖析配置文件解析过程</a><span>（6158）</span></li>
+                 
+                 <li><a href="/youbingchen/article/details/51767587">从源码解析Nginx对 Native aio支持</a><span>（5727）</span></li>
+                 
+                 <li><a href="/youbingchen/article/details/51707792">大数据处理架构Hadoop配置</a><span>（2434）</span></li>
+                 
+                 <li><a href="/youbingchen/article/details/52095740">Go安装</a><span>（1264）</span></li>
+                 
+                 <li><a href="/youbingchen/article/details/51671479">Nginx TCP/UDP 代理</a><span>（839）</span></li>
+                 
+                </ul>
+              </dt>
+            </dl>
+            
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-comments"></i><span class="column">评论排行</span></div>
+                <ul class="article_list">
+                  
+                  <li><a href="/youbingchen/article/details/51789088">Nginx 模块自主开发七：源码剖析整个Nginx框架</a><span>（11）</span></li>
+                  
+                  <li><a href="/youbingchen/article/details/51836286">Nginx 模块自主开发十: 设计一个基于NGINX 的缓存服务</a><span>（3）</span></li>
+                  
+                  <li><a href="/youbingchen/article/details/51671479">Nginx TCP/UDP 代理</a><span>（1）</span></li>
+                  
+                  <li><a href="/youbingchen/article/details/51518092">海量数据（面向面试）</a><span>（1）</span></li>
+                  
+                  <li><a href="/youbingchen/article/details/51511113">C++基础(一些经常混淆的概念)</a><span>（0）</span></li>
+                  
+                  <li><a href="/youbingchen/article/details/52166318">Linux 虚拟内存机制</a><span>（0）</span></li>
+                  
+                  <li><a href="/youbingchen/article/details/51506716">git代码版本控制</a><span>（0）</span></li>
+                  
+                  <li><a href="/youbingchen/article/details/51502228">shell 脚本学习</a><span>（0）</span></li>
+                  
+                  <li><a href="/youbingchen/article/details/51499115">Linux 的(cut,sed,awk,grep,sort)</a><span>（0）</span></li>
+                  
+                  <li><a href="/youbingchen/article/details/51493434">剑指offer经典题（利用C++的特性）</a><span>（0）</span></li>
+                  
+                </ul>
+              </dt>
+            </dl>
+                
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-list-ol"></i><span class="column">推荐文章</span></div>
+                <ul class="article_list">
+                 <ul>
+<li><a href="http://blog.csdn.net/lmj623565791/article/details/53370414" target="_blank">* Android 反编译初探 应用是如何被注入广告的</a></li>
+<li><a href="http://blog.csdn.net/foruok/article/details/53500801" 
+target="_blank">* 凭兴趣求职80%会失败，为什么</a></li>
+<li><a href="http://blog.csdn.net/AndroidMsky/article/details/53490459" 
+target="_blank">* 安卓微信自动抢红包插件优化和实现</a></li>
+<li><a href="http://blog.csdn.net/poem_qianmo/article/details/53240330" target="_blank">* 【游戏设计模式】之四 《游戏编程模式》全书内容提炼总结</a></li>
+<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/53404018" 
+target="_blank">* 带你开发一款给Apk中自动注入代码工具icodetools(完善篇)</a></li>
+
+
+</ul>
+                </ul>
+              </dt>
+            </dl>
+                  
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-commenting"></i><span class="column">最新评论</span></div>
+                <ul class="article_list new_comment">
+                  
+                    <li>                    
+                    <p><a href="/youbingchen/article/details/51671479">Nginx TCP/UDP 代理</a></p>                   
+                    <p><a href="/gaocongly" class="reply_name">gaocongly</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>请问，udp 代理有测试过吗，我下载了最新的V1.11.4版本，在windows环境下载做测试，提示...</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="/youbingchen/article/details/51836286">Nginx 模块自主开发十: 设计一个基于NGINX 的缓存服务</a></p>                   
+                    <p><a href="/youbingchen" class="reply_name">youbingchen</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>@shliujing:你那个怎么搞的</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="">Nginx 模块自主开发十: 设计一个基于NGINX 的缓存服务</a></p>                   
+                    <p><a href="/shliujing" class="reply_name">shliujing</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>http://v.youku.com/v_show/id_XMTY0ODY1Nzk0MA==.htm...</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="">Nginx 模块自主开发十: 设计一个基于NGINX 的缓存服务</a></p>                   
+                    <p><a href="/shliujing" class="reply_name">shliujing</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>导演，有时间去我博客，玩玩"high"，哈林摇特效很带感~</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="/youbingchen/article/details/51789088">Nginx 模块自主开发七：源码剖析整个Nginx框架</a></p>                   
+                    <p><a href="/shliujing" class="reply_name">shliujing</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>就是友情链接啊。我这边加好了。你看看我：http://www.iamlj.com/</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="">Nginx 模块自主开发七：源码剖析整个Nginx框架</a></p>                   
+                    <p><a href="/youbingchen" class="reply_name">youbingchen</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>@shliujing:什么东东？</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="">Nginx 模块自主开发七：源码剖析整个Nginx框架</a></p>                   
+                    <p><a href="/shliujing" class="reply_name">shliujing</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>导演，方便加了有链么？我那边先给你加好。</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="">Nginx 模块自主开发七：源码剖析整个Nginx框架</a></p>                   
+                    <p><a href="/shliujing" class="reply_name">shliujing</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>不能下一页真蛋疼...</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="">Nginx 模块自主开发七：源码剖析整个Nginx框架</a></p>                   
+                    <p><a href="/youbingchen" class="reply_name">youbingchen</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>@shliujing:右边文章分类，或是直接访问http://blog.csdn.net/youbi...</i></p>                    
+                  </li>      
+                 
+                    <li>                    
+                    <p><a href="">Nginx 模块自主开发七：源码剖析整个Nginx框架</a></p>                   
+                    <p><a href="/shliujing" class="reply_name">shliujing</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>导演，这个博客主题简单，但是用的有点蛋疼。比如“50 原创”不能点击，还有键盘失效，下一页的“Pag...</i></p>                    
+                  </li>      
+                           
+                </ul>
+              </dt>
+            </dl>
+                
+
+            <!--
+           [startblogcolumn]            
+             [startsearch]   
+               <dl class="classify_list">
+                     <div class="article_search">
+                         <div class="article_search_c">
+                            <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+                                <input type="text" id="inputSearch" placeholder="文章搜索"><i class="fa fa-search" id="btnSubmit"></i>
+                            </form>
+                         </div>
+                     </div>
+               </dl>  
+            [endsearch]   
+            
+            [startspecialcolumn]        
+            <dl class="classify_list">
+              <dt><i class="fa fa-file-text"></i><a  href="/youbingchen/blog/column" class="column">博客专栏</a> </dt>
+            </dl>  
+            [endspecialcolumn]   
+            
+             [startcategory]        
+           <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-th"></i><span class="column">文章分类</span></div>
+                <ul id="article_list0" class="article_list">
+				  {articlecategorys}                  
+                </ul>
+              </dt>
+              <dd style="display:none"><a href="#" class="article_add"><i class="fa fa-plus"></i></a></dd>
+            </dl>
+            [endcategory]
+
+            [startarchive]
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-calendar"></i><span class="column">文章存档</span></div>
+                <ul id="article_list1" class="article_list">
+                 [startlist]
+                    <li><a href="/{0}/article/month/{1}/{2}">{1}年{2}月</a><span>({3})</span></li>
+                [endlist]
+                </ul>
+              </dt>
+            </dl>
+             [endarchive]    
+                [startviewcountarticles]    
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-eye"></i><span class="column">阅读排行</span></div>
+                <ul class="article_list">
+                [startlist]
+                 <li><a href="{columnarticleurl}">{columnarticletitle}</a><span>（{columnarticlecount}）</span></li>
+                 [endlist]
+                </ul>
+              </dt>
+            </dl>
+            [endviewcountarticles]
+                [startcommentcountarticles]
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-comments"></i><span class="column">评论排行</span></div>
+                <ul class="article_list">
+                  [startlist]
+                  <li><a href="{columnarticleurl}">{columnarticletitle}</a><span>（{columnarticlecommentcount}）</span></li>
+                  [endlist]
+                </ul>
+              </dt>
+            </dl>
+                [endcommentcountarticles]
+                [starthomepagearticles]
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-list-ol"></i><span class="column">推荐文章</span></div>
+                <ul class="article_list">
+                 {cloumcontent}
+                </ul>
+              </dt>
+            </dl>
+                  [endhomepagearticles]
+                [startnewcomments]
+            <dl class="classify_list js_list">
+              <dt>
+                <div class="js_column_wrap"><i class="fa fa-commenting"></i><span class="column">最新评论</span></div>
+                <ul class="article_list new_comment">
+                  [startlist]
+                    <li>                    
+                    <p><a href="{articleurl}">从流程解析Nginx对 Native aio支持</a></p>                   
+                    <p><a href="/{commentusername}" class="reply_name">{commentusername}</a><span>回复：</span></p>
+                    <p class="reply_c"><em></em><i>{commentcontent}</i></p>                    
+                  </li>      
+                 [endlist]          
+                </ul>
+              </dt>
+            </dl>
+                [endnewcomments]
+                [startcustom]
+                   <dl class="classify_list js_list">
+                      <dt>
+                        <div class="js_column_wrap"><i class="fa fa-cube"></i><span class="column">{columntitle}</span></div>
+                        <ul class="article_list">
+                         {columcontent}
+                        </ul>
+                      </dt>
+                    </dl>
+                [endcustom]
+         [endblogcolumn]    
+            -->
+
+            <!--
+            <dl class="classify_list">
+              <dt class="rss"><i class="fa fa-rss"></i>			 
+			  <span class="column">
+			   	<a href="http://blog.csdn.net/youbingchen/rss/list" class="column"  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">RSS订阅</a>
+			   </span>
+			  </dt>
+            </dl>
+            -->
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="skin_right_small" class="skin_right_small">
+      <div class="skin_r_small"><i id="faNavicon" class="fa fa-navicon"></i>
+        <div class="head_small"><a href="http://my.csdn.net/youbingchen"><img src="http://avatar.csdn.net/F/2/1/1_youbingchen.jpg" alt="img"></a></div>
+        <ul class="rSmallList">  
+           
+                
+                  <li class="small_article"><i class="fa fa-file-text"></i><a href="/youbingchen/blog/column" class="small_column">博客专栏</a></li>
+                    
+                  <li class="small_article js_smallArticle"><i class="fa fa-th"></i><a href="#" class="small_column">文章分类</a></li>
+                
+                  <li class="small_article js_smallArticle"><i class="fa fa-calendar"></i><a href="#" class="small_column">文章存档</a></li>
+                
+                  <li class="small_article js_smallArticle"><i class="fa fa-eye"></i><a href="#" class="small_column">阅读排行</a></li>
+              
+                  <li class="small_article js_smallArticle"><i class="fa fa-comments"></i><a href="#" class="small_column">评论排行</a></li>
+              
+                  <li class="small_article js_smallArticle"><i class="fa fa-list-ol"></i><a href="#" class="small_column">推荐文章</a></li>
+              
+                  <li class="small_article js_smallArticle"><i class="fa fa-commenting"></i><a href="#" class="small_column">最新评论</a></li>
+                      
+          <!-- 
+           [startblogcolumnsmall]   
+               [startspecialcolumn]    
+                  <li class="small_article"><i class="fa fa-file-text"></i><a href="/youbingchen/blog/column" class="small_column">博客专栏</a></li>
+               [endspecialcolumn]  
+                [startcategory]     
+                  <li class="small_article js_smallArticle"><i class="fa fa-th"></i><a href="#" class="small_column">文章分类</a></li>
+                [endcategory]     
+              [startarchive]
+                  <li class="small_article js_smallArticle"><i class="fa fa-calendar"></i><a href="#" class="small_column">文章存档</a></li>
+              [endarchive]
+              [startviewcountarticles]  
+                  <li class="small_article js_smallArticle"><i class="fa fa-eye"></i><a href="#" class="small_column">阅读排行</a></li>
+              [endviewcountarticles]  
+              [startcommentcountarticles]
+                  <li class="small_article js_smallArticle"><i class="fa fa-comments"></i><a href="#" class="small_column">评论排行</a></li>
+              [endcommentcountarticles]
+              [starthomepagearticles]
+                  <li class="small_article js_smallArticle"><i class="fa fa-list-ol"></i><a href="#" class="small_column">推荐文章</a></li>
+              [endhomepagearticles]
+              [startnewcomments]
+                  <li class="small_article js_smallArticle"><i class="fa fa-commenting"></i><a href="#" class="small_column">最新评论</a></li>
+              [endnewcomments]
+              [startcustom]
+                  <li class="small_article js_smallArticle"><i class="fa fa-cube"></i><a href="#" class="small_column">{columntitle}</a></li>
+              [endcustom]
+          [endblogcolumnsmall]    
+          -->         
+        </ul>        
+      </div>
+    </div>
+    <div id="mask"></div>
+    <script type="text/javascript" src="http://static.blog.csdn.net/skin/skin2-template/js/apps/accordion.js"></script>
+    
+    <script type="text/javascript" src="http://static.blog.csdn.net/skin/skin2-template/js/apps/jquery.mousewheel.js"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/skin/skin2-template/js/apps/jquery.rollbar.min.js"></script>
+    
+    <script type="text/javascript" src="http://static.blog.csdn.net/skin/skin2-template/js/apps/transition.js"></script>  
+     <script id="noticeScript" type="text/javascript" charset="utf-8" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" src="http://c.csdnimg.cn/public/common/toolbar/js/notify.js"></script>  
+    <!--script( type="text/javascript" src="http://csdnimg.cn/pubfooter/js/publib_footer.js" )-->
+    <!--script( type="text/javascript" src="http://static.csdn.net/public/common/toolbar/js/toolbar.js" )-->
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>
+
+     <div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+    </div>
+    <div id="report_dialog">
+    </div>
+
+    <div id="popup_mask"></div>
+    <style  type="text/css">
+        #popup_mask
+        {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            left: 0px;
+            top: 0px;
+            opacity: 0.3;
+            filter: alpha(opacity=30);
+            display: none;
+        }
+
+         .skin_list  dl dd div ol {  
+        margin-left:15px;
+            }  
+
+       .skin_list dl dd div ol li {  
+         display:list-item;list-style-type:decimal;margin-left:15px;
+            }       
+
+    </style>     
+      
+        <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+        </div> 
+
+       <!-- 广告位开始 -->
+        <ins data-revive-zoneid="72" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+   <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_code.css" />
+            <script type="text/javascript" src="http://static.blog.csdn.net/scripts/saveToCode.js"></script>     
+	<script type="text/javascript" src="//csdnimg.cn/rabbit/tracking-ad/main.js?75eacd8></script>
+  </body>
+</html>
+ <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/async_new.js"></script>      
+
+<script  type="text/javascript">
+    $(function(){
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },500);
+    });
+</script>
+

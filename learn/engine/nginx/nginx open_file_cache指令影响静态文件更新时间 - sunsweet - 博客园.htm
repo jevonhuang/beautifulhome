@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>nginx open_file_cache指令影响静态文件更新时间 - sunsweet - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=03KQeESEmpLfzDqUo0NiWUg5Zd5aRam3JHBZTK05Wug1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/LessIsMore/bundle-LessIsMore.css?v=0F7NKnmmVYJDCp-KQ2sA7Dn1GREfDmWWyNjiJP9YrzE1"/>
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="/skins/LessIsMore/bundle-LessIsMore-mobile.css?v=-559DaKqzQsHh-ZmNj3u85wntv3Lbkjpzbkkq1zkN_E1"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/sunsweet/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/sunsweet/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/sunsweet/wlwmanifest.xml"/>
+<script src="//common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'sunsweet', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="/bundles/blog-common.js?v=hH1lCMV8WaIu271Nx7jPuv36TENW9-RsSxziLxUpjtc1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+		
+<!--done-->
+<div class="title"><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/sunsweet/">sunsweet</a></div>
+<div class="subtitle"></div>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li id="nav_sitehome"><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li id="nav_myhome"><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/sunsweet/">首页</a></li>
+<li id="nav_newpost"><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li id="nav_contact"><a id="blog_nav_contact" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/sunsweet">联系</a></li>
+<li id="nav_rss"><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/sunsweet/rss">订阅</a>
+<!--<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/sunsweet/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li id="nav_admin"><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<!--done-->
+随笔-77&nbsp;
+文章-0&nbsp;
+评论-4&nbsp;
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/sunsweet/p/3338684.html">nginx open_file_cache指令影响静态文件更新时间</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>有这样的需求，客户上传图片，覆盖以前的图片，因为客户可能会频繁的换图片，上传覆盖完后，页面会自动请求刚才的图片，图片已经换掉，但是url并没有换，因为图片名字没改。</p>
+<p>因为更新的图要及时显示所以这个目录里的图片过期时间是</p>
+<div class="cnblogs_code">
+<pre>location ~ .*\path\.(jpg|png|<span style="color: #000000;">jpeg)$<br />{
+            expires </span><span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>但是并没有出现更新，浏览器依然会用本地的缓存。</p>
+<p>抓包发现，浏览器发现图片过期并发送了请求带有<span>If-Modified-Since</span>，得到的是304且<span>Last-Modified时间没变</span>，也就是说nginx说此图片没有更改，浏览器就用本地缓存了。但是通过stat命令发现此图片modify时间已经变化，确实更改了。</p>
+<p>超找原因，发现是open_file_cache选项，open_file_cache max=102400 inactive=20s;</p>
+<p><span>open_file_cache 指令会对以下信息进行缓存：</span><br /><span>* 打开文件描述符的文件大小和修改时间信息</span><br /><span>* 存在的目录信息</span><br /><span>* 搜索文件的错误信息：文件不存在无权限读取等信息</span></p>
+<p><span><span>max指定缓存数量 &nbsp;&nbsp;<span>inactive是指经过多长时间文件没被请求后删除缓存。我指定了20s,所以等到至少20s不访问这个文件，相应</span></span></span>缓存的这个文件的更改信息才会被删除。</p>
+<p><span>open_file_cache_valid 30s;</span></p>
+<p>#<span>这个是指多长时间检查一次缓存的有效信息。也就是说即使我一直访问这个文件，30s后会检查此文件的更改信息是否变化，发现变化就更新。</span></p>
+<p><span><span>open_file_cache_min_uses 1;</span></span></p>
+<p>&nbsp;</p>
+<p>#<span>指令中的inactive参数时间内文件的最少使用次数，如果超过这个数字，文件更改信息一直是在缓存中打开的。</span></p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+
+		</div>
+		<div class = "postDesc">posted @ <span id="post-date">2013-09-25 14:25</span> <a href='http://www.cnblogs.com/sunsweet/'>sunsweet</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=3338684" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(3338684);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=127594,cb_entryId=3338684,cb_blogApp=currentBlogApp,cb_blogUserGuid='c1278982-76f9-e111-aa3f-842b2b196315',cb_entryCreatedDate='2013/9/25 14:25:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id='comment_form' class='commentform'>
+<a name='commentform'></a>
+<div id='divCommentShow'></div>
+<div id='comment_nav'><span id='span_refresh_tips'></span><a href='javascript:void(0);' onclick='return RefreshCommentList();' id='lnk_RefreshComments' runat='server' clientidmode='Static'>刷新评论</a><a href='#' onclick='return RefreshPage();'>刷新页面</a><a href='#top'>返回顶部</a></div>
+<div id='comment_form_container'></div>
+<div class='ad_text_commentbox' id='ad_text_under_commentbox'></div>
+<div id='ad_t2'></div>
+<div id='opt_under_post'></div>
+<div id='ad_c1' class='c_ad_block'></div>
+<div id='under_post_news'></div>
+<div id='ad_c2' class='c_ad_block'></div>
+<div id='under_post_kb'></div>
+<div id='HistoryToday' class='c_ad_block'></div>
+<script type='text/javascript'>
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright &copy;2016 sunsweet
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+</body>
+</html>

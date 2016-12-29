@@ -1,0 +1,977 @@
+
+<!DOCTYPE HTML>
+<html>
+<head  lang="cn">
+	<title>Nginx 配置高并发 - OPEN 开发经验库</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<meta name=keywords content="Nginx,Nginx ">
+	<meta name=description content="一般来说nginx 配置文件中对优化比较有作用的为以下几项：
+
+1.  worker_processes 8;
+
+nginx 进程数，建议按照cpu 数目来指定，一般为它的倍数 (如,2个四核的cpu计为8)。
+
+">
+	<link rel="shortcut icon" href="/lib/favicon.ico">
+	<link rel=copyright href="http://www.open-open.com/">
+
+	<link href="//cdn.bootcss.com/highlight.js/9.2.0/styles/idea.min.css" rel="stylesheet">
+	<link href="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.min.css" rel="stylesheet">
+	
+	<link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+	<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/lib/css/jquery-confirm.css" rel="stylesheet">
+	<link href="http://www.open-open.com/resource/styles.css" rel="stylesheet">
+
+	<style type="text/css" media="screen, projection">
+		/*<![CDATA[*/
+		@import "/lib/css/common.css";
+		@import "/lib/css/main.css";
+		@import "/lib/css/jGrowl.css";
+		/*]]>*/
+		.articleIndex li.active a {
+			color: #0099ff;
+		}
+	</style>
+	<style type="text/css">
+		.topheader h1{font-size: 24px;margin: 0;}
+		.crumbs{padding-bottom: 5px;font-size: 11px;}.crumbs,.crumbs a,.meta{color: #bbb;}
+		#tag-list{margin-top: 10px;}
+		#tag-list a{background: #fff;padding: 2px 10px;text-decoration: none;}
+		#tag-list a:hover{background: #c5e2ff;color: #0099ff;}
+		.crumbs a:hover{color: #0099ff;}
+		#readercontainer{background: #fff;padding: 40px 89px;}
+
+		.post-nav ul{
+			margin: 0;
+		}
+		.post-nav>ul>li a{
+			padding-left: 10px;
+		}
+		.post-nav>ul>li>ul>li a{
+			padding-left: 30px;
+		}
+		.post-nav>ul>li>ul>li>ul>li a{
+			padding-left: 50px;
+		}
+		.post-nav ul li.active a{
+			border-left: 2px solid #0099ff;
+		}
+
+		.aside-fixed {
+			left: 50%;
+			margin-left: 310px;
+			position: fixed;
+			top: 65px;
+			width: 260px;
+		}
+		.bdsharebuttonbox {
+			background: #eee none repeat scroll 0 0;
+			margin-top: 10px;
+			padding: 10px;
+			width: 100%;
+		}
+
+	</style>
+
+	<script type="text/javascript">
+		if(window.location.toString().indexOf('pref=padindex') != -1){
+		}else{
+			if(/AppleWebKit.*Mobile/i.test(navigator.userAgent) || (/MIDP|SymbianOS|NOKIA|SAMSUNG|LG|NEC|TCL|Alcatel|BIRD|DBTEL|Dopod|PHILIPS|HAIER|LENOVO|MOT-|Nokia|SonyEricsson|SIE-|Amoi|ZTE/.test(navigator.userAgent))){
+				if(window.location.href.indexOf("?mobile")<0){
+					try{
+						if(/Android|Windows Phone|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
+							window.location.href="http://m.open-open.com/m/lib/view/1392942521299.html";
+						}else if(/iPad/i.test(navigator.userAgent)){
+							window.location.href="http://m.open-open.com/m/lib/view/1392942521299.html"
+						}else{
+							window.location.href="http://m.open-open.com/m/lib/view/1392942521299.html"
+						}
+					}catch(e){}
+				}
+			}
+		}
+	</script>
+
+
+	<script type="text/javascript">
+		var rooturl="/lib";
+		var wgDocKey='1392942521299';
+		var wgDocTitle='Nginx 配置高并发';
+		var wgDocStatusFlag='';
+		var wgUserFolders=null;
+		var wgDownFrame=null;
+		var wgCostByUser=null;
+		var wgDocFavoriteByUser=false;
+		var wgDocScoreByUser=null;
+		var wgUserLogined=0;
+		var tb_pathToImage = "/lib/images/loadingAnimation.gif";
+
+
+	</script>
+
+
+
+
+</head>
+<body id=view>
+
+
+<style>
+	.global-tags{background: #333;color: #ababab;height: 30px;line-height: 30px;width: 100%;}
+	.global-tags .container{position: relative;}
+	.global-tags ul{ height: 30px; margin: 0; overflow: hidden;}
+	.global-tags a{color:#ababab;padding: 5px; }
+	.global-tags a:hover{color:#e0e0e0; }
+	.global-tags li { display: inline-block; padding: 0; }
+	.global-tags  .more { background-color: #333; height: 30px; position: absolute; right: 0; top: 0; width: 30px; }
+	.global-tags  .more:before { background-image: linear-gradient(90deg, rgba(0, 95, 60, 0), #333); background-size: 100% auto; content: ""; height: 100%; left: -20px; position: absolute; top: 0; width: 20px; }
+
+	/* menu */
+	.all-sort{z-index: 100;position: absolute;left: 15px;top: 30px;display: none;}
+	.all-sort-head{background: #ff3c00; color: #fff; margin-right: 20px; text-align: center; width: 160px;float: left;}
+	.all-sort-head a{color: #fff;}
+	.item-list .subitem{float:left;padding:20px;}
+	.all-sort-list{position:relative;width:160px;border:2px solid #393939;border-top:none;background:#393939;float: left;z-index: 100;}
+	.all-sort-list .item .parent{font-weight: 700;border: none;width: 120px;text-align: right;margin-right: 2px;}
+	.all-sort-list .item .parent i{font: 400 9px/14px consolas; height: 14px; margin-left: 10px; width: 4px;}
+	.all-sort-list .item.bo{border-top:none;}
+	.all-sort-list .item h3{height:40px;line-height:40px;font-size:14px;font-weight:normal;width:158px;overflow:hidden; color:#ffffff;margin: 0;}
+	.all-sort-list .item h3 a{color: #ffffff;}
+	.all-sort-list .item:hover h3,.all-sort-list .item:hover span,.all-sort-list .item:hover h3 a,.all-sort-list .item .active ,.all-sort-list .item .active a,.all-sort-list .item .active span{color:#E4393C;}
+	.all-sort-list .item span{padding:0px 5px;color:#ffffff;font-family:"\5B8B\4F53";}
+	.all-sort-list .item a{text-decoration:none;}
+	.all-sort-list .subitem a{ float: left;  margin:5px 20px 5px 0;border-left:1px solid #eee;line-height: 14px;height: 20px;}
+	.all-sort-list .item a:hover{color:#E4393C;}
+	.all-sort-list .item:hover h3,.all-sort-list .item .active{position:relative;z-index:13;background:#FFF;border-color:#DDD;border-width:1px 0px;border-style:solid;}
+	.all-sort-list .item-list{ display:none; position:absolute; width:705px; min-height:360px; _height:360px; background:#FFF; left:157px;  border:1px solid #DDD; top:0; z-index:10; }
+
+</style>
+
+
+<header class="site-header">
+	<div class="header-top ">
+		<div class="header-top-inner">
+			<div class="" style="margin: 0 30px;">
+				<div class="row">
+					
+						<div class="header-talet pull-left">
+							<a  href="http://www.open-open.com/">首页</a> &nbsp;
+							<a class="" href="http://www.open-open.com/code/">代码</a> &nbsp;
+							<a class="" href="http://www.open-open.com/doc/">文档</a> &nbsp;
+							<a title='OPEN论坛频道' href="http://www.open-open.com/solution/">问答</a> &nbsp;
+							<a title="OPEN资讯" class="" href="http://www.open-open.com/news/">资讯</a> &nbsp;
+							<a title="OPEN经验库" class="active" href="http://www.open-open.com/lib/" >经验</a> &nbsp;
+							<a title="GitHub日报" class="" href="http://www.open-open.com/github/">GitHub日报</a>
+							&nbsp;|&nbsp;
+							<a  class="active" title=" 安卓开发专栏" target="_blank" href="http://www.open-open.com/lib/list/177">安卓开发专栏</a>
+							&nbsp;|&nbsp;
+							<a class="active" href="/lib/tag/开发者周刊"  target="_blank"  rel="tag">开发者周刊</a>&nbsp;|&nbsp;
+							<a class="active" href="http://www.open-open.com/lib/view/open1475497562965.html"  target="_blank"  rel="tag">Android Studio 使用推荐</a>&nbsp;|&nbsp;
+							<a class="active" href="http://www.open-open.com/lib/view/open1475497355674.html"  target="_blank"  rel="tag">Android开发推荐</a>
+							
+						</div>
+					
+						<div class="user-info pull-right" id="Personal">
+							
+								<a href="#" title="登录OPEN经验库" class="login">登录</a>&nbsp;&nbsp;
+								<a href="#" title="注册新的账号" class="register">注册</a>
+							
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<nav class="navbar ">
+		<div class="container">
+			<div class="navbar-header" style="margin-right: 30px;">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+						aria-expanded="false" aria-controls="navbar">
+					<span aria-hidden="true" class="glyphicon glyphicon-menu-hamburger"></span>
+					<span aria-hidden="true" class="glyphicon glyphicon-menu-up"></span>
+				</button>
+				<a class="top-logo" href="//www.open-open.com/lib"><span>www.open-open.com/lib</span></a>
+				<span style="font-size: 26px;color: #db6d4c">OPEN经验</span>
+				<span style="font-size: 12px;color: #b5b5b5"></span>
+			</div>
+
+			<div class="pull-right" style="padding: 20px;">
+				<button class="btn btn-info br40" id="upload" type="button">投稿</button>
+			</div>
+			<div id="search">
+				<form onsubmit="document.charset='utf-8';" accept-charset="utf-8" method="post" action="/lib/query" name="sf">
+					<input type="hidden" value="all" name="site">
+					<div class="input-group">
+						<input type="text" x-webkit-speech="" placeholder="经验搜索" class="form-control" name="q" id="kw">
+                      <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                      </span>
+
+					</div>
+				</form>
+
+				<!-- /input-group -->
+
+			</div>
+
+		</div>
+	</nav>
+	<div class="global-tags">
+		<div class="container">
+			<div class="all-sort-head"><a href="/lib/list/all">全部经验分类</a>&nbsp;<i aria-hidden="true" class="fa fa-toggle-down"></i></div><div class="all-sort"><div class="all-sort-list"><div data-submenu-id="submenu1" class="item bo"><h3><span>·</span><a href="/lib/list/1">软件开发</a></h3><div id="submenu1" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/405">VR</a><a href="/lib/list/2">Web框架</a><a href="/lib/list/3">GUI开发框架</a><a href="/lib/list/4">图表/报表制作</a><a href="/lib/list/5">搜索引擎</a><a href="/lib/list/6">模板引擎</a><a href="/lib/list/7">缓存组件</a><a href="/lib/list/8">Ajax框架</a><a href="/lib/list/9">XML操作类库</a><a href="/lib/list/10">HTML操作类库</a><a href="/lib/list/12">文件上传</a><a href="/lib/list/347">3D图形处理库</a><a href="/lib/list/14">图形/图像处理</a><a href="/lib/list/15">常用工具包</a><a href="/lib/list/16">JSON开发包</a><a href="/lib/list/353">OAuth开发包</a><a href="/lib/list/17">PDF工具包</a><a href="/lib/list/18">Flex开发</a><a href="/lib/list/19">Office文档处理</a><a href="/lib/list/20">日志处理</a><a href="/lib/list/21">网络工具包</a><a href="/lib/list/22">多媒体处理</a><a href="/lib/list/23">WEB服务/RPC/SOA</a><a href="/lib/list/24">RSS/ATOM相关</a><a href="/lib/list/25">持久层框架</a><a href="/lib/list/26">作业调度框架</a><a href="/lib/list/27">工作流引擎</a><a href="/lib/list/28">业务规则引擎</a><a href="/lib/list/29">面向方面AOP/IoC</a><a href="/lib/list/30">JEE框架</a><a href="/lib/list/31">安全相关</a><a href="/lib/list/32">OpenID/单点登录SSO</a><a href="/lib/list/34">条形码/二维码开发包</a><a href="/lib/list/35">验证码(Captcha)</a><a href="/lib/list/96">网络爬虫</a><a href="/lib/list/214">OSGi</a><a                            href="/lib/list/237">网络技术</a><a href="/lib/list/324">Google相关API</a><a href="/lib/list/328">Swing开发包</a><a href="/lib/list/332">HTML编辑器</a><a href="/lib/list/337" style="color:#FF3C00">JavaScript开发工具包</a><a href="/lib/list/352">TTS/语音合成和处理</a><a href="/lib/list/367">游戏开发</a><a href="/lib/list/370">加密/解密软件包</a><a href="/lib/list/374">源代码语法着色</a><a href="/lib/list/376">WebSocket 开发</a><a href="/lib/list/381">MathML显示与编辑</a><a href="/lib/list/383">计算机视觉库/人脸识别</a><a href="/lib/list/385">XML-RPC 开发</a><a href="/lib/list/386">Markdown处理库</a><a href="/lib/list/387">神经网络</a><a href="/lib/list/389">多媒体播放器</a><a href="/lib/list/391">推荐引擎</a><a href="/lib/list/394">机器学习</a><a href="/lib/list/401">算法</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu2" class="item "><h3><span>·</span><a href="/lib/list/36">开发语言与工具</a></h3><div id="submenu2" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/406">R语言</a><a href="/lib/list/37" style="color:#FF3C00">Java开发</a><a href="/lib/list/38">.NET开发</a><a href="/lib/list/39">PHP开发</a><a href="/lib/list/40">C/C++开发</a><a href="/lib/list/42">Ruby开发</a><a href="/lib/list/43">Python开发</a><a href="/lib/list/148">ActionScript开发</a><a href="/lib/list/145" style="color:#FF3C00">JavaScript开发</a><a href="/lib/list/44">Perl开发</a><a href="/lib/list/263">Delphi开发</a><a href="/lib/list/243">Erlang开发</a><a href="/lib/list/211">Google Go/Golang开发</a><a href="/lib/list/201">Scala开发</a><a href="/lib/list/240">Lua开发</a><a href="/lib/list/392">Apple Swift开发</a><a href="/lib/list/301">Objective-C开发</a><a href="/lib/list/45">BUG跟踪管理</a><a href="/lib/list/294">Lisp开发</a><a href="/lib/list/46">项目构建</a><a href="/lib/list/41">移动开发</a><a href="/lib/list/47">单元测试</a><a href="/lib/list/48">测试工具</a><a href="/lib/list/49">性能测试和优化</a><a href="/lib/list/50">程序调试</a><a href="/lib/list/51">代码混淆和加密</a><a href="/lib/list/52">UML/模型工具</a><a href="/lib/list/53">安装制作</a><a href="/lib/list/54">代码分析/审查/优化</a><a href="/lib/list/55">前端技术</a><a href="/lib/list/179">Eclipse开发工具</a><a href="/lib/list/205">IntelliJ IDEA</a><a href="/lib/list/281">NetBeans</a><a href="/lib/list/349">程序文档工具</a><a href="/lib/list/361">语法/词法分析器</a><a href="/lib/list/362">脚本/动态语言</a><a href="/lib/list/364">持续集成系统</a><a href="/lib/list/375">Web开发工具</a><a href="/lib/list/388">Node.js 开发</a><a href="/lib/list/395">中文分词</a><a href="/lib/list/399" style="color:#FF3C00">Android Studio开发工具</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu3" class="item "><h3><span>·</span><a href="/lib/list/57">网站系统</a></h3><div id="submenu3" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/58">论坛系统BBS</a><a href="/lib/list/59">建站系统CMS</a><a href="/lib/list/60">电子商务/商城</a><a href="/lib/list/61">SNS社交网络/交友平台</a><a href="/lib/list/62">百科系统Wiki</a><a href="/lib/list/63">门户平台Portal</a><a href="/lib/list/64">网络会议/视频会议</a><a href="/lib/list/65">相册/照片/多媒体系统</a><a href="/lib/list/66">微博工具/系统</a><a href="/lib/list/363">博客系统</a><a href="/lib/list/379">开源问答系统</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu4" class="item "><h3><span>·</span><a href="/lib/list/67">企业应用</a></h3><div id="submenu4" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/68">ERP/CRM</a><a href="/lib/list/69">OA办公/协作平台</a><a href="/lib/list/70">WebMail系统</a><a href="/lib/list/71">地理信息系统GIS</a><a href="/lib/list/72">数据挖掘</a><a href="/lib/list/73">文档管理</a><a href="/lib/list/74">项目/任务管理</a><a href="/lib/list/333">教学科研相关</a><a href="/lib/list/357">开源SIP项目</a><a href="/lib/list/368">计算机辅助设计CAD/CAM</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu5" class="item "><h3><span>·</span><a href="/lib/list/75">服务器软件</a></h3><div id="submenu5" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/76">应用服务器</a><a href="/lib/list/77">Web服务器</a><a href="/lib/list/78">FTP服务器</a><a href="/lib/list/79">邮件服务器</a><a href="/lib/list/80">缓存服务器</a><a href="/lib/list/81">版本控制系统</a><a href="/lib/list/82">路由器/防火墙</a><a href="/lib/list/83">电话/通讯/IM聊天</a><a href="/lib/list/84">集群/负载均衡</a><a href="/lib/list/85">流媒体服务器</a><a href="/lib/list/86">消息系统</a><a href="/lib/list/220">分布式/云计算/大数据</a><a href="/lib/list/298">企业服务总线ESB</a><a href="/lib/list/321">建站服务器套件</a><a href="/lib/list/348">虚拟化</a><a href="/lib/list/355">目录服务LDAP</a><a href="/lib/list/393">容器系统</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu6" class="item "><h3><span>·</span><a href="/lib/list/87">插件和扩展</a></h3><div id="submenu6" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/88">Eclipse插件</a><a href="/lib/list/89">jQuery插件</a><a href="/lib/list/331">Node.js扩展</a><a href="/lib/list/338">jQuery分页插件</a><a href="/lib/list/346">Prototype扩展</a><a href="/lib/list/356">Chrome插件/扩展</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu7" class="item "><h3><span>·</span><a href="/lib/list/90">数据库相关</a></h3><div id="submenu7" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/91">数据库服务器</a><a href="/lib/list/92">数据库管理工具</a><a href="/lib/list/93">数据库驱动程序</a><a href="/lib/list/94">数据库建模</a><a href="/lib/list/122">数据库连接池</a><a href="/lib/list/154">SQL</a><a href="/lib/list/307">NoSQL数据库</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu8" class="item "><h3><span>·</span><a href="/lib/list/155">操作系统</a></h3><div id="submenu8" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/156">Linux</a><a href="/lib/list/182">CentOS</a><a href="/lib/list/183">Ubuntu</a><a href="/lib/list/224">UNIX</a><a href="/lib/list/251">Fedora</a><a href="/lib/list/274">FreeBSD</a><a href="/lib/list/310">Solaris</a><a href="/lib/list/311">openSUSE</a><a href="/lib/list/312">Debian</a><a href="/lib/list/313">OpenBSD</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu9" class="item "><h3><span>·</span>其他分类</h3><div id="submenu9" class="item-list clearfix"><div class=" subitem"><p class="clearfix"><a href="/lib/list/159" class="parent">软件开发管理<i>></i></a><a href="/lib/list/174">敏捷开发</a><a href="/lib/list/178">项目管理</a><a href="/lib/list/196">软件架构</a><a href="/lib/list/296">软件测试</a></p><p class="clearfix"><a href="/lib/list/319" class="parent">管理和监控<i>></i></a><a href="/lib/list/320">系统监控</a><a href="/lib/list/360">日志分析和统计</a><a href="/lib/list/366">备份工具</a></p><p class="clearfix"><a href="/lib/list/322" class="parent">应用工具<i>></i></a><a href="/lib/list/323">磁盘/光驱工具</a><a href="/lib/list/359">文档/文本编辑</a><a href="/lib/list/384">终端/远程登录</a></p><p class="clearfix"><a href="/lib/list/329" class="parent">游戏相关<i>></i></a><a href="/lib/list/330">网页游戏</a></p></div><div class="cat-right"></div></div></div></div></div>
+			<ul class="nav__list">
+				<li class="nav__item " >
+
+				</li>
+				<li class="nav__item"><i class="fa fa-tags"></i></li>
+
+				<li class="nav__item"><a href="/lib/tag/Android"  rel="tag">Android</a></li>
+				<li class="nav__item"><a href="/lib/tag/IOS"  rel="tag">IOS</a></li>
+				<li class="nav__item"><a href="/lib/tag/JavaScript"  rel="tag">JavaScript</a></li>
+				<li class="nav__item"><a href="/lib/tag/HTML5"  rel="tag">HTML5</a></li>
+				<li class="nav__item"><a href="/lib/tag/CSS"  rel="tag">CSS</a></li>
+				<li class="nav__item"><a href="/lib/tag/jQuery"  rel="tag">jQuery</a></li>
+				<li class="nav__item"><a href="/lib/tag/Python"  rel="tag">Python</a></li>
+				<li class="nav__item"><a href="/lib/tag/PHP"  rel="tag">PHP</a></li>
+				<li class="nav__item"><a href="/lib/tag/NodeJS"  rel="tag">NodeJS</a></li>
+				<li class="nav__item"><a href="/lib/tag/Java"  rel="tag">Java</a></li>
+				<li class="nav__item"><a href="/lib/tag/Spring"  rel="tag">Spring</a></li>
+				<li class="nav__item"><a href="/lib/tag/MySQL"  rel="tag">MySQL</a></li>
+				<li class="nav__item"><a href="/lib/tag/MongoDB"  rel="tag">MongoDB</a></li>
+				<li class="nav__item"><a href="/lib/tag/Redis"  rel="tag">Redis</a></li>
+				<li class="nav__item"><a href="/lib/tag/NOSQL"  rel="tag">NOSQL</a></li>
+				<li class="nav__item"><a href="/lib/tag/Vim"  rel="tag">Vim</a></li>
+				<li class="nav__item"><a href="/lib/tag/C++"  rel="tag">C++</a></li>
+				<li class="nav__item"><a href="/lib/tag/C#"  rel="tag">C#</a></li>
+				<li class="nav__item"><a href="/lib/tag/JSON"  rel="tag">JSON</a></li>
+				<li class="nav__item"><a href="/lib/tag/Ruby"  rel="tag">Ruby</a></li>
+				<li class="nav__item"><a href="/lib/tag/Linux"  rel="tag">Linux</a></li>
+				<li class="nav__item"><a href="/lib/tag/Nginx"  rel="tag">Nginx</a></li>
+				<li class="nav__item"><a href="/lib/tag/Docker"  rel="tag">Docker</a></li>
+				<li class="more"></li>
+
+			</ul>
+
+		</div>
+	</div>
+</header>
+
+
+
+<div class="topheader" style="background: #eee;padding: 10px 0 30px;">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9">
+				<div class="crumbs">
+					<a href="/lib/list/all">所有分类</a>
+					
+						&nbsp;&gt;&nbsp;
+						<a href="/lib/list/75">服务器软件</a>
+					
+						&nbsp;&gt;&nbsp;
+						<a href="/lib/list/77">Web服务器</a>
+					
+						&nbsp;&gt;&nbsp;
+						<a href="/lib/list/151">Nginx </a>
+					
+				</div>
+				<h1 id="articleTitle" >Nginx 配置高并发</h1>
+				<div class="meta" style="margin-top: 10px;">
+					<span id="tag-list">
+					
+						<a href="/lib/tag/Nginx">Nginx</a>
+					
+					</span>&nbsp;
+
+					<span class=item>2014-02-21 08:53:12 发布</span>
+				</div>
+
+
+			</div>
+			<div  class="col-md-3">
+				<table>
+					<tbody>
+					<tr>
+						<td><strong>您的评价</strong>:</td>
+						<td>
+							<div id=rate class=rate-container><span id=star1 class=star-big-off title=很差>&nbsp;</span><span id=star2 class=star-big-off title=较差>&nbsp;</span><span id=star3 class=star-big-off title=还行>&nbsp;</span><span
+									id=star4 class=star-big-off title=不错>&nbsp;</span><span id=star5 class=star-big-off title=力荐>&nbsp;</span></div>
+						</td>
+						<td width=30>
+							<span id=score-num>0.0</span>
+						</td>
+						<td width=30>
+							<div id=rate-tip></div>
+						</td>
+
+					</tr>
+					</tbody>
+				</table>
+				<div id="favorite-container"><a id="favorite" href="javascript:void(0)" class="btn btn-default">收藏</a>&nbsp;&nbsp;&nbsp;&nbsp;
+					<span class=item>2收藏</span>
+					<div id=favorite-box>
+						<table>
+							<tbody>
+							<tr>
+								<td width=70 align=right>文件夹</td>
+								<td><select id=fav_folderlist name=folder>
+									<option selected value=0>请选择...</option>
+									<option id=newfolder-sp disabled value="">-------------</option>
+									<option value=-1>新增文件夹...</option>
+								</select></td>
+							</tr>
+							<tr style="display: none" id=newfolder-input>
+								<td align=right>新增文件夹</td>
+								<td><input id=fav_newfolder maxlength=50 type=text name=newfolder></td>
+							</tr>
+							<tr>
+								<td align=right>标签</td>
+								<td><input id=fav_tags maxlength=135 size=20 type=text name=tags></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td colspan=2>(多个标签用逗号分隔)</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="container">
+<div class="row">
+
+		<div id="readercontainer"  class="col-md-9">
+				<article>
+					<p><strong>一、一般来说nginx 配置文件中对优化比较有作用的为以下几项：</strong></p>
+<p><strong>1. &nbsp;worker_processes 8;</strong></p>
+<p>nginx 进程数，建议按照cpu 数目来指定，一般为它的倍数 (如,2个四核的cpu计为8)。</p>
+<p><strong>2. &nbsp;worker_cpu_affinity 00000001 00000010 00000100 00001000 00010000 00100000 01000000 10000000;</strong></p>
+<p>为每个进程分配cpu，上例中将8 个进程分配到8 个cpu，当然可以写多个，或者将一<br />
+个进程分配到多个cpu。</p>
+<p><strong>3.</strong><strong>&nbsp;&nbsp;</strong><strong>worker_rlimit_nofile 65535;</strong></p>
+<p>这个指令是指当一个nginx 进程打开的最多文件描述符数目，理论值应该是最多打开文<br />
+件数（ulimit -n）与nginx 进程数相除，但是nginx 分配请求并不是那么均匀，所以最好与ulimit -n 的值保持一致。</p>
+<p>现在在linux 2.6内核下开启文件打开数为65535，worker_rlimit_nofile就相应应该填写65535。<br />
+<br />
+这是因为nginx调度时分配请求到进程并不是那么的均衡，所以假如填写10240，总并发量达到3-4万时就有进程可能超过10240了，这时会返回502错误。</p>
+<p>查看linux系统文件描述符的方法：</p>
+<p>[root@web001 ~]# sysctl -a | grep fs.file</p>
+<p>fs.file-max = 789972</p>
+<p>fs.file-nr = 510 0 789972</p>
+<p><strong>4.</strong><strong>&nbsp;&nbsp;</strong><strong>use epoll;</strong></p>
+<p>使用epoll 的I/O 模型</p>
+<p>(</p>
+<p>补充说明:</p>
+<p>与apache相类，nginx针对不同的操作系统，有不同的事件模型</p>
+<p>&nbsp; &nbsp;&nbsp; &nbsp;A）标准事件模型<br />
+&nbsp; &nbsp;&nbsp; &nbsp; Select、poll属于标准事件模型，如果当前系统不存在更有效的方法，nginx会选择select或poll<br />
+&nbsp; &nbsp;&nbsp; &nbsp;B）高效事件模型&nbsp; &nbsp;<br />
+<strong>Kqueue：</strong>使用于 FreeBSD 4.1+, OpenBSD 2.9+, NetBSD 2.0 和 MacOS X. 使用双处理器的MacOS X系统使用kqueue可能会造成内核崩溃。<br />
+<strong>Epoll:</strong> 使用于Linux内核2.6版本及以后的系统。<br />
+</p>
+<p>/dev/poll：使用于 Solaris 7 11/99+, HP/UX 11.22+ (eventport), IRIX 6.5.15+ 和 Tru64 UNIX 5.1A+。</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Eventport：使用于 Solaris 10. 为了防止出现内核崩溃的问题， 有必要安装安全补丁。</p>
+<p>)</p>
+<p><strong>5.</strong><strong>&nbsp;&nbsp;</strong><strong>worker_connections 65535;</strong></p>
+<p>每个进程允许的最多连接数， 理论上每台nginx 服务器的最大连接数为worker_processes*worker_connections。</p>
+<p><strong>6.</strong><strong>&nbsp;&nbsp;</strong><strong>keepalive_timeout 60;</strong></p>
+<p>keepalive 超时时间。</p>
+<p><strong>7</strong><strong>.</strong><strong>&nbsp;&nbsp;</strong><strong>client_header_buffer_size 4k;</strong></p>
+<p>客户端请求头部的缓冲区大小，这个可以根据你的系统分页大小来设置，一般一个请求头的大小不会超过1k，不过由于一般系统分页都要大于1k，所以这里设置为分页大小。&nbsp;</p>
+<p>分页大小可以用命令<strong>getconf PAGESIZE</strong> 取得。</p>
+<p>[root@web001 ~]# getconf PAGESIZE&nbsp;</p>
+<p>4096</p>
+<p>但也有client_header_buffer_size超过4k的情况，但是client_header_buffer_size该值必须设置为<strong>“系统分页大小”的整倍数。</strong></p>
+<p><strong>8</strong><strong>.</strong><strong>&nbsp;&nbsp;</strong><strong>open_file_cache max=65535 inactive=60s;</strong></p>
+<p>这个将为打开文件指定缓存，默认是没有启用的，max 指定缓存数量，建议和打开文件数一致，inactive 是指经过多长时间文件没被请求后删除缓存。</p>
+<p><strong>9</strong><strong>.</strong><strong>&nbsp;&nbsp;</strong><strong>open_file_cache_valid 80s;</strong></p>
+<p>这个是指多长时间检查一次缓存的有效信息。</p>
+<p><strong>10</strong><strong>.</strong><strong>&nbsp;&nbsp;</strong><strong>open_file_cache_min_uses 1;</strong></p>
+<p>open_file_cache 指令中的inactive 参数时间内文件的最少使用次数，如果超过这个数字，文件描述符一直是在缓存中打开的，如上例，如果有一个文件在inactive 时间内一次没被使用，它将被移除。</p>
+<p>&nbsp;</p>
+<p><strong>二、关于内核参数的优化：</strong></p>
+<p><strong>net.ipv4.tcp_max_tw_buckets = 6000</strong></p>
+<p>timewait 的数量，默认是180000。</p>
+<p><strong>net.ipv4.ip_local_port_range = 1024 65000</strong></p>
+<p>允许系统打开的端口范围。</p>
+<p><strong>net.ipv4.tcp_tw_recycle = 1</strong></p>
+<p>启用timewait 快速回收。</p>
+<p><strong>net.ipv4.tcp_tw_reuse = 1</strong></p>
+<p>开启重用。允许将TIME-WAIT sockets 重新用于新的TCP 连接。</p>
+<p><strong>net.ipv4.tcp_syncookies = 1</strong></p>
+<p>开启SYN Cookies，当出现SYN 等待队列溢出时，启用cookies 来处理。</p>
+<p><strong>net.core.somaxconn = 262144</strong></p>
+<p>web 应用中listen 函数的backlog 默认会给我们内核参数的net.core.somaxconn 限制到128，而nginx 定义的NGX_LISTEN_BACKLOG 默认为511，所以有必要调整这个值。</p>
+<p><strong>net.core.netdev_max_backlog = 262144</strong></p>
+<p>每个网络接口接收数据包的速率比内核处理这些包的速率快时，允许送到队列的数据包的最大数目。</p>
+<p><strong>net.ipv4.tcp_max_orphans = 262144</strong></p>
+<p>系统中最多有多少个TCP 套接字不被关联到任何一个用户文件句柄上。如果超过这个数字，孤儿连接将即刻被复位并打印出警告信息。这个限制仅仅是为了防止简单的DoS 攻击，不能过分依靠它或者人为地减小这个值，更应该增加这个值(如果增加了内存之后)。</p>
+<p><strong>net.ipv4.tcp_max_syn_backlog = 262144</strong></p>
+<p>记录的那些尚未收到客户端确认信息的连接请求的最大值。对于有128M 内存的系统而言，缺省值是1024，小内存的系统则是128。</p>
+<p><strong>net.ipv4.tcp_timestamps = 0</strong></p>
+<p>时间戳可以避免序列号的卷绕。一个1Gbps 的链路肯定会遇到以前用过的序列号。时间戳能够让内核接受这种“异常”的数据包。这里需要将其关掉。</p>
+<p><strong>net.ipv4.tcp_synack_retries = 1</strong></p>
+<p>为了打开对端的连接，内核需要发送一个SYN 并附带一个回应前面一个SYN 的ACK。也就是所谓三次握手中的第二次握手。这个设置决定了内核放弃连接之前发送SYN+ACK 包的数量。</p>
+<p><strong>net.ipv4.tcp_syn_retries = 1</strong></p>
+<p>在内核放弃建立连接之前发送SYN 包的数量。</p>
+<p><strong>net.ipv4.tcp_fin_timeout = 1</strong></p>
+<p>如 果套接字由本端要求关闭，这个参数决定了它保持在FIN-WAIT-2 状态的时间。对端可以出错并永远不关闭连接，甚至意外当机。缺省值是60 秒。2.2 内核的通常值是180 秒，3你可以按这个设置，但要记住的是，即使你的机器是一个轻载的WEB 服务器，也有因为大量的死套接字而内存溢出的风险，FIN- WAIT-2 的危险性比FIN-WAIT-1 要小，因为它最多只能吃掉1.5K 内存，但是它们的生存期长些。</p>
+<p><strong>net.ipv4.tcp_keepalive_time = 30</strong></p>
+<p>当keepalive 起用的时候，TCP 发送keepalive 消息的频度。缺省是2 小时。</p>
+<p>&nbsp;</p>
+<p><strong>三、下面贴一个完整的内核优化设置:</strong></p>
+<p><strong>vi /etc/sysctl.conf</strong>&nbsp; CentOS5.5中可以将所有内容清空直接替换为如下内容:</p>
+<p>net.ipv4.ip_forward = 0<br />
+net.ipv4.conf.default.rp_filter = 1<br />
+net.ipv4.conf.default.accept_source_route = 0<br />
+kernel.sysrq = 0<br />
+kernel.core_uses_pid = 1<br />
+net.ipv4.tcp_syncookies = 1<br />
+kernel.msgmnb = 65536<br />
+kernel.msgmax = 65536<br />
+kernel.shmmax = 68719476736<br />
+kernel.shmall = 4294967296<br />
+net.ipv4.tcp_max_tw_buckets = 6000<br />
+net.ipv4.tcp_sack = 1<br />
+net.ipv4.tcp_window_scaling = 1<br />
+net.ipv4.tcp_rmem = 4096 87380 4194304<br />
+net.ipv4.tcp_wmem = 4096 16384 4194304<br />
+net.core.wmem_default = 8388608<br />
+net.core.rmem_default = 8388608<br />
+net.core.rmem_max = 16777216<br />
+net.core.wmem_max = 16777216<br />
+net.core.netdev_max_backlog = 262144<br />
+net.core.somaxconn = 262144<br />
+net.ipv4.tcp_max_orphans = 3276800<br />
+net.ipv4.tcp_max_syn_backlog = 262144<br />
+net.ipv4.tcp_timestamps = 0<br />
+net.ipv4.tcp_synack_retries = 1<br />
+net.ipv4.tcp_syn_retries = 1<br />
+net.ipv4.tcp_tw_recycle = 1<br />
+net.ipv4.tcp_tw_reuse = 1<br />
+net.ipv4.tcp_mem = 94500000 915000000 927000000<br />
+net.ipv4.tcp_fin_timeout = 1<br />
+net.ipv4.tcp_keepalive_time = 30<br />
+net.ipv4.ip_local_port_range = 1024 65000</p>
+<p>使配置立即生效可使用如下命令：<br />
+<strong>/sbin/sysctl -p</strong></p>
+<p><strong>四、下面是关于系统连接数的优化</strong></p>
+<p><strong>linux 默认值 open files 和 max user processes 为 1024</strong></p>
+<p>#ulimit -n</p>
+<p>1024</p>
+<p>#ulimit –u</p>
+<p>1024</p>
+<p><strong>问题描述：</strong>&nbsp;说明 server 只允许同时打开 1024 个文件，处理 1024 个用户进程</p>
+<p>使用ulimit -a 可以查看当前系统的所有限制值，使用ulimit -n 可以查看当前的最大打开文件数。</p>
+<p>新装的linux 默认只有1024 ，当作负载较大的服务器时，很容易遇到error: too many open files 。因此，需要将其改大。</p>
+<p>&nbsp;</p>
+<p><strong>解决方法：</strong></p>
+<p>使用 ulimit –n 65535 可即时修改，但重启后就无效了。（注ulimit -SHn 65535 等效 ulimit -n 65535 ，-S 指soft ，-H 指hard)</p>
+<p>有如下三种修改方式：</p>
+<p>1. 在/etc/rc.local 中增加一行 ulimit -SHn 65535<br />
+2. 在/etc/profile 中增加一行 ulimit -SHn 65535<br />
+3.&nbsp;在<strong>/etc/security/limits.conf</strong> 最后增加：</p>
+<p><strong>* soft nofile 65535<br />
+* hard nofile 65535<br />
+* soft nproc 65535<br />
+* hard nproc 65535</strong></p>
+<p>具体使用哪种，<strong>在 CentOS 中使用第1 种方式无效果，使用第3 种方式有效果</strong>，而在Debian 中使用第2 种有效果</p>
+<p>&nbsp;# ulimit -n</p>
+<p>65535</p>
+<p># ulimit -u</p>
+<p>65535</p>
+<p>&nbsp;</p>
+<p>备注：ulimit 命令本身就有分软硬设置，加-H 就是硬，加-S 就是软默认显示的是软限制</p>
+<p>soft 限制指的是当前系统生效的设置值。 hard 限制值可以被普通用户降低。但是不能增加。 soft 限制不能设置的比 hard 限制更高。 只有 root 用户才能够增加 hard 限制值。</p>
+<p>&nbsp;</p>
+<p><strong>五、下面是一个简单的nginx 配置文件：</strong></p>
+<p>user www www;<br />
+worker_processes 8;<br />
+worker_cpu_affinity 00000001 00000010 00000100 00001000 00010000 00100000<br />
+01000000;<br />
+error_log /www/log/nginx_error.log crit;<br />
+pid /usr/local/nginx/nginx.pid;<br />
+worker_rlimit_nofile 204800;<br />
+events<br />
+{<br />
+use epoll;<br />
+worker_connections 204800;<br />
+}<br />
+http<br />
+{<br />
+include mime.types;<br />
+default_type application/octet-stream;<br />
+charset utf-8;<br />
+server_names_hash_bucket_size 128;<br />
+client_header_buffer_size 2k;<br />
+large_client_header_buffers 4 4k;<br />
+client_max_body_size 8m;<br />
+sendfile on;<br />
+tcp_nopush on;<br />
+keepalive_timeout 60;<br />
+fastcgi_cache_path /usr/local/nginx/fastcgi_cache levels=1:2<br />
+keys_zone=TEST:10m<br />
+inactive=5m;<br />
+fastcgi_connect_timeout 300;<br />
+fastcgi_send_timeout 300;<br />
+fastcgi_read_timeout 300;<br />
+fastcgi_buffer_size 4k;<br />
+fastcgi_buffers 8 4k;<br />
+fastcgi_busy_buffers_size 8k;<br />
+fastcgi_temp_file_write_size 8k;<br />
+fastcgi_cache TEST;<br />
+fastcgi_cache_valid 200 302 1h;<br />
+fastcgi_cache_valid 301 1d;<br />
+fastcgi_cache_valid any 1m;<br />
+fastcgi_cache_min_uses 1;<br />
+fastcgi_cache_use_stale error timeout invalid_header http_500;<br />
+open_file_cache max=204800 inactive=20s;<br />
+open_file_cache_min_uses 1;<br />
+open_file_cache_valid 30s;<br />
+tcp_nodelay on;<br />
+gzip on;<br />
+gzip_min_length 1k;<br />
+gzip_buffers 4 16k;<br />
+gzip_http_version 1.0;<br />
+gzip_comp_level 2;<br />
+gzip_types text/plain application/x-javascript text/css application/xml;<br />
+gzip_vary on;<br />
+server<br />
+{<br />
+listen 8080;<br />
+server_name backup.aiju.com;<br />
+index index.php index.htm;<br />
+root /www/html/;<br />
+location /status<br />
+{<br />
+stub_status on;<br />
+}<br />
+location ~ .*\.(php|php5)?$<br />
+{<br />
+fastcgi_pass 127.0.0.1:9000;<br />
+fastcgi_index index.php;<br />
+include fcgi.conf;<br />
+}<br />
+location ~ .*\.(gif|jpg|jpeg|png|bmp|swf|js|css)$<br />
+{<br />
+expires 30d;<br />
+}<br />
+log_format access '$remote_addr -- $remote_user [$time_local] "$request" '<br />
+'$status $body_bytes_sent "$http_referer" '<br />
+'"$http_user_agent" $http_x_forwarded_for';<br />
+access_log /www/log/access.log access;<br />
+}<br />
+}</p>
+<p><strong>六、关于FastCGI 的几个指令：</strong></p>
+<p>fastcgi_cache_path /usr/local/nginx/fastcgi_cache levels=1:2 keys_zone=TEST:10minactive=5m;</p>
+<p>这个指令为FastCGI 缓存指定一个路径，目录结构等级，关键字区域存储时间和非活动删除时间。</p>
+<p><strong>fastcgi_connect_timeout 300;</strong></p>
+<p>指定连接到后端FastCGI 的超时时间。</p>
+<p><strong>fastcgi_send_timeout 300;</strong></p>
+<p>向FastCGI 传送请求的超时时间，这个值是指已经完成两次握手后向FastCGI 传送请求的超时时间。</p>
+<p><strong>fastcgi_read_timeout 300;</strong></p>
+<p>接收FastCGI 应答的超时时间，这个值是指已经完成两次握手后接收FastCGI 应答的超时时间。</p>
+<p><strong>fastcgi_buffer_size 4k;</strong></p>
+<p>指定读取FastCGI 应答第一部分需要用多大的缓冲区，一般第一部分应答不会超过1k，由于页面大小为4k，所以这里设置为4k。</p>
+<p><strong>fastcgi_buffers 8 4k;</strong></p>
+<p>指定本地需要用多少和多大的缓冲区来缓冲FastCGI 的应答。</p>
+<p><strong>fastcgi_busy_buffers_size 8k;</strong></p>
+<p>这个指令我也不知道是做什么用，只知道默认值是fastcgi_buffers 的两倍。</p>
+<p><strong>fastcgi_temp_file_write_size 8k;</strong></p>
+<p>在写入fastcgi_temp_path 时将用多大的数据块，默认值是fastcgi_buffers 的两倍。</p>
+<p><strong>fastcgi_cache TEST</strong></p>
+<p>开启FastCGI 缓存并且为其制定一个名称。个人感觉开启缓存非常有用，可以有效降低CPU 负载，并且防止502 错误。</p>
+<p><strong>fastcgi_cache_valid 200 302 1h;<br />
+fastcgi_cache_valid 301 1d;<br />
+fastcgi_cache_valid any 1m;</strong></p>
+<p>为指定的应答代码指定缓存时间，如上例中将200，302 应答缓存一小时，301 应答缓存1 天，其他为1 分钟。</p>
+<p><strong>fastcgi_cache_min_uses 1;</strong></p>
+<p>缓存在fastcgi_cache_path 指令inactive 参数值时间内的最少使用次数，如上例，如果在5 分钟内某文件1 次也没有被使用，那么这个文件将被移除。</p>
+<p><strong>fastcgi_cache_use_stale error timeout invalid_header http_500;</strong></p>
+<p>不知道这个参数的作用，猜想应该是让nginx 知道哪些类型的缓存是没用的。以上为nginx 中FastCGI 相关参数，另外，FastCGI 自身也有一些配置需要进行优化，如果你使用php-fpm 来管理FastCGI，可以修改配置文件中的以下值：</p>
+<p><strong>&lt;value name="max_children"&gt;60&lt;/value&gt;</strong></p>
+<p>同时处理的并发请求数，即它将开启最多60 个子线程来处理并发连接。</p>
+<p><strong>&lt;value name="rlimit_files"&gt;102400&lt;/value&gt;</strong></p>
+<p>最多打开文件数。</p>
+<p><strong>&lt;value name="max_requests"&gt;204800&lt;/value&gt;</strong></p>
+<p>每个进程在重置之前能够执行的最多请求数。<br />
+<br />
+原文地址：<a href="http://hi.baidu.com/myframework/item/e6dbb7f66e026acaa935a231" target="_blank">http://hi.baidu.com/myframework/item/e6dbb7f66e026acaa935a231</a></p>
+				</article>
+
+
+
+
+		
+
+
+
+		</div>
+
+
+
+	<div  class="col-md-3">
+		<div class="bdsharebuttonbox">
+			<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+			<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+			<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>
+			<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>
+			<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+
+		</div>
+
+		<div class=" side-box" style="margin-top: 20px;">
+				<div class="title"><h3>同类热门经验</h3></div>
+				<ol class="hot">
+					
+						<li>
+							<a title=Nginx 完整配置说明 href="/lib/view/open1330003599968.html"><span class=title>Nginx 完整配置说明</span></a>
+						</li>
+					
+						<li>
+							<a title=Nginx搭建反向代理服务器过程详解 href="/lib/view/open1417488526633.html"><span class=title>Nginx搭建反向代理服务器过程详解</span></a>
+						</li>
+					
+						<li>
+							<a title=Nginx+Tomcat实现https安全链接 href="/lib/view/open1330516293186.html"><span class=title>Nginx+Tomcat实现https安全链接</span></a>
+						</li>
+					
+						<li>
+							<a title=Nginx+Tomcat集群与负载均衡 href="/lib/view/open1351061706430.html"><span class=title>Nginx+Tomcat集群与负载均衡</span></a>
+						</li>
+					
+						<li>
+							<a title=[Ganglia监控扩展]监控nginx的连接数  href="/lib/view/open1326333999327.html"><span class=title>[Ganglia监控扩展]监控nginx的连接数 </span></a>
+						</li>
+					
+						<li>
+							<a title=Nginx和Tomcat负载均衡实现session共享  href="/lib/view/open1334626362015.html"><span class=title>Nginx和Tomcat负载均衡实现session共享 </span></a>
+						</li>
+					
+
+				</ol>
+			</div>
+		<p class="aiBar"></p>
+		<div class=" side-box post-nav" style="margin-top: 20px;">
+			<div class="title"><h3>阅读目录</h3></div>
+			<ul class="articleIndex"></ul>
+		</div>
+	</div>
+
+
+
+</div>
+	</div>
+
+<div class="container">
+<script type="text/javascript">
+    var cpro_id = "u2690846";
+</script>
+<script type="text/javascript" src="http://cpro.baidustatic.com/cpro/ui/c.js"></script>
+
+	<div class="row">
+		<div class="col-md-9">
+			<table width='100%'><tr>
+				<td valign='top' width="33%" class="Relatedb">
+					<div style="border-bottom: 1px #ccc solid;margin-top: 5px"><strong>相关文档</strong> 　—　<a href="http://www.open-open.com/doc" rel="nofollow" target="_blank">更多</a></div>
+					<ul >
+						
+							<li><a  href="http://www.open-open.com/doc/view/745b1343f604424684bbfcc01c43574b" rel="nofollow" target="_blank" title="实战Nginx：取代Apache的高性能Web服务器.pdf">实战Nginx：取代Apache的高性能Web服务器.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/721791da17c345db853970a37210be0d" rel="nofollow" target="_blank" title="Nginx完整配置手册_v1.pdf">Nginx完整配置手册_v1.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/70ed918487f84cdbb8f3fe3cb10c204c" rel="nofollow" target="_blank" title="实战Nginx取代Apache的高性能Web服务器.2010.pdf">实战Nginx取代Apache的高性能Web服务器.2010.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/ab4e373753874075a7ee9d6d907a243a" rel="nofollow" target="_blank" title="高性能Web服务器Nginx及相关新技术的应用实践.ppt">高性能Web服务器Nginx及相关新技术的应用实践.ppt</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/d13aa44fcb674854ab3f0d1685eab886" rel="nofollow" target="_blank" title="使用Nginx轻松实现开源负载均衡.ppt">使用Nginx轻松实现开源负载均衡.ppt</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/4a425cababf14e61b98679b57d7c1681" rel="nofollow" target="_blank" title="Nginx配置and nginx+tomcat+memcached实现.pdf">Nginx配置and nginx+tomcat+memcached实现.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/2ae36bc425894edf808e41f7d34099ed" rel="nofollow" target="_blank" title="nginx 官网配置.pdf">nginx 官网配置.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/e5ea389039894143b0a0ef4f3faf846b" rel="nofollow" target="_blank" title="nginx配置详解说.docx">nginx配置详解说.docx</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/516af5beaf354bbbb07535c9911cf437" rel="nofollow" target="_blank" title="Nginx+Keepalived 双主配置.pdf">Nginx+Keepalived 双主配置.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/23ea168856184b80b7c2b7999bdfd75b" rel="nofollow" target="_blank" title="nginx+tomcat负载均衡配置文档.docx">nginx+tomcat负载均衡配置文档.docx</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/9ce39abf2c3c47c093063e533a9b1781" rel="nofollow" target="_blank" title="Nginx配置 Nginx安装.doc">Nginx配置 Nginx安装.doc</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/f8dff8f8eaee49b99803a427d07c8f0a" rel="nofollow" target="_blank" title="Nginx 文档.docx">Nginx 文档.docx</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/a0d0f2848b8a488c9e0a8904f1685159" rel="nofollow" target="_blank" title="Java Apache Tomcat Resin Nginx 详细配置.doc">Java Apache Tomcat Resin Nginx 详细配置.doc</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/aa6646484293412d826e6ea420ca4384" rel="nofollow" target="_blank" title="nginx+tomcat高可用、高性能jsp集群.docx">nginx+tomcat高可用、高性能jsp集群.docx</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/9d47717fa7254976b2c85c8dc087e6eb" rel="nofollow" target="_blank" title="windows下nginx配置.docx">windows下nginx配置.docx</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/6c065375899b46a7896e14d1fc3b68ee" rel="nofollow" target="_blank" title="Mastering Nginx.pdf">Mastering Nginx.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/5562454ddac84fd78bc2e125a9b11d40" rel="nofollow" target="_blank" title="nginx的配置系统.docx">nginx的配置系统.docx</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/627d06a8e517415c8cdb85727eb80d99" rel="nofollow" target="_blank" title="linux下nginx+tomcat整合的安装与配置.docx">linux下nginx+tomcat整合的安装与配置.docx</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/c9a6ede784084f6b8bd57a6e563e095c" rel="nofollow" target="_blank" title="Java Apache Tomcat Resin Nginx 详细配置资料.doc">Java Apache Tomcat Resin Nginx 详细配置资料.doc</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/dfba8943b51b4c09ad133976cf97b761" rel="nofollow" target="_blank" title="Nginx编译安装与简单负载均衡配置手册.docx">Nginx编译安装与简单负载均衡配置手册.docx</a></li>
+						
+					</ul>
+				</td>
+				<td valign='top' width="33%" class="Relatedb">
+					<div style="border-bottom: 1px #ccc solid;margin-top: 5px"><strong>相关经验</strong> 　—　<a href="http://www.open-open.com/lib" rel="nofollow" target="_blank">更多</a></div>
+					<ul >
+						
+							<li >
+								<a title=Nginx高并发访问配置详解 href="/lib/view/open1438355156769.html" target=_blank><span
+										class=title>Nginx高并发访问配置详解</span></a>
+
+							</li>
+						
+							<li >
+								<a title=nginx 高并发配置参数  href="/lib/view/open1456751771421.html" target=_blank><span
+										class=title>nginx 高并发配置参数 </span></a>
+
+							</li>
+						
+							<li >
+								<a title=Nginx 高并发TCP请求Linux系统参数配置  href="/lib/view/open1451369290214.html" target=_blank><span
+										class=title>Nginx 高并发TCP请求Linux系统参数配置 </span></a>
+
+							</li>
+						
+							<li >
+								<a title=nginx+lua+redis构建高并发应用 href="/lib/view/open1455261799808.html" target=_blank><span
+										class=title>nginx+lua+redis构建高并发应用</span></a>
+
+							</li>
+						
+							<li >
+								<a title=Nginx+tomcat配置集群 href="/lib/view/open1411528524921.html" target=_blank><span
+										class=title>Nginx+tomcat配置集群</span></a>
+
+							</li>
+						
+							<li >
+								<a title=Nginx是如何实现轻量级和高并发  href="/lib/view/open1403399238309.html" target=_blank><span
+										class=title>Nginx是如何实现轻量级和高并发 </span></a>
+
+							</li>
+						
+							<li >
+								<a title=轻松使用Nginx搭建web服务器 href="/lib/view/open1439048017004.html" target=_blank><span
+										class=title>轻松使用Nginx搭建web服务器</span></a>
+
+							</li>
+						
+							<li >
+								<a title=nginx服务器安装及配置文件详解 href="/lib/view/open1433489643244.html" target=_blank><span
+										class=title>nginx服务器安装及配置文件详解</span></a>
+
+							</li>
+						
+							<li >
+								<a title=Nginx的介绍和使用  href="/lib/view/open1392709343194.html" target=_blank><span
+										class=title>Nginx的介绍和使用 </span></a>
+
+							</li>
+						
+							<li >
+								<a title=Nginx的介绍和使用  href="/lib/view/open1369638269034.html" target=_blank><span
+										class=title>Nginx的介绍和使用 </span></a>
+
+							</li>
+						
+							<li >
+								<a title=nginx与Elasticsearch结合使用 href="/lib/view/open1426686198226.html" target=_blank><span
+										class=title>nginx与Elasticsearch结合使用</span></a>
+
+							</li>
+						
+							<li >
+								<a title=快速切换Nginx作为网站前端代理服务器 href="/lib/view/open1366692124156.html" target=_blank><span
+										class=title>快速切换Nginx作为网站前端代理服务器</span></a>
+
+							</li>
+						
+							<li >
+								<a title= Elasticsearch结合Nginx使用 href="/lib/view/open1450427805610.html" target=_blank><span
+										class=title> Elasticsearch结合Nginx使用</span></a>
+
+							</li>
+						
+							<li >
+								<a title=CentOS上如何把Web服务器从Apache换到Nginx href="/lib/view/open1400721541581.html" target=_blank><span
+										class=title>CentOS上如何把Web服务器从Apache换到Nginx</span></a>
+
+							</li>
+						
+					</ul>
+				</td>
+				<td valign='top' width="33%" class="Relatedb">
+					<div style="border-bottom: 1px #ccc solid;margin-top: 5px"><strong>相关讨论</strong> 　—　<a href="http://www.open-open.com/solution" rel="nofollow" target="_blank">更多</a></div>
+					<ul >
+						
+							<li >
+								<a title=高性能的 HTTP 和 反向代理服务器 Nginx href="http://www.open-open.com/solution/view/1319457665703" rel="nofollow" target=_blank><span class=title>高性能的 HTTP 和 反向代理服务器 Nginx</span></a>
+							</li>
+						
+							<li >
+								<a title=PHP程序员的技术成长规划 href="http://www.open-open.com/solution/view/1414478644325" rel="nofollow" target=_blank><span class=title>PHP程序员的技术成长规划</span></a>
+							</li>
+						
+							<li >
+								<a title=工作机会感兴趣的可联系哈 href="http://www.open-open.com/solution/view/1392014162660" rel="nofollow" target=_blank><span class=title>工作机会感兴趣的可联系哈</span></a>
+							</li>
+						
+							<li >
+								<a title=百万级PHP网站架构工具箱 href="http://www.open-open.com/solution/view/1325163722374" rel="nofollow" target=_blank><span class=title>百万级PHP网站架构工具箱</span></a>
+							</li>
+						
+							<li >
+								<a title=  用户规模越来越大，系统不能承受的服务器之重 href="http://www.open-open.com/solution/view/1450267214844" rel="nofollow" target=_blank><span class=title>  用户规模越来越大，系统不能承受的服务器之重</span></a>
+							</li>
+						
+							<li >
+								<a title=大型网站后台架构的Web Server与缓存 href="http://www.open-open.com/solution/view/1319767005656" rel="nofollow" target=_blank><span class=title>大型网站后台架构的Web Server与缓存</span></a>
+							</li>
+						
+							<li >
+								<a title=天猫浏览型应用的CDN静态化架构演变 href="http://www.open-open.com/solution/view/1404964984388" rel="nofollow" target=_blank><span class=title>天猫浏览型应用的CDN静态化架构演变</span></a>
+							</li>
+						
+					</ul>
+				</td>
+			</tr></table>
+		</div>
+
+	</div>
+
+</div>
+
+
+
+
+
+<style>
+	footer{background-color: #fff;
+		border-top: 1px solid rgba(230, 230, 230, 0.75);
+		margin-top: 20px;
+		padding: 20px 0;}
+</style>
+<footer>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 col-xs-4" style="line-height: 60px;">
+				<span>&copy;2006-2016 深度开源 </span>
+			</div>
+			<div class="col-md-4 col-xs-4 text-center"><span>
+				<a rel="nofollow" href="http://www.open-open.com/" class="brightbox-logo"><img src="http://www.open-open.com/resource/logo-icon.png"  ></a>
+			</span></div>
+			<div class="col-md-4 col-xs-4"  style="line-height: 60px;">
+				 <a target="_blank" href="http://www.miibeian.gov.cn/">浙ICP备09019653号-31</a>
+				<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1257892335'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1257892335' type='text/javascript'%3E%3C/script%3E"));</script>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<script src="//cdn.bootcss.com/jquery/1.12.1/jquery.min.js"></script>
+<script type="text/javascript" src="/lib/js/jquery-confirm.js"></script>
+<script type="text/javascript" src="/lib/js/app.js?1603300956"></script>
+<script type="text/javascript" src="/lib/js/scrolltopcontrol.js"></script>
+<!-- the jScrollPane script -->
+<script type="text/javascript" src="/lib/js/jquery.contentcarousel.js"></script>
+
+<script type="text/javascript">
+	var rooturl="/lib";
+	var tb_pathToImage = "/lib/images/loadingAnimation.gif";
+	var jc = {};
+	$(function (){
+		$('#ca-container').contentcarousel();
+		$('.login').on('click', function () {
+			jc = $.dialog({
+				title: '&nbsp;',
+				content: '<iframe id="dialog" scrolling="no" style="width:100%;border:none;height:300px;" src="/lib/members/login?keepThis=true&TB_iframe=true&height=177&width=280"></iframe>',
+				animation: 'top',
+				columnClass: 'col-md-5 col-md-offset-3',
+				closeAnimation: 'top',
+				backgroundDismiss: true
+			});
+		});
+		$('.register').on('click', function () {
+			jc = $.dialog({
+				title: '&nbsp;',
+				content: '<iframe id="dialog" scrolling="no" style="width:100%;border:none;height:460px;" src="/lib/members/register?keepThis=true&TB_iframe=true&height=460&width=460"></iframe>',
+				animation: 'top',
+				columnClass: 'col-md-6 col-md-offset-3',
+				closeAnimation: 'top',
+				backgroundDismiss: true
+			});
+		});
+
+
+	});
+
+
+</script>
+
+<script src="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/lib/js/scrolltopcontrol.js"></script>
+<script type="text/javascript" src="/lib/js/view.js?1603300911"></script>
+
+<script type="text/javascript" src="/lib/js/jquery.jgrowl_minimized.js"></script>
+
+<script type="text/javascript">
+	scrolltotop.offset(95,165);
+	scrolltotop.init();
+</script>
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();
+
+	(function(){
+		var c = new contentIndex();
+		c("article", ".articleIndex");
+		setAIActive();
+
+
+		$(window).scroll(function () {
+			if ($(window).scrollTop() > $(".aiBar").offset().top) {
+				$(".post-nav").addClass("aside-fixed");
+//          console.log($(window).scrollTop());
+			} else {
+//           console.log($(window).scrollTop());
+				$(".post-nav").removeClass("aside-fixed");
+			}
+		});
+		$("#readercontainer img").each(function(index, element) {
+			var $width=$("#readercontainer article").width();
+			if ( this.width>$width) {
+
+				this.height = this.height*$width/this.width;
+				this.width=$width;
+			}
+		});
+
+	})();
+</script>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+<script>
+	(function(){
+		var bp = document.createElement('script');
+		bp.src = '//push.zhanzhang.baidu.com/push.js';
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(bp, s);
+	})();
+</script>
+
+</body>
+</html>
