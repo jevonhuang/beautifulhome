@@ -1,0 +1,1811 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='zh-CN' xml:lang='zh-CN' xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+	<!-- 此meta用于腾讯验证我们网址的有效性 -->
+    <meta property="qc:admins" content="2554550177673301616654" />
+	<!-- 此meta用于百度站长工具 -->
+    <meta name="baidu-site-verification" content="kerGDpToCx" />
+
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico?t=1451964198000" />
+  <title>nginx server_name怎么可有可无 - 开源中国社区</title>
+				<meta itemprop="name" content="nginx server_name怎么可有可无- 开源中国社区"/>
+<meta itemprop="image" content="https://www.oschina.net/img/logo_s2.png" />
+
+		  		  <meta name="Description" itemprop="description" content="nginx server_name怎么可有可无- 开源中国社区"/>
+	  
+  <link rel="stylesheet" href="/css/style2013.css?t=1475164686000" type="text/css" media="screen" />
+  <link rel="stylesheet" href="/css/channel.css?t=1470682757000" type="text/css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="/js/2011/fancybox/jquery.fancybox-1.3.4.css?t=1451964198000" media="screen" />
+  <link rel="alternate" type="application/rss+xml" title="最新开源项目" href="https://www.oschina.net/project/rss" />
+  <link rel="alternate" type="application/rss+xml" title="最新开源资讯" href="https://www.oschina.net/news/rss" />
+  <link rel="alternate" type="application/rss+xml" title="最新问题列表" href="https://www.oschina.net/question/rss" />
+  <link rel="alternate" type="application/rss+xml" title="最新翻译列表" href="https://www.oschina.net/translate/rss" />
+  <link rel="alternate" type="application/rss+xml" title="最新博客列表" href="https://www.oschina.net/blog/rss" />
+  <link rel="alternate" type="application/rss+xml" title="推荐博客列表" href="https://www.oschina.net/blog/rss?show=more" />
+  <link rel="alternate" type="application/rss+xml" title="推荐软件列表" href="https://www.oschina.net/project/rss?show=recomms" />
+  <link rel="alternate" type="application/rss+xml" title="最新代码分享列表" href="https://www.oschina.net/code/rss" />
+  <link rel="alternate" type="application/rss+xml" title="开源中国 - 源码列表" href="https://www.oschina.net/code/source_rss" />
+    <!--添加emoji支持-->
+    <link rel="stylesheet" type="text/css" href="/js/team/grunt/dist/emoji/emoji.min.css?t=1463610254000">
+
+  <script type="text/javascript" src="/js/2012/jquery-1.7.1.min.js?t=1451964198000"></script>
+  <script type="text/javascript" src="/js/2012/jquery.form.js?t=1451964198000"></script>
+  <script type="text/javascript" src="/js/2011/fancybox/jquery.fancybox-fixed.js?t=1451964198000?2014031702"></script>
+    <link rel="stylesheet" href="/js/poshytip/tip-yellowsimple/tip-yellowsimple.css?t=1451964199000" type="text/css" />
+  <script type="text/javascript" src="/js/poshytip/jquery.poshytip.min.js?t=1451964199000"></script>
+    <!-- 此script用于百度统计工具-->
+	<script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?a411c4d1664dd70048ee98afe7b28f0b";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+	<script type="text/javascript">
+  	g_user = {
+	id:0,
+	name:'',
+	login:false};  </script>
+    <script type="text/javascript" src="/js/2011/oschina.js?t=1451964198000"></script>
+  <script type="text/javascript" src="/js/utils.js?t=1451964199000"></script>
+  <script type="text/javascript" src="/js/channel.js?t=1480417745000?2014022501"></script>
+    <style type="text/css">
+  
+  </style>
+</head>
+<body>
+<div id='OSC_NavTop'>
+	<div class="wp998">
+        <div id="OSC_Channels">
+        	<ul>
+        	<li class="item"><a href="https://www.oschina.net/" class='home'>首页</a></li>        	<li class="item control_select"><a href="https://www.oschina.net/project" class='project'>开源项目</a>
+				<ul class="cs_content">
+					<li><a href='https://www.oschina.net/project/zh'>国产开源项目</a></li>
+					<li><a href='https://www.oschina.net/project/tags'>项目分类</a></li>
+					<li><a href='https://www.oschina.net/project/list?sort=time'>最新收录项目</a></li>
+					<li class='split'></li>
+                	                	<li><a href="https://www.oschina.net/project/lang/19/java">Java 开源软件</a></li>
+                	<li><a href="https://www.oschina.net/project/lang/194/csharp">C# 开源软件</a></li>
+                	<li><a href="https://www.oschina.net/project/lang/22/php">PHP 开源软件</a></li>
+                	<li><a href="https://www.oschina.net/project/lang/21/c">C/C++ 开源软件</a></li>
+                	<li><a href="https://www.oschina.net/project/lang/26/ruby">Ruby 开源软件</a></li>
+                	<li><a href="https://www.oschina.net/project/lang/25/python">Python 开源软件</a></li>
+                	<li><a href="https://www.oschina.net/project/lang/358/go">Go开源软件</a></li>
+                	<li><a href="https://www.oschina.net/project/lang/28/javascript">JS开源软件</a></li>
+				</ul>
+			</li>
+        	<li class="item control_select">
+				<a href="https://www.oschina.net/question" class='question hl'>问答</a>
+				<ul class="cs_content">
+                	<li><a href="https://www.oschina.net/question?catalog=1"> 技术问答 &raquo; </a></li>
+                	<li><a href="https://www.oschina.net/question?catalog=2"> 技术分享 &raquo; </a></li>
+                	<li><a href="https://www.oschina.net/question?catalog=3"> IT大杂烩 &raquo; </a></li>
+                	<li><a href="https://www.oschina.net/question?catalog=100"> 职业生涯 &raquo; </a></li>
+                	<li><a href="https://www.oschina.net/question?catalog=4"> 站务/建议 &raquo; </a></li>
+                	<li><a href="https://www.oschina.net/alipay"> 支付宝专区 &raquo; </a></li>
+                	<li><a href="https://www.oschina.net/mopaas"> MoPaaS专区 &raquo; </a></li>
+                	<li><a href="https://www.oschina.net/hardware"> 开源硬件专区 &raquo; </a></li>
+				</ul>
+			</li>
+        	<li class="item"><a href="https://www.oschina.net/tweets" class='tweets'>动弹</a></li>
+        	        	<li class="item"><a href="https://www.oschina.net/blog" class='blog'>博客</a></li>
+        	<li class="item"><a href="https://www.oschina.net/translate" class='tran'>翻译</a></li>
+            <li class="item"><a href="https://www.oschina.net/news" class='news'>资讯</a></li>
+        	<li class="item control_select">
+				<a href="https://www.oschina.net/android" class='mobile'>专题</a>
+				<ul class="cs_content cs_mobile">
+        			<li><a href='https://www.oschina.net/event/ych' style='color:#c00'>源创会</a> <a href='/video'>视频</a></li>
+        			<li><a href='http://www.oschina.net/question/tag/%E9%AB%98%E6%89%8B%E9%97%AE%E7%AD%94'>高手问答</a> <a href='http://www.oschina.net/question/tag/%E5%BC%80%E6%BA%90%E8%AE%BF%E8%B0%88'>访谈</a></li>
+        			<li><a href='http://www.oschina.net/question/tag/%E5%BC%80%E6%BA%90%E5%91%A8%E5%88%8A'>周刊</a> <a href='http://my.oschina.net/xxiaobian/blog?catalog=547834'>乱弹</a></li>
+            		<li><a href="https://www.oschina.net/company">公司开源导航页</a></li>
+					<li class='split'></li>
+                	<li class="android_"><a href="https://www.oschina.net/android">Android开发专区</a></li>
+                	<li class="ios_"><a href="https://www.oschina.net/ios/home">iOS开发专区</a></li>
+                	<li class="ios_"><a href="https://www.oschina.net/ios/codingList">iOS代码库</a></li>
+                	<li class="wp7_"><a href="https://www.oschina.net/wp">Windows Phone</a></li>
+					
+				</ul>
+			</li>
+        <li class="item"><a href="https://www.oschina.net/event" class='event'>活动</a></li>
+        	        				        	</ul>
+        </div>
+		<div id="OSC_Userbar">
+                		    		当前访客身份：游客 [ <a href="https://www.oschina.net/home/login?goto_page=http%3A%2F%2Fwww.oschina.net%2Fquestion%2F922543_91357">登录</a> | <a href="https://www.oschina.net/home/reg">加入开源中国</a> ]
+    				</div>
+		<div class='clear'></div>
+	</div>
+
+</div>
+<div id='OSC_Banner'><div class="wp998"><a href='https://www.oschina.net/' class='Logo' title='OSChina 开源中国'>开源中国</a>
+<h1><a href='/question'>问答</a></h1>
+<dl>
+    <dt>当前位置：</dt>
+    <dd>
+                                    <a href="/question">问答</a>&nbsp;&raquo;
+                <a href="/question?catalog=1">技术问答</a>                                    &raquo;&nbsp;<a href="/p/nginx">Nginx</a>
+                                        </dd>
+</dl>
+<form action='https://www.oschina.net/search' class='search'>
+    <input type='hidden' name='scope' value='bbs'/>
+    <input id='channel_q' type='text' name='q' value='' placeholder='资讯、软件、分享、代码、博客' class='TXT'/>
+    <button type='submit' class='BTN'>搜 索</button>
+</form>
+<div class='clear'></div></div></div>
+<div id="OSC_Screen">
+	<div id="OSC_Content" class='CenterDiv'>
+<script type="text/javascript" src="/js/scrolltopcontrol.js?t=1451964199000"></script>
+<script type="text/javascript">
+  	scrolltotop.offset(100,120);
+  	scrolltotop.init();
+	$(function(){
+		$('a.ShowUserOutline img.SmallPortrait').poshytip({
+			className: 'tip-yellowsimple',
+			alignTo: 'target',
+			alignX: 'right',
+			alignY: 'inner-top',
+			offsetX: 5,
+			offsetY: 0,
+			fade: false,
+			slide: false,
+			content: function(updateCallback) {
+				ajax_get("/action/ajax/get_user_outline?id="+$(this).attr('user'),false,function(html){
+					updateCallback(html);
+				});
+				return "<div style='height:100px;'>Loading...</div>";
+			}
+		});
+	});
+	function add_to_favorite(pid,concern_it){
+			alert("必须登录后才能收藏");
+		}
+</script>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        osc.show_tag_introduce_project();
+        osc.show_tag_introduce_other();
+    });
+</script>
+
+
+
+<div class='Question'>
+    <div class='Body'>
+        <div class="main">
+            <div class='Title'>
+                <a class="jump_answer" href="#tags_nav" title="跳到回复"></a>
+
+                <div class='QTitle'>
+                                        <h1><a href="https://www.oschina.net/question/922543_91357" hidefocus="true"
+                                                       name='top'>nginx server_name怎么可有可无</a></h1>
+
+                    <div class="array"></div>
+                </div>
+                <div class="clear"></div>
+            
+                <div class='clear'></div>
+            </div>
+                                
+
+            <div class='Content'>
+                <p style="margin:0 0 10px 0;"><a data-traceid="question_detail_above_text_link_1" data-tracepid="question_detail_above_text_link" style="color:#A00;font-weight:bold;" href="https://www.qcloud.com/community/article/164816001481011969?utm_source=Community&utm_medium=article164816001481011969&utm_campaign=kyzg" target="_blank">Hbase WAL线程模型源码分析&gt;&gt;&gt; »</a>&nbsp;&nbsp;<img src="https://my.oschina.net/img/hot3.png" align="absmiddle"></p>                <div class='detail'><p> 以前我发现nginx &nbsp;server_name写错了进不去网站：但昨天发现随便写个错误域名或者干脆不写都能访问网站: </p> 
+<p> 我是参考<a href="http://www.oschina.net/code/snippet_12_175" target="_blank" rel="nofollow">http://www.oschina.net/code/snippet_12_175</a><span> 配的：<a href="http://www.oschina.net/question/@红薯" target="_blank" rel="nofollow"></a><a href="http://my.oschina.net/javayou" target="_blank" rel="nofollow">@红薯</a> <br /> </span> </p> 
+<p> http<br /> {<br /> &nbsp; include&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mime.types;<br /> &nbsp; default_type&nbsp; application/octet-stream;<br /> &nbsp; server_tokens off;<br /> &nbsp; #charset&nbsp; gb2312;<br /> <br /> &nbsp; log_format&nbsp; main&nbsp; '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '$status $body_bytes_sent &quot;$http_referer&quot; '<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';<br /> <br /> &nbsp; server_names_hash_bucket_size 128;<br /> &nbsp; client_header_buffer_size 32k;<br /> &nbsp; large_client_header_buffers 4 32k;<br /> &nbsp; client_max_body_size 8m;<br /> <br /> &nbsp; sendfile on;<br /> &nbsp; tcp_nopush&nbsp;&nbsp;&nbsp;&nbsp; on;<br /> <br /> &nbsp; keepalive_timeout 60;<br /> &nbsp; tcp_nodelay on;<br /> &nbsp; proxy_redirect&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; off;<br /> &nbsp; proxy_set_header&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Host $host;<br /> &nbsp; proxy_set_header&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; X-Real-IP $remote_addr;<br /> &nbsp; proxy_set_header&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; X-Forwarded-For $proxy_add_x_forwarded_for;<br /> &nbsp; proxy_connect_timeout&nbsp;&nbsp; 300;<br /> &nbsp; proxy_send_timeout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 300;<br /> &nbsp; proxy_read_timeout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 300;<br /> &nbsp; proxy_buffer_size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4k;<br /> &nbsp; proxy_buffers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 32k;<br /> &nbsp; proxy_busy_buffers_size 64k;<br /> &nbsp; proxy_temp_file_write_size 64k;<br /> <br /> &nbsp; gzip on;<br /> &nbsp; gzip_min_length&nbsp; 1k;<br /> &nbsp; gzip_buffers&nbsp;&nbsp;&nbsp;&nbsp; 4 16k;<br /> &nbsp; gzip_http_version 1.0;<br /> &nbsp; gzip_comp_level 2;<br /> &nbsp; gzip_types&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; text/plain application/x-javascript text/css application/xml;<br /> &nbsp; gzip_vary on; </p> 
+<p> server {<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; listen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 80;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#E53333;"> server_name www.oschina112233.com;</span>&nbsp; //这里随便写域名或者 删除<span style="color:#E53333;"> server_name</span>都能正常访问<br /> <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; access_log&nbsp; logs/access.log&nbsp; main;<br /> <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; location / {<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; auth_basic&nbsp; &quot;say frend and pass!&quot;;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; auth_basic_user_file /home/nginxpasswd/localpasswd/visitpass;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy_pass http://127.0.0.1:10697;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<span></span> </p> 
+<table> 
+ <tbody> 
+  <tr> 
+   <td> <br /> </td> 
+   <td> <p> <br /> </p> <p> 怎么回事？是不是一个server可以不写<span style="color:#E53333;">server_name</span> </p> </td> 
+  </tr> 
+ </tbody> 
+</table>                    <div class='clear'></div><div class='EditLogs'>
+	<span class="question_resupply_list">
+		</span>
+</div></div>
+                                <div class="Asker special">
+                    <div class="info" title="小猫王">
+					<span class="ainfo">
+						<a href="https://my.oschina.net/nonmore" class="ShowUserOutline" target="_blank"
+                           title="小猫王"><img src="https://static.oschina.net/uploads/user/461/922543_50.jpg?t=1359599052000" align="absmiddle" alt="小猫王" title="小猫王" class="SmallPortrait" user="922543"/></a>
+					</span>
+					<span class="pinfo">
+		    			<a href="https://my.oschina.net/nonmore" class="Asker-Name"
+                           target="_blank">小猫王</a><br/>
+		    			<span class="pub_time">发帖于&nbsp;4年前</span><br/>
+		    			<span><a href='#answers' class='answer_count'>8</a>回/20503阅</span>
+					</span>
+                    </div>
+                    <div class='clear'></div>
+                </div>
+                <div class="tags_toolbars">
+                    <div class='Tags' id="tags_nav">
+                        <strong>标签：</strong>
+                                                                            <a href='https://www.oschina.net/question/tag/nginx' class='tag project image' data-id='390' title='高性能Web服务器 Nginx'><img src='/img/logo/nginx.png?t=1451964198000' height='18' class='prj_logo_18'>Nginx</a>                                                                     </div>
+                                            <div class='SameQuestions'>
+			<span class="q_toolbar">
+				<ul>
+                                        <li> <a href="javascript:report('https://www.oschina.net/question/922543_91357',91357,2)">举报&nbsp;</a></li>
+                    <li id="Share">
+                        <a class="Ask_Share_Tencent" title="分享到腾讯微博"
+                           href="javascript:(function(){window.open('http://v.t.qq.com/share/share.php?url='+encodeURIComponent(document.location)+'&amp;appkey=96f54f97c4de46e393c4835a266207f4&amp;site=&amp;title='+encodeURIComponent(document.title)+encodeURIComponent(': 以前我发现nginx  server_name写错了进不去网站：但昨天发现随便写个错误域名或者干脆不写都能访问网站: 我是参考http://www.oschina.net/code/snippet_12_175 配的：@...'),'', 'width=450, height=400, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, location=yes, resizable=no, status=no');}())"></a>
+                        <a class="Ask_Share_Sina" title="分享到新浪微博"
+                           href="javascript:void((function(s,d,e,r,l,p,t,z,c){var%20f='http://v.t.sina.com.cn/share/share.php?appkey=858381728',u=z||d.location,p=['&url=',e(u),'&title=',e(t||d.title),'&source=',e(r),'&sourceUrl=',e(l),'&content=',c||'gb2312','&pic=',e(p||'')].join('');function%20a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=440,height=430,left=',(s.width-440)/2,',top=',(s.height-430)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else%20a();})(screen,document,encodeURIComponent,'','','','nginx server_name怎么可有可无: 以前我发现nginx  server_name写错了进不去网站：但昨天发现随便写个错误域名或者干脆不写都能访问网站: 我是参考http://www.oschina.net/code/snippet_12_175 配的：@...','','utf-8'));"></a>
+                        |<a href="javascript:function(0);">&nbsp;分享到</a>
+                    </li>
+                </ul>
+			</span>
+
+                            <div class="clear"></div>
+                        </div>
+                                    </div>
+            </div>
+            <div class='Vote' id='Vote'>
+                                                <a id="vote_up" class="vote-up-off" href="#" title="顶：这问题很有用或者提问清晰明了"></a>
+                                <span class="q_vote_num">0</span>
+                                    <a id="vote_down" class="vote-down-off" href="#" title="踩：这问题不知道在问什么，或者没什么用"></a>
+                                <span class="store">
+    		<a title="收藏此话题"
+               class="Tool-Store-Off" id="favor_trigger" href="javascript:;">收藏(0)</a>
+    		</span>
+            </div>
+        </div>
+        <style type='text/css'>
+            #TagsSwitcher { color : #A00; }
+
+            #RecTags, #MyTags { margin : 5px 0; }
+
+            #RecTags a.tag { line-height : 24px; }
+
+            #favor_form p:first-child { margin : 5px 0; }
+
+            #favor_form { width : 200px; }
+
+            #favor_form p { color : #666; }
+
+            #favor_form form { width : 200px; }
+
+            #favor_form form ._favor_input { display : block; margin : 2px 0; width : 199px; }
+
+            #favor_form form ._favor_button { float : left; padding : 2px 5px; }
+
+            .favor_ok { text-align : center; font-size : 10.5pt; width : 199px; height : 60px; margin-top : 10px; }
+
+            #TagsSwitcher { cursor : pointer; float : right; margin-top : 10px; }
+
+            #MyTags { display : none; width : 199px; }
+
+            #MyTags a.tag { float : left; background-color : #E0EAF1; border-bottom : 1px solid #3E6D8E; border-right : 1px solid #7F9FB6; color : #3E6D8E; font-size : 8pt; line-height : 16px; margin : 2px 2px 2px 0; padding : 2px 4px; text-decoration : none; white-space : nowrap; }
+
+            #MyTags a.tag:hover { background-color : #3E6D8E; color : #FFF; }
+
+            .osc_promotion { position : relative; display : inline-block; padding : 10px; margin : 10px 0; border : 1px solid #ccc; }
+
+            .osc_promotion .c { position : absolute; right : -1px; top : -1px; }
+
+            .ask_toolbar { float : right; list-style : none; font-size : 12px; color : #333; height : 28px; _padding-top : 5px; overflow : hidden; margin : 20px 0 10px 0; }
+
+            .ask_toolbar div { float : left; margin-left : 5px; background : url("/img/ask-icon.gif") no-repeat; padding : 6px 0 6px 15px; padding-left : 15px; height : 16px; }
+
+            .ask_toolbar a { height : 16px; color : #333; text-decoration : none; display : inline-block; zoom : 1; vertical-align : middle; }
+
+            .ask_share { width : 89px; vertical-align : bottom; line-height : 15px; _line-height : 14px; }
+
+            .ask_share a { background : url("/img/ask-icon.gif"); width : 16px; }
+
+            a.ask_share_sina { background : url("/img/ask-icon.gif") 0 -40px no-repeat; margin-left : 5px; }
+
+            a.ask_share_tencent { background-position : 0 -70px; margin-left : 5px; }
+
+            .ask_toolbar em { height : 28px; line-height : 28px; width : 14px; display : inline-block; float : left; background : url("/img/ask-icon.gif") top right; }
+
+            .ask_collect a, .ask_report a, .ask_vote a, .ask_collected a { padding-left : 20px; line-height : 15px; }
+
+            .ask_collect a { background : url("/img/ask-icon.gif") 0 -131px no-repeat; }
+
+            .ask_collected a { background : url("/img/ask-icon.gif") 0 -100px no-repeat; }
+
+            div.ask_collect_count { background : url("/img/ask-icon.gif") 0 -309px no-repeat; font-weight : bold; font-size : 14px; margin-left : 0; height : 16px; line-height : 16px; }
+
+            .ask_report a { background : url("/img/ask-icon.gif") 0 -160px no-repeat; }
+
+            em.ask_collect_count_r { background-position : 59px -309px; }
+
+            .ask_vote a { background : url("/img/ask-icon.gif"); }
+                        a.ask_vote_up { background-position : 3px -190px; }
+
+            a.ask_vote_down { background-position : 0 -280px; }
+
+            a.ask_vote_uped { background-position : 3px -190px; }
+                        a.ask_vote_downed { background-position : 0 -280px; }
+
+            .ask_vote span { display : inline-block; margin : 0 10px; font-weight : bold; font-size : 14px; vertical-align : middle; margin-bottom : 2px; line-height : 16px; }
+        </style>
+        <div class='clear'></div>
+    
+    	        <div class='clear'></div>
+                        <div class='QuestionReplies'>
+            <h2>
+				<span class='sort'>
+					<a href="https://www.oschina.net/question/922543_91357#answers">                        按票数排序</a>&nbsp;
+					<a href="?sort=time#answers" class='current'>显示最新答案</a>&nbsp;&nbsp;
+				</span>
+                <a name='answers'></a>共有<em class='answer_count'>8</em>个答案
+                <a href="?sort=time#answers"
+                                           class="last_reply">(最后回答: 7个月前
+                    )</a>            </h2>
+                        <ul class='list'><span class="hr unvisible"></span><div class="Vote" id="vote_1145764">
+        <a href="javascript:vote_answer(1145764,true,true)" id='a_post_voteup_1145764'
+       class=" vote-up-off "
+       title=" 投支持票 "></a>
+    <span class="a_vote_num" id="a_vote_num_1145764">0</span>
+    <a href="javascript:vote_answer(1145764,false,true)" id='a_post_votedown_1145764'
+       class=" vote-down-off "
+       title=" 投反对票 "></a>
+                </div>
+<li class='Answer '
+    id='answer_1145764'>
+    <div class='user'>
+        <span class="user_img"><a href="https://my.oschina.net/iahu" class="ShowUserOutline" name="AnchorAnswer1145764"
+                                  target="_blank"><img src="https://static.oschina.net/uploads/user/466/932121_50.jpg?t=1357191674000" align="absmiddle" alt="fusionBin" title="fusionBin" class="SmallPortrait" user="932121"/></a></span>
+		<span class="user_info">
+			<a href="https://my.oschina.net/iahu" title="fusionBin"
+               target="_blank">fusionBin</a>
+			<span class="reply-time">7个月前</span>
+		</span>
+
+        <div class="clear"></div>
+    </div>
+    <div class='body'>
+                                            <div class='clear'></div>
+        <div class='detail'><p>
+	是不是少了所谓的 catch-all
+</p>
+<p>
+	http://stackoverflow.com/questions/9454764/nginx-server-name-wildcard-or-catch-all
+</p></div>
+    </div>
+    <div class='clear'></div>
+    <div class='replies' id='PostReplies_1145764'></div>
+
+    <div class='votes'>
+                <span class="a_toolbar">
+		<a href="javascript:reply_to_post(1145764, 0)">评论(0)</a>|
+            <a href="/question/answer?question=91357&amp;answer=1145764">引用此答案</a>|                                        <a href="javascript:report('https://www.oschina.net/question/922543_91357#AnchorAnswer1145764',1145764,17)">举报</a>
+            
+            (2016-06-15 16:23)
+		</span>
+    </div>
+</li>
+<span class="hr"></span>
+<script>
+                $('li.Answer').bind('mouseenter', function () {
+            var anwserId = $(this).attr('id');
+            $("#best_" + anwserId).show();
+        }).bind('mouseleave', function () {
+            var anwserId = $(this).attr('id');
+            var bestAI = $('#best_' + anwserId);
+            if (bestAI && bestAI.attr('class') && bestAI.attr('class').indexOf('accept-off') != -1) {
+                bestAI.hide();
+            }
+        });
+        $('.Vote').bind('mouseenter', function () {
+            $(this).find('a.accept-off').show();
+            $(this).find('a.accept-on').show();
+            $(this).next('li.Answer').find('.hover-show').show();
+        }).bind('mouseleave', function () {
+            $(this).find('a.accept-off').hide();
+            $(this).next('li.Answer').find('.hover-show').hide();
+        });
+        </script><div class="Vote" id="vote_630288">
+        <a href="javascript:vote_answer(630288,true,true)" id='a_post_voteup_630288'
+       class=" vote-up-off "
+       title=" 投支持票 "></a>
+    <span class="a_vote_num" id="a_vote_num_630288">0</span>
+    <a href="javascript:vote_answer(630288,false,true)" id='a_post_votedown_630288'
+       class=" vote-down-off "
+       title=" 投反对票 "></a>
+                </div>
+<li class='Answer '
+    id='answer_630288'>
+    <div class='user'>
+        <span class="user_img"><a href="https://my.oschina.net/gongju" class="ShowUserOutline" name="AnchorAnswer630288"
+                                  target="_blank"><img src="https://static.oschina.net/uploads/user/218/437041_50.jpg?t=1393345645000" align="absmiddle" alt="李少麒" title="李少麒" class="SmallPortrait" user="437041"/></a></span>
+		<span class="user_info">
+			<a href="https://my.oschina.net/gongju" title="李少麒"
+               target="_blank">李少麒</a>
+			<span class="reply-time">3年前</span>
+		</span>
+
+        <div class="clear"></div>
+    </div>
+    <div class='body'>
+                                            <div class='clear'></div>
+        <div class='detail'>有多个server可不可以不指定呢？</div>
+    </div>
+    <div class='clear'></div>
+    <div class='replies' id='PostReplies_630288'></div>
+
+    <div class='votes'>
+                <span class="a_toolbar">
+		<a href="javascript:reply_to_post(630288, 0)">评论(0)</a>|
+            <a href="/question/answer?question=91357&amp;answer=630288">引用此答案</a>|                                        <a href="javascript:report('https://www.oschina.net/question/922543_91357#AnchorAnswer630288',630288,17)">举报</a>
+            
+            (2013-11-13 16:41)
+		</span>
+    </div>
+</li>
+<span class="hr"></span>
+<script>
+                $('li.Answer').bind('mouseenter', function () {
+            var anwserId = $(this).attr('id');
+            $("#best_" + anwserId).show();
+        }).bind('mouseleave', function () {
+            var anwserId = $(this).attr('id');
+            var bestAI = $('#best_' + anwserId);
+            if (bestAI && bestAI.attr('class') && bestAI.attr('class').indexOf('accept-off') != -1) {
+                bestAI.hide();
+            }
+        });
+        $('.Vote').bind('mouseenter', function () {
+            $(this).find('a.accept-off').show();
+            $(this).find('a.accept-on').show();
+            $(this).next('li.Answer').find('.hover-show').show();
+        }).bind('mouseleave', function () {
+            $(this).find('a.accept-off').hide();
+            $(this).next('li.Answer').find('.hover-show').hide();
+        });
+        </script><div class="Vote" id="vote_434112">
+        <a href="javascript:vote_answer(434112,true,true)" id='a_post_voteup_434112'
+       class=" vote-up-off "
+       title=" 投支持票 "></a>
+    <span class="a_vote_num" id="a_vote_num_434112">1</span>
+    <a href="javascript:vote_answer(434112,false,true)" id='a_post_votedown_434112'
+       class=" vote-down-off "
+       title=" 投反对票 "></a>
+                </div>
+<li class='Answer '
+    id='answer_434112'>
+    <div class='user'>
+        <span class="user_img"><a href="https://my.oschina.net/wwei" class="ShowUserOutline" name="AnchorAnswer434112"
+                                  target="_blank"><img src="/img/portrait.gif?t=1451964198000" align="absmiddle" alt="wang_wei" title="wang_wei" class="SmallPortrait" user="11369"/></a></span>
+		<span class="user_info">
+			<a href="https://my.oschina.net/wwei" title="wang_wei"
+               target="_blank">wang_wei</a>
+			<span class="reply-time">4年前</span>
+		</span>
+
+        <div class="clear"></div>
+    </div>
+    <div class='body'>
+                                            <div class='clear'></div>
+        <div class='detail'>如果nginx中只配置一个server域的话，则nginx是不会去进行server_name的匹配的。因为只有一个server域，也就是这有一个虚拟主机，那么肯定是发送到该nginx的所有请求均是要转发到这一个域的，即便做一次匹配也是没有用的。还不如干脆直接就省了。如果一个http域的server域有多个，nginx才会根据$hostname去匹配server_name进而把请求转发到匹配的server域中。此时的匹配会按照匹配的优先级进行，一旦匹配成功进不会再进行匹配，关于具体的匹配规则可以参见nginx官网提供的文档。</div>
+    </div>
+    <div class='clear'></div>
+    <div class='replies' id='PostReplies_434112'><div class='clear'></div>
+<strong>--- 共有 2 条评论 --- </strong>
+<ul>
+		<li id='PostReply_435455'>
+				<a href="https://my.oschina.net/wwei" class='p' name='AnchorAnswer435455'>wang_wei</a>
+		<span class='b'>
+		<span class='c'>实际上，nginx会匹配请求头中的host和server_name，如果没有匹配的上，nginx会指定该请求到一个默认的server域，如果比较说明，默认的server为第一个server。因此，就出现了如楼主所述的情况。</span>
+		<span class='t'>
+				(4年前)&nbsp&nbsp;
+				<span class='opts'><a href="javascript:reply_to_post(434112,11369)">回复</a></span>
+		</span>
+		</span>
+		<div class='clear'></div>
+	</li>
+		<li id='PostReply_434137'>
+				<a href="https://my.oschina.net/nonmore" class='p' name='AnchorAnswer434137'>小猫王</a>
+		<span class='b'>
+		<span class='c'>谢谢</span>
+		<span class='t'>
+				(4年前)&nbsp&nbsp;
+				<span class='opts'><a href="javascript:reply_to_post(434112,922543)">回复</a></span>
+		</span>
+		</span>
+		<div class='clear'></div>
+	</li>
+	</ul>	
+<div class='PagerLinks'>
+</div>
+</div>
+
+    <div class='votes'>
+                <span class="a_toolbar">
+		<a href="javascript:reply_to_post(434112, 0)">评论(2)</a>|
+            <a href="/question/answer?question=91357&amp;answer=434112">引用此答案</a>|                                        <a href="javascript:report('https://www.oschina.net/question/922543_91357#AnchorAnswer434112',434112,17)">举报</a>
+            
+            (2013-03-11 19:10)
+		</span>
+    </div>
+</li>
+<span class="hr"></span>
+<script>
+                $('li.Answer').bind('mouseenter', function () {
+            var anwserId = $(this).attr('id');
+            $("#best_" + anwserId).show();
+        }).bind('mouseleave', function () {
+            var anwserId = $(this).attr('id');
+            var bestAI = $('#best_' + anwserId);
+            if (bestAI && bestAI.attr('class') && bestAI.attr('class').indexOf('accept-off') != -1) {
+                bestAI.hide();
+            }
+        });
+        $('.Vote').bind('mouseenter', function () {
+            $(this).find('a.accept-off').show();
+            $(this).find('a.accept-on').show();
+            $(this).next('li.Answer').find('.hover-show').show();
+        }).bind('mouseleave', function () {
+            $(this).find('a.accept-off').hide();
+            $(this).next('li.Answer').find('.hover-show').hide();
+        });
+        </script><div class="Vote" id="vote_426160">
+        <a href="javascript:vote_answer(426160,true,true)" id='a_post_voteup_426160'
+       class=" vote-up-off "
+       title=" 投支持票 "></a>
+    <span class="a_vote_num" id="a_vote_num_426160">0</span>
+    <a href="javascript:vote_answer(426160,false,true)" id='a_post_votedown_426160'
+       class=" vote-down-off "
+       title=" 投反对票 "></a>
+                </div>
+<li class='Answer '
+    id='answer_426160'>
+    <div class='user'>
+        <span class="user_img"><a href="https://my.oschina.net/ppabvc" class="ShowUserOutline" name="AnchorAnswer426160"
+                                  target="_blank"><img src="https://static.oschina.net/uploads/user/47/95703_50.jpg?t=1370602738000" align="absmiddle" alt="萝卜Robert" title="萝卜Robert" class="SmallPortrait" user="95703"/></a></span>
+		<span class="user_info">
+			<a href="https://my.oschina.net/ppabvc" title="萝卜Robert"
+               target="_blank">萝卜Robert</a>
+			<span class="reply-time">4年前</span>
+		</span>
+
+        <div class="clear"></div>
+    </div>
+    <div class='body'>
+                                            <div class='clear'></div>
+        <div class='detail'><br /> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; listen &nbsp;80 default; 
+<br /> 
+<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; server_name &nbsp;www.test.com; </p> 
+<p> <br /> </p> 
+<p> 多个的话用&nbsp;<span>default</span> </p> 
+<p> <span>哈哈 &nbsp; 试试</span> </p> 
+<p> <span><br /> </span> </p></div>
+    </div>
+    <div class='clear'></div>
+    <div class='replies' id='PostReplies_426160'></div>
+
+    <div class='votes'>
+                <span class="a_toolbar">
+		<a href="javascript:reply_to_post(426160, 0)">评论(0)</a>|
+            <a href="/question/answer?question=91357&amp;answer=426160">引用此答案</a>|                                        <a href="javascript:report('https://www.oschina.net/question/922543_91357#AnchorAnswer426160',426160,17)">举报</a>
+            
+            (2013-02-28 11:53)
+		</span>
+    </div>
+</li>
+<span class="hr"></span>
+<script>
+                $('li.Answer').bind('mouseenter', function () {
+            var anwserId = $(this).attr('id');
+            $("#best_" + anwserId).show();
+        }).bind('mouseleave', function () {
+            var anwserId = $(this).attr('id');
+            var bestAI = $('#best_' + anwserId);
+            if (bestAI && bestAI.attr('class') && bestAI.attr('class').indexOf('accept-off') != -1) {
+                bestAI.hide();
+            }
+        });
+        $('.Vote').bind('mouseenter', function () {
+            $(this).find('a.accept-off').show();
+            $(this).find('a.accept-on').show();
+            $(this).next('li.Answer').find('.hover-show').show();
+        }).bind('mouseleave', function () {
+            $(this).find('a.accept-off').hide();
+            $(this).next('li.Answer').find('.hover-show').hide();
+        });
+        </script><div class="Vote" id="vote_426130">
+        <a href="javascript:vote_answer(426130,true,true)" id='a_post_voteup_426130'
+       class=" vote-up-off "
+       title=" 投支持票 "></a>
+    <span class="a_vote_num" id="a_vote_num_426130">0</span>
+    <a href="javascript:vote_answer(426130,false,true)" id='a_post_votedown_426130'
+       class=" vote-down-off "
+       title=" 投反对票 "></a>
+                </div>
+<li class='Answer '
+    id='answer_426130'>
+    <div class='user'>
+        <span class="user_img"><a href="https://my.oschina.net/zhubaoming" class="ShowUserOutline" name="AnchorAnswer426130"
+                                  target="_blank"><img src="https://static.oschina.net/uploads/user/52/105076_50.png?t=1380547224000" align="absmiddle" alt="Jewel_M" title="Jewel_M" class="SmallPortrait" user="105076"/></a></span>
+		<span class="user_info">
+			<a href="https://my.oschina.net/zhubaoming" title="Jewel_M"
+               target="_blank">Jewel_M</a>
+			<span class="reply-time">4年前</span>
+		</span>
+
+        <div class="clear"></div>
+    </div>
+    <div class='body'>
+                                            <div class='clear'></div>
+        <div class='detail'><div class="ref"><h4>引用来自“万里码”的答案</h4><div class=ref_body><p> 刚试验了下： </p> 
+<p> 我只配了一个server，所有没写<span style="color:#E53333;">server_name</span>或者乱写域名都可以访问 </p> 
+<p> 有多个server&nbsp;&nbsp; nginx会去匹配<span style="color:#E53333;">server_name</span>名称 </p></div></div><div class=a_body>原来是这样...</div></div>
+    </div>
+    <div class='clear'></div>
+    <div class='replies' id='PostReplies_426130'></div>
+
+    <div class='votes'>
+                <span class="a_toolbar">
+		<a href="javascript:reply_to_post(426130, 0)">评论(0)</a>|
+            <a href="/question/answer?question=91357&amp;answer=426130">引用此答案</a>|                                        <a href="javascript:report('https://www.oschina.net/question/922543_91357#AnchorAnswer426130',426130,17)">举报</a>
+            
+            (2013-02-28 11:28)
+		</span>
+    </div>
+</li>
+<span class="hr"></span>
+<script>
+                $('li.Answer').bind('mouseenter', function () {
+            var anwserId = $(this).attr('id');
+            $("#best_" + anwserId).show();
+        }).bind('mouseleave', function () {
+            var anwserId = $(this).attr('id');
+            var bestAI = $('#best_' + anwserId);
+            if (bestAI && bestAI.attr('class') && bestAI.attr('class').indexOf('accept-off') != -1) {
+                bestAI.hide();
+            }
+        });
+        $('.Vote').bind('mouseenter', function () {
+            $(this).find('a.accept-off').show();
+            $(this).find('a.accept-on').show();
+            $(this).next('li.Answer').find('.hover-show').show();
+        }).bind('mouseleave', function () {
+            $(this).find('a.accept-off').hide();
+            $(this).next('li.Answer').find('.hover-show').hide();
+        });
+        </script><div class="Vote" id="vote_426109">
+        <a href="javascript:vote_answer(426109,true,true)" id='a_post_voteup_426109'
+       class=" vote-up-off "
+       title=" 投支持票 "></a>
+    <span class="a_vote_num" id="a_vote_num_426109">0</span>
+    <a href="javascript:vote_answer(426109,false,true)" id='a_post_votedown_426109'
+       class=" vote-down-off "
+       title=" 投反对票 "></a>
+                </div>
+<li class='Answer '
+    id='answer_426109'>
+    <div class='user'>
+        <span class="user_img"><a href="https://my.oschina.net/nonmore" class="ShowUserOutline" name="AnchorAnswer426109"
+                                  target="_blank"><img src="https://static.oschina.net/uploads/user/461/922543_50.jpg?t=1359599052000" align="absmiddle" alt="小猫王" title="小猫王" class="SmallPortrait" user="922543"/></a></span>
+		<span class="user_info">
+			<a href="https://my.oschina.net/nonmore" title="小猫王"
+               target="_blank">小猫王</a>
+			<span class="reply-time">4年前</span>
+		</span>
+
+        <div class="clear"></div>
+    </div>
+    <div class='body'>
+                                            <div class='clear'></div>
+        <div class='detail'><p> 刚试验了下： </p> 
+<p> 我只配了一个server，所有没写<span style="color:#E53333;">server_name</span>或者乱写域名都可以访问 </p> 
+<p> 有多个server&nbsp;&nbsp; nginx会去匹配<span style="color:#E53333;">server_name</span>名称 </p></div>
+    </div>
+    <div class='clear'></div>
+    <div class='replies' id='PostReplies_426109'></div>
+
+    <div class='votes'>
+                <span class="a_toolbar">
+		<a href="javascript:reply_to_post(426109, 0)">评论(0)</a>|
+            <a href="/question/answer?question=91357&amp;answer=426109">引用此答案</a>|                                        <a href="javascript:report('https://www.oschina.net/question/922543_91357#AnchorAnswer426109',426109,17)">举报</a>
+            
+            (2013-02-28 11:16)
+		</span>
+    </div>
+</li>
+<span class="hr"></span>
+<script>
+                $('li.Answer').bind('mouseenter', function () {
+            var anwserId = $(this).attr('id');
+            $("#best_" + anwserId).show();
+        }).bind('mouseleave', function () {
+            var anwserId = $(this).attr('id');
+            var bestAI = $('#best_' + anwserId);
+            if (bestAI && bestAI.attr('class') && bestAI.attr('class').indexOf('accept-off') != -1) {
+                bestAI.hide();
+            }
+        });
+        $('.Vote').bind('mouseenter', function () {
+            $(this).find('a.accept-off').show();
+            $(this).find('a.accept-on').show();
+            $(this).next('li.Answer').find('.hover-show').show();
+        }).bind('mouseleave', function () {
+            $(this).find('a.accept-off').hide();
+            $(this).next('li.Answer').find('.hover-show').hide();
+        });
+        </script><div class="Vote" id="vote_426089">
+        <a href="javascript:vote_answer(426089,true,true)" id='a_post_voteup_426089'
+       class=" vote-up-off "
+       title=" 投支持票 "></a>
+    <span class="a_vote_num" id="a_vote_num_426089">0</span>
+    <a href="javascript:vote_answer(426089,false,true)" id='a_post_votedown_426089'
+       class=" vote-down-off "
+       title=" 投反对票 "></a>
+                </div>
+<li class='Answer '
+    id='answer_426089'>
+    <div class='user'>
+        <span class="user_img"><a href="https://my.oschina.net/nonmore" class="ShowUserOutline" name="AnchorAnswer426089"
+                                  target="_blank"><img src="https://static.oschina.net/uploads/user/461/922543_50.jpg?t=1359599052000" align="absmiddle" alt="小猫王" title="小猫王" class="SmallPortrait" user="922543"/></a></span>
+		<span class="user_info">
+			<a href="https://my.oschina.net/nonmore" title="小猫王"
+               target="_blank">小猫王</a>
+			<span class="reply-time">4年前</span>
+		</span>
+
+        <div class="clear"></div>
+    </div>
+    <div class='body'>
+                                            <div class='clear'></div>
+        <div class='detail'><div class="ref"> 
+ <h4> 引用来自“Jewel_M”的答案 </h4> 
+ <div class="ref_body">
+   我的理解是 &nbsp; 如果不写的话 &nbsp;会默认绑定所有IP &nbsp;如 127.0.0.1 
+ </div> 
+</div> 
+<div class="a_body">
+  server { 
+ <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; listen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 80; 
+ <br /> 
+ <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#E53333;"> server_name 123123123123；//随便写都可以，相当于没去匹配server_name</span> </p> 
+ <p> <span style="color:#E53333;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</span> </p> 
+ <p> <span style="color:#E53333;">不是缓存问题，是没去匹配<span style="color:#E53333;">server_name</span>？？？</span> </p> 
+ <p> <span style="color:#E53333;"><span style="color:#006600;">我再查查 是不是 <span style="color:#006600;">只有一个server执行默认的 server</span></span><br /> </span> </p> 
+</div></div>
+    </div>
+    <div class='clear'></div>
+    <div class='replies' id='PostReplies_426089'></div>
+
+    <div class='votes'>
+                <span class="a_toolbar">
+		<a href="javascript:reply_to_post(426089, 0)">评论(0)</a>|
+            <a href="/question/answer?question=91357&amp;answer=426089">引用此答案</a>|                                        <a href="javascript:report('https://www.oschina.net/question/922543_91357#AnchorAnswer426089',426089,17)">举报</a>
+            
+            (2013-02-28 11:05)
+		</span>
+    </div>
+</li>
+<span class="hr"></span>
+<script>
+                $('li.Answer').bind('mouseenter', function () {
+            var anwserId = $(this).attr('id');
+            $("#best_" + anwserId).show();
+        }).bind('mouseleave', function () {
+            var anwserId = $(this).attr('id');
+            var bestAI = $('#best_' + anwserId);
+            if (bestAI && bestAI.attr('class') && bestAI.attr('class').indexOf('accept-off') != -1) {
+                bestAI.hide();
+            }
+        });
+        $('.Vote').bind('mouseenter', function () {
+            $(this).find('a.accept-off').show();
+            $(this).find('a.accept-on').show();
+            $(this).next('li.Answer').find('.hover-show').show();
+        }).bind('mouseleave', function () {
+            $(this).find('a.accept-off').hide();
+            $(this).next('li.Answer').find('.hover-show').hide();
+        });
+        </script><div class="Vote" id="vote_426069">
+        <a href="javascript:vote_answer(426069,true,true)" id='a_post_voteup_426069'
+       class=" vote-up-off "
+       title=" 投支持票 "></a>
+    <span class="a_vote_num" id="a_vote_num_426069">0</span>
+    <a href="javascript:vote_answer(426069,false,true)" id='a_post_votedown_426069'
+       class=" vote-down-off "
+       title=" 投反对票 "></a>
+                </div>
+<li class='Answer '
+    id='answer_426069'>
+    <div class='user'>
+        <span class="user_img"><a href="https://my.oschina.net/zhubaoming" class="ShowUserOutline" name="AnchorAnswer426069"
+                                  target="_blank"><img src="https://static.oschina.net/uploads/user/52/105076_50.png?t=1380547224000" align="absmiddle" alt="Jewel_M" title="Jewel_M" class="SmallPortrait" user="105076"/></a></span>
+		<span class="user_info">
+			<a href="https://my.oschina.net/zhubaoming" title="Jewel_M"
+               target="_blank">Jewel_M</a>
+			<span class="reply-time">4年前</span>
+		</span>
+
+        <div class="clear"></div>
+    </div>
+    <div class='body'>
+                                            <div class='clear'></div>
+        <div class='detail'>我的理解是 &nbsp; 如果不写的话 &nbsp;会默认绑定所有IP &nbsp;如 127.0.0.1</div>
+    </div>
+    <div class='clear'></div>
+    <div class='replies' id='PostReplies_426069'></div>
+
+    <div class='votes'>
+                <span class="a_toolbar">
+		<a href="javascript:reply_to_post(426069, 0)">评论(0)</a>|
+            <a href="/question/answer?question=91357&amp;answer=426069">引用此答案</a>|                                        <a href="javascript:report('https://www.oschina.net/question/922543_91357#AnchorAnswer426069',426069,17)">举报</a>
+            
+            (2013-02-28 10:50)
+		</span>
+    </div>
+</li>
+<span class="hr"></span>
+<script>
+                $('li.Answer').bind('mouseenter', function () {
+            var anwserId = $(this).attr('id');
+            $("#best_" + anwserId).show();
+        }).bind('mouseleave', function () {
+            var anwserId = $(this).attr('id');
+            var bestAI = $('#best_' + anwserId);
+            if (bestAI && bestAI.attr('class') && bestAI.attr('class').indexOf('accept-off') != -1) {
+                bestAI.hide();
+            }
+        });
+        $('.Vote').bind('mouseenter', function () {
+            $(this).find('a.accept-off').show();
+            $(this).find('a.accept-on').show();
+            $(this).next('li.Answer').find('.hover-show').show();
+        }).bind('mouseleave', function () {
+            $(this).find('a.accept-off').hide();
+            $(this).next('li.Answer').find('.hover-show').hide();
+        });
+        </script>            </ul>
+                            </div>
+        <div class="recruitment recruitment-question">
+	<div class="recruit-heading">
+		<div class="title">
+			最新热门职位
+		</div>
+		<div class="more">
+			更多开发者职位上
+			<a href="https://job.oschina.net/" target="_blank" class="link">开源中国·招聘</a>
+		</div>
+	</div>
+	<div class="recruit-body">
+		<ul>
+									<li>
+				<div class="logo-img">
+					<a href="https://job.oschina.net/position/6952_2335238_27811" target="_blank">
+										<span>前
+</span>
+										</a>
+				</div>
+				<div class="info-list">
+					<div>
+						<a href="https://job.oschina.net/position/6952_2335238_27811" target="_blank">	PHP工程师
+</a>
+						<a href="https://job.oschina.net/company/2335238_6952" target="_blank">
+							<small>前海未来动力
+</small>
+						</a>
+					</div>
+					<h5>
+						月薪：
+						<span class="font-red">15-25K</span>
+					</h5>
+				</div>
+			</li>
+												<li>
+				<div class="logo-img">
+					<a href="https://job.oschina.net/position/11751_2999791_27617" target="_blank">
+										<img src="https://static.oschina.net/uploads/company/logo/201611/01154554_7vwt2999791.png">
+										</a>
+				</div>
+				<div class="info-list">
+					<div>
+						<a href="https://job.oschina.net/position/11751_2999791_27617" target="_blank">	Linux运维主管
+</a>
+						<a href="https://job.oschina.net/company/2999791_11751" target="_blank">
+							<small>818Gaming
+</small>
+						</a>
+					</div>
+					<h5>
+						月薪：
+						<span class="font-red">15-25K</span>
+					</h5>
+				</div>
+			</li>
+								</ul>
+	</div>
+	<div class="clear"></div>
+</div>
+<style>
+	/*招聘广告位--样式*/
+	.clear{
+		clear:both;
+		font-size:1px;
+		line-height: 0;
+	}
+	.recruitment{
+		background:#fff;
+		font-size: 14px;
+		color: #333;
+		padding-bottom: 10px;
+	}
+	.recruitment a{
+		text-decoration: none;
+		color: #333;
+	}
+	.recruitment a:hover{
+		text-decoration: none;
+		color: #459120;
+	}
+	.recruitment ul,.recruitment li{
+		list-style-type: none;
+		padding:0;
+		margin:0;
+	}
+	.recruitment h5{
+		font-weight: 400;
+		font-size: 12px;
+		color: #999;
+		margin:0;
+	}
+	.recruitment .recruit-heading{
+		height: 34px;
+		line-height: 34px;
+		border-bottom:1px solid #ddd;
+		margin-bottom: 10px;
+	}
+	.recruitment .recruit-heading .title{
+		float:left;
+	}
+	.recruitment .recruit-heading .more{
+		float:right;
+	}
+	.recruitment .recruit-heading .link{
+		color:#3AA904;
+		font-size: 12px;
+		font-weight: bold;
+	}
+	.recruitment .recruit-body{
+	}
+	.recruitment .recruit-body li{
+		outline: 0;
+		padding:10px 0;
+		width: 50%;
+		height: 50px;
+		margin:0;
+		float: left;
+	}
+	.recruitment .recruit-body li .logo-img{
+		float: left;
+		width: 44px;
+		height: 44px;
+		display: inline-block;
+		padding: 2px;
+		border:1px solid #ccc;
+	}
+	.recruitment .recruit-body li .logo-img img{
+		width: 44px;
+		height: 44px;
+	}
+	.recruitment .recruit-body li .logo-img span{
+		display: block;
+		font-weight: 700;
+		height: 44px;
+		line-height: 44px;
+		font-size: 20px;
+		text-align: center;
+		border-radius: 5px;
+	}
+	.recruitment .recruit-body li .info-list{
+		margin-left:60px;
+	}
+	.recruitment .recruit-body li .info-list div{
+		line-height: 30px;
+	}
+	.recruitment .recruit-body li .info-list div a{
+		margin-right:10px;
+	}
+	.recruitment .recruit-body li .info-list small{
+		color: #666;
+	}
+	.recruitment .font-red{
+		color: #EB6000 !important;
+	}
+	.recruitment-question{
+		border-bottom: 1px solid #ddd;
+	}
+	.recruitment-question .recruit-heading{
+		padding-top:10px;
+		margin:0 !important;
+		border: 0 !important;
+	}
+	.recruitment-question .recruit-heading .title{
+		font-size:16px;
+	}
+
+	.recruitment .recruit-heading .more{
+		font-size:12px;
+	}
+</style>
+        <div class='AnswerForm'>
+                    <form id='form_answer' action="/action/question/answer?question=91357" method="post">
+                <input type='hidden' name='user' value=''/>
+                <textarea id='txt_answner' name='body'
+                          style='width:650px;height:160px;'></textarea>
+                <input type='submit' value=' 我要回答 ' id="FormSubmitButton"
+                       class='rndbutton'/>
+                <span id='form_msg' style='display:none;'></span>
+                <br/><br/>
+                <a href="#answers">回答案顶部</a>&nbsp;|&nbsp;<a href="#top">回页面顶部</a>
+            </form>
+            <div class='clear'></div>
+            <script>
+                $('#form_answer').ajaxForm({
+                    dataType: 'json',
+                    beforeSerialize: function ($form, options) {
+                        editor.sync();
+                    },
+                    beforeSubmit: function () {
+                        $('#FormSubmitButton').attr('disabled', 'disabled');
+                        $('#form_msg').html("<span class='ajax_processing'>正在提交答案，请稍候...</span>");
+                        $('#form_msg').show();
+                    },
+                    success: function (json) {
+                        $('#FormSubmitButton').removeAttr('disabled');
+                        if (json.msg) {
+                            $('#form_msg').html("<span class='error_msg'>" + json.msg + "</span>");
+                            $('#form_msg').show();
+                        }
+                        else if (json.id) {
+                            ajax_get("/question/show_answer?_answer_id=" + json.id, true, function (data) {
+                                                                    $('.QuestionReplies ul.list').prepend(data);
+                                                                editor.html('');
+                                $('.answer_count').html(json.answer_count);
+                            });
+                            $('#form_msg').hide();
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+    
+<script type="text/javascript" src="/js/sh309/scripts/xregexp-min.js?t=1451964199000"></script>
+<script type="text/javascript" src="/js/sh309/scripts/shCore.min.js?t=1451964199000"></script>
+<script type="text/javascript" src="/js/sh309/scripts/shAutoloader.js?t=1451964199000"></script>
+<link type="text/css" rel="stylesheet" href="/js/sh309/styles/shCore.css?t=1451964199000"/>
+<link type="text/css" rel="Stylesheet" href="/js/sh309/styles/shThemeDefault.css?t=1451964199000"/>
+
+<script type="text/javascript">
+    SyntaxHighlighter.autoloader(
+            'applescript			/js/sh309/scripts/shBrushAppleScript.js?t=1451964199000',
+            'actionscript3 as3		/js/sh309/scripts/shBrushAS3.js?t=1451964199000',
+            'bash shell				/js/sh309/scripts/shBrushBash.js?t=1451964199000',
+            'coldfusion cf			/js/sh309/scripts/shBrushColdFusion.js?t=1451964199000',
+            'cpp c					/js/sh309/scripts/shBrushCpp.js?t=1451964199000',
+            'obj-c objc				/js/sh309/scripts/shBrushObjC.js?t=1451964199000',
+            'c# c-sharp csharp		/js/sh309/scripts/shBrushCSharp.js?t=1451964199000',
+            'css					/js/sh309/scripts/shBrushCss.js?t=1451964199000',
+            'delphi pascal			/js/sh309/scripts/shBrushDelphi.js?t=1451964199000',
+            'diff patch pas			/js/sh309/scripts/shBrushDiff.js?t=1451964199000',
+            'erl erlang				/js/sh309/scripts/shBrushErlang.js?t=1451964199000',
+            'groovy					/js/sh309/scripts/shBrushGroovy.js?t=1451964199000',
+            'haxe hx				/js/sh309/scripts/shBrushHaxe.js?t=1451964199000',
+            'java					/js/sh309/scripts/shBrushJava.js?t=1451964199000',
+            'jfx javafx				/js/sh309/scripts/shBrushJavaFX.js?t=1451964199000',
+            'js jscript javascript	/js/sh309/scripts/shBrushJScript.js?t=1451964199000',
+            'perl pl				/js/sh309/scripts/shBrushPerl.js?t=1451964199000',
+            'php					/js/sh309/scripts/shBrushPhp.js?t=1451964199000',
+            'text plain				/js/sh309/scripts/shBrushPlain.js?t=1451964199000',
+            'py python				/js/sh309/scripts/shBrushPython.js?t=1451964199000',
+            'ruby rails ror rb		/js/sh309/scripts/shBrushRuby.js?t=1451964199000',
+            'scala					/js/sh309/scripts/shBrushScala.js?t=1451964199000',
+            'sql					/js/sh309/scripts/shBrushSql.js?t=1451964199000',
+            'vb vbnet				/js/sh309/scripts/shBrushVb.js?t=1451964199000',
+            'xml xhtml xslt html	/js/sh309/scripts/shBrushXml.js?t=1451964199000'
+    );
+    SyntaxHighlighter.all();
+</script>
+    <div class='QuestionRelations'>
+        <div id='QuestionWizard'>
+            有什么技术问题吗？
+            <a href='/question/ask' class='rndbutton'><span>我要提问</span></a>
+
+            <div class='clear'></div>
+        </div>
+            					<div style='text-align:center;margin-bottom:10px;'>
+		<a name="question_banner_one"/>
+		<a  data-traceid="questionbanner01" data-tracepid="question_banner_one"   href="http://netease.im/promotion/11?hmsr=os12&FROM=OS12" target="_blank" title="网易云信">
+			<img src="https://static.oschina.net/uploads/cooperation/question_banner_one_UztXt.jpg" width="250" height="250">
+		</a>
+		 </div>
+	                    <div class="AskerCard">
+                                        <div id='OtherQuestionsOfUser' class='Qlist'>
+                    <strong><a href="https://my.oschina.net/nonmore/?ft=bbs&scope=2&showme=1"
+                               class="more">全部(86
+                        )</a>小猫王的其它问题</strong>
+                    <ul>
+                                                                                    <li><a href="https://www.oschina.net/question/922543_2180897"
+                                       title="bpel invoke 报参数错误？">bpel invoke 报参数错误？</a><span
+                                        class='date'>(0回/52
+                                    阅,7个月前)</span></li>                                                                                    <li><a href="https://www.oschina.net/question/922543_2151986"
+                                       title="arcgis 底图怎么发布？？？">arcgis 底图怎么发布？？？</a><span
+                                        class='date'>(1回/245
+                                    阅,10个月前)</span></li>                                                                                    <li><a href="https://www.oschina.net/question/922543_224615"
+                                       title="linux cup 占用100%的问题">linux cup 占用100%的问题</a><span
+                                        class='date'>(8回/403
+                                    阅,2年前)</span></li>                                                                                    <li><a href="https://www.oschina.net/question/922543_217776"
+                                       title="网站上传速度很快，但浏览速度非常慢,怎么回事？">网站上传速度很快，但浏览速度非常慢,怎么回事？</a><span
+                                        class='date'>(5回/683
+                                    阅,2年前)</span></li>                                                                                    <li><a href="https://www.oschina.net/question/922543_212657"
+                                       title="服务器被攻击">服务器被攻击</a><span
+                                        class='date'>(4回/594
+                                    阅,2年前)</span></li>                                            </ul>
+                </div>
+                    </div>
+        					<div style='text-align:center;margin-top:20px;'>
+		<a name="question_banner_two"/>
+		<a  data-traceid="questionbanner02" data-tracepid="question_banner_two"   href="https://www.qcloud.com/act/event/all-discount.html?utm_source=3zhe&utm_medium=3zhe&utm_campaign=kyzg" target="_blank" title="腾讯云">
+			<img src="https://static.oschina.net/uploads/cooperation/question_banner_two_AUAwy.jpg" width="250" height="250">
+		</a>
+		 </div>
+	
+                    
+        <div id='Similarity' class='Qlist'>
+                                        <strong>类似的话题</strong>
+                <ul>
+                                                                        <li><a href="https://www.oschina.net/question/231397_36917"
+                                   title="Nginx 配置文件中 user nobody 具体的作用？">Nginx 配置文件中 user nobody 具体的作用？</a><span
+                                    class='date'>(2回/8026
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/234226_37334"
+                                   title="nginx的access.log记载400错误">nginx的access.log记载400错误</a><span
+                                    class='date'>(3回/1580
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/104691_37410"
+                                   title="提问：为什么OSChina的URL重写放在java中实现？">提问：为什么OSChina的URL重写放在java中实现？</a><span
+                                    class='date'>(5回/862
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/231397_37464"
+                                   title="张晏 Nginx 配置中 worker_connections 65535 是怎么来的？">张晏 Nginx 配置中 worker_connections 65535 是怎么来的？</a><span
+                                    class='date'>(9回/11808
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/129471_37769"
+                                   title="nginx能实现文件同步吗？">nginx能实现文件同步吗？</a><span
+                                    class='date'>(3回/1183
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/67067_37909"
+                                   title="nginx如何实现二级域名和多域名？">nginx如何实现二级域名和多域名？</a><span
+                                    class='date'>(1回/6434
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/170653_37979"
+                                   title="nginx服务频繁死掉">nginx服务频繁死掉</a><span
+                                    class='date'>(11回/1979
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/165046_38085"
+                                   title="nginx实现视频拖动">nginx实现视频拖动</a><span
+                                    class='date'>(2回/1011
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/3270_38134"
+                                   title="nginx一个域名反向代理多个应用系统">nginx一个域名反向代理多个应用系统</a><span
+                                    class='date'>(3回/2493
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/238131_38157"
+                                   title="请问基于Nginx的邮件协议还原中，Nginx的应用场景是什么？Nginx可以实现骨干网上的邮件还原吗？">请问基于Nginx的邮件协议还原中，Nginx的应用场景是什么？Nginx可以实现骨干网上的邮件还原吗？</a><span
+                                    class='date'>(0回/272
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/147333_38306"
+                                   title="固态硬盘当WEB服务器缓存这个可行吗?">固态硬盘当WEB服务器缓存这个可行吗?</a><span
+                                    class='date'>(20回/1891
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/92960_38798"
+                                   title="nginx配置里的fastcgi_index是用来干嘛？和index的区别是？">nginx配置里的fastcgi_index是用来干嘛？和index的区别是？</a><span
+                                    class='date'>(1回/7636
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/83064_39477"
+                                   title="想问下红薯oschina的论坛文章rest访问方式是通过地址转换弄的么？？">想问下红薯oschina的论坛文章rest访问方式是通过地址转换弄的么？？</a><span
+                                    class='date'>(2回/316
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/62530_40164"
+                                   title="想学C，例如看看nginx源码， 该如何快速上手，用什么编程和调试工具？">想学C，例如看看nginx源码， 该如何快速上手，用什么编程和调试工具？</a><span
+                                    class='date'>(5回/915
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/183239_40281"
+                                   title="为什么多个进程同时监听了同一端口？">为什么多个进程同时监听了同一端口？</a><span
+                                    class='date'>(13回/7801
+                                阅,5年前)</span></li>                                                                        <li><a href="https://www.oschina.net/question/249923_41103"
+                                   title="nginx 下部署war包">nginx 下部署war包</a><span
+                                    class='date'>(2回/3620
+                                阅,5年前)</span></li>                                    </ul>
+                    </div>
+    </div>
+    <div class='clear'></div>
+</div>
+<script type='text/javascript' src='/js/ke/kindeditor-min.js?t=1451964198000' charset='utf-8'></script>
+<script type='text/javascript'>
+    <!--
+    var editor;
+    KindEditor.ready(function (K) {
+        editor = K.create('#txt_answner', {
+            themeType: 'oschina',
+            resizeType: 1,
+            urlType: 'domain',
+            shadowMode: false,
+            allowPreviewEmoticons: false,
+            allowImageUpload: true,
+            allowFlashUpload: false,
+            cssPath: '/css/ke-oschina.css?t=1482162273000',
+            uploadJson: '/action/blog/upload_img',
+            afterCreate: function () {
+                /*
+                K.ctrl(this.edit.iframe.get(0).contentWindow.document, 13, function() {
+                    $("#txt_answner
+
+
+
+                                                                ").parent().submit();
+                                                                            });
+                                                                            */
+                $(this.edit.iframe.get(0).contentWindow.document).keydown(function (e) {
+                    if ((e.ctrlKey || e.metaKey) && e.which == 13 && !e.shiftKey && !e.altKey) {
+                        $("#txt_answner").parent().submit();
+                    }
+                });
+            },
+            afterChange: function () {
+                this.sync();
+            },
+            items: ['bold', 'italic', 'underline', 'strikethrough', 'removeformat', '|', 'insertorderedlist', 'insertunorderedlist',
+                'forecolor', 'hilitecolor', 'fontname', 'fontsize', '|', 'link', 'unlink', 'emoticons',
+                'shcode', 'image', 'flash', 'quote', '|', 'source', 'about'],
+            htmlTags: {
+                script: ['src'],
+                font: ['color', 'size', 'face', '.background-color'],
+                span: [
+                    '.color', '.background-color', '.font-size', '.font-family', '.background',
+                    '.font-weight', '.font-style', '.text-decoration', '.vertical-align', '.line-height'
+                ],
+                div: [
+                    'class', 'align', '.border', '.margin', '.padding', '.text-align', '.color',
+                    '.background-color', '.font-size', '.font-family', '.font-weight', '.background',
+                    '.font-style', '.text-decoration', '.vertical-align', '.margin-left'
+                ],
+                table: [
+                    'border', 'cellspacing', 'cellpadding', 'width', 'height', 'align', 'bordercolor',
+                    '.padding', '.margin', '.border', 'bgcolor', '.text-align', '.color', '.background-color',
+                    '.font-size', '.font-family', '.font-weight', '.font-style', '.text-decoration', '.background',
+                    '.width', '.height', '.border-collapse'
+                ],
+                'td,th': [
+                    'align', 'valign', 'width', 'height', 'colspan', 'rowspan', 'bgcolor',
+                    '.text-align', '.color', '.background-color', '.font-size', '.font-family', '.font-weight',
+                    '.font-style', '.text-decoration', '.vertical-align', '.background', '.border'
+                ],
+                a: ['href', 'target', 'name'],
+                embed: ['src', 'width', 'height', 'type', 'loop', 'autostart', 'quality', '.width', '.height', 'align', 'allowscriptaccess'],
+                img: ['src', 'width', 'height', 'border', 'alt', 'title', 'align', '.width', '.height', '.border'],
+                'p,ol,ul,li,blockquote,h1,h2,h3,h4,h5,h6': [
+                    'align', '.text-align', '.color', '.background-color', '.font-size', '.font-family', '.background',
+                    '.font-weight', '.font-style', '.text-decoration', '.vertical-align', '.text-indent', '.margin-left'
+                ],
+                pre: ['class'],
+                hr: ['class', '.page-break-after'],
+                'br,tbody,tr,strong,b,sub,sup,em,i,u,strike,s,del': []
+            }
+        });
+    });
+    //-->
+</script>
+<!--[if lt IE 7]>
+<script type="text/javascript" src="/js/minmax.js?t=1451964199000  </script>
+<![endif]-->
+<script type="text/javascript" src="/action/visit/question?id=91357"></script>
+<script type='text/javascript'>
+    <!--
+    $(document).ready(function () {
+        $.ajax({
+            url: "/action/favorite/attentionUsersCount",
+            type: "get",
+            data: "id="+91357+"&type="+2,
+            success: function (msg) {
+                $("#favor_trigger").html("收藏(" + msg + ")");
+            }
+        });
+        $('.Answer .replies li').hover(
+                function () {
+                    $(this).addClass('hover');
+                },
+                function () {
+                    $(this).removeClass('hover');
+                }
+        );
+
+        $('.detail img').css('cursor', 'pointer');
+        jQuery.each($('.detail img'), function (idx, v) {
+            if (!$(v).parent().is("a")) {
+                $(v).wrap("<a href='" + $(this).attr('src') + "' target='_blank'></a>");
+            }
+        });
+
+        $('#c').bind('mouseover mouseout', function () {
+            $('#c_on').toggle();
+            $('#c_off').toggle();
+        });
+
+        $('#favor_trigger').click(function () {
+                            add_to_favor(91357,2);
+                    });
+    });
+    function ask_too(qid, ask) {
+        ajax_post("/action/question/ask_too?id=" + qid + "&ask=" + ask, "", function (html) {
+            json = eval('(' + html + ')');
+            if (json.asker_count >= 0) {
+                $('#c_asker_count').html(json.asker_count);
+                if (json.ask_mode)
+                    $('#RQuestionAction').html("<span class='rect'>已问同一问题 | <a href='javascript:ask_too(91357,false)'>取消？</a></span>");
+                else
+                    $('#RQuestionAction').html("<a href='javascript:ask_too(91357,true)' class='rndbutton'><span>我想问同样的问题</span></a>");
+            }
+            else {
+                $('#RQuestionAction').poshytip({
+                    className: 'tip-yellowsimple',
+                    content: json.msg,
+                    showOn: 'none',
+                    alignTo: 'target',
+                    alignX: 'center',
+                    alignY: 'top',
+                    offsetY: 6
+                });
+                $('#RQuestionAction').poshytip('show');
+                var t = setTimeout(function () {
+                    clearTimeout(t);
+                    $('#RQuestionAction').poshytip('destroy');
+                }, 4000);
+            }
+        });
+    }
+    function delete_q(qid) {
+        if (!confirm("您确认要删除此问题吗，删除的数据不可恢复？"))
+            return;
+                ajax_post("/action/question/delete?id=" + qid + "&hash=-368211683" +"&user_code=", "", function (html) {
+            if (html.length > 0)
+                alert(html);
+            else {
+                location.href = "/question";
+            }
+        });
+    }
+    function edit_answer(aid) {
+        location.href = "/question/edit_answer?id=" + aid +"&user_code=" ;
+    }
+    function delete_answer(aid, hash) {
+        if (!confirm("您确认要删除此答案吗，删除的数据不可恢复？"))
+            return;
+        ajax_post("/action/question/delete_answer?id=" + aid + "&hash=" + hash +"&user_code=", "", function (html) {
+            if (html.length > 0)
+                alert(html);
+            else {
+                $('#answer_' + aid).fadeOut();
+                $('#vote_' + aid).fadeOut();
+                $('#answer_' + aid).next('.hr').fadeOut();
+            }
+        });
+    }
+    function delete_post_reply(aid, hash) {
+        if (!confirm("您确认要删除此评论吗，删除的数据不可恢复？"))
+            return;
+        ajax_post("/action/question/delete_answer?id=" + aid + "&hash=" + hash+"&user_code=", "", function (html) {
+            if (html.length > 0)
+                alert(html);
+            else {
+                $('#PostReply_' + aid).fadeOut();
+            }
+        });
+    }
+    function delete_q_rpl(qid, rid) {
+        if (!confirm("删除补充说明会被扣威望值，是否继续？"))
+            return;
+        ajax_post("/action/question/delete_detail?id=" + rid+"&user_code=", "", function (html) {
+            if (html.length > 0)
+                alert(html);
+            else
+                $("#q_reply_" + rid).fadeOut();
+        });
+    }
+    function close_tip(tid) {
+        $('#' + tid).poshytip('destroy');
+    }
+    //答案投票
+    function vote_answer(qid, vote_up, need_confirm) {
+        if (need_confirm && !vote_up) {
+            if (!$('#a_post_votedown_' + qid).hasClass('bold')) {
+                var vote_down_confirm_msg = "<p>此操作将会扣掉你1个积分，是否继续？</p><p style='margin-top:10px;'><a href='javascript:vote_answer(" + qid + ",false,false)' class='rbtn' style='margin:0 10px 0 50px;'><span>确定</span></a><a href=\"javascript:close_tip('a_post_votedown_" + qid + "')\" class='rbtn'><span>取消</span></a></p>";
+                $('#a_post_votedown_' + qid).poshytip({
+                    className: 'tip-yellowsimple',
+                    content: vote_down_confirm_msg,
+                    showOn: 'none',
+                    slide: false,
+                    fade: false,
+                    alignTo: 'target',
+                    alignX: 'center',
+                    offsetY: 8
+                });
+                $('#a_post_votedown_' + qid).poshytip('show');
+                return;
+            }
+        }
+        if (!need_confirm) {
+            $('#a_post_votedown_' + qid).poshytip('destroy');
+        }
+        ajax_post("/action/question/vote_answer?id=" + qid + "&vote=" + vote_up + "&user=" +"&user_code=", "", function (data) {
+            json = eval('(' + data + ')');
+            if (json.msg) {
+                var aid = vote_up ? "a_post_voteup_" : "a_post_votedown_";
+                aid += qid;
+                $('#' + aid).poshytip({
+                    className: 'tip-yellowsimple',
+                    content: json.msg,
+                    showOn: 'none',
+                    alignTo: 'target',
+                    alignX: 'center',
+                    alignY: 'top',
+                    offsetY: 6
+                });
+                $('#' + aid).poshytip('show');
+                var t = setTimeout(function () {
+                    clearTimeout(t);
+                    $('#' + aid).poshytip('destroy');
+                }, 2000);
+                //jQuery.fancybox("<div class='error_box'>"+json.msg+"</div>");
+            }
+            else {
+                if (vote_up) {
+                    $('#post_voteup_' + qid).html('(' + json.vote + ')');
+                    var a_post_voteup = $('#a_post_voteup_' + qid);
+                    if (a_post_voteup.attr('class').indexOf("vote-up-off") != -1) {
+                        $('#a_post_voteup_' + qid).attr('class', 'vote-up-on');
+                        $('#a_post_voteup_' + qid).attr('title', '取消支持票');
+                        $('#a_vote_num_' + qid).html(parseInt($('#a_vote_num_' + qid).html()) + 1);
+                    } else {
+                        $('#a_post_voteup_' + qid).attr('class', 'vote-up-off');
+                        $('#a_post_voteup_' + qid).attr('title', '投支持票');
+                        $('#a_vote_num_' + qid).html(parseInt($('#a_vote_num_' + qid).html()) - 1);
+                    }
+                } else {
+                    $('#post_votedown_' + qid).html('(' + json.vote + ')');
+                    var a_post_votedown = $('#a_post_votedown_' + qid);
+                    if (a_post_votedown.attr('class').indexOf("vote-down-off") != -1) {
+                        a_post_votedown.attr('class', 'vote-down-on').attr('title', '取消反对票');
+                        $('#a_vote_num_' + qid).html(parseInt($('#a_vote_num_' + qid).html()) - 1);
+                    } else {
+                        a_post_votedown.attr('class', 'vote-down-off');
+                        a_post_votedown.attr('title', '投反对票');
+                        $('#a_vote_num_' + qid).html(parseInt($('#a_vote_num_' + qid).html()) + 1);
+                    }
+                }
+            }
+        });
+    }
+    //问题投票
+    $('#vote_up').click(function () {
+        if (this.clickTimeout) {
+            // 双击
+            clearTimeout(this.clickTimeout);
+            this.clickTimeout = null;
+            alert("不用那么费劲啦，点击一下就够了:)");
+        }
+        else {
+            // 单击
+            var elem = this;
+            this.clickTimeout = setTimeout(function () {
+                // 执行点击动作
+                elem.clickTimeout = null;
+                vote_question(91357, true, true);
+            }, 250);
+        }
+        //阻止链接onclick时的默认行为
+        return false;
+    });
+    $('#vote_down').click(function () {
+        vote_question(91357, false, true);
+        /*
+        if(this.clickTimeout){
+            // 双击
+            clearTimeout(this.clickTimeout);
+            this.clickTimeout = null;
+            alert("不用那么费劲啦，点击一下就够了:)");
+        }
+        else{
+            // 单击
+            var elem = this;
+            this.clickTimeout = setTimeout(function(){
+                // 执行点击动作
+                elem.clickTimeout = null;
+                vote_question(91357,false, true);
+        }, 250);
+    }
+    //阻止链接onclick时的默认行为
+	*/
+        return false;
+    });
+    function vote_question(qid, vote_up, need_confirm) {
+        if (need_confirm && !vote_up) {
+            if ($('#Vote #vote_down').hasClass('ask_vote_down')) {
+                var vote_down_confirm_msg = "<p>踩问题将会扣掉你1个积分，是否继续？</p><p style='margin-top:10px;'><a href='javascript:vote_question(91357,false,false)' class='rbtn' style='margin-right:10px;'><span>确定</span></a><a href=\"javascript:close_tip('vote_down')\" class='rbtn'><span>取消</span></a></p>";
+                $('#Vote #vote_down').poshytip({
+                    className: 'tip-yellowsimple',
+                    content: vote_down_confirm_msg,
+                    slide: false,
+                    fade: false,
+                    showOn: 'none',
+                    alignTo: 'target',
+                    alignX: 'inner-right',
+                    alignY: 'bottom',
+                    offsetX: -35,
+                    offsetY: 5
+                });
+                $('#Vote #vote_down').poshytip('show');
+                return;
+            }
+        }
+        if (!need_confirm) {
+            $('#Vote #vote_down').poshytip('destroy');
+        }
+        ajax_post("/action/question/vote?user=&id=" + qid + "&vote=" + vote_up, "", function (data) {
+            json = eval('(' + data + ')');
+            if (json.msg) {
+                var aid = vote_up ? "vote_up" : "vote_down";
+                $('#' + aid).poshytip({
+                    className: 'tip-yellowsimple',
+                    content: json.msg,
+                    showOn: 'none',
+                    alignTo: 'target',
+                    alignX: 'inner-right',
+                    alignY: 'bottom',
+                    offsetX: 5,
+                    offsetX: -35
+                });
+                $('#' + aid).poshytip('show');
+                var t = setTimeout(function () {
+                    clearTimeout(t);
+                    $('#' + aid).poshytip('destroy');
+                }, 2000);
+            }
+            else {
+                            if (vote_up) {
+                    $('#Vote .vote-up-count').html(json.vote_up);
+                    if ($('#vote_up').attr('class').indexOf("vote-up-off") != -1) {
+                        $('#vote_up').attr('class', 'vote-up-on');
+                        $('#vote_up').attr('title', '取消顶');
+                        $('.q_vote_num').html(parseInt($('.q_vote_num').html()) + 1);
+                    } else {
+                        $('#vote_up').attr('class', 'vote-up-off');
+                        $('#vote_up').attr('title', '顶：这问题很有用或者很提问清晰明了');
+                        $('.q_vote_num').html(parseInt($('.q_vote_num').html()) - 1);
+                    }
+                }
+                else {
+                    $('#Vote .vote-down-count').html(json.vote_down);
+                    if ($('#vote_down').attr('class').indexOf("vote-down-off") != -1) {
+                        $('#vote_down').attr('class', 'vote-down-on');
+                        $('#vote_down').attr('title', '取消踩');
+                        $('.q_vote_num').html(parseInt($('.q_vote_num').html()) - 1);
+                    } else {
+                        $('#vote_down').attr('class', 'vote-down-off');
+                        $('#vote_down').attr('title', '踩：这问题不知道在问什么，或者没什么用');
+                        $('.q_vote_num').html(parseInt($('.q_vote_num').html()) + 1);
+                    }
+                }
+            }
+        });
+    }
+    //评论答案
+    function reply_to_post(postid, uid) {
+            url = "/action/ajax/reply_to_post?id=" + postid + "&refer=" + uid
+        ajax_post(url, "", function (data) {
+            $.fancybox({
+                content: data,
+                onComplete: function () {
+                    $input = $('#ta_body');
+                        $input.focus();
+                    pos = $input.val()?$input.val().length: 0;
+                    if (document.selection) {
+                        range = $input[0].createTextRange();
+                        range.move("character", pos);
+                        range.select();
+                    } else {
+                        if ($input[0])
+                            $input[0].setSelectionRange(pos, pos);
+                    }
+                }
+            });
+        });
+    }
+
+    function show_rp_next(postid, current, total) {
+        if (current < total) {
+            var next_page = current + 1;
+            var url = "/question/post_replies?answer=" + postid + "&rp=" + next_page;
+            ajax_post(url, "", function (html) {
+                $('#PostReplies_' + postid).html(html);
+                addRepliesHoverEvent();
+            });
+        }
+    }
+
+    function addRepliesHoverEvent() {
+        $("li [id ^= 'PostReply']").hover(function () {
+            $(this).addClass("hover");
+        }, function () {
+            $(this).removeClass("hover");
+        });
+    }
+
+    function show_rp_prev(postid, current, total) {
+        if (current > 1) {
+            var next_page = current - 1;
+            var url = "/question/post_replies?answer=" + postid + "&rp=" + next_page;
+            ajax_post(url, "", function (html) {
+                $('#PostReplies_' + postid).html(html);
+                addRepliesHoverEvent();
+            });
+        }
+    }
+    function mark_as_top(qid, as_top) {
+        var args = "id=" + qid + "&top=" + as_top+"&user_code=";
+        ajax_post("/action/question/mark_as_top", args, function (html) {
+            alert(html);
+        });
+    }
+    function mark_as_best(postid, is_best) {
+        var args = "id=" + postid + "&best=" + (is_best ? 1 : 0)+"&user_code=";
+        ajax_post("/action/question/mark_as_best", args, function (html) {
+            if (html.length > 0) {
+                $('#best_answer_' + postid).poshytip({
+                    className: 'tip-yellowsimple',
+                    content: html,
+                    showOn: 'none',
+                    alignTo: 'target',
+                    alignX: 'center',
+                    alignY: 'top',
+                    offsetY: 6
+                });
+                $('#best_answer_' + postid).poshytip('show');
+                var t = setTimeout(function () {
+                    clearTimeout(t);
+                    $('#best_answer_' + postid).poshytip('destroy');
+                }, 2000);
+            }
+            else {
+                if (is_best) {
+                    $('#answer_' + postid).addClass('Best');
+                    $('#best_answer_' + postid).attr('class', 'accept-on')
+                            .attr('href', 'javascript:mark_as_best(' + postid + ',false)')
+                            .attr('title', '取消标记为最佳答案');
+                } else {
+                    $('#answer_' + postid).removeClass('Best');
+                    $('#best_answer_' + postid).attr('class', 'accept-off')
+                            .attr('href', 'javascript:mark_as_best(' + postid + ',true)')
+                            .attr('title', '标记为最佳答案');
+                }
+            }
+        });
+    }
+    function edit_tags(qid) {
+        popup("/question/edit_tags?question=" + qid);
+    }
+    function edit_catalogs(qid) {
+        popup("/admin/catalog/set-catalogs?parent=1&type=2&id=" + qid);
+    }
+    function event_apply(event_id) {
+        popup("/action/ajax/event_apply", "id=" + event_id);
+    }
+    function cancel_apply(event_id) {
+        if (confirm("您确认要取消参加此次活动吗？")) {
+            ajax_post("/action/event/cancel", "event=" + event_id, function (html) {
+                if (html.length > 0)
+                    alert(html);
+                else
+                    alert('已取消参加此次活动，感谢您的支持:)');
+            });
+        }
+    }
+
+    var favor_ok = "<p class='favor_ok'>已成功添加到收藏夹<br/><br/> <a href='null/favorites?type=$DAISY_OBJ_TYPE'>我的收藏夹</a> | <a href='javascript:close_favor()'>关闭</a></p>";
+    function delete_favor(obi_id, obj_type) {
+        if (!confirm('确定取消收藏？')) return;
+        $.post("/action/favorite/cancel?type=" + obj_type + "&id=" + obi_id + "&user=", function (html) {
+            $('#favor_trigger').parent('div').removeClass('ask_collected').addClass('ask_collect');
+            $('#favor_trigger').attr('title', '添加到收藏');
+            $('#p_favor_count').html(html);
+            $('#favor_trigger').unbind('click');
+            $('#favor_trigger').click(function () {
+                add_to_favor(91357,2);
+            });
+        });
+    }
+    function add_to_favor(obj_id, obj_type) {
+                    if (confirm('必须登录后才能收藏，是否现在登录？')) {
+                location.href = "https://www.oschina.net/home/login?goto_page=" + location.href;
+            }
+            }
+    function close_favor(elem_id) {
+        $('#favor_trigger').poshytip('destroy');
+    }
+    function setTag(tv) {
+        var t = $("._favor_input");
+        var value = t.val();
+        var tags = value.replace(/，/ig, ',').split(',');
+        var exist = false;
+        value = $.map(tags, function (v, i) {
+            if ($.trim(tv) == $.trim(v)) {
+                exist = true;
+                return undefined;
+            }
+            return v;
+        }).join(',');
+        if (exist) {
+            t.val(value);
+            return;
+        }
+        if (value != "")
+            t.val(value + "," + tv);
+        else
+            t.val(tv)
+    }
+    //-->
+</script>
+
+        <script>
+        window.addEventListener("load", function() {
+            (function(){
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                }
+                else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        });
+    </script>
+    <div class='clear'></div></div>
+	<div id="OSC_Footer" class='CenterDiv'><style>
+.oscapp {text-align:left; width:220px;}
+.oscapp span {float:left;width:140px;}
+.oscapp a {float:left;text-indent:-9999em;width:16px;margin-left:8px;}
+.oscapp a.android {background:url('/img/android.gif') no-repeat left center;}
+.oscapp a.iphone {background:url('/img/iphone.gif') no-repeat left center;}
+.oscapp a.wp7 {background:url('/img/wp7.gif') no-repeat left center;}
+</style>
+<table width='100%'><tr>
+<td align='left'>&copy; 开源中国(OSChina.NET) | <a href="https://www.oschina.net/home/aboutosc">关于我们</a> | <a href="mailto:market@oschina.cn">广告联系</a> | <a href="http://weibo.com/oschina2010" target="_blank">@新浪微博</a> | <a href="http://m.oschina.net/">开源中国手机版</a> | <a href='http://www.miitbeian.gov.cn/' target='_blank' style='color:#737573;text-decoration:none;'>粤ICP备12009483号-3</a></td>
+<td class='oscapp'>
+	<span>开源中国手机客户端：</span>
+	<a href="http://www.oschina.net/app" class='android' title='Android客户端'>Android</a>
+	<a href="http://www.oschina.net/app" class='iphone' title='iPhone 客户端'>iPhone</a>
+	<a href="http://www.oschina.net/app" class='wp7' title='Windows Phone 客户端'>WP7</a>
+</td>
+</tr>
+<tr>
+<td colspan='2' align='left'>开源中国社区(OSChina.net)是工信部 <a href='http://www.copu.org.cn/' target='_blank'>开源软件推进联盟</a> 指定的官方社区</td>
+</tr>
+</table>
+<script type='text/javascript'>
+<!--
+if (top.location != self.location)top.location=self.location;
+//-->
+</script></div>
+</div>
+
+	<script type="text/javascript">
+     (function (ww, dt) {
+         ww.__gac = {
+             domain: 'www.oschina.net'
+         };
+         if(!(/\/marketing\/ad-slice/.test(location.href))){
+             var script = dt.createElement('script');
+             script.setAttribute('type', 'text/javascript');
+             script.setAttribute('src', '//www.oschina.net/public/javascripts/cjl/ga.js?t=20160926');
+             dt.body.appendChild(script);
+         }
+     } (window, window.document));
+ </script></body>
+</html>
+<!-- Generated by OsChina.NET (init:0[ms],page:92[ms],ip:110.80.46.142) -->
