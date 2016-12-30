@@ -1,0 +1,425 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>http头中的host字段详解 | 6san.com</title>
+<link rel="stylesheet" href="http://www.6san.com/wp-content/themes/light-clean-blue/style.css" type="text/css" media="screen" />
+<link rel="pingback" href="http://www.6san.com/xmlrpc.php" />
+<link rel='dns-prefetch' href='//ajax.useso.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="6san.com &raquo; Feed" href="http://www.6san.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="6san.com &raquo; 评论Feed" href="http://www.6san.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="6san.com &raquo; http头中的host字段详解评论Feed" href="http://www.6san.com/463/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/www.6san.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.6.1"}};
+			!function(a,b,c){function d(a){var c,d,e,f,g,h=b.createElement("canvas"),i=h.getContext&&h.getContext("2d"),j=String.fromCharCode;if(!i||!i.fillText)return!1;switch(i.textBaseline="top",i.font="600 32px Arial",a){case"flag":return i.fillText(j(55356,56806,55356,56826),0,0),!(h.toDataURL().length<3e3)&&(i.clearRect(0,0,h.width,h.height),i.fillText(j(55356,57331,65039,8205,55356,57096),0,0),c=h.toDataURL(),i.clearRect(0,0,h.width,h.height),i.fillText(j(55356,57331,55356,57096),0,0),d=h.toDataURL(),c!==d);case"diversity":return i.fillText(j(55356,57221),0,0),e=i.getImageData(16,16,1,1).data,f=e[0]+","+e[1]+","+e[2]+","+e[3],i.fillText(j(55356,57221,55356,57343),0,0),e=i.getImageData(16,16,1,1).data,g=e[0]+","+e[1]+","+e[2]+","+e[3],f!==g;case"simple":return i.fillText(j(55357,56835),0,0),0!==i.getImageData(16,16,1,1).data[0];case"unicode8":return i.fillText(j(55356,57135),0,0),0!==i.getImageData(16,16,1,1).data[0];case"unicode9":return i.fillText(j(55358,56631),0,0),0!==i.getImageData(16,16,1,1).data[0]}return!1}function e(a){var c=b.createElement("script");c.src=a,c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i;for(i=Array("simple","flag","unicode8","diversity","unicode9"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='wordpress-popular-posts-css'  href='http://www.6san.com/wp-content/plugins/wordpress-popular-posts/style/wpp.css?ver=3.3.4' type='text/css' media='all' />
+<script type='text/javascript' src='http://ajax.useso.com/ajax/libs/jquery/1.6.2/jquery.min.js?ver=4.6.1'></script>
+<script type='text/javascript' src='http://www.6san.com/wp-content/themes/light-clean-blue/js/custom-jquery-script.js?ver=4.6.1'></script>
+<link rel='https://api.w.org/' href='http://www.6san.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.6san.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.6san.com/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress 4.6.1" />
+<link rel="canonical" href="http://www.6san.com/463/" />
+<link rel='shortlink' href='http://www.6san.com/?p=463' />
+<link rel="alternate" type="application/json+oembed" href="http://www.6san.com/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.6san.com%2F463%2F" />
+<link rel="alternate" type="text/xml+oembed" href="http://www.6san.com/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.6san.com%2F463%2F&#038;format=xml" />
+				<!-- WordPress Popular Posts v3.3.4 -->
+				<script type="text/javascript">
+
+					var sampling_active = 0;
+					var sampling_rate   = 100;
+					var do_request = false;
+
+					if ( !sampling_active ) {
+						do_request = true;
+					} else {
+						var num = Math.floor(Math.random() * sampling_rate) + 1;
+						do_request = ( 1 === num );
+					}
+
+					if ( do_request ) {
+
+						/* Create XMLHttpRequest object and set variables */
+						var xhr = ( window.XMLHttpRequest )
+						  ? new XMLHttpRequest()
+						  : new ActiveXObject( "Microsoft.XMLHTTP" ),
+						url = 'http://www.6san.com/wp-admin/admin-ajax.php',
+						params = 'action=update_views_ajax&token=f404691800&wpp_id=463';
+						/* Set request method and target URL */
+						xhr.open( "POST", url, true );
+						/* Set request header */
+						xhr.setRequestHeader( "Content-type", "application/x-www-form-urlencoded" );
+						/* Hook into onreadystatechange */
+						xhr.onreadystatechange = function() {
+							if ( 4 === xhr.readyState && 200 === xhr.status ) {
+								if ( window.console && window.console.log ) {
+									window.console.log( xhr.responseText );
+								}
+							}
+						};
+						/* Send request */
+						xhr.send( params );
+
+					}
+
+				</script>
+				<!-- End WordPress Popular Posts v3.3.4 -->
+				</head>
+<body class="single single-post postid-463 single-format-standard">
+<div class="wrapperBg">
+<!-- Start: Main Container -->
+<div class="mainCont">
+	<!-- Start: Header -->
+	<div class="header">
+		<a href="http://www.6san.com/"><img width="190" height="70" src="http://www.6san.com/wp-content/uploads/2012/10/6san.png"/></a>
+		<h2></h2>
+		<form method="get" id="searchform" action="http://www.6san.com/" class="searchForm">
+	<p><input type="text" value="" name="s" id="s" class="field" />
+	<input type="image" src="http://www.6san.com/wp-content/themes/light-clean-blue/images/go-btn.gif" title="Search" id="searchsubmit" class="btn" /></p>
+</form>
+	</div>
+	<!-- End: Header -->
+	<!-- Start: Header menu -->
+	<div class="headerMenu">
+		<span></span>
+		<span class="rightBg"></span>
+			<ul id="menu-6san" class="menu"><li id="menu-item-45" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-45"><a href="http://www.6san.com">首页</a></li>
+<li id="menu-item-38" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-has-children menu-item-38"><a href="http://www.6san.com/category/network/">网络&#038;协议</a>
+<ul class="sub-menu">
+	<li id="menu-item-42" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-42"><a href="http://www.6san.com/category/network/net/">网络百科</a></li>
+	<li id="menu-item-39" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-39"><a href="http://www.6san.com/category/network/zhuabao/">抓包工具</a></li>
+	<li id="menu-item-40" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-40"><a href="http://www.6san.com/category/network/tcp/">网络协议</a></li>
+	<li id="menu-item-41" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-41"><a href="http://www.6san.com/category/network/nettool/">网络工具</a></li>
+</ul>
+</li>
+<li id="menu-item-33" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-33"><a href="http://www.6san.com/category/os/">系统OS</a>
+<ul class="sub-menu">
+	<li id="menu-item-37" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-37"><a href="http://www.6san.com/category/os/pc/">电脑杂记</a></li>
+	<li id="menu-item-36" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-36"><a href="http://www.6san.com/category/os/doc/">文档编辑</a></li>
+	<li id="menu-item-34" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-34"><a href="http://www.6san.com/category/os/android/">android</a></li>
+</ul>
+</li>
+<li id="menu-item-43" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-43"><a href="http://www.6san.com/category/web/">网页&#038;营销</a>
+<ul class="sub-menu">
+	<li id="menu-item-21" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-21"><a href="http://www.6san.com/category/web/seo/">SEO</a></li>
+	<li id="menu-item-22" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-22"><a href="http://www.6san.com/category/web/uiue/">UI/UE</a></li>
+	<li id="menu-item-24" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-24"><a href="http://www.6san.com/category/web/wordpress/">wordpress</a></li>
+	<li id="menu-item-44" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-44"><a href="http://www.6san.com/category/web/yingxiao/">网络营销</a></li>
+	<li id="menu-item-25" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-25"><a href="http://www.6san.com/category/web/domain/">域名主机</a></li>
+	<li id="menu-item-23" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-23"><a href="http://www.6san.com/category/web/safe/">web安全</a></li>
+</ul>
+</li>
+<li id="menu-item-26" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-26"><a href="http://www.6san.com/category/test/">测试工具</a>
+<ul class="sub-menu">
+	<li id="menu-item-30" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-30"><a href="http://www.6san.com/category/test/xingneng/">性能测试工具</a></li>
+	<li id="menu-item-29" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-29"><a href="http://www.6san.com/category/test/heihe/">功能测试工具</a></li>
+	<li id="menu-item-31" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-31"><a href="http://www.6san.com/category/test/dajian/">测试环境搭建</a></li>
+	<li id="menu-item-28" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-28"><a href="http://www.6san.com/category/test/selenium/">selenium</a></li>
+	<li id="menu-item-113" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-113"><a href="http://www.6san.com/category/test/sikuli/">sikuli</a></li>
+	<li id="menu-item-27" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-27"><a href="http://www.6san.com/category/test/au3/">AutoIt3</a></li>
+	<li id="menu-item-32" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-32"><a href="http://www.6san.com/category/goutong/">管理沟通</a></li>
+</ul>
+</li>
+</ul> 
+	</div>
+	<div class="clear"></div>
+	<!-- End: Header menu -->
+	<!-- Start: Body Content -->
+	<div class="bodyContent">
+
+	<!-- Start: Left Panel -->
+	<div class="leftPanel">
+
+	
+		<div class="post-463 post type-post status-publish format-standard hentry category-network category-tcp tag-http" id="post-463">
+			<h1>http头中的host字段详解</h1>
+
+			<div class="entryContent">
+				<p><strong>Host</strong>：客户端指定自己想访问的http服务器的域名/IP 地址和端口号。</p>
+<p>今天同事问了一个问题引发了我对http头中host字段的详细思考，总结了以下5条。</p>
+<p>1.host字段可以是域名，也可以是ip地址。host字段域名/ip后可以跟端口号，如Host: www.6san.com:8080</p>
+<p>2.host可以由程序自定义，某些程序为了防止运营商或防火墙拦截会定义虚假host</p>
+<p>3.http1.1中host字段可以是空值，http1.0中可以缺失host字段</p>
+<p>4.http响应头中不包含host字段，所以wireshark中http.host过滤到的都是请求包</p>
+<p>5.因为http头中的host字段可以由程序自定义，所以host字段的值就会有很多特殊情况，如包含多个&#8217;/&#8217;字符的HOST头信息，结尾含有&#8221;.&#8221;等</p>
+<p><strong>http头中可以没有host字段吗？</strong></p>
+<p>在http 1.1中不能缺失host字段,如果缺失, 服务器返回400 bad request，<strong>http1.1中不能缺失host字段，但host字段可以是空值</strong>。</p>
+<p>在http 1.0中可以缺失host字段。</p>
+<p>RFC 2616中关于host字段的说明如下：</p>
+<p><span style="color: red;">A client MUST include a Host header field in all HTTP/1.1 request<br />
+messages . If the requested URI does not include an Internet host<br />
+name for the service being requested,<wbr><wbr> then the Host header field MUST<br />
+be given with an empty value. An HTTP/1.1 proxy MUST ensure that any<br />
+request message it forwards does contain an appropriat<wbr><wbr>e Host header<br />
+field that identifies<wbr><wbr> the service being requested by the proxy. All<br />
+Internet-b<wbr><wbr>ased HTTP/1.1 servers MUST respond with a 400 (Bad Request)<br />
+status code to any HTTP/1.1 request message which lacks a Host header<br />
+field.</wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></span></p>
+<p><strong>转载请注明出处:</strong><a title="6san.com" href="http://www.6san.com/" target="_blank" rel="external nofollow">6san.com</a> 
+</br>
+<strong>原文地址:</strong> <a href="http://www.6san.com/463/" title="http头中的host字段详解">http://www.6san.com/463/</a></p>
+                <div class="clear"></div>
+								<p>Tags: <a href="http://www.6san.com/tag/http/" rel="tag">http</a></p>				<!-- Baidu Button BEGIN -->
+<div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+<span class="bds_more">分享到：</span>
+<a class="bds_qzone"></a>
+<a class="bds_tsina"></a>
+<a class="bds_tqq"></a>
+<a class="bds_renren"></a>
+<a class="shareCount"></a>
+</div>
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=6497773" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+			</div>
+
+			<div class="navigation">
+				<div class="alignleft">上一篇：<a href="http://www.6san.com/461/" rel="prev">au3鼠标拖拽函数MouseClickDrag</a></div>
+				<div class="alignright">下一篇:<a href="http://www.6san.com/467/" rel="next">抓包查看代理用户名和密码：http.proxy_authorization</a></div>
+			</div>		
+			
+		</div>
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-0642240777996011";
+/* 6sanpost */
+google_ad_slot = "9025836440";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+	
+<!-- You can start editing here. -->
+
+
+			<!-- If comments are open, but there are no comments. -->
+
+	 
+<p></p>
+<br />
+
+
+				<div id="respond" class="comment-respond">
+			<h3 id="reply-title" class="comment-reply-title">发表评论 <small><a rel="nofollow" id="cancel-comment-reply-link" href="/463/#respond" style="display:none;">取消回复</a></small></h3>				<form action="http://www.6san.com/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+					<p class="comment-notes"><span id="email-notes">电子邮件地址不会被公开。</span> 必填项已用<span class="required">*</span>标注</p><p class="comment-form-comment"><label for="comment">评论</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" aria-required="true" required="required"></textarea></p><p class="comment-form-author"><label for="author">姓名 <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" aria-required='true' required='required' /></p>
+<p class="comment-form-email"><label for="email">电子邮件 <span class="required">*</span></label> <input id="email" name="email" type="text" value="" size="30" maxlength="100" aria-describedby="email-notes" aria-required='true' required='required' /></p>
+<p class="comment-form-url"><label for="url">站点</label> <input id="url" name="url" type="text" value="" size="30" maxlength="200" /></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="发表评论" /> <input type='hidden' name='comment_post_ID' value='463' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="a168629127" /></p><p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="219"/></p>				</form>
+					</div><!-- #respond -->
+		
+
+
+
+
+	
+	</div>
+	<!-- End: Left Panel -->
+	<!-- Start: Right Panel -->
+	<div class="rightPan">
+		<span class="topBg"></span>
+	<div class="inner">
+	<div class="widgetBlock"><h3>分类目录</h3>		<ul>
+	<li class="cat-item cat-item-123"><a href="http://www.6san.com/category/robot/" >Robot</a> (1)
+</li>
+	<li class="cat-item cat-item-1"><a href="http://www.6san.com/category/uncategorized/" >未分类</a> (1)
+</li>
+	<li class="cat-item cat-item-8"><a href="http://www.6san.com/category/test/" title="软件和web自动化测试工具，自动化测试方法杂记">测试工具</a> (100)
+<ul class='children'>
+	<li class="cat-item cat-item-13"><a href="http://www.6san.com/category/test/au3/" >AutoIt3</a> (24)
+</li>
+	<li class="cat-item cat-item-12"><a href="http://www.6san.com/category/test/selenium/" >selenium</a> (15)
+</li>
+	<li class="cat-item cat-item-34"><a href="http://www.6san.com/category/test/sikuli/" >sikuli</a> (4)
+</li>
+	<li class="cat-item cat-item-10"><a href="http://www.6san.com/category/test/heihe/" title="测试工具，系统工具，自动化测试工具">功能测试工具</a> (17)
+</li>
+	<li class="cat-item cat-item-40"><a href="http://www.6san.com/category/test/anquan/" >安全测试</a> (9)
+</li>
+	<li class="cat-item cat-item-9"><a href="http://www.6san.com/category/test/xingneng/" >性能测试工具</a> (20)
+</li>
+	<li class="cat-item cat-item-11"><a href="http://www.6san.com/category/test/dajian/" >测试环境搭建</a> (11)
+</li>
+</ul>
+</li>
+	<li class="cat-item cat-item-25"><a href="http://www.6san.com/category/goutong/" >管理沟通</a> (6)
+</li>
+	<li class="cat-item cat-item-14"><a href="http://www.6san.com/category/os/" title="android，linux，windows，电脑杂记，故障排除，文档处理">系统OS</a> (115)
+<ul class='children'>
+	<li class="cat-item cat-item-16"><a href="http://www.6san.com/category/os/android/" >android</a> (41)
+</li>
+	<li class="cat-item cat-item-17"><a href="http://www.6san.com/category/os/linux/" >linux</a> (11)
+</li>
+	<li class="cat-item cat-item-54"><a href="http://www.6san.com/category/os/win8/" title="win8，windows8，metro">windows</a> (13)
+</li>
+	<li class="cat-item cat-item-18"><a href="http://www.6san.com/category/os/doc/" title="文档编辑工具，如ue，excel等">文档编辑</a> (13)
+</li>
+	<li class="cat-item cat-item-15"><a href="http://www.6san.com/category/os/pc/" title="pc使用杂记，故障排除">电脑杂记</a> (37)
+</li>
+</ul>
+</li>
+	<li class="cat-item cat-item-3"><a href="http://www.6san.com/category/network/" title="网络协议，计算机网络初探；抓包工具，其它网络工具使用杂记">网络&amp;协议</a> (84)
+<ul class='children'>
+	<li class="cat-item cat-item-5"><a href="http://www.6san.com/category/network/zhuabao/" title="wireshark，fildder，Microsoft Network Monitor等抓包工具使用杂记">抓包工具</a> (28)
+</li>
+	<li class="cat-item cat-item-4"><a href="http://www.6san.com/category/network/tcp/" title="tcp，udp，http，icmp，arp等网络协议摘录抓包分析">网络协议</a> (17)
+</li>
+	<li class="cat-item cat-item-6"><a href="http://www.6san.com/category/network/nettool/" title="代理服务器，http服务器，测速，流量监控，网络安全工具，包延迟，包伪造工具">网络工具</a> (16)
+</li>
+	<li class="cat-item cat-item-7"><a href="http://www.6san.com/category/network/net/" title="网络名称释义，网络杂记">网络百科</a> (23)
+</li>
+</ul>
+</li>
+	<li class="cat-item cat-item-19"><a href="http://www.6san.com/category/web/" title="ui/ue，seo，wordpress，web检测，网络营销，域名主机">网页&amp;营销</a> (13)
+<ul class='children'>
+	<li class="cat-item cat-item-22"><a href="http://www.6san.com/category/web/seo/" title="搜索引擎优化">SEO</a> (1)
+</li>
+	<li class="cat-item cat-item-20"><a href="http://www.6san.com/category/web/uiue/" >UI/UE</a> (5)
+</li>
+	<li class="cat-item cat-item-23"><a href="http://www.6san.com/category/web/safe/" title="web运行监测，web安全检查">web安全</a> (1)
+</li>
+	<li class="cat-item cat-item-21"><a href="http://www.6san.com/category/web/wordpress/" >wordpress</a> (6)
+</li>
+</ul>
+</li>
+		</ul>
+</div><div class="widgetBlock">			<div class="textwidget"><script type="text/javascript">
+    /*sou220*54*/
+    var cpro_id = "u1900400";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+</div>
+		</div>
+<!-- WordPress Popular Posts Plugin v3.3.4 [W] [weekly] [views] [regular] -->
+<div class="widgetBlock">
+<h3>热门文章</h3>
+<ul class="wpp-list">
+<li><a href="http://www.6san.com/833/" title="Notepad++查找和替换空行/空格/换行" class="wpp-post-title" target="_self">Notepad++查找和替换空行/空格/换行</a> </li>
+<li><a href="http://www.6san.com/630/" title="wireshark捕获/过滤指定ip地址数据包" class="wpp-post-title" target="_self">wireshark捕获/过滤指定ip地址数据包</a> </li>
+<li><a href="http://www.6san.com/789/" title="Fiddler过滤指定域名" class="wpp-post-title" target="_self">Fiddler过滤指定域名</a> </li>
+<li><a href="http://www.6san.com/496/" title="wireshark中的时间格式" class="wpp-post-title" target="_self">wireshark中的时间格式</a> </li>
+<li><a href="http://www.6san.com/561/" title="fiddler抓取指定进程的请求包" class="wpp-post-title" target="_self">fiddler抓取指定进程的请求包</a> </li>
+
+</ul>
+</div>
+<!-- End WordPress Popular Posts Plugin v3.3.4 -->
+<div class="widgetBlock"><h3>热门关键字</h3><div class="tagcloud"><a href='http://www.6san.com/tag/adb/' class='tag-link-149 tag-link-position-1' title='4个话题' style='font-size: 10.990291262136pt;'>adb</a>
+<a href='http://www.6san.com/tag/android-2/' class='tag-link-110 tag-link-position-2' title='31个话题' style='font-size: 22pt;'>Android</a>
+<a href='http://www.6san.com/tag/apache/' class='tag-link-75 tag-link-position-3' title='3个话题' style='font-size: 9.631067961165pt;'>apache</a>
+<a href='http://www.6san.com/tag/au3-2/' class='tag-link-64 tag-link-position-4' title='24个话题' style='font-size: 20.504854368932pt;'>AU3</a>
+<a href='http://www.6san.com/tag/dns/' class='tag-link-171 tag-link-position-5' title='3个话题' style='font-size: 9.631067961165pt;'>dns</a>
+<a href='http://www.6san.com/tag/dynatrace/' class='tag-link-91 tag-link-position-6' title='2个话题' style='font-size: 8pt;'>dynatrace</a>
+<a href='http://www.6san.com/tag/eclipse/' class='tag-link-52 tag-link-position-7' title='2个话题' style='font-size: 8pt;'>Eclipse</a>
+<a href='http://www.6san.com/tag/everything/' class='tag-link-33 tag-link-position-8' title='2个话题' style='font-size: 8pt;'>everything</a>
+<a href='http://www.6san.com/tag/excel/' class='tag-link-44 tag-link-position-9' title='3个话题' style='font-size: 9.631067961165pt;'>excel</a>
+<a href='http://www.6san.com/tag/fiddler/' class='tag-link-99 tag-link-position-10' title='4个话题' style='font-size: 10.990291262136pt;'>fiddler</a>
+<a href='http://www.6san.com/tag/gzip/' class='tag-link-121 tag-link-position-11' title='2个话题' style='font-size: 8pt;'>gzip</a>
+<a href='http://www.6san.com/tag/hosts/' class='tag-link-47 tag-link-position-12' title='3个话题' style='font-size: 9.631067961165pt;'>hosts</a>
+<a href='http://www.6san.com/tag/http/' class='tag-link-36 tag-link-position-13' title='15个话题' style='font-size: 17.78640776699pt;'>http</a>
+<a href='http://www.6san.com/tag/httpcomponents/' class='tag-link-119 tag-link-position-14' title='2个话题' style='font-size: 8pt;'>HttpComponents</a>
+<a href='http://www.6san.com/tag/https/' class='tag-link-104 tag-link-position-15' title='2个话题' style='font-size: 8pt;'>https</a>
+<a href='http://www.6san.com/tag/ie/' class='tag-link-72 tag-link-position-16' title='3个话题' style='font-size: 9.631067961165pt;'>IE</a>
+<a href='http://www.6san.com/tag/ie%e4%bb%a3%e7%90%86/' class='tag-link-43 tag-link-position-17' title='3个话题' style='font-size: 9.631067961165pt;'>ie代理</a>
+<a href='http://www.6san.com/tag/ip/' class='tag-link-122 tag-link-position-18' title='5个话题' style='font-size: 12.077669902913pt;'>ip</a>
+<a href='http://www.6san.com/tag/java/' class='tag-link-46 tag-link-position-19' title='10个话题' style='font-size: 15.611650485437pt;'>java</a>
+<a href='http://www.6san.com/tag/jmeter/' class='tag-link-88 tag-link-position-20' title='13个话题' style='font-size: 17.106796116505pt;'>jmeter</a>
+<a href='http://www.6san.com/tag/linux-2/' class='tag-link-160 tag-link-position-21' title='5个话题' style='font-size: 12.077669902913pt;'>Linux</a>
+<a href='http://www.6san.com/tag/logcat/' class='tag-link-147 tag-link-position-22' title='3个话题' style='font-size: 9.631067961165pt;'>logcat</a>
+<a href='http://www.6san.com/tag/microsoft-network-monitor/' class='tag-link-68 tag-link-position-23' title='5个话题' style='font-size: 12.077669902913pt;'>Microsoft Network Monitor</a>
+<a href='http://www.6san.com/tag/monkeyrunner/' class='tag-link-130 tag-link-position-24' title='7个话题' style='font-size: 13.708737864078pt;'>monkeyrunner</a>
+<a href='http://www.6san.com/tag/nginx/' class='tag-link-116 tag-link-position-25' title='7个话题' style='font-size: 13.708737864078pt;'>nginx</a>
+<a href='http://www.6san.com/tag/procmon/' class='tag-link-28 tag-link-position-26' title='2个话题' style='font-size: 8pt;'>Procmon</a>
+<a href='http://www.6san.com/tag/selenium/' class='tag-link-172 tag-link-position-27' title='7个话题' style='font-size: 13.708737864078pt;'>selenium</a>
+<a href='http://www.6san.com/tag/sikuli/' class='tag-link-175 tag-link-position-28' title='4个话题' style='font-size: 10.990291262136pt;'>sikuli</a>
+<a href='http://www.6san.com/tag/ssdp/' class='tag-link-73 tag-link-position-29' title='2个话题' style='font-size: 8pt;'>ssdp</a>
+<a href='http://www.6san.com/tag/udp/' class='tag-link-93 tag-link-position-30' title='2个话题' style='font-size: 8pt;'>UDP</a>
+<a href='http://www.6san.com/tag/ue/' class='tag-link-53 tag-link-position-31' title='6个话题' style='font-size: 13.029126213592pt;'>UE</a>
+<a href='http://www.6san.com/tag/url/' class='tag-link-57 tag-link-position-32' title='5个话题' style='font-size: 12.077669902913pt;'>url</a>
+<a href='http://www.6san.com/tag/wamp/' class='tag-link-65 tag-link-position-33' title='3个话题' style='font-size: 9.631067961165pt;'>wamp</a>
+<a href='http://www.6san.com/tag/webdriver/' class='tag-link-111 tag-link-position-34' title='3个话题' style='font-size: 9.631067961165pt;'>WebDriver</a>
+<a href='http://www.6san.com/tag/web%e5%89%8d%e7%ab%af%e6%80%a7%e8%83%bd/' class='tag-link-90 tag-link-position-35' title='2个话题' style='font-size: 8pt;'>web前端性能</a>
+<a href='http://www.6san.com/tag/win8-2/' class='tag-link-55 tag-link-position-36' title='6个话题' style='font-size: 13.029126213592pt;'>win8</a>
+<a href='http://www.6san.com/tag/windbg/' class='tag-link-114 tag-link-position-37' title='7个话题' style='font-size: 13.708737864078pt;'>windbg</a>
+<a href='http://www.6san.com/tag/windows/' class='tag-link-115 tag-link-position-38' title='5个话题' style='font-size: 12.077669902913pt;'>windows</a>
+<a href='http://www.6san.com/tag/wininet/' class='tag-link-56 tag-link-position-39' title='2个话题' style='font-size: 8pt;'>wininet</a>
+<a href='http://www.6san.com/tag/wireshark/' class='tag-link-29 tag-link-position-40' title='17个话题' style='font-size: 18.601941747573pt;'>wireshark</a>
+<a href='http://www.6san.com/tag/word/' class='tag-link-66 tag-link-position-41' title='2个话题' style='font-size: 8pt;'>word</a>
+<a href='http://www.6san.com/tag/wordpress/' class='tag-link-173 tag-link-position-42' title='4个话题' style='font-size: 10.990291262136pt;'>wordpress</a>
+<a href='http://www.6san.com/tag/%e5%ae%89%e5%85%a8/' class='tag-link-39 tag-link-position-43' title='6个话题' style='font-size: 13.029126213592pt;'>安全</a>
+<a href='http://www.6san.com/tag/%e6%80%a7%e8%83%bd/' class='tag-link-51 tag-link-position-44' title='5个话题' style='font-size: 12.077669902913pt;'>性能</a>
+<a href='http://www.6san.com/tag/%e6%b3%a8%e5%86%8c%e8%a1%a8/' class='tag-link-30 tag-link-position-45' title='2个话题' style='font-size: 8pt;'>注册表</a></div>
+</div>		<div class="widgetBlock">		<h3>近期文章</h3>		<ul>
+					<li>
+				<a href="http://www.6san.com/1334/">配置ISA、squid代理服务器的digest认证测试不通过</a>
+						</li>
+					<li>
+				<a href="http://www.6san.com/1331/">Android应用备份android:allowBackup</a>
+						</li>
+					<li>
+				<a href="http://www.6san.com/1329/">调起exe可能出现的bug</a>
+						</li>
+					<li>
+				<a href="http://www.6san.com/1324/">windows设置方便获取dmp</a>
+						</li>
+					<li>
+				<a href="http://www.6san.com/1321/">使用沃通免费SSL证书配置正常验证的https</a>
+						</li>
+				</ul>
+		</div>		<div class="widgetBlock">			<div class="textwidget"><script type="text/javascript">
+/*200*200，创建于2013-1-29*/
+var cpro_id = "u1203962";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script></div>
+		</div><div class="widgetBlock"><h3>rss订阅</h3>			<div class="textwidget"><a title="订阅此内容" class="rsswidget" href="http://www.6san.com/?feed=rss2"><img width="14" height="14" style="border-bottom: 0px; border-left: 0px; border-top: 0px; border-right: 0px;" alt="RSS" src="http://www.6san.com/wp-includes/images/rss.png" complete="complete"/>&nbsp;6san.com</a></div>
+		</div>	</div>
+<span class="bottomBg"></span>	</div>
+	<!-- End: Right Panel -->
+	
+</div>
+	<!-- End: Body Content -->
+</div>
+<!-- End: Main Container -->
+</div>
+<!-- Start: Footer -->
+<div class="footer">
+	<div class="inner">
+		<p class="logo">6san.com</p>
+		<div class="right">
+			<ul id="menu-footer" class="menu"><li id="menu-item-180" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-180"><a href="http://www.6san.com/sample-page/">联系投稿</a></li>
+</ul>			<div class="credits">Powered by <a href="http://wordpress.org/">Wordpress</a>. Design by Handla-Online.org.<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F2bda2fa0ffe551d11a7e7ab8febb70d3' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+		</div>
+	</div>
+</div>
+<!-- End: Footer -->
+
+<script type='text/javascript' src='http://www.6san.com/wp-content/plugins/akismet/_inc/form.js?ver=3.2'></script>
+<script type='text/javascript' src='http://www.6san.com/wp-includes/js/comment-reply.min.js?ver=4.6.1'></script>
+<script type='text/javascript' src='http://www.6san.com/wp-includes/js/wp-embed.min.js?ver=4.6.1'></script>
+</body>
+</html>
