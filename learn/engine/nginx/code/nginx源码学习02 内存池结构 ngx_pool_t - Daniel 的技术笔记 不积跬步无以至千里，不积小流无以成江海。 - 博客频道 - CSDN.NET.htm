@@ -1,0 +1,1710 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+     
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>  
+
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <title>nginx源码学习(二)  内存池结构 ngx_pool_t - Daniel 的技术笔记  不积跬步无以至千里，不积小流无以成江海。
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="1、函数、变量出现“could not be resolved ”问题出现此问题一般是没有找到cocos2d-x声明的头文件，在eclipse将cocos2d的头文件目录引入，包括工程目录、platform/android在hellocpp/main.cpp函数加入头文件#include AppDelegate.h#include cocos2d.h#include " />
+    <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+      <script type="text/javascript" src="http://static.blog.csdn.net/scripts/jquery-version.js"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
+        <!--new top-->
+               <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css">        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/tracking.js"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/dark1/css/style.css?v=1.1" />
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/gfsfg8545/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+ 
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+</head>
+<body>
+
+
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/daniel_ustc">Daniel 的技术笔记  不积跬步无以至千里，不积小流无以成江海。</a></h2>
+            <h3> </h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/daniel_ustc?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/daniel_ustc?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/daniel_ustc/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "gfsfg8545";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/daniel_ustc";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/53636007
+">
+<font color=blue>【获奖公布】“我的2016”主题征文活动 
+
+
+</font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://bss.csdn.net/m/topic/edu_develop
+">
+<font color=red>程序猿全指南，让【移动开发】更简单！ 
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/PK.html">
+<font color=blue>【观点】移动原生App开发和HTML 5开发，你更看好哪个？
+</font></a>
+
+&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/baiyuzhong2012/article/details/54098338">
+<font color=red>博客的神秘功能
+</font></a>
+
+
+</div>                        </div>
+                        
+
+
+
+  
+<link href="http://static.blog.csdn.net/css/comment1.css" type="text/css" rel="stylesheet" />
+<link href="http://static.blog.csdn.net/css/style1.css" type="text/css" rel="stylesheet" />
+<script language='JavaScript' type='text/javascript' src='http://download.csdn.net/js/jquery.cookie.js'></script>
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/search-service/main.js"></script>
+<link rel="stylesheet" href="http://static.blog.csdn.net/public/res-min/markdown_views.css?v=1.0" />
+<link rel="stylesheet" href="http://static.blog.csdn.net/css/category.css?v=1.0" />
+<script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/web-storage-cache.min.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/replace.min.js"></script>
+
+
+
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=nginx%e6%ba%90%e7%a0%81%e5%ad%a6%e4%b9%a0(%e4%ba%8c)++%e5%86%85%e5%ad%98%e6%b1%a0%e7%bb%93%e6%9e%84+ngx_pool_t&u=http://blog.csdn.net/daniel_ustc/article/details/11645293"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/daniel_ustc/article/details/11645293">
+        nginx源码学习(二)  内存池结构 ngx_pool_t            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href='http://www.csdn.net/tag/nginx' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">nginx</a><a href='http://www.csdn.net/tag/%e5%86%85%e5%ad%98%e6%b1%a0' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">内存池</a><a href='http://www.csdn.net/tag/%e5%86%85%e5%ad%98%e7%ae%a1%e7%90%86' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">内存管理</a><a href='http://www.csdn.net/tag/%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">源码分析</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2013-09-13 17:24</span>
+            <span class="link_view" title="阅读次数">1780人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(3)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('nginx%e6%ba%90%e7%a0%81%e5%ad%a6%e4%b9%a0(%e4%ba%8c)++%e5%86%85%e5%ad%98%e6%b1%a0%e7%bb%93%e6%9e%84+ngx_pool_t','11645293');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(11645293,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody"  style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script  type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label  onclick="GetCategoryArticles('1447759','gfsfg8545','top','11645293');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">Nginx<em>（10）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/gfsfg8545/article/category/1447759"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_1447759">                            
+                            </ul>
+                        </div>
+                    </label>                    
+                    <label  onclick="GetCategoryArticles('1251243','gfsfg8545','top','11645293');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">unix/linux/网络编程<em>（29）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/gfsfg8545/article/category/1251243"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_1251243">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+    <script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>  
+        <div   class="bog_copyright">         
+            <p  class="copyright_p" >版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+
+<h4><span style="font-family:SimSun; font-size:14px">1,nginx的内存池介绍</span></h4>
+<p>&nbsp;&nbsp;&nbsp; 为了方便系统模块对内存的使用，方便内存的管理，nginx自己实现了进程池的机制来进行内存的分配和释放， 首先nginx会在特定的生命周期帮你</p>
+<p>&nbsp;&nbsp; 统一建立内存池，当需要进行内存分配的时候统一通过内存池中的内存进行分配，最后nginx会在适当的时候释放内存池的资源，开发者只要在需要</p>
+<p>&nbsp;&nbsp; 的时候对内存进行申请即可，不用过多考虑内存的释放等问题，大大提高了开发的效率。</p>
+<p><span style="color:#FF0000">&nbsp; 例如</span>对于内存的管理，如果我们需要使用内存，那么总是从一个ngx_pool_t的对象中获取内存，在最终的某个时刻，我们销毁这个ngx_pool_t对象，</p>
+<p>&nbsp; 所有这些内存都被释放了。这样我们就不必要对对这些内存进行malloc和free的操作，不用担心是否某块被malloc出来的内存没有被释放。因为当</p>
+<p>&nbsp;&nbsp; ngx_pool_t对象被销毁的时候，所有从这个对象中分配出来的内存都会被统一释放掉。</p>
+<h2><span style="font-family:SimSun">2，nginx内存管理相关结构</span></h2>
+<p>&nbsp;下面介绍下 nginx 封装的一些有关内存分配、管理相关函数,内存相关的操作主要在文件 os/unix/ngx_alloc.{h,c} 和 core/ngx_palloc.{h,c} 中实现：</p>
+<p><strong><span style="color:#FF0000">&nbsp;A</span></strong>&nbsp; ./src/os/unix/ngx_alloc.{h,c}中包括所有nginx内存申请的相关函数。<br>
+</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:#000099">ngx_alloc()</span> 包装了malloc()，仅添加了内存分配失败时的，log输出和debug时的log输出。</p>
+<p>&nbsp; &nbsp; <span style="color:#000099">ngx_calloc() </span>调用上面的函数，成功分配后，将内存清零。</p>
+<p>&nbsp; &nbsp;<span style="color:#000099"> ngx_memalign()</span> 也是向操作系统申请内存，只不过采用内存对齐方式。是为了减少内存碎片。如果操作系统支持posix_memalign()就采用它，如果</p>
+<p>&nbsp;&nbsp;&nbsp; 支持memalign()则用memalign()。在0.8.19版本中，作者不再使用ngx_alloc()，而全部改用ngx_memalign()，函数ngx_memalign()返回基于一个指</p>
+<p>&nbsp;&nbsp; 定alignment的大小为size的内存 空间，且其地址为alignment的整数倍，alignment为2的幂。</p>
+<p><strong><span style="color:#FF0000">&nbsp;B</span></strong>，./src/core/ngx_palloc.{h,c}<span lang="zh-CN" style="font-family:宋体; font-size:10pt"><br>
+</span></p>
+<p><span lang="zh-CN" style="font-family:宋体; font-size:10pt">&nbsp; 包含了内存管理的数据结构，封装创建</span><span lang="en-US" style="font-family:'Lucida Console'; font-size:10pt">/</span><span lang="zh-CN" style="font-family:宋体; font-size:10pt">销毁内存池，从内存池分配空间等函数。</span></p>
+<p><span lang="zh-CN" style="font-family:宋体; font-size:10pt">&nbsp; 内存管理中几个主要的数据结构：<br>
+&nbsp; 在文件ngx_palloc.h定义的内存管理相关数据结构。</span></p>
+<pre code_snippet_id="167411" snippet_file_name="blog_20140122_1_5558776"  code_snippet_id="167411" snippet_file_name="blog_20140122_1_5558776" name="code" class="cpp">//该结构用来维护内存池的数据块，供用户分配之用
+typedef struct {
+    u_char               *last;  //当前内存分配结束位置，即下一段可分配内存的起始位置
+    u_char               *end;   //内存池结束位置
+    ngx_pool_t           *next;  //内存池里面有很多块内存，这些内存块就是通过该指针连成链表的
+    ngx_uint_t            failed;//统计该内存池不能满足分配请求的次数,即分配失败次数
+} ngx_pool_data_t;//内存池的数据块位置信息 
+</pre>
+<p></p>
+<p><span lang="zh-CN" style="font-family:宋体; font-size:10pt">ngx_pool_t结构<br>
+</span></p>
+<p></p>
+<pre code_snippet_id="167411" snippet_file_name="blog_20140122_2_7227216"  code_snippet_id="167411" snippet_file_name="blog_20140122_2_7227216" name="code" class="cpp">typedef struct ngx_pool_s        ngx_pool_t;
+
+//该结构维护整个内存池的头部信息
+struct ngx_pool_s {   
+ ngx_pool_data_t       d;       //数据块   
+ size_t                max;     //内存池数据块的最大值  
+ ngx_pool_t           *current; //指向当前内存池 
+ ngx_chain_t          *chain;   //该指针挂接一个ngx_chain_t结构     
+ ngx_pool_large_t     *large;   //分配大块内存用，即超过max的内存请求   
+ ngx_pool_cleanup_t   *cleanup; //释放内存池的callback   
+ ngx_log_t            *log;	   //日志信息
+};</pre><br>
+<span lang="zh-CN" style="font-family:宋体">其中，</span><span lang="zh-CN" style="font-family:'Lucida Console'">sizeof(ngx_pool_data_t)</span><span lang="en-US" style="font-family:'Lucida Console'">=16B</span><span lang="zh-CN" style="font-family:宋体">，</span><span lang="zh-CN" style="font-family:'Lucida Console'">sizeof(ngx_pool_t)</span><span lang="en-US" style="font-family:'Lucida Console'">=40B</span><span lang="zh-CN" style="font-family:宋体">。</span>
+<p></p>
+<p>大块内存结构：</p>
+<p></p>
+<pre code_snippet_id="167411" snippet_file_name="blog_20140122_3_5449309"  code_snippet_id="167411" snippet_file_name="blog_20140122_3_5449309" name="code" class="cpp">//大内存结构
+struct ngx_pool_large_s {
+    ngx_pool_large_t     *next; //下一个大块内存
+    void                 *alloc;//指向分配的大块内存
+};</pre>
+<p></p>
+<p>当待分配空间已经超过了池子自身大小，nginx也没有别的好办法，只好按照你需要分配的大小，实际去调用malloc()函数去分配，例如池子的大小是1K，</p>
+<p>待分配的大小是1M。实际上池子里只存储了ngx_pool_large_t结构，这个结构中的alloc指针，指向被分配的内存，并把这个指针返回给系统使用。<br>
+</p>
+<p><span lang="zh-CN" style="font-family:宋体; font-size:10pt">上述这些数据结构的逻辑结构图如下：</span></p>
+<p><span lang="zh-CN" style="font-family:宋体; font-size:10pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="http://img.blog.csdn.net/20140122221217906" alt=""><br>
+</span></p>
+<p>&nbsp; <span style="color:#FF0000">注</span>：在nginx的main()函数中，通过将ngx_pagesize 设置为1024来指定内存 分配按1024bytes对齐。这意味着你虽指示分配10 bytes的内存，</p>
+<p>&nbsp; 实际上nginx也向 操作系统申请至少1024bytes的内存。<span lang="en-US" style="font-family:'Lucida Console'"> nginx</span><span lang="zh-CN" style="font-family:宋体">将几乎所有的结构体放在</span><span lang="en-US" style="font-family:'Lucida Console'">ngx_core.h</span><span lang="zh-CN" style="font-family:宋体">文件中重新进行了申明</span>，形式如：<span><span class="keyword"><br>
+</span></span></p>
+<p><span><span class="keyword">&nbsp; typedef</span><span>&nbsp;</span><span class="keyword">struct</span><span>&nbsp;ngx_**_s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ngx_**_t;</span></span> 。<br>
+<br>
+</p>
+<h2>3，nginx 内存池操作相关。</h2>
+<p>&nbsp;<span style="color:#000099">A，内存池的<span style="color:#000099">创建</span>和</span><span style="color:#000099">销毁</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; </p>
+<pre code_snippet_id="167411" snippet_file_name="blog_20140122_4_1196168"  code_snippet_id="167411" snippet_file_name="blog_20140122_4_1196168" name="code" class="cpp">//创建内存池
+ngx_pool_t *
+ngx_create_pool(size_t size, ngx_log_t *log)
+{
+    ngx_pool_t  *p;
+   // ngx_memalign 返回值为void*,void*可以执指向任何类型的数据
+    p = ngx_memalign(NGX_POOL_ALIGNMENT, size, log);  // 内存分配,该函数的实现在src/os/unix/ngx_alloc.c文件中,uinx,windows分开走
+    if (p == NULL) {
+        return NULL;
+    }
+
+    p-&gt;d.last = (u_char *) p + sizeof(ngx_pool_t); //last指向ngx_pool_t结构体之后数据的起始
+    p-&gt;d.end = (u_char *) p + size; //end指向分配的整个size大小的内存的末尾 
+    p-&gt;d.next = NULL;
+    p-&gt;d.failed = 0;
+   //max中存放的数指所申请内存块中空闲的大小,因此，在计算max之前先减去了管理结点本身的大小。	 
+    size = size - sizeof(ngx_pool_t); 
+	//最大不超过 NGX_MAX_ALLOC_FROM_POOL,也就是getpagesize()-1 大小，即4095B
+    p-&gt;max = (size &lt; NGX_MAX_ALLOC_FROM_POOL) ? size : NGX_MAX_ALLOC_FROM_POOL; 
+	
+    p-&gt;current = p;
+    p-&gt;chain = NULL;
+    p-&gt;large = NULL;
+    p-&gt;cleanup = NULL;
+    p-&gt;log = log;
+
+    return p;
+}
+</pre>
+<p></p>
+<p></p>
+创建一个初始节点大小为size的pool，log为后续在该pool上进行操作时输出日志的对象。 需要说明的是size的选择，size的大小必须小于等于NGX_MAX_ALLOC_FROM_POOL 且必须大于sizeof(ngx_pool_t)。<br>
+<p>选择大于NGX_MAX_ALLOC_FROM_POOL的&#20540;会造成浪费，因为大于该限制的空间不会被用到（只是说在第一个由ngx_pool_t对象管理的内存</p>
+<p>块上的内存，后续的分配如果第一个内存块上的空闲部分已用完，会再分配的）。选择小于sizeof(ngx_pool_t)的&#20540;会造成程序崩溃。由于初始大</p>
+<p>小的内存块中要用一部分来存储ngx_pool_t这个信息本身。当一个ngx_pool_t 对象被创建以后，该对象的max字段被赋&#20540;为size-sizeof(ngx_pool_t)</p>
+<p>和NGX_MAX_ALLOC_FROM_POOL这两者中比较小的。后续的从这个pool中分配的内存块，在第一块内存使用完成以后，如果要继续分配的话，</p>
+<p>就需要继续从操作系统申请内存。当内存的大小小于等于max字段的时候，则分配新的内存块，链接在d这个字段（实际上是d.next字段）管理的一</p>
+<p>条链表上。当要分配的内存块比max大的，那么从系统中申请的内存是被挂接在large字段管理的一条链表上。我们暂且把这个称之为大块内存链</p>
+<p>和小块内存链。</p>
+<p>总结起来，ngx_create_pool有如下<strong>三步</strong>:<br>
+</p>
+<p>第一步，调用ngx_memalign()申请内存；</p>
+<p>第二步，设置ngx_pool_t中的成员d(即类型ngx_pool_data_t)中的各个变量；<br>
+&nbsp; …<br>
+&nbsp; p-&gt;d.last = (u_char *) p &#43; sizeof(ngx_pool_t);<br>
+&nbsp; p-&gt;d.end = (u_char *) p &#43; size;<br>
+&nbsp; p-&gt;d.next = NULL;<br>
+&nbsp; p-&gt;d.failed = 0;<br>
+&nbsp; d.last则指向未使用内存的开始处,而d.end指向内存块的结尾处。刚申请的内存中占用ngx_pool_t结构体作为管理单元。所以，此时d.last指向</p>
+<p>&nbsp; (u_char *) p &#43; sizeof(ngx_pool_t)处。</p>
+<p>第三步，设置ngx_pool_t 除d变量的其它成员；<br>
+&nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp;&nbsp; p-&gt;max =... <br>
+&nbsp;&nbsp;&nbsp; p-&gt;current = p;<br>
+&nbsp;&nbsp;&nbsp; p-&gt;chain = NULL;<br>
+&nbsp;&nbsp;&nbsp; p-&gt;large = NULL;<br>
+&nbsp;&nbsp;&nbsp; p-&gt;cleanup = NULL;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+在计算max时，max中存放的数指所申请内存块中空闲内存的大小。因此，在计算max之前先减去了管理结点本身的大小。<br>
+</p>
+<p><span style="color:#000099">&nbsp;下面介绍 ngx_create_pool 里分配内存的 ngx_memalign()函数</span><br>
+</p>
+<pre code_snippet_id="167411" snippet_file_name="blog_20140122_5_6594361"  code_snippet_id="167411" snippet_file_name="blog_20140122_5_6594361" name="code" class="cpp"> void *  
+ngx_memalign(size_t alignment, size_t size, ngx_log_t *log)  
+{  
+    void  *p;  
+    int    err;  
+      
+    err = posix_memalign(&amp;p, alignment, size);  
+    //该函数分配以alignment为对齐的size字节的内存大小，其中p指向分配的内存块。  
+      
+    if (err) {  
+        ngx_log_error(NGX_LOG_EMERG, log, err,  
+            &quot;posix_memalign(%uz, %uz) failed&quot;, alignment, size);  
+        p = NULL;  
+    }  
+      
+    ngx_log_debug3(NGX_LOG_DEBUG_ALLOC, log, 0,  
+        &quot;posix_memalign: %p:%uz @%uz&quot;, p, size, alignment);  
+      
+    return p;  
+}  
+</pre>
+<p>&nbsp; 从这个函数的实现体，我们可以看到p =ngx_memalign(NGX_POOL_ALIGNMENT, size, log); <br>
+</p>
+<p>&nbsp; 函数分配以NGX_POOL_ALIGNMENT字节对齐的size字节的内存，在src/core/ngx_palloc.h</p>
+<p>&nbsp; #defineNGX_POOL_ALIGNMENT &nbsp;16&nbsp; 因此，nginx的内存池分配，是以16字节为边界对齐的<br>
+</p>
+<p>&nbsp; 首先我们要理解为什么要内存对齐?&nbsp; 为了移植性和 程序的性能，可以<a target="_blank" target="_blank" href="http://blog.csdn.net/lgouc/article/details/8235471">参考这篇文章</a>。</p>
+<p><br>
+</p>
+<p>&nbsp;看下内存池的销毁函数,pool指向需要销毁的内存池:</p>
+<p></p>
+<pre code_snippet_id="167411" snippet_file_name="blog_20140122_6_6646828"  code_snippet_id="167411" snippet_file_name="blog_20140122_6_6646828" name="code" class="cpp">    void  
+    ngx_destroy_pool(ngx_pool_t *pool)  
+    {  
+        ngx_pool_t          *p, *n;  
+        ngx_pool_large_t    *l;  
+        ngx_pool_cleanup_t  *c;  
+        // 遍历 cleanup链表结构依次调用clenup的handler清理
+     //cleanup指向析构函数，用于执行相关的内存池销毁之前的清理工作，如文件的关闭等.
+        for (c = pool-&gt;cleanup; c; c = c-&gt;next) {  
+            if (c-&gt;handler) {  
+                ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool-&gt;log, 0,  
+                    &quot;run cleanup: %p&quot;, c);  
+                c-&gt;handler(c-&gt;data);  
+            }  
+        }  
+        //清理大块内存，ngx_free实际上就是标准的free函数
+        for (l = pool-&gt;large; l; l = l-&gt;next) {  
+            ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool-&gt;log, 0, &quot;free: %p&quot;, l-&gt;alloc);  
+              
+            if (l-&gt;alloc) {  
+                ngx_free(l-&gt;alloc);  
+            }  
+        }   
+          
+    #if (NGX_DEBUG)  
+          
+        /** 
+        * we could allocate the pool-&gt;log from this pool 
+        * so we can not use this log while the free()ing the pool 
+        */  
+          
+        for (p = pool, n = pool-&gt;d.next; /** void */; p = n, n = n-&gt;d.next) {  
+            ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, pool-&gt;log, 0,  
+                &quot;free: %p, unused: %uz&quot;, p, p-&gt;d.end - p-&gt;d.last);  
+              
+            if (n == NULL) {  
+                break;  
+            }  
+        }  
+        //只有debug模式才会执行这个片段的代码，主要是log记录，用以跟踪函数销毁时日志记录。  
+    #endif  
+        //释放小内存块
+        for (p = pool, n = pool-&gt;d.next; /** void */; p = n, n = n-&gt;d.next) {  
+            ngx_free(p);  
+              
+            if (n == NULL) {  
+                break;  
+            }  
+        }  
+    }  </pre><span style="font-family:Arial; color:#333333"><span style="font-size:14px; line-height:26px"></span></span><br>
+&nbsp;&nbsp; 该函数将遍历内存池链表，释放大块内存(通过ngx_free),而没有提供对小块内存的释放。如果注册了clenup(也是一个链表结构)，
+<p></p>
+<p>&nbsp;&nbsp; 亦将遍历该cleanup链表结构依次调用clenup的handler清理和该内存相关联的的其它资源，也就是当我们从内存池中申请资源时，</p>
+<p>&nbsp;&nbsp; 可能会附带一些其它的资源(比如打开的文件),这些资源的使用和申请的内存是绑定在一起的，所以在进行资源释放时，希望这些资</p>
+<p>&nbsp; 源的释放能够和内存池释放时一起进行(通过handler()回调函数)，避免了资源泄露和单独执行释放相关资源的麻烦。</p>
+<p>总结起来 ngx_destroy_pool() 释放内存池，<strong>一共分三步</strong>：<br>
+第一步、在释放前先对业务逻辑进行释放前的处理<br>
+&nbsp;&nbsp;&nbsp; for (c = pool-&gt;cleanup; c; c = c-&gt;next) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp;&nbsp; }<br>
+第二步、释放large占用的内存(大内存块链表)<br>
+&nbsp;&nbsp;&nbsp; for (l = pool-&gt;large; l; l = l-&gt;next) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ....<br>
+&nbsp;&nbsp;&nbsp; }<br>
+第三步、释放所有的池子(即小内存块链表)<br>
+for (p = pool, n = pool-&gt;next; /* void */; p = n, n = n-&gt;next) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+&nbsp; }<br>
+</p>
+<span style="color:#000099"><span style="background-color:rgb(255,255,255)">&nbsp;B，内存申请和释放</span></span>
+<p></p>
+<p>&nbsp;下面简单介绍有关内存申请函数。&nbsp;<br>
+</p>
+<p><strong>⑴</strong>，void *ngx_palloc(ngx_pool_t *pool, size_t size); 代码如下:<br>
+</p>
+<pre code_snippet_id="167411" snippet_file_name="blog_20140123_7_2160919"  code_snippet_id="167411" snippet_file_name="blog_20140123_7_2160919" name="code" class="cpp">void *
+ngx_palloc(ngx_pool_t *pool, size_t size)
+{
+    u_char      *m;
+    ngx_pool_t  *p;
+
+    if (size &lt;= pool-&gt;max) {//判断待分配内存与max值 
+        p = pool-&gt;current; //小于max值，则从current节点开始遍历pool链表 
+        do {
+            m = ngx_align_ptr(p-&gt;d.last, NGX_ALIGNMENT); // 对齐内存指针，加快存取速度
+            if ((size_t) (p-&gt;d.end - m) &gt;= size) { //找到合适内存块
+                p-&gt;d.last = m + size;//在该节点指向的内存块中分配size大小的内存
+                return m;
+            }
+			//如果不满足，则查找下一个节点
+            p = p-&gt;d.next;
+        } while (p);
+		
+		//链表里没有能分配size大小内存的节点，则生成一个新的节点并在其中分配内存  
+        return ngx_palloc_block(pool, size);
+    }
+	//大于max值，则在large链表里分配内存
+    return ngx_palloc_large(pool, size);
+}
+</pre>
+<p></p>
+<p>&nbsp;&nbsp;ngx_palloc(pool, size); 从这个pool中分配一块为size大小的内存。注意，此函数分配的内存的起始地址按照NGX_ALIGNMENT进行了对齐。</p>
+<p>关于内存字节对齐,看下面的宏定义:</p>
+<p>#define ngx_align(d, a)&nbsp;&nbsp;&nbsp;&nbsp; (((d) &#43; (a - 1)) &amp; ~(a - 1))</p>
+<p>这个宏使用来计算存储d字节的数据，如果按照a字节对齐,需要多少字节来存储对齐的数据，其中a为2的指数幂。</p>
+<p>比如 ngx_align(9,4)&nbsp; 则其结果为12，因为按4字节对齐4的整数倍最小&#20540; 则为 12, 宏 ngx_align_ptr 和ngx_align同样的道理和作用。<br>
+</p>
+<p>对齐操作会提高系统处理的速度,上面已经解释过内存字节对齐的诸多好处，下面给出&nbsp;ngx_palloc的流程图。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="http://img.blog.csdn.net/20140123105155093" alt="" height="440" width="488"></p>
+<p>界定小内存块和大内存块的&#20540;是 min (size, NGX_MAX_ALLOC_FROM_POOL (4095))。<br>
+</p>
+<p><strong>⑵</strong>，void *ngx_pnalloc(ngx_pool_t *pool, size_t size);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 从这个pool中分配一块为size大小的内存。ngx_pnalloc() 函数与ngx_palloc()函数唯一不同之处，就是在计算申请内存的指针的方式未按32位对齐方式计算。</p>
+<p><strong>⑶</strong>，static void * ngx_palloc_block(ngx_pool_t *pool, size_t size);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 待申请新的内存池节点小于等于max是调用这个函数。<br>
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ngx_palloc_block() 函数用来分配新的内存池块，形成一个链表。这个函数用static 修饰 可见其为内调函数,不会被外部调用。代码如下:<br>
+</p>
+<pre code_snippet_id="167411" snippet_file_name="blog_20140123_8_7568611"  code_snippet_id="167411" snippet_file_name="blog_20140123_8_7568611" name="code" class="cpp">static void *
+ngx_palloc_block(ngx_pool_t *pool, size_t size)
+{
+    u_char      *m;
+    size_t       psize;
+    ngx_pool_t  *p, *new, *current;
+    psize = (size_t) (pool-&gt;d.end - (u_char *) pool);//计算pool的大小
+    m = ngx_memalign(NGX_POOL_ALIGNMENT, psize, pool-&gt;log);//分配一块与pool大小相同的内存
+    if (m == NULL) {
+        return NULL;
+    }
+    new = (ngx_pool_t *) m;
+    new-&gt;d.end = m + psize;//设置end指针
+    new-&gt;d.next = NULL;
+    new-&gt;d.failed = 0;
+    m += sizeof(ngx_pool_data_t);//让m指向该块内存ngx_pool_data_t结构体之后数据区起始位置
+    m = ngx_align_ptr(m, NGX_ALIGNMENT);//按NGX_ALIGNMENT字节对齐
+    new-&gt;d.last = m + size;//在数据区分配size大小的内存并设置last指针  
+    current = pool-&gt;current;
+	//更新current
+    for (p = current; p-&gt;d.next; p = p-&gt;d.next) {
+        if (p-&gt;d.failed++ &gt; 4) {//failed的值只在此处被修改
+            current = p-&gt;d.next;//失败6次以上移动current指针
+        }
+    }
+	//将分配的block链入内存池 
+    p-&gt;d.next = new;//尾插法
+	//如果直到最后节点failed计数&gt;=6次，则current指向新分配的内存池节点block
+    pool-&gt;current = current ? current : new;
+
+    return m;
+}</pre>这个函数中申请到新的内存池块后，在该块中分配完ngx_pool_data_t结点后，将这个结点挂在内存池队列的结尾处。<br>
+&nbsp;有<span style="color:#FF0000">两点</span> 需要注意的:<br>
+<p><strong>1</strong>.新建的内存池节点的开头部分都只有结构体ngx_pool_data_t(注意不是40B的ngx_pool_t(创建内存池时才这样)而是16 B的ngx_pool_data_t,因为</p>
+<p>内存池除头节点外的其它节点没有必要更多的ngx_pool_t描述结构，多么节省内存)， 空闲内存的开始处new-&gt;d.last 不仅去除ngx_pool_data_t大小</p>
+<p>的头结构体而且还需 要 ngx_align_ptr(m, NGX_ALIGNMENT)进行内存对齐。<strong><br>
+</strong></p>
+<p><strong>2</strong>.ngx_pool_data_t结构中的failed及current的妙用。failed实际上是用来计数用的,current字段记录了后续从内存池分配内存的起始内存节点，即从</p>
+<p>current指向 的内存池节点开始搜索可分配的内存,其中current的变动是根据统计来做的。如下<br>
+&nbsp;&nbsp; for (p = current; p-&gt;d.next; p = p-&gt;d.next) {<br>
+&nbsp;&nbsp;&nbsp; if (p-&gt;d.failed&#43;&#43; &gt; 4) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; current = p-&gt;d.next;<br>
+&nbsp;&nbsp; &nbsp; }<br>
+&nbsp;}<br>
+&nbsp;&nbsp; 当链表较长，由于内存池管理队列是单向链表, 所以每次从头到尾搜索是很费时的。每次搜寻失败的结点（非尾部结点）的failed加1。failed指出了</p>
+<p>&nbsp;该结点经历多少次查寻，如果从当前内存池节点分配内存总失败次数大于等于6次(由于p-&gt;d.failed初始&#20540;为0，至少失败6次才为真),就将current字段</p>
+<p>&nbsp;移动到下一个内存池节点,如下一个节点的failed次数也大于等于6次，再下一个。这样，下次再做类&#20284;查询时，可以跳过若干不必要的结点加快查询</p>
+<p>速度。最后新申请的内存池节点采用尾插法插入内存池链表中。<br>
+</p>
+<p><strong>⑷</strong>，static void *ngx_palloc_large(ngx_pool_t *pool, size_t size);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 待申请新的内存池节点大于于max是调用这个函数。<br>
+</p>
+<p>&nbsp;&nbsp; <br>
+</p>
+<p></p>
+<pre code_snippet_id="167411" snippet_file_name="blog_20140123_9_5823724"  code_snippet_id="167411" snippet_file_name="blog_20140123_9_5823724" name="code" class="cpp">//控制大块内存的申请
+static void *
+ngx_palloc_large(ngx_pool_t *pool, size_t size)
+{
+    void              *p;
+    ngx_uint_t         n;
+    ngx_pool_large_t  *large;
+
+    p = ngx_alloc(size, pool-&gt;log);
+    if (p == NULL) {
+        return NULL;
+    }
+
+    n = 0;
+
+    for (large = pool-&gt;large; large; large = large-&gt;next) {
+        if (large-&gt;alloc == NULL) {
+            large-&gt;alloc = p;//把新分配的内存块设置在其空出的large的alloc指针字段下
+            return p;
+        }
+
+        if (n++ &gt; 3) {//尝试5次仍未找到已释放大内存块后空出的ngx_pool_large_t头结构体
+            break;
+        }
+    }
+	// 重新分配ngx_pool_large_t结构体
+    large = ngx_palloc(pool, sizeof(ngx_pool_large_t));
+    if (large == NULL) {
+        ngx_free(p);
+        return NULL;
+    }
+	// 采用头插法插入新分配的大内存块
+    large-&gt;alloc = p;
+    large-&gt;next = pool-&gt;large;
+    pool-&gt;large = large;
+
+    return p;
+}
+</pre><br>
+ngx_palloc_large() 函数专用来申请大块内存，其过程总结为如下两步:
+<p></p>
+<p>第一步，调用ngx_alloc申请的大块内存。</p>
+<p>第二步，在ngx_pool_t中大块内存节点large链表中寻找空闲的ngx_pool_larger结点。如果找到，将大块内存挂在该结点上。ngx_pool_larger队列中</p>
+<p>查找空闲结点数不会超过五次。超过五个结点没找到空闲结点就放弃。如果超过5次仍没找到空闲的large节点，则创建一个新的ngx_pool_large_t结</p>
+<p>构体，并将申请到大块内存挂在这个新结点上，最后将这个节点采用头插法插入链表头部。</p>
+<p>综合 函数⑶、⑷ 可知 ngx_palloc_block,ngx_palloc_large 为nginx从系统申请新的内存池节点加入到ngx_pool_t这个内存池管理容器中。<br>
+</p>
+<p><strong>⑸</strong>，void *ngx_pcalloc(ngx_pool_t *pool, size_t size);</p>
+<p>&nbsp; &nbsp; &nbsp;&nbsp; 该函数也是从ngx_pool_t内存池中分配size大小的内存，并且对分配的内存块进行了清零。内部实际上是调用ngx_palloc申请内存,然后调用</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ngx_memzero清零。</p>
+<p><strong>⑹</strong>，void *ngx_prealloc(ngx_pool_t *pool, void *p, size_t old_size, size_t new_size);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 对指针p指向的一块内存再分配。如果p是NULL，则直接分配一块新的new_size大小的内存。如果p不是NULL, 新分配一块内存，并把旧内存</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 中的内容拷贝 至新内存块中，然后释放p的旧内存（具体能不能释放旧的，要视具体的情况而定，这里不再详述）。这个函数实际上也是使用</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ngx_palloc实现的。</p>
+<p><strong>⑺</strong>， void *ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 按照指定对齐大小alignment来申请一块大小为size的内存。此处获取的内存不管大小都将被置于大内存块链中管理。</p>
+<p><strong>(8)</strong>，ngx_int_t&nbsp; ngx_pfree(ngx_pool_t *pool, void *p);//<span class="com"> 释放指定的内存</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 对于被置于大块内存链，也就是被large字段管理的一列内存中的某块进行释放。该函数的实现是顺序遍历large管理的大块内存链表。所以效率</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 比较低下。如果在这个链表中找到了这块内存，则释放，并返回NGX_OK。否则返回NGX_DECLINED。由于这个操作效率比较低下，除非必要，</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; 也就是说这块内存非 常大，确应及时释放，否则一般不需要调用。反正内存在这个pool被销毁的时候，总归会都释放掉的嘛！</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#FF0000">需要注意</span>的是该函数只释放large链表中注册的内存，普通内存在ngx_destroy_pool中统一释放。<br>
+</p>
+<p><strong>(9)</strong>，ngx_pool_cleanup_t *ngx_pool_cleanup_add(ngx_pool_t *p, size_t size);<span class="com">// 注册cleanup回叫函数（结构体）</span><span class="pln"></span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ngx_pool_t中的cleanup字段管理着一个特殊的链表，该链表的每一项都记录着一个特殊的需要释放的资源。对于这个链表中每个节点所包含的</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 资源如何去释放， 是自说明的。这也就提供了非常大的灵活性。意味着，ngx_pool_t不仅仅可以管理内存，通过这个机制，也可以管理任何需要</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 释放的资源，例如，关闭文件，或 者删除文件等等的。 (<span style="color:#000099">这个过程在nginx里面出现的比较多，也就是 xxxx_add 操作通常不是实际的添加操作，</span></p>
+<p><span style="color:#000099">&nbsp;&nbsp;&nbsp;&nbsp; 而是分配空间并返回一个指针，后续我们还要通过操作指针指向的空间来实现所谓的add</span>)<br>
+</p>
+<p>下面介绍这个链表(在文件ngx_palloc.h定义)：</p>
+<p></p>
+<pre code_snippet_id="167411" snippet_file_name="blog_20140122_6_1261424"  code_snippet_id="167411" snippet_file_name="blog_20140122_6_1261424" name="code" class="cpp">typedef struct ngx_pool_cleanup_s  ngx_pool_cleanup_t;
+typedef void (*ngx_pool_cleanup_pt)(void *data);
+struct ngx_pool_cleanup_s {
+    ngx_pool_cleanup_pt   handler;// 是一个函数指针，指向一个可以释放data所对应资源的函数。该函数的只有一个参数，就是data
+    void                 *data;//指向要清除的数据  
+    ngx_pool_cleanup_t   *next;//下一个cleanup callback
+};</pre>
+<p></p>
+<p>看到这里，ngx_pool_cleanup_add这个函数的用法，我相信大家都应该有一些明白了。但是这个参数size是起什么作用的呢？这个 size就是要存储这个</p>
+<p>data字段所指向 的资源的大小。比如我们需要最后删除一个文件。那我们在调用这个函数的时候，把size指定为存储文件名的字符串的大小，然后调用</p>
+<p>这个函数给cleanup链表中增加一项。 该函数会返回新添加的这个节点。我们然后把这个节点中的data字段拷贝为文件名。把hander字段赋&#20540;为一个删</p>
+<p>除文件的函数 （当然该函数的原型为：void(*ngx_pool_cleanup_pt)(void *data)）。</p>
+<p>Nginx中预定义了两个cleanup函数。</p>
+<p>void ngx_pool_cleanup_file(void *data) 用来关闭打开的文件。</p>
+<p>void ngx_pool_delete_file(void *data) 用来删除文件并且试图关闭文件。<br>
+</p>
+<p>概括起来如下图:<br>
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="http://img.blog.csdn.net/20140123141515531" alt="" height="430" width="633"><br>
+</p>
+<p>由图可知，每个需要清理的资源都对应有一个头部结构，这个结构中有一个关键的字段handler，handler是一个函数指针，在挂载一个资源到内存池上的</p>
+<p>时候，同时也会注册一个清理资源的函数到这个handler上。即是说，内存池在清理cleanup的时候，就是调用这个handler来清理对应的资源。&nbsp;&nbsp;</p>
+<h2>4,下面是内存操作的一些例子</h2>
+<p>毫无疑问内存池的使用给nginx带来很大好处，比如内存使用便利、逻辑代码的简化、程序性能的提升等。&nbsp; <br>
+</p>
+<p>为了 更好的理解 nginx 内存管理相关 的设计 和 使用 方法，下面我们写一个测试例子 进行 编译调试:</p>
+<p>代码如下:</p>
+<p></p>
+<pre code_snippet_id="167411" snippet_file_name="blog_20140129_11_6106415"  code_snippet_id="167411" snippet_file_name="blog_20140129_11_6106415" name="code" class="cpp">//ngx_pool_test.c 
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &quot;ngx_config.h&quot;//包含相关 nginx 头文件
+#include &quot;nginx.h&quot;
+#include &quot;ngx_conf_file.h&quot;
+#include &quot;ngx_core.h&quot;
+#include &quot;ngx_string.h&quot;
+#include &quot;ngx_palloc.h&quot;
+
+volatile ngx_cycle_t *ngx_cycle; // 测试需要
+void ngx_log_error_core(ngx_uint_t level, ngx_log_t *log,
+			ngx_err_t err, const char *fmt, ...)
+{
+}
+// 自定义结构体类型
+typedef struct demo_s 
+{
+	int key;
+	char *name;
+}demo_t;
+
+//输出内存池相关信息:小块内存链表上个内存节点信息
+void pool_blocks(ngx_pool_t *pool)
+{
+	int n = 0;
+	ngx_pool_t *pool_head = pool;//记录内存池头(链表)部节点
+        // ngxin 对于一个内存池(链表) 只有头节点 包含 max,current等信息 
+       &nbsp;while(pool)
+	{
+		printf(&quot;Block %d:\n&quot;, n+1);
+		printf(&quot;block addr = 0x%0x\n&quot;, pool);
+		printf(&quot;  .current = 0x%0x\n&quot;, pool_head-&gt;current); 
+		printf(&quot;unused memory size is %d\n&quot;, (ngx_uint_t)(pool-&gt;d.end - 
+						pool-&gt;d.last));
+		printf(&quot;Block %d failed %d\n&quot;, n+1, pool-&gt;d.failed);
+		pool = pool-&gt;d.next;
+		++n;
+	}
+	printf(&quot;-------------------------------\n&quot;);
+}
+
+
+int main()
+{
+	ngx_pool_t *pool;
+	demo_t *demo;
+	char name[] = &quot;hello NGX!&quot;;
+ 	char *buf;
+       // 创建一个新的内存池
+       &nbsp;pool = ngx_create_pool(1024, NULL);
+	printf(&quot;pool max is %d\n\n&quot;, pool-&gt;max);
+	pool_blocks(pool);
+        // 向NGX申请内存
+	demo = ngx_palloc(pool, sizeof(demo_t));
+	buf = ngx_palloc(pool, strlen(name)+1);
+	demo-&gt;key = 1;
+	demo-&gt;name = buf;
+	strcpy(buf, name);
+        // 输出数据
+        printf(&quot;Data\n&quot;);
+    	printf(&quot;demo-&gt;key=%d, demo-&gt;name=%s\n&quot;, demo-&gt;key, demo-&gt;name);
+	pool_blocks(pool);
+       
+        // 申请内存
+	ngx_palloc(pool, 970);
+	pool_blocks(pool);
+
+	ngx_palloc(pool, 970);
+	pool_blocks(pool);
+
+	ngx_destroy_pool(pool);
+	return 0;
+}</pre>
+<p></p>
+<p>上面的代码注意添加&nbsp; ngx_cycle_t *ngx_cycle , ngx_log_error_core的相关声明，不然会出现如下错误:</p>
+<p>undefined reference to `ngx_cycle'<br>
+undefined reference to `ngx_log_error_core'<br>
+对于上面的代码, 编写 相应的Makefile(不熟悉make的可以 参考<a target="_blank" target="_blank" href="http://wiki.ubuntu.org.cn/%E8%B7%9F%E6%88%91%E4%B8%80%E8%B5%B7%E5%86%99Makefile">这里</a>)文件如下：</p>
+<p></p>
+<pre code_snippet_id="167411" snippet_file_name="blog_20140129_12_5233580"  code_snippet_id="167411" snippet_file_name="blog_20140129_12_5233580" name="code" class="plain">CC=gcc
+C_FLAGS = -g -Wall -Wextra  
+DIR=/home/dane/nginx-1.2.0
+TARGETS=ngx_pool_test
+TARGETS_FILE=$(TARGETS).c
+
+all:$(TARGETS)
+
+
+clean:
+	rm -f $(TARGETS) *.o
+
+CORE_INCS=-I $(DIR)/src/core/ \
+		  -I $(DIR)/objs/ \
+		  -I $(DIR)/src/event \
+		  -I $(DIR)/src/event/modules \
+		  -I $(DIR)/src/os/unix \
+		  -I $(DIR)/Nginx_Pre/pcre-8.32/
+
+NGX_OBJ = $(DIR)/objs/src/core/ngx_palloc.o \
+		  $(DIR)/objs/src/core/ngx_string.o \
+		  $(DIR)/objs/src/os/unix/ngx_alloc.o
+
+$(TARGETS):$(TARGETS_FILE)
+	$(CC) $(C_FLAGS) $(TARGETS_FILE) $(CORE_INCS) $(NGX_OBJ) -o $@</pre><br>
+makefile 文件 需要指定 相应的 依赖文件 包含文件 路径等。
+<p></p>
+<p>上面的Makefile 编写好后, 直接 make 就可产生 出 可执行文件 ngx_pool_test</p>
+<p>./ngx_pool_test 即可运行 可执行文件。</p>
+<p>结果如下：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="http://img.blog.csdn.net/20140129231944203" alt="" height="624" width="262"></p>
+<p>&nbsp;由程序及上图运行结果可知，程序开始调用ngx_create_pool 创建大小为 1024大小的内存池头部节点，因为ngx_pool_t 的大小为40字节，</p>
+<p>所以此时可用最大内存 pool-&gt;max 大小为 1024-40 为 984字节。随后调用函数ngx_palloc 在内存池上分配 sizeof(demo_t)大小的内存，并</p>
+<p>申请其第二个成员对应的内存char* name，其总共申请内存大小为 8&#43;11 为19字节，因此 第一个内存块所剩内存大小为 965字节。随后 我们</p>
+<p>申请 970字节的内存 此时内存池中没有满足要求的内存块,因此内存池调用函数ngx_palloc_block向系统申请 size即1024字节大小的内存，并</p>
+<p>挂接在内存池之上，此时新申请的内存池节点的头部只是占用ngx_pool_data_t (16字节)结构体大小的内存，所以可用内存大小为 1024-16 为</p>
+<p>1008 字节,所以对于第二个block 去除 970字节所申请内存大小 还剩 38字节，随后的程序读者可以 根据程序 自行分析。</p>
+<p><br>
+</p>
+<p>参考资料：</p>
+<p>http://blog.csdn.net/livelylittlefish/article/details/6586946</p>
+<p>http://code.google.com/p/nginxsrp/wiki/NginxCodeReview</p>
+<p>http://www.alidata.org/archives/1390<br>
+<span><span></span></span></p>
+<p><br>
+</p>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_detail.css" />
+
+    
+<!--172.16.140.15-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+ 
+
+
+        <div id="digg" ArticleId="11645293" >
+            <dl id="btnDigg" class="digg digg_disable"  onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>10</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable"  onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/daniel_ustc/article/details/10834413';">上一篇</span><a href="/daniel_ustc/article/details/10834413" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">hadoop 完全分布式 下 datanode无法启动解决方法</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/daniel_ustc/article/details/12043469';">下一篇</span><a href="/daniel_ustc/article/details/12043469" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">HTTP中Get与Post</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+        <div class="similar_article"  style="display:none">
+                <h4>我的同类文章</h4>
+                <div class="similar_c"style="margin:20px 0px 0px 0px">
+                    <div class="similar_c_t">
+                                <label class="similar_cur">
+                                    <span  style="cursor:pointer"  onclick="GetCategoryArticles('1447759','gfsfg8545','foot','11645293');">Nginx<em>（10）</em></span>
+                                </label>
+                                <label class="">
+                                    <span  style="cursor:pointer"  onclick="GetCategoryArticles('1251243','gfsfg8545','foot','11645293');">unix/linux/网络编程<em>（29）</em></span>
+                                </label>
+                    </div>
+                   
+                    <div class="similar_wrap tracking-ad" data-mod="popu_141"  style="max-height:195px;">
+                        <a href="http://blog.csdn.net" style="display:none">http://blog.csdn.net</a>
+                        <ul class="similar_list fl">                          
+                        </ul>
+
+                        <ul class="similar_list fr">                           
+                        </ul>
+                    </div>
+                </div>
+            </div>    
+    <script  type="text/javascript">
+        $(function () {
+            GetCategoryArticles('1447759', 'gfsfg8545','foot','11645293');
+        });
+    </script>
+      
+</div>
+
+     <div>
+                <script type="text/javascript">
+                    /*博客内容页下方Banner1-960*90，创建于2016-12-13*/
+                    var cpro_id = "u2843955";
+                </script>
+                <script type="text/javascript" src="http://cpro.baidustatic.com/cpro/ui/c.js"></script>
+    </div>
+
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/gfsfg8545/svc/GetSuggestContent/11645293",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ <link rel="stylesheet" href="http://static.blog.csdn.net/css/replace.css"/>
+<div id="relate" data-mod="popu_218"  class="tracking-ad">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c">
+        </div>
+</div>
+ 
+
+<dl class="blog-ass-articl" id="res-relatived" > 
+    <div class="embody embody_b" id="libkeyparent"  style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="http://csdnimg.cn/jobreco/job_reco.js" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "11645293",
+                username: "",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+        </script> 
+    </div>  
+
+    
+     <div id="res"  data-mod="popu_36"  class="tracking-ad" style="width: 42%;float: left;margin-right: 30px;"></div>
+   
+</dl>
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = 'nginx源码学习(二)  内存池结构 ngx_pool_t' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>  
+
+
+    <div id="ad_cen">        
+                    <script type="text/javascript">
+                        /*博客内容页下方Banner-728*90，创建于2014-7-3*/
+                        var cpro_id = "u1607657";
+                    </script>
+                    <script type="text/javascript" src="http://cpro.baidustatic.com/cpro/ui/c.js"></script>
+    </div>  
+
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '11645293';
+    var commentscount = 3;
+    var islock = false
+</script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/comment.js"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="display:none"></div>
+  <script  language="javascript" type='text/javascript'>     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/gfsfg8545/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+</script>
+ <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/async_new.js"></script>      
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/gfsfg8545" target="_blank">
+    <img src="http://avatar.csdn.net/3/3/3/1_gfsfg8545.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/gfsfg8545" class="user_name" target="_blank">gfsfg8545</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=gfsfg8545','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+                                            <a  target="_blank">
+                                                    <img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/zhuanlandaren.png" onmouseover="m_over_m(this,2)" onmouseout="m_out_m()" alt="1" >
+                                            </a>
+                                            <a  target="_blank">
+                                                    <img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/chizhiyiheng.png" onmouseover="m_over_m(this,4)" onmouseout="m_out_m()" alt="1" >
+                                            </a>
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>359049次</span></li>
+    <li>积分：<span>5123</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog6.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：5123 </div>
+        </span>  </li>
+    <li>排名：<span>第4269名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>105篇</span></li>
+    <li>转载：<span>17篇</span></li>
+    <li>译文：<span>0篇</span></li>
+    <li>评论：<span>94条</span></li>
+</ul>
+</ul>
+</div>
+
+
+
+
+<div id="custom_column_40195593" class="panel">
+<ul class="panel_head"><span>我的链接</span></ul>
+<ul class="panel_body">
+
+<a title="HomePage" href="http://ustcdane.github.io/" target="_blank"><br>
+<ul class="panel_head">
+<span>HomePage</span></ul>
+</a>-------------------------------------------- <a title="Github" href="https://github.com/ustcdane" target="_blank">
+<br>
+<ul class="panel_head">
+<span>Github</span></ul>
+</a>-------------------------------------------- <a title="weibo" href="http://widget.weibo.com/weiboshow/index.php?language=&amp;width=0&amp;height=550&amp;fansRow=1&amp;ptype=1&amp;speed=0&amp;skin=1&amp;isTitle=1&amp;noborder=1&amp;isWeibo=1&amp;isFans=1&amp;uid=1757692391&amp;verifier=debae559&amp;dpc=1" target="_blank">
+<br>
+<ul class="panel_head">
+<span>新浪微博</span></ul>
+</a>
+
+</ul>
+</div><div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字" /></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog" />
+        <input type="hidden" name="q" id="inputQ" />
+        <input type="hidden" name="t" value="blog" />
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+    <ul class="panel_head"><span>博客专栏</span></ul>
+    <ul class="panel_body" id="sp_column">
+    <table cellpadding="0" cellspacing="0"><tr>
+    <td style="padding:10px 10px 0 0;">
+    <a href="http://blog.csdn.net/column/details/ngx-study-t.html" target="_blank"><img src="http://img.blog.csdn.net/20151123175706958" style="width:75px;height:75px;" /></a>
+    </td>
+    <td style="padding:10px 0; vertical-align:top;">
+    <a href="http://blog.csdn.net/column/details/ngx-study-t.html" target="_blank">nginx 源码学习</a>
+    <p>文章：6篇</p>
+    <span>阅读：14254</span>
+    </td>
+    </tr></table>
+    </ul>
+</div><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/gfsfg8545/article/category/1699403" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">c/c++/cpp11</a><span>(13)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1273166" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据结构、算法</a><span>(28)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1251243" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">unix/linux/网络编程</a><span>(30)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/5778483" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">ML/NLP</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1695711" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">编程练习ACM</a><span>(14)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1440875" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">代码阅读</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1447759" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Nginx</a><span>(11)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1851807" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">redis</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1515877" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据库、MySql</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1844109" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">tcp/ip</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1786941" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">设计模式</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1845081" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">awk &amp; sed</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1845131" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">linux shell</a><span>(13)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1399812" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">python / Django / flask</a><span>(7)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1845093" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">lua</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1852895" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">git</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1608331" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Hadoop</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1608333" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">HBase</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1695567" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">hive</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/732676" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Windows程序设计笔记</a><span>(8)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1412452" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">个人博客系统</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/gfsfg8545/article/category/1695735" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">杂谈</a><span>(9)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/gfsfg8545/article/month/2016/01">2016年01月</a><span>(2)</span></li><li><a href="/gfsfg8545/article/month/2015/09">2015年09月</a><span>(4)</span></li><li><a href="/gfsfg8545/article/month/2015/08">2015年08月</a><span>(1)</span></li><li><a href="/gfsfg8545/article/month/2014/05">2014年05月</a><span>(3)</span></li><li><a href="/gfsfg8545/article/month/2014/04">2014年04月</a><span>(1)</span></li><li><a href="/gfsfg8545/article/month/2014/03">2014年03月</a><span>(3)</span></li><li><a href="/gfsfg8545/article/month/2014/02">2014年02月</a><span>(4)</span></li><li><a href="/gfsfg8545/article/month/2014/01">2014年01月</a><span>(8)</span></li><li><a href="/gfsfg8545/article/month/2013/12">2013年12月</a><span>(7)</span></li><li><a href="/gfsfg8545/article/month/2013/11">2013年11月</a><span>(9)</span></li><li><a href="/gfsfg8545/article/month/2013/10">2013年10月</a><span>(10)</span></li><li><a href="/gfsfg8545/article/month/2013/09">2013年09月</a><span>(3)</span></li><li><a href="/gfsfg8545/article/month/2013/08">2013年08月</a><span>(5)</span></li><li><a href="/gfsfg8545/article/month/2013/07">2013年07月</a><span>(6)</span></li><li><a href="/gfsfg8545/article/month/2013/06">2013年06月</a><span>(4)</span></li><li><a href="/gfsfg8545/article/month/2013/05">2013年05月</a><span>(1)</span></li><li><a href="/gfsfg8545/article/month/2013/04">2013年04月</a><span>(9)</span></li><li><a href="/gfsfg8545/article/month/2013/03">2013年03月</a><span>(4)</span></li><li><a href="/gfsfg8545/article/month/2012/12">2012年12月</a><span>(4)</span></li><li><a href="/gfsfg8545/article/month/2012/11">2012年11月</a><span>(8)</span></li><li><a href="/gfsfg8545/article/month/2012/10">2012年10月</a><span>(10)</span></li><li><a href="/gfsfg8545/article/month/2012/09">2012年09月</a><span>(4)</span></li><li><a href="/gfsfg8545/article/month/2012/04">2012年04月</a><span>(5)</span></li><li><a href="/gfsfg8545/article/month/2011/06">2011年06月</a><span>(5)</span></li><li><a href="/gfsfg8545/article/month/2011/05">2011年05月</a><span>(1)</span></li><li><a href="/gfsfg8545/article/month/2010/09">2010年09月</a><span>(1)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/daniel_ustc/article/details/9714163" title="使用 python Matplotlib 库绘图">使用 python Matplotlib 库绘图</a><span>(33174)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/16845327" title="使用xrdp实现windows  远程桌面  ubuntu linux">使用xrdp实现windows  远程桌面  ubuntu linux</a><span>(23773)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/18005925" title="linux 下使用 rsync 进行文件 同步">linux 下使用 rsync 进行文件 同步</a><span>(17649)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/15501385" title="使用 PyInstaller  把python程序 .py转为 .exe 可执行程序">使用 PyInstaller  把python程序 .py转为 .exe 可执行程序</a><span>(16513)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/18099067" title="linux 下安装、使用 redis">linux 下安装、使用 redis</a><span>(13491)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/10834413" title="hadoop 完全分布式 下 datanode无法启动解决方法">hadoop 完全分布式 下 datanode无法启动解决方法</a><span>(10334)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/8299096" title="vim + ctags + taglist配置和使用  【及】 一键安装 ctags和cscope的方法 【及】vim语法高亮,自动缩进，python 自动缩进设置">vim + ctags + taglist配置和使用  【及】 一键安装 ctags和cscope的方法 【及】vim语法高亮,自动缩进，python 自动缩进设置</a><span>(10043)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/8008168" title="传奇人物 Donald E. Knuth 高纳德，真正的技术大牛">传奇人物 Donald E. Knuth 高纳德，真正的技术大牛</a><span>(9768)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/9383183" title="linux 下 命令行 mail 发邮件方法">linux 下 命令行 mail 发邮件方法</a><span>(8938)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/12795627" title="hive 集成hbase 笔记">hive 集成hbase 笔记</a><span>(8032)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/daniel_ustc/article/details/9714163" title="使用 python Matplotlib 库绘图">使用 python Matplotlib 库绘图</a><span>(31)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/16845327" title="使用xrdp实现windows  远程桌面  ubuntu linux">使用xrdp实现windows  远程桌面  ubuntu linux</a><span>(12)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/15501385" title="使用 PyInstaller  把python程序 .py转为 .exe 可执行程序">使用 PyInstaller  把python程序 .py转为 .exe 可执行程序</a><span>(8)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/8117962" title="进程控制之 fork、wait、exec族函数 及进程资源控制">进程控制之 fork、wait、exec族函数 及进程资源控制</a><span>(4)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/11645293" title="nginx源码学习(二)  内存池结构 ngx_pool_t">nginx源码学习(二)  内存池结构 ngx_pool_t</a><span>(3)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/17094285" title="二级指针实现单链表的插入、删除及 linux内核源码双向链表之奇技">二级指针实现单链表的插入、删除及 linux内核源码双向链表之奇技</a><span>(3)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/17955005" title="HTTP 协议解析">HTTP 协议解析</a><span>(3)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/10282103" title="Nginx 源码学习（一） nginx的跟踪与调试">Nginx 源码学习（一） nginx的跟踪与调试</a><span>(2)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/7994096" title="apue   dup和dup2">apue   dup和dup2</a><span>(2)</span>
+</li>
+<li>
+<a href="/daniel_ustc/article/details/9383183" title="linux 下 命令行 mail 发邮件方法">linux 下 命令行 mail 发邮件方法</a><span>(2)</span>
+</li>
+</ul>
+</div>
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="/daniel_ustc/article/details/18005925#comments">linux 下使用 rsync 进行文件 同步</a>
+    <p style="margin:0px;"><a href="/u013924136" class="user_name">u013924136</a>:
+一个冒号  和  两个冒号的  区别是？
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daniel_ustc/article/details/50488040#comments">mmseg分词算法及实现</a>
+    <p style="margin:0px;"><a href="/vevenlcf" class="user_name">vevenlcf</a>:
+*** Error in `./mmseg&#39;: free(): invalid size: 0x00...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daniel_ustc/article/details/6549628#comments">计算机科学与技术学习心得(转载)</a>
+    <p style="margin:0px;"><a href="/kangkang62" class="user_name">kangkang62</a>:
+受教了！
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daniel_ustc/article/details/17613359#comments">C++ STL 优先队列 及其 霍夫曼编码应用示例</a>
+    <p style="margin:0px;"><a href="/u013644957" class="user_name">u013644957</a>:
+老哥，这篇文章我转走了
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daniel_ustc/article/details/17613359#comments">mmseg分词算法及实现</a>
+    <p style="margin:0px;"><a href="/zsynacl" class="user_name">zsynacl</a>:
+大师兄不考虑一下用-D参数编译吗
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daniel_ustc/article/details/11645293#comments">nginx源码学习(二)  内存池结构 ngx_pool_t</a>
+    <p style="margin:0px;"><a href="/Glogo" class="user_name">Glogo</a>:
+分析的很到位，但是在x86_64系统中运行你的demo程序是有错的
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daniel_ustc/article/details/7522731#comments">基于WinPcap的包截获和分析系统</a>
+    <p style="margin:0px;"><a href="/OliveZh" class="user_name">OliveZh</a>:
+感谢分享。学习了。
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daniel_ustc/article/details/8117962#comments">进程控制之 fork、wait、exec族函数 及进程资源控制</a>
+    <p style="margin:0px;"><a href="/xiongyangg" class="user_name">xiongyangg</a>:
+信号SIGKILL和SIGSTOP不能被捕获到, 所有检查内存没有生效&quot;The signals SI...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daniel_ustc/article/details/9714163#comments">使用 python Matplotlib 库绘图</a>
+    <p style="margin:0px;"><a href="/gtt1111213" class="user_name">gtt1111213</a>:
+numpy matplotlib dateutil 和pyparsing 这四个包都装了还提示cou...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daniel_ustc/article/details/23096229#comments">c++ 智能指针及 循环引用问题</a>
+    <p style="margin:0px;"><a href="/gk405128494" class="user_name">gk405128494</a>:
+谢谢博主分享
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                   <!-- 广告位开始 --> 
+                    <ins data-revive-zoneid="190" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+                    <!-- 广告位结束 -->
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/cnick/cnick.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/newblog.min.js"></script>
+
+
+<script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=774352"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/JavaScript1.js"></script>
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>     <!--new top-->
+   
+    <link href="http://c.csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet" />
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/wmd.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/showdown.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/prettify.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/apps/ask_float_block.js'></script>
+   
+
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_code.css" />
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/saveToCode.js"></script>
+      <script type="text/javascript" src="//csdnimg.cn/rabbit/tracking-ad/main.js?75eacd8"></script>
+
+     <link rel="stylesheet" href="http://static.blog.csdn.net/css/fa.css" />
+
+    <div class="pop_CA_cover"  style="display:none"></div>
+    <div class="pop pop_CA"  style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon"  id="fapancle"  onclick="$('.pop_CA').hide();$('.pop_CA_cover').hide();"></span>
+          </div>
+          <iframe src="" id="fa" frameborder="0" width="100%" height="360"  scrolling="no" />
+    </div>
+</body>
+</html>   
+ 
