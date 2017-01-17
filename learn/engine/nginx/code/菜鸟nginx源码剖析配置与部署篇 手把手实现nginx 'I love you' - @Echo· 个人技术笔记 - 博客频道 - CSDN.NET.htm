@@ -1,0 +1,1279 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+     
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>  
+
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <title>菜鸟nginx源码剖析 配置与部署篇（一） 手把手实现nginx  &quot;I love you&quot; - @Echo&#183; 个人技术笔记
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="Json文件：" />
+    <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+      <script type="text/javascript" src="http://static.blog.csdn.net/scripts/jquery-version.js"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
+        <!--new top-->
+               <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css">        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/tracking.js"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/skin-blue/css/style.css?v=1.1" />
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/chen19870707/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/simple.css" />
+ 
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+</head>
+<body>
+
+
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/chen19870707">@Echo&#183; 个人技术笔记</a></h2>
+            <h3>Echo Chen</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/chen19870707?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/chen19870707?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/chen19870707/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "chen19870707";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/chen19870707";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/53636007
+">
+<font color=blue>【获奖公布】“我的2016”主题征文活动 
+
+
+</font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://bss.csdn.net/m/topic/edu_develop
+">
+<font color=red>程序猿全指南，让【移动开发】更简单！ 
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/PK.html">
+<font color=blue>【观点】移动原生App开发和HTML 5开发，你更看好哪个？
+</font></a>
+
+&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/baiyuzhong2012/article/details/54098338">
+<font color=red>博客的神秘功能
+</font></a>
+
+
+</div>                        </div>
+                        
+
+
+
+  
+<link href="http://static.blog.csdn.net/css/comment1.css" type="text/css" rel="stylesheet" />
+<link href="http://static.blog.csdn.net/css/style1.css" type="text/css" rel="stylesheet" />
+<script language='JavaScript' type='text/javascript' src='http://download.csdn.net/js/jquery.cookie.js'></script>
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/search-service/main.js"></script>
+<link rel="stylesheet" href="http://static.blog.csdn.net/public/res-min/markdown_views.css?v=1.0" />
+<link rel="stylesheet" href="http://static.blog.csdn.net/css/category.css?v=1.0" />
+<script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/web-storage-cache.min.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/replace.min.js"></script>
+
+
+
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=%e8%8f%9c%e9%b8%9fnginx%e6%ba%90%e7%a0%81%e5%89%96%e6%9e%90+%e9%85%8d%e7%bd%ae%e4%b8%8e%e9%83%a8%e7%bd%b2%e7%af%87%ef%bc%88%e4%b8%80%ef%bc%89+%e6%89%8b%e6%8a%8a%e6%89%8b%e5%ae%9e%e7%8e%b0nginx++%22I+love+you%22&u=http://blog.csdn.net/chen19870707/article/details/40922215"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/chen19870707/article/details/40922215">
+        菜鸟nginx源码剖析 配置与部署篇（一） 手把手实现nginx  &quot;I love you&quot;            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href='http://www.csdn.net/tag/%e6%9c%8d%e5%8a%a1%e5%99%a8' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">服务器</a><a href='http://www.csdn.net/tag/nginx' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">nginx</a><a href='http://www.csdn.net/tag/%e9%85%8d%e7%bd%ae' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">配置</a><a href='http://www.csdn.net/tag/%e7%bd%91%e9%a1%b5' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">网页</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2014-11-08 16:56</span>
+            <span class="link_view" title="阅读次数">3260人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(6)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('%e8%8f%9c%e9%b8%9fnginx%e6%ba%90%e7%a0%81%e5%89%96%e6%9e%90+%e9%85%8d%e7%bd%ae%e4%b8%8e%e9%83%a8%e7%bd%b2%e7%af%87%ef%bc%88%e4%b8%80%ef%bc%89+%e6%89%8b%e6%8a%8a%e6%89%8b%e5%ae%9e%e7%8e%b0nginx++%22I+love+you%22','40922215');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(40922215,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody"  style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script  type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label  onclick="GetCategoryArticles('2647301','chen19870707','top','40922215');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">Server - 菜鸟nginx源码剖析<em>（13）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/chen19870707/article/category/2647301"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_2647301">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+    <script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>  
+        <div   class="bog_copyright">         
+            <p  class="copyright_p" >版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+
+<p align="center"><span style="font-size:32px"></span>&nbsp;</p>
+<blockquote>
+<h1 align="center"><span style="font-size:32px">菜鸟nginx源码剖析 配置与部署篇（一） 手把手配置nginx “I love you”</span></h1>
+</blockquote>
+<p>&nbsp;</p>
+<li>
+<p>Author：Echo Chen（陈斌）</p>
+</li><li>
+<p>Email：chenb19870707@gmail.com</p>
+</li><li>
+<p>Blog：<a target="_blank" target="_blank" href="http://blog.csdn.net/chen19870707">Blog.csdn.net/chen19870707</a></p>
+</li><li>
+<p>Date：Nov 7th, 2014</p>
+<p>&nbsp;</p>
+<blockquote>
+<p>还记得在前几年的CSDN泄漏账号事件中，统计发现程序员的账号中含有love的最多，这里我也俗套下，在这篇文章中将讲解如何 一步一步实用Nginx在一台机器上搭建一个最简单的显示“I love you”的Web服务器，大家一起动手尝试吧。</p>
+</blockquote>
+<blockquote></blockquote>
+<h2>1.Nginx 程序包</h2>
+<blockquote>
+<p>目前nginx最新的开发版本为1.7.7：</p>
+<ul>
+<li>Linux：<a target="_blank" target="_blank" href="http://nginx.org/download/nginx-1.7.7.tar.gz">nginx-1.7.7.tar.gz</a></li><li>Windows：<a target="_blank" target="_blank" href="http://nginx.org/download/nginx-1.7.7.zip">nginx-1.7.7.zip</a>&nbsp;</li></ul>
+<p>稳定版本为1.6.2：</p>
+<ul>
+<li>Linux：<a target="_blank" target="_blank" href="http://nginx.org/download/nginx-1.6.2.tar.gz">nginx-1.6.2.tar.gz</a>&nbsp;</li><li>Windows：<a target="_blank" target="_blank" href="http://nginx.org/download/nginx-1.6.2.zip">nginx-1.6.2.zip</a>&nbsp;</li></ul>
+</blockquote>
+<blockquote></blockquote>
+<blockquote>
+<p>大家可以根据自己的操作系统和喜好选择程序包来实现，这里以<a target="_blank" target="_blank" href="http://nginx.org/download/nginx-1.7.7.tar.gz">nginx-1.7.7.tar.gz</a> 在<strong><span style="color:#dd8484">CentOs 6.4</span></strong>操作系统下为例。</p>
+</blockquote>
+<p>&nbsp;</p>
+<h2>2.Nginx下载解压、安装</h2>
+<blockquote>
+<p>下载和解压，这里以<a target="_blank" target="_blank" href="http://nginx.org/download/nginx-1.7.7.tar.gz">nginx-1.7.7.tar.gz</a> 在<strong><span style="color:#dd8484">CentOs 6.4</span></strong>操作系统下为例:</p>
+</blockquote>
+<blockquote>
+<div>
+<div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> wget http:<span style="color:#008000">//nginx.org/download/nginx-1.7.7.tar.gz</span></pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum2" style="color:#606060">   2:</span> tar zxvf nginx-1.7.7.tar.gz </pre>
+</div>
+</div>
+</blockquote>
+<blockquote>
+<p>但是下载解压完不要急着安装，因为 Nginx 依赖很多软件（gcc、g&#43;&#43;、make、<code>libz-dev、</code><code>libbz2-dev、</code><code>libreadline-dev</code>），我们假设您的 Linux 环境是“纯净”的，所以下面我们就来安装这些依赖包。请按照如下步骤安装：</p>
+<p>&nbsp;</p>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> yum install gcc -y</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum2" style="color:#606060">   2:</span> yum install g&#43;&#43; -y</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum3" style="color:#606060">   3:</span> yum install make -y</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum4" style="color:#606060">   4:</span> yum install zlib-dev* -y</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum5" style="color:#606060">   5:</span> yum install bzip2-dev* -y</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum6" style="color:#606060">   6:</span> yum install readline-devel -y</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"></pre>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>这是一些基本的软件，另外还有 PCRE 要安装。PCRE 是“Perl Compatible Regular Expressions”的缩写，是一个正则表达式库。下载、解压并安装 PCRE：</p>
+<p>&nbsp;</p>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> wget <a target="_blank" target="_blank" href="ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.36.tar.gz">ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.36.tar.gz</a></pre>
+<p>&nbsp;</p>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum2" style="color:#606060">   2:</span> tar -zxvf pcre-8.36.tar.gz</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum3" style="color:#606060">   3:</span> cd pcre-8.36.tar.gz</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum4" style="color:#606060">   4:</span> ./configure</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum5" style="color:#606060">   5:</span> make</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum6" style="color:#606060">   6:</span> make install</pre>
+</div>
+</div>
+</blockquote>
+<blockquote>
+<p>好了，这下可以安装我们的nginx了</p>
+<p>&nbsp;</p>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> tar -zxvf nginx-1.7.7.tar.gz</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum2" style="color:#606060">   2:</span> cd nginx-1.7.7</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum3" style="color:#606060">   3:</span> ./configure</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum4" style="color:#606060">   4:</span> sudo make</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum5" style="color:#606060">   5:</span> sudo make install</pre>
+</div>
+</div>
+</blockquote>
+<p>&nbsp;</p>
+<h2>3.Nginx 配置文件</h2>
+<blockquote>
+<p>按照上面的操作，Nginx 就已经安装完了。因为我们使用的是默认的 configure，所以会安装到<code>/usr/local/nginx</code>目录。相应的配置文件是<code>/usr/local/nginx/conf/nginx.conf</code>。我们打开配置文件，看到结构形如：</p>
+<p>&nbsp;</p>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> ...</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum2" style="color:#606060">   2:</span> #工作模式与连接数上限</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum3" style="color:#606060">   3:</span> events</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum4" style="color:#606060">   4:</span> {</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum5" style="color:#606060">   5:</span> #参考事件模型，use [ kqueue | rtsig | epoll | /dev/poll | select | poll ]; epoll模型是Linux 2.6以上版本内核中的高性能网络I/O模型，如果跑在FreeBSD上面，就用kqueue模型。</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum6" style="color:#606060">   6:</span> use epoll;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum7" style="color:#606060">   7:</span> #单个进程最大连接数（最大连接数=连接数*进程数）</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum8" style="color:#606060">   8:</span> worker_connections 65535;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum9" style="color:#606060">   9:</span> }</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum10" style="color:#606060">  10:</span>&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum11" style="color:#606060">  11:</span> #设定http服务器，利用它的反向代理功能提供负载均衡支持</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum12" style="color:#606060">  12:</span> http</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum13" style="color:#606060">  13:</span> {</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum14" style="color:#606060">  14:</span>&nbsp;&nbsp;&nbsp;&nbsp; ...</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum15" style="color:#606060">  15:</span>&nbsp;&nbsp;&nbsp;&nbsp; #第一个虚拟服务器</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum16" style="color:#606060">  16:</span>&nbsp;&nbsp;&nbsp; server {</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum17" style="color:#606060">  17:</span>&nbsp;&nbsp;&nbsp;&nbsp; #侦听192.168.8.x的80端口</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum18" style="color:#606060">  18:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; listen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 80;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum19" style="color:#606060">  19:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; server_name&nbsp; 192.168.8.x;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum20" style="color:#606060">  20:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum21" style="color:#606060">  21:</span> }</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum22" style="color:#606060">  22:</span>&nbsp; </pre>
+</div>
+</div>
+</blockquote>
+<blockquote>
+<div>其中<code>events模块表示工作模式与链接数上限，<span style="font-family:Arial">http模块的作用为设定http服务器，server模块表示虚拟服务器，这里只是简要列出最简单的配置，如果有需要对配置进行进一步了解，可以参考《</span></code><a target="_blank" target="_blank" href="http://www.ha97.com/5194.html">Nginx配置文件nginx.conf中文详解</a><code><span style="font-family:Arial">》。</span></code></div>
+</blockquote>
+<h2>4.Nginx 一个简单配置的编写</h2>
+<blockquote>
+<p>建立一个/root/test_space目录，用来存储我们的测试页面。再直接在 Nginx 的默认配置文件/usr/loca/nginx/conf/nginx.conf中修改，在http中增加一个server模块，如下：</p>
+</blockquote>
+<blockquote>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> server {</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum2" style="color:#606060">   2:</span>&nbsp;&nbsp;&nbsp;&nbsp; listen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8011;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum3" style="color:#606060">   3:</span>&nbsp;&nbsp;&nbsp;&nbsp; server_name localhost;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum4" style="color:#606060">   4:</span>&nbsp;&nbsp;&nbsp;&nbsp; charset&nbsp;&nbsp;&nbsp;&nbsp; utf-8;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum5" style="color:#606060">   5:</span>&nbsp;&nbsp;&nbsp;&nbsp; location / {</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum6" style="color:#606060">   6:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alias&nbsp;&nbsp; /root/test_space/;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum7" style="color:#606060">   7:</span>&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum8" style="color:#606060">   8:</span> }</pre>
+</div>
+</div>
+</blockquote>
+<blockquote>
+<p>其中<code>listen</code>表示监听的端口号，<code>sever_name</code>则是<code>web</code>服务器的名称（可以是域名、host 或 IP 地址），<code>charset</code>指定编码字符集，这里的<code>location</code>则通过<code>alias</code>指定了<code>web</code>服务的文件目录。</p>
+</blockquote>
+<h2>5.Nginx启动</h2>
+<p>&nbsp;</p>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> /usr/local/nginx/sbin/nginx </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum2" style="color:#606060">   2:</span> s -ef | grep nginx</pre>
+</div>
+</div>
+<blockquote>
+<p>显示如下则启动成功：</p>
+<p><a target="_blank" target="_blank" href="http://img.blog.csdn.net/20141108165715531"><img title="image" border="0" alt="image" src="http://img.blog.csdn.net/20141108165620324" width="644" height="36" style="border-top:0px; border-right:0px; border-bottom:0px; padding-top:0px; padding-left:0px; border-left:0px; display:inline; padding-right:0px"></a></p>
+</blockquote>
+<h2>6.测试</h2>
+<blockquote>
+<p>在/root/test_space下建立如下html文件：</p>
+<p>&nbsp;</p>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> &lt;html&gt;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum2" style="color:#606060">   2:</span>&nbsp;&nbsp;&nbsp; &lt;head&gt;&lt;/head&gt;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum3" style="color:#606060">   3:</span>&nbsp;&nbsp;&nbsp; &lt;body&gt;I love you!&lt;body&gt;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum4" style="color:#606060">   4:</span> &lt;/html&gt;</pre>
+</div>
+</div>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>-</p>
+<p>Echo Chen：<a target="_blank" target="_blank" href="http://blog.csdn.net/chen19870707">Blog.csdn.net/chen19870707</a></p>
+<p>-</p>
+</li>   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_detail.css" />
+
+    
+<!--172.16.140.13-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+ 
+
+
+        <div id="digg" ArticleId="40922215" >
+            <dl id="btnDigg" class="digg digg_disable"  onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>2</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable"  onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/chen19870707/article/details/40866533';">上一篇</span><a href="/chen19870707/article/details/40866533" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">菜鸟nginx源码剖析数据结构篇（八） 缓冲区链表ngx_chain_t</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/chen19870707/article/details/41015613';">下一篇</span><a href="/chen19870707/article/details/41015613" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+        <div class="similar_article"  style="display:none">
+                <h4>我的同类文章</h4>
+                <div class="similar_c"style="margin:20px 0px 0px 0px">
+                    <div class="similar_c_t">
+                                <label class="similar_cur">
+                                    <span  style="cursor:pointer"  onclick="GetCategoryArticles('2647301','chen19870707','foot','40922215');">Server - 菜鸟nginx源码剖析<em>（13）</em></span>
+                                </label>
+                    </div>
+                   
+                    <div class="similar_wrap tracking-ad" data-mod="popu_141"  style="max-height:195px;">
+                        <a href="http://blog.csdn.net" style="display:none">http://blog.csdn.net</a>
+                        <ul class="similar_list fl">                          
+                        </ul>
+
+                        <ul class="similar_list fr">                           
+                        </ul>
+                    </div>
+                </div>
+            </div>    
+    <script  type="text/javascript">
+        $(function () {
+            GetCategoryArticles('2647301', 'chen19870707','foot','40922215');
+        });
+    </script>
+      
+</div>
+
+     <div>
+             <ins data-revive-zoneid="206" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+    </div>
+
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/chen19870707/svc/GetSuggestContent/40922215",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ <link rel="stylesheet" href="http://static.blog.csdn.net/css/replace.css"/>
+<div id="relate" data-mod="popu_218"  class="tracking-ad">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c">
+        </div>
+</div>
+ 
+
+<dl class="blog-ass-articl" id="res-relatived" > 
+    <div class="embody embody_b" id="libkeyparent"  style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="http://csdnimg.cn/jobreco/job_reco.js" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "40922215",
+                username: "",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+        </script> 
+    </div>  
+
+    
+     <div id="res"  data-mod="popu_36"  class="tracking-ad" style="width: 42%;float: left;margin-right: 30px;"></div>
+   
+</dl>
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = '菜鸟nginx源码剖析 配置与部署篇（一） 手把手实现nginx  &quot;I love you&quot;' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>  
+
+
+    <div id="ad_cen">        
+                      <ins data-revive-zoneid="199" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    </div>  
+
+    <!-- 广告位开始 -->
+    <ins data-revive-zoneid="72" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '40922215';
+    var commentscount = 6;
+    var islock = false
+</script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/comment.js"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="display:none"></div>
+  <script  language="javascript" type='text/javascript'>     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/chen19870707/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+</script>
+ <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/async_new.js"></script>      
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/chen19870707" target="_blank">
+    <img src="http://avatar.csdn.net/8/E/2/1_chen19870707.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/chen19870707" class="user_name" target="_blank">chen19870707</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=chen19870707','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                         <div class="ico_expert" title="CSDN博客准专家"  onclick="javascript:location='http://blog.csdn.net/experts/rule.html'" style=" cursor:pointer;width:54px;height:60px;background:url('http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/bokezhunzhuanjiamiddle.png') no-repeat" ></div>
+                <div id="bms_box">
+                                            <a  target="_blank">
+                                                    <img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/zhuanlandaren.png" onmouseover="m_over_m(this,2)" onmouseout="m_out_m()" alt="2" >
+                                            </a>
+                                            <a  target="_blank">
+                                                    <img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/chizhiyiheng.png" onmouseover="m_over_m(this,4)" onmouseout="m_out_m()" alt="2" >
+                                            </a>
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>748523次</span></li>
+    <li>积分：<span>4991</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog5.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：4991 </div>
+        </span>  </li>
+    <li>排名：<span>第4451名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>49篇</span></li>
+    <li>转载：<span>4篇</span></li>
+    <li>译文：<span>4篇</span></li>
+    <li>评论：<span>160条</span></li>
+</ul>
+</ul>
+</div>
+
+
+
+
+<div id="custom_column_37363329" class="panel">
+<ul class="panel_head"><span>博客公告</span></ul>
+<ul class="panel_body">
+
+<div id="custom_column_17387915" class="panel">
+<ul class="panel_head">
+<span>博客公告</span></ul>
+<ul class="panel_body">
+<b><font color="red">谢谢大家的关注和支持，大家一起学习。</font></b>
+<hr>
+新浪微博：<font color="red"><a href="http://weibo.com/u/2534653810/home?wvr=5" target="_blank">二狗陈Chen</a></font><a href="http://weibo.com/u/2534653810/home?wvr=5" target="_blank"><br>
+</a>
+<center><a href="http://weibo.com/u/2534653810/home?wvr=5" target="_blank"></a><a href="http://weibo.com/u/2534653810/home?wvr=5" target="_blank"><img src="http://img.my.csdn.net/uploads/201411/08/1415438651_6545.jpg" width="150" height="“150”"></a></center>
+<a href="http://www.ed365.com" target="_blank">
+<hr>
+<hr>
+<font color="blue">博主简介</font>：Echo，游戏后台工程师。 <font color="red">博主拥有该Blog内全部原创文章的所有权利。欢迎以任何形式转载，但务必注明原文链接。任何个人、组织、网站、出版社不得在未经本人许可的情况下用于商业目的。</font>
+<hr>
+如果我的博文对你有所帮助，欢迎你评论留言，这是对我最大的鼓励。如果你发现我的博文有谬误，请你务必指正，这是对我和其他读者的莫大的帮助。 <br>
+</a></ul>
+<a href="http://www.ed365.com" target="_blank"></a></div>
+<a href="http://www.ed365.com" target="_blank"></a>
+
+</ul>
+</div><div id="panel_Category" class="panel">
+    <ul class="panel_head"><span>博客专栏</span></ul>
+    <ul class="panel_body" id="sp_column">
+    <table cellpadding="0" cellspacing="0"><tr>
+    <td style="padding:10px 10px 0 0;">
+    <a href="http://blog.csdn.net/column/details/niginxsourcelearning.html" target="_blank"><img src="http://img.blog.csdn.net/20151123180051317" style="width:75px;height:75px;" /></a>
+    </td>
+    <td style="padding:10px 0; vertical-align:top;">
+    <a href="http://blog.csdn.net/column/details/niginxsourcelearning.html" target="_blank">nginx源码剖析</a>
+    <p>文章：14篇</p>
+    <span>阅读：234845</span>
+    </td>
+    </tr></table>
+    <table cellpadding="0" cellspacing="0"><tr>
+    <td style="padding:10px 10px 0 0;">
+    <a href="http://blog.csdn.net/column/details/tcmalloclearning.html" target="_blank"><img src="http://img.blog.csdn.net/20151123180045989" style="width:75px;height:75px;" /></a>
+    </td>
+    <td style="padding:10px 0; vertical-align:top;">
+    <a href="http://blog.csdn.net/column/details/tcmalloclearning.html" target="_blank">TCMalloc原理和使用</a>
+    <p>文章：5篇</p>
+    <span>阅读：228552</span>
+    </td>
+    </tr></table>
+    </ul>
+</div><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/chen19870707/article/category/726519" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Lang. - C/C++</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2589985" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Dev. Tools - Compiler</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2593299" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - Database</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2607051" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - Perception</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2621993" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - Linux Kernal</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2628763" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - Tcmalloc</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2619017" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - 高级数据结构</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2647301" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - 菜鸟nginx源码剖析</a><span>(14)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2617611" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Learning. - Plan</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/1228520" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">试题 - 算法/数据结构</a><span>(16)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/3065025" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server-nodejs</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/3065029" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - nodejs</a><span>(1)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/chen19870707/article/month/2015/03">2015年03月</a><span>(1)</span></li><li><a href="/chen19870707/article/month/2015/02">2015年02月</a><span>(1)</span></li><li><a href="/chen19870707/article/month/2015/01">2015年01月</a><span>(4)</span></li><li><a href="/chen19870707/article/month/2014/11">2014年11月</a><span>(10)</span></li><li><a href="/chen19870707/article/month/2014/10">2014年10月</a><span>(15)</span></li><li><a href="/chen19870707/article/month/2014/09">2014年09月</a><span>(6)</span></li><li><a href="/chen19870707/article/month/2012/09">2012年09月</a><span>(17)</span></li><li><a href="/chen19870707/article/month/2010/08">2010年08月</a><span>(4)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/chen19870707/article/details/40301783" title="TCMalloc 安装和使用">TCMalloc 安装和使用</a><span>(75952)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/40343827" title="菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t">菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t</a><span>(65090)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/40145565" title="使用Tcmalloc进行堆栈分析">使用Tcmalloc进行堆栈分析</a><span>(64647)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/40302911" title="TCMalloc 对MYSQL 性能 优化的分析">TCMalloc 对MYSQL 性能 优化的分析</a><span>(64289)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/41083183" title="CAS原子操作实现无锁及性能分析">CAS原子操作实现无锁及性能分析</a><span>(36309)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/41015613" title="菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t">菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t</a><span>(23455)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/43202679" title="为什么linux下多线程程序如此消耗虚拟内存">为什么linux下多线程程序如此消耗虚拟内存</a><span>(21555)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/41050379" title="菜鸟nginx源码剖析 框架篇（一） 从main函数看nginx启动流程">菜鸟nginx源码剖析 框架篇（一） 从main函数看nginx启动流程</a><span>(21471)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/39585277" title="手把手实现红黑树">手把手实现红黑树</a><span>(20375)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/39994303" title="眉目传情之并发无锁环形队列的实现">眉目传情之并发无锁环形队列的实现</a><span>(19419)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/chen19870707/article/details/43202679" title="为什么linux下多线程程序如此消耗虚拟内存">为什么linux下多线程程序如此消耗虚拟内存</a><span>(30)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/41083183" title="CAS原子操作实现无锁及性能分析">CAS原子操作实现无锁及性能分析</a><span>(20)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/41015613" title="菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t">菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t</a><span>(15)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/40343827" title="菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t">菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t</a><span>(12)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/40400719" title="菜鸟nginx源码剖析数据结构篇（三） 单向链表 ngx_list_t">菜鸟nginx源码剖析数据结构篇（三） 单向链表 ngx_list_t</a><span>(9)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/39994303" title="眉目传情之并发无锁环形队列的实现">眉目传情之并发无锁环形队列的实现</a><span>(9)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/39899743" title="眉目传情之匠心独运的kfifo">眉目传情之匠心独运的kfifo</a><span>(9)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/39694517" title="游戏服务器设计的一些感悟">游戏服务器设计的一些感悟</a><span>(8)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/39585277" title="手把手实现红黑树">手把手实现红黑树</a><span>(8)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/40515287" title="菜鸟nginx源码剖析数据结构篇（四）红黑树ngx_rbtree_t">菜鸟nginx源码剖析数据结构篇（四）红黑树ngx_rbtree_t</a><span>(7)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/laoyang360/article/details/53843771" target="_blank">* 而立之年——三线城市程序员的年终告白</a></li>
+<li><a href="http://blog.csdn.net/sdkfjksf/article/details/54380659" 
+target="_blank">* Java集合框架中隐藏的设计套路</a></li>
+<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/54092364" 
+target="_blank">* Python脚本下载今日头条视频(附加Android版本辅助下载器)</a></li>
+<li><a href="http://blog.csdn.net/caowenbin/article/details/54406716" target="_blank">* 人工智能的冷思考</a></li>
+<li><a href="http://blog.csdn.net/it_talk/article/details/54346566" 
+target="_blank">* React Native 实战系列教程之热更新原理分析与实现</a></li>
+
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="/chen19870707/article/details/39994303#comments">眉目传情之并发无锁环形队列的实现</a>
+    <p style="margin:0px;"><a href="/louisejackie" class="user_name">louisejackie</a>:
+测试了下，没有内存屏障不好使啊。
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/39899743#comments">眉目传情之匠心独运的kfifo</a>
+    <p style="margin:0px;"><a href="/linyt" class="user_name">linyt</a>:
+@mcv82:volatile和mb是两回事，达不到这个效果
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/39899743#comments">眉目传情之匠心独运的kfifo</a>
+    <p style="margin:0px;"><a href="/lbknxy" class="user_name">lbknxy</a>:
+谢谢楼主分享。 请问 in 和 out 修改和读取采用内存屏障，写线程正在写，此时读线程想去读，也通...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/40400719#comments">菜鸟nginx源码剖析数据结构篇（三） 单向链表 ngx_list_t</a>
+    <p style="margin:0px;"><a href="/zhangxiao93" class="user_name">zhangxiao93</a>:
+建议贴出运行结果可参考参考～
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/39546409#comments">MySQL bin-log分析方法</a>
+    <p style="margin:0px;"><a href="/oneunited01" class="user_name">oneunited01</a>:
+谢谢你的文章，处理了一个问题，谢谢
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/43202679#comments">为什么linux下多线程程序如此消耗虚拟内存</a>
+    <p style="margin:0px;"><a href="/anchenggang" class="user_name">anchenggang</a>:
+厉害~MALLOC_ARENA_MAX 原来是这个意思~
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/40343827#comments">菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t</a>
+    <p style="margin:0px;"><a href="/u014676491" class="user_name">u014676491</a>:
+ngx_array_destroy中为什么是p = a-&gt;pool而不是p=a-&gt;pool.d-&gt;n...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/40301783#comments">TCMalloc 安装和使用</a>
+    <p style="margin:0px;"><a href="/u012398613" class="user_name">u012398613</a>:
+看了你的很多博客，也分享了一些。想问问TCMalloc的堆栈分析感觉好麻烦，不如valgrind简洁...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/40371047#comments">菜鸟nginx源码剖析数据结构篇（二） 双向链表ngx_queue_t</a>
+    <p style="margin:0px;"><a href="/liwf616" class="user_name">liwf616</a>:
+你这个测试程序是怎么写的？
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/40371047#comments">为什么linux下多线程程序如此消耗虚拟内存</a>
+    <p style="margin:0px;"><a href="/9527" class="user_name">9527</a>:
+赞，我也遇到一样的问题，个人认为c语言的优点是程序员自己来处理这些问题，我认为他们越界了。。。
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                 <!-- 广告位开始 --> 
+                    <ins data-revive-zoneid="189" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+                <!-- 广告位结束 -->
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/cnick/cnick.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/newblog.min.js"></script>
+
+
+<script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=611880"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/JavaScript1.js"></script>
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>     <!--new top-->
+   
+    <link href="http://c.csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet" />
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/wmd.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/showdown.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/prettify.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/apps/ask_float_block.js'></script>
+   
+
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_code.css" />
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/saveToCode.js"></script>
+      <script type="text/javascript" src="//csdnimg.cn/rabbit/tracking-ad/main.js?75eacd8"></script>
+
+     <link rel="stylesheet" href="http://static.blog.csdn.net/css/fa.css" />
+
+    <div class="pop_CA_cover"  style="display:none"></div>
+    <div class="pop pop_CA"  style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon"  id="fapancle"  onclick="$('.pop_CA').hide();$('.pop_CA_cover').hide();"></span>
+          </div>
+          <iframe src="" id="fa" frameborder="0" width="100%" height="360"  scrolling="no" />
+    </div>
+</body>
+</html>   
+ 

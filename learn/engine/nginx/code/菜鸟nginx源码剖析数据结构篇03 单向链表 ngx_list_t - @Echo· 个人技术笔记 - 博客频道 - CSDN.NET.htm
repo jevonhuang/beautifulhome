@@ -1,0 +1,1335 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+     
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>  
+
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <title>菜鸟nginx源码剖析数据结构篇（三） 单向链表 ngx_list_t - @Echo&#183; 个人技术笔记
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="1. continue. 可以使用return。　　$(***).each(function(){　　　　　if(a == b){　　　　　　return; &#160; // continue　　　　}　　})2. break , 使用return false　　　　$(***).each(function(){　　　　　if" />
+    <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+      <script type="text/javascript" src="http://static.blog.csdn.net/scripts/jquery-version.js"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
+        <!--new top-->
+               <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css">        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/tracking.js"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/skin-blue/css/style.css?v=1.1" />
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/chen19870707/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/simple.css" />
+ 
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+</head>
+<body>
+
+
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/chen19870707">@Echo&#183; 个人技术笔记</a></h2>
+            <h3>Echo Chen</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/chen19870707?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/chen19870707?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/chen19870707/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "chen19870707";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/chen19870707";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/53636007
+">
+<font color=blue>【获奖公布】“我的2016”主题征文活动 
+
+
+</font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://bss.csdn.net/m/topic/edu_develop
+">
+<font color=red>程序猿全指南，让【移动开发】更简单！ 
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/PK.html">
+<font color=blue>【观点】移动原生App开发和HTML 5开发，你更看好哪个？
+</font></a>
+
+&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/baiyuzhong2012/article/details/54098338">
+<font color=red>博客的神秘功能
+</font></a>
+
+
+</div>                        </div>
+                        
+
+
+
+  
+<link href="http://static.blog.csdn.net/css/comment1.css" type="text/css" rel="stylesheet" />
+<link href="http://static.blog.csdn.net/css/style1.css" type="text/css" rel="stylesheet" />
+<script language='JavaScript' type='text/javascript' src='http://download.csdn.net/js/jquery.cookie.js'></script>
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/search-service/main.js"></script>
+<link rel="stylesheet" href="http://static.blog.csdn.net/public/res-min/markdown_views.css?v=1.0" />
+<link rel="stylesheet" href="http://static.blog.csdn.net/css/category.css?v=1.0" />
+<script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/web-storage-cache.min.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/replace.min.js"></script>
+
+
+
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=%e8%8f%9c%e9%b8%9fnginx%e6%ba%90%e7%a0%81%e5%89%96%e6%9e%90%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%af%87%ef%bc%88%e4%b8%89%ef%bc%89+%e5%8d%95%e5%90%91%e9%93%be%e8%a1%a8+ngx_list_t&u=http://blog.csdn.net/chen19870707/article/details/40400719"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/chen19870707/article/details/40400719">
+        菜鸟nginx源码剖析数据结构篇（三） 单向链表 ngx_list_t            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href='http://www.csdn.net/tag/nginx' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">nginx</a><a href='http://www.csdn.net/tag/%e6%ba%90%e7%a0%81' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">源码</a><a href='http://www.csdn.net/tag/%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">数据结构</a><a href='http://www.csdn.net/tag/%e9%93%be%e8%a1%a8' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">链表</a><a href='http://www.csdn.net/tag/%e5%89%96%e6%9e%90' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">剖析</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2014-10-23 17:20</span>
+            <span class="link_view" title="阅读次数">10122人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(9)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('%e8%8f%9c%e9%b8%9fnginx%e6%ba%90%e7%a0%81%e5%89%96%e6%9e%90%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%af%87%ef%bc%88%e4%b8%89%ef%bc%89+%e5%8d%95%e5%90%91%e9%93%be%e8%a1%a8+ngx_list_t','40400719');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(40400719,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody"  style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script  type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label  onclick="GetCategoryArticles('2647301','chen19870707','top','40400719');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">Server - 菜鸟nginx源码剖析<em>（13）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/chen19870707/article/category/2647301"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_2647301">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+    <script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>  
+        <div   class="bog_copyright">         
+            <p  class="copyright_p" >版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+
+<p align="center"><span style="font-size:32px"></span>&nbsp;</p>
+<p align="center"><span style="font-size:32px">菜鸟nginx源码剖析数据结构篇（三） 单向链表 ngx_list_t</span></p>
+<p>&nbsp;</p>
+<li>
+<p>Author：Echo Chen（陈斌）</p>
+</li><li>
+<p>Email：chenb19870707@gmail.com</p>
+</li><li>
+<p>Blog：<a target="_blank" target="_blank" href="http://blog.csdn.net/chen19870707">Blog.csdn.net/chen19870707</a></p>
+<p>Date：October 23h, 2014</p>
+<p>&nbsp;</p>
+<h2>1.ngx_list优势和特点</h2>
+<p>&nbsp;</p>
+<p>ngx_list _t是一个顺序容器，它实际上是<strong><span style="color:#dd8484">动态数组和单向链表的结合体</span></strong>，扩容起来比动态数组简单的多，可以一次扩容一个数组，所以说它<strong><span style="color:#dd8484">结合了 链表插入删除不需要移动的 和 数组下标快速索引 的优势</span></strong>，设计非常让人叫绝，此外它还有以下特点：</p>
+<ul>
+<li>
+<p>链表中存储的元素是灵活的，可以是任何一种数据结构。 </p>
+</li><li>链表元素需要占用的内存由ngx_list_t管理，它已经通过数组分配好了。 </li><li>小块的内存使用链表访问O(n)效率是低下的，可以使用数组通过直接通过偏移量来直接访问O(1)。 </li></ul>
+<h2>2.源代码位置</h2>
+<p>&nbsp;</p>
+<p>头文件：<a target="_blank" target="_blank" title="http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_list.h" href="http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_list.h">http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_list.h</a></p>
+<p>源文件：<a target="_blank" target="_blank" title="http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_list.c" href="http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_list.c">http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_list.c</a></p>
+<p>&nbsp;</p>
+<h2>3.数据结构定义</h2>
+<p>&nbsp;</p>
+<p>前面说到ngx_list_t是一个数组链表，<strong><span style="color:#dd8484">链表中的每个结点都是一个数组，ngx_list_part_t 描述的是链表中的一个结点</span></strong>，这个结点又是一个数组，elts为数组首地址,nelts为该数组已经使用的个数，*next为下一个链表结点的指针，定义如下：</p>
+<p id="codeSnippetWrapper"></p>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; line-height:12pt; background-color:rgb(244,244,244)">
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum1" style="color:#606060">   1:</span> <span style="color:#0000ff">typedef</span>&nbsp;<span style="color:#0000ff">struct</span> ngx_list_part_s&nbsp; ngx_list_part_t;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum2" style="color:#606060">   2:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum3" style="color:#606060">   3:</span> <span style="color:#008000">//描述链表中的一个结点，这个结点又是一个数组</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum4" style="color:#606060">   4:</span> <span style="color:#0000ff">struct</span> ngx_list_part_s {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum5" style="color:#606060">   5:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">void</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *elts;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//首地址</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum6" style="color:#606060">   6:</span>&nbsp;&nbsp;&nbsp;&nbsp; ngx_uint_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nelts;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//已经使用的个数</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum7" style="color:#606060">   7:</span>&nbsp;&nbsp;&nbsp;&nbsp; ngx_list_part_t&nbsp; *next;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//下一个链表节点的指针</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum8" style="color:#606060">   8:</span> };</pre>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>ngx_list_t是描述整个链表，其中last 为链表中最后一个数组，part为链表中首个数组，size为数组每个元素占用空间小，nalloc为每个数组可以容纳的元素个数，pool为链表内存池对象，定义如下：</p>
+<p>&nbsp;</p>
+<p id="codeSnippetWrapper"></p>
+<div id="codeSnippet" style="font-size:8pt; border-style:none; overflow:visible; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; line-height:12pt; background-color:rgb(244,244,244)">
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum1" style="color:#606060">   1:</span> <span style="color:#0000ff">typedef</span>&nbsp;<span style="color:#0000ff">struct</span> {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum2" style="color:#606060">   2:</span>&nbsp;&nbsp;&nbsp;&nbsp; ngx_list_part_t&nbsp; *last;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//链表中最后一个数组元素</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum3" style="color:#606060">   3:</span>&nbsp;&nbsp;&nbsp;&nbsp; ngx_list_part_t&nbsp;&nbsp; part;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//链表中的首个数组元素</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum4" style="color:#606060">   4:</span>&nbsp;&nbsp;&nbsp;&nbsp; size_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; size;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//每个数组元素占用的空间大小</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum5" style="color:#606060">   5:</span>&nbsp;&nbsp;&nbsp;&nbsp; ngx_uint_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nalloc;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//每个数组结点的容量，即每个数组最多可以存放多少个元素</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum6" style="color:#606060">   6:</span>&nbsp;&nbsp;&nbsp;&nbsp; ngx_pool_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *pool;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//链表中的内存池对象指针</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum7" style="color:#606060">   7:</span> } ngx_list_t;</pre>
+</div>
+<p>&nbsp;</p>
+<p>其结构如下图所示，最下面一行为内存映像，可以看到整个<strong><span style="color:#dd8484">内存中仅仅多了 一个ngx_list_t 和 几个ngx_list_part_s结果，内存并没有太多的浪费，nginx在内存方面的苛刻确实&#20540;得我们学习</span></strong>。</p>
+<blockquote style="margin:0 0 0 40px; border:none; padding:0px">&nbsp;<img src="http://img.blog.csdn.net/20141023171740714?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbjE5ODcwNzA3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></blockquote>
+<h2>&nbsp;</h2>
+<h2>4.链表创建ngx_list_create和初始化ngx_list_init</h2>
+<p>&nbsp;</p>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; line-height:12pt; background-color:rgb(244,244,244)">
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum1" style="color:rgb(96,96,96)">   1:</span> <span style="color:#008000">//链表创建,pool为内存池对象，size为每个数组元素的大小，n为每个数组可以容纳的元素个数</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum2" style="color:#606060">   2:</span> ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size)</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum3" style="color:#606060">   3:</span> {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum4" style="color:#606060">   4:</span>&nbsp;&nbsp;&nbsp;&nbsp; ngx_list_t&nbsp; *list;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum5" style="color:#606060">   5:</span>&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum6" style="color:#606060">   6:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//分配ngx_list_t结构</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum7" style="color:#606060">   7:</span>&nbsp;&nbsp;&nbsp;&nbsp; list = ngx_palloc(pool, <span style="color:#0000ff">sizeof</span>(ngx_list_t));</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum8" style="color:#606060">   8:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (list == NULL) {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum9" style="color:#606060">   9:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> NULL;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum10" style="color:#606060">  10:</span>&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum11" style="color:#606060">  11:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum12" style="color:#606060">  12:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//初始化</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum13" style="color:#606060">  13:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (ngx_list_init(list, pool, n, size) != NGX_OK) {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum14" style="color:#606060">  14:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> NULL;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum15" style="color:#606060">  15:</span>&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum16" style="color:#606060">  16:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum17" style="color:#606060">  17:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> list;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum18" style="color:#606060">  18:</span> }</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum19" style="color:#606060">  19:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum20" style="color:#606060">  20:</span> <span style="color:#008000">//链表初始化，list为链表结构（在create中创建），pool为内存池，size为每个数组元素的大小，n为每个数组可以容纳的元素个数</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum21" style="color:#606060">  21:</span> <span style="color:#0000ff">static</span> ngx_inline ngx_int_t ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum22" style="color:#606060">  22:</span> {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum23" style="color:#606060">  23:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//分配一个数组，并用链表首结点指向它</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum24" style="color:#606060">  24:</span>&nbsp;&nbsp;&nbsp;&nbsp; list-&gt;part.elts = ngx_palloc(pool, n * size);</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum25" style="color:#606060">  25:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (list-&gt;part.elts == NULL) {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum26" style="color:#606060">  26:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> NGX_ERROR;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum27" style="color:#606060">  27:</span>&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum28" style="color:#606060">  28:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum29" style="color:#606060">  29:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//已使用个数为0</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum30" style="color:#606060">  30:</span>&nbsp;&nbsp;&nbsp;&nbsp; list-&gt;part.nelts = 0;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum31" style="color:#606060">  31:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//没有下一个结点，next指为NULL</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum32" style="color:#606060">  32:</span>&nbsp;&nbsp;&nbsp;&nbsp; list-&gt;part.next = NULL;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum33" style="color:#606060">  33:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//最后一个结点也指向刚刚分配的数组</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum34" style="color:#606060">  34:</span>&nbsp;&nbsp;&nbsp;&nbsp; list-&gt;last = &amp;list-&gt;part;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum35" style="color:#606060">  35:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//数组每个元素大小为size</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum36" style="color:#606060">  36:</span>&nbsp;&nbsp;&nbsp;&nbsp; list-&gt;size = size;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum37" style="color:#606060">  37:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//数组能容纳元素个数为n</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum38" style="color:#606060">  38:</span>&nbsp;&nbsp;&nbsp;&nbsp; list-&gt;nalloc = n;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum39" style="color:#606060">  39:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//内存池为pool</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum40" style="color:#606060">  40:</span>&nbsp;&nbsp;&nbsp;&nbsp; list-&gt;pool = pool;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum41" style="color:#606060">  41:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum42" style="color:#606060">  42:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> NGX_OK;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum43" style="color:#606060">  43:</span> }</pre>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>可以看到，ngx_list_init调用成功后，会创建一个数组结点。</p>
+<p>&nbsp;</p>
+<h2>5.链表添加元素操作ngx_list_push</h2>
+<p>&nbsp;</p>
+<div>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; line-height:12pt; background-color:rgb(244,244,244)">
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum1" style="color:#606060">   1:</span> <span style="color:#008000">//链表添加元素，l为链表结构</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum2" style="color:#606060">   2:</span> <span style="color:#0000ff">void</span> *ngx_list_push(ngx_list_t *l)</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum3" style="color:#606060">   3:</span> {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum4" style="color:#606060">   4:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">void</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *elt;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum5" style="color:#606060">   5:</span>&nbsp;&nbsp;&nbsp;&nbsp; ngx_list_part_t&nbsp; *last;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum6" style="color:#606060">   6:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum7" style="color:#606060">   7:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//last指向链表最后一个结点</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum8" style="color:#606060">   8:</span>&nbsp;&nbsp;&nbsp;&nbsp; last = l-&gt;last;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum9" style="color:#606060">   9:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum10" style="color:#606060">  10:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//如果最后一个结点的数组已经满了</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum11" style="color:#606060">  11:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (last-&gt;nelts == l-&gt;nalloc) {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum12" style="color:#606060">  12:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum13" style="color:#606060">  13:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">/* the last part is full, allocate a new list part */</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum14" style="color:#606060">  14:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum15" style="color:#606060">  15:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//从内存池中分配一个ngx_list_part_t数组对象</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum16" style="color:#606060">  16:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; last = ngx_palloc(l-&gt;pool, <span style="color:#0000ff">sizeof</span>(ngx_list_part_t));</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum17" style="color:#606060">  17:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (last == NULL) {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum18" style="color:#606060">  18:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> NULL;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum19" style="color:#606060">  19:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum20" style="color:#606060">  20:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum21" style="color:#606060">  21:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//从内存池中给数组对象元素分配空间，每个元素大小为size,元素数目为nalloc</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum22" style="color:#606060">  22:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; last-&gt;elts = ngx_palloc(l-&gt;pool, l-&gt;nalloc * l-&gt;size);</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum23" style="color:#606060">  23:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (last-&gt;elts == NULL) {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum24" style="color:#606060">  24:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> NULL;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum25" style="color:#606060">  25:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum26" style="color:#606060">  26:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum27" style="color:#606060">  27:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//新分配的数组已使用结点个数为0，下一个链表结点为NULL</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum28" style="color:#606060">  28:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; last-&gt;nelts = 0;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum29" style="color:#606060">  29:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; last-&gt;next = NULL;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum30" style="color:#606060">  30:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum31" style="color:#606060">  31:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//将新分配的数组链到链表，并把链表尾指针指向新分配数组</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum32" style="color:#606060">  32:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l-&gt;last-&gt;next = last;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum33" style="color:#606060">  33:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; l-&gt;last = last;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum34" style="color:#606060">  34:</span>&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum35" style="color:#606060">  35:</span>&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum36" style="color:#606060">  36:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//elts为数组首地址，elts &#43; size * nelts 即位为分配数组元素的位置</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum37" style="color:#606060">  37:</span>&nbsp;&nbsp;&nbsp;&nbsp; elt = (<span style="color:#0000ff">char</span> *) last-&gt;elts &#43; l-&gt;size * last-&gt;nelts;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum38" style="color:#606060">  38:</span>&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum39" style="color:#606060">  39:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//分配个数&#43;1</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum40" style="color:#606060">  40:</span>&nbsp;&nbsp;&nbsp;&nbsp; last-&gt;nelts&#43;&#43;;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum41" style="color:#606060">  41:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum42" style="color:#606060">  42:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> elt;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum43" style="color:#606060">  43:</span> }</pre>
+</div>
+</div>
+<div><strong></strong></div>
+<div><span style="color:#dd8484"><span style="color:#666666">可以看到，push的思想很简单，每次都往链表最后一个数组添加，数组满后就再增加一个数组结点，这里push的时间复杂度为O(1)，没有任何遍历操作，充分利用了<strong><span style="color:#dd8484">“链表尾插”</span></strong> 和
+<span style="color:#dd8484"><strong>“数组下标索引”</strong></span>的优势。</span><strong> <br>
+</strong></span></div>
+<div><strong></strong></div>
+<span style="color:#666666"></span>
+<h2>6.疑问</h2>
+<blockquote>
+<p>源代码中只给了链表的插入操作，没有删除操作，看起来不完整，这里猜测这个链表结构应该不会直接使用，而是被再次封装。</p>
+</blockquote>
+<div>&nbsp;</div>
+<h2>7.实战</h2>
+<p>&nbsp;</p>
+<p>看完源代码，这个list设计还是很巧妙的，结合了数组和链表各自的优势，确实不得不让人拍手叫绝。下面尝试给出ngx_list_t的使用例子：</p>
+<p>&nbsp;</p>
+</div>
+<p></p>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; line-height:12pt; background-color:rgb(244,244,244)">
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum1" style="color:#606060">   1:</span> <span style="color:#0000ff">int</span> main()</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum2" style="color:#606060">   2:</span> {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum3" style="color:#606060">   3:</span>&nbsp;&nbsp;&nbsp;&nbsp; ngx_list_t *pList = ngx_list_create( r-&gt;pool,4,<span style="color:#0000ff">sizeof</span>( ngx_str_t));</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum4" style="color:#606060">   4:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span>( NULL == pList)</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum5" style="color:#606060">   5:</span>&nbsp;&nbsp;&nbsp;&nbsp; {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum6" style="color:#606060">   6:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> -1;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum7" style="color:#606060">   7:</span>&nbsp;&nbsp;&nbsp;&nbsp; } </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum8" style="color:#606060">   8:</span>&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum9" style="color:#606060">   9:</span>&nbsp;&nbsp;&nbsp;&nbsp; ngx_str_t *str = ngx_list_push(pList);</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum10" style="color:#606060">  10:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span>( NULL == str)</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum11" style="color:#606060">  11:</span>&nbsp;&nbsp;&nbsp;&nbsp; {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum12" style="color:#606060">  12:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> -1;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum13" style="color:#606060">  13:</span>&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum14" style="color:#606060">  14:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum15" style="color:#606060">  15:</span>&nbsp;&nbsp;&nbsp;&nbsp; str-&gt;len = <span style="color:#0000ff">sizeof</span>(<span style="color:#006080">&quot;This is a test for ngx_list_t&quot;</span>);</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum16" style="color:#606060">  16:</span>&nbsp;&nbsp;&nbsp;&nbsp; str-&gt;value = <span style="color:#006080">&quot;This is a test for ngx_list_t&quot;</span>;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum17" style="color:#606060">  17:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum18" style="color:#606060">  18:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//遍历</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum19" style="color:#606060">  19:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ngx_list_part_t *part = &amp;pList-&gt;part;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum20" style="color:#606060">  20:</span>&nbsp;&nbsp;&nbsp;&nbsp; ngx_str_t *str = part-&gt;elts;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum21" style="color:#606060">  21:</span>&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum22" style="color:#606060">  22:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">for</span>(<span style="color:#0000ff">int</span> i = 0;;i&#43;&#43;)</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum23" style="color:#606060">  23:</span>&nbsp;&nbsp;&nbsp;&nbsp; {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum24" style="color:#606060">  24:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span>( i &gt;= part-&gt;nelts)</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum25" style="color:#606060">  25:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum26" style="color:#606060">  26:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//已经遍历完最后一个数组，没有下一个结点了</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum27" style="color:#606060">  27:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span>( NULL == part-&gt;next)</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum28" style="color:#606060">  28:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum29" style="color:#606060">  29:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">break</span>;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum30" style="color:#606060">  30:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum31" style="color:#606060">  31:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum32" style="color:#606060">  32:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//还有下一个数组，part指到下一个数组，并把str指到新数组的地址</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum33" style="color:#606060">  33:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; part = part-&gt;next;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum34" style="color:#606060">  34:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; str = part-&gt;elts;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum35" style="color:#606060">  35:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum36" style="color:#606060">  36:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//重置计数器</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum37" style="color:#606060">  37:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i = 0;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum38" style="color:#606060">  38:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum39" style="color:#606060">  39:</span>&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum40" style="color:#606060">  40:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//输出结点</span></pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum41" style="color:#606060">  41:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; <span style="color:#006080">&quot;list elemts :&quot;</span> &lt;&lt; str[i] &lt;&lt; endl;</pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum42" style="color:#606060">  42:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; padding:0px; direction:ltr; margin:0em; line-height:12pt; background-color:rgb(244,244,244)"><span id="lnum43" style="color:#606060">  43:</span>&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+</div>
+</div>
+<span style="color:rgb(102,102,102)"></span>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>-</p>
+<p>Echo Chen：<a target="_blank" target="_blank" href="http://blog.csdn.net/chen19870707">Blog.csdn.net/chen19870707</a></p>
+<p>-</p>
+</li>   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_detail.css" />
+
+    
+<!--172.16.140.12-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+ 
+
+
+        <div id="digg" ArticleId="40400719" >
+            <dl id="btnDigg" class="digg digg_disable"  onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>3</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable"  onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/chen19870707/article/details/40371047';">上一篇</span><a href="/chen19870707/article/details/40371047" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">菜鸟nginx源码剖析数据结构篇（二） 双向链表ngx_queue_t</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/chen19870707/article/details/40427645';">下一篇</span><a href="/chen19870707/article/details/40427645" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">站在巨人的肩膀上，C++开源库大全</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+        <div class="similar_article"  style="display:none">
+                <h4>我的同类文章</h4>
+                <div class="similar_c"style="margin:20px 0px 0px 0px">
+                    <div class="similar_c_t">
+                                <label class="similar_cur">
+                                    <span  style="cursor:pointer"  onclick="GetCategoryArticles('2647301','chen19870707','foot','40400719');">Server - 菜鸟nginx源码剖析<em>（13）</em></span>
+                                </label>
+                    </div>
+                   
+                    <div class="similar_wrap tracking-ad" data-mod="popu_141"  style="max-height:195px;">
+                        <a href="http://blog.csdn.net" style="display:none">http://blog.csdn.net</a>
+                        <ul class="similar_list fl">                          
+                        </ul>
+
+                        <ul class="similar_list fr">                           
+                        </ul>
+                    </div>
+                </div>
+            </div>    
+    <script  type="text/javascript">
+        $(function () {
+            GetCategoryArticles('2647301', 'chen19870707','foot','40400719');
+        });
+    </script>
+      
+</div>
+
+     <div>
+             <ins data-revive-zoneid="206" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+    </div>
+
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/chen19870707/svc/GetSuggestContent/40400719",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ <link rel="stylesheet" href="http://static.blog.csdn.net/css/replace.css"/>
+<div id="relate" data-mod="popu_218"  class="tracking-ad">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c">
+        </div>
+</div>
+ 
+
+<dl class="blog-ass-articl" id="res-relatived" > 
+    <div class="embody embody_b" id="libkeyparent"  style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="http://csdnimg.cn/jobreco/job_reco.js" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "40400719",
+                username: "",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+        </script> 
+    </div>  
+
+    
+     <div id="res"  data-mod="popu_36"  class="tracking-ad" style="width: 42%;float: left;margin-right: 30px;"></div>
+   
+</dl>
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = '菜鸟nginx源码剖析数据结构篇（三） 单向链表 ngx_list_t' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>  
+
+
+    <div id="ad_cen">        
+                      <ins data-revive-zoneid="199" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    </div>  
+
+    <!-- 广告位开始 -->
+    <ins data-revive-zoneid="72" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '40400719';
+    var commentscount = 9;
+    var islock = false
+</script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/comment.js"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="display:none"></div>
+  <script  language="javascript" type='text/javascript'>     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/chen19870707/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+</script>
+ <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/async_new.js"></script>      
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/chen19870707" target="_blank">
+    <img src="http://avatar.csdn.net/8/E/2/1_chen19870707.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/chen19870707" class="user_name" target="_blank">chen19870707</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=chen19870707','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                         <div class="ico_expert" title="CSDN博客准专家"  onclick="javascript:location='http://blog.csdn.net/experts/rule.html'" style=" cursor:pointer;width:54px;height:60px;background:url('http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/bokezhunzhuanjiamiddle.png') no-repeat" ></div>
+                <div id="bms_box">
+                                            <a  target="_blank">
+                                                    <img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/zhuanlandaren.png" onmouseover="m_over_m(this,2)" onmouseout="m_out_m()" alt="2" >
+                                            </a>
+                                            <a  target="_blank">
+                                                    <img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/chizhiyiheng.png" onmouseover="m_over_m(this,4)" onmouseout="m_out_m()" alt="2" >
+                                            </a>
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>748514次</span></li>
+    <li>积分：<span>4991</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog5.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：4991 </div>
+        </span>  </li>
+    <li>排名：<span>第4451名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>49篇</span></li>
+    <li>转载：<span>4篇</span></li>
+    <li>译文：<span>4篇</span></li>
+    <li>评论：<span>160条</span></li>
+</ul>
+</ul>
+</div>
+
+
+
+
+<div id="custom_column_37363329" class="panel">
+<ul class="panel_head"><span>博客公告</span></ul>
+<ul class="panel_body">
+
+<div id="custom_column_17387915" class="panel">
+<ul class="panel_head">
+<span>博客公告</span></ul>
+<ul class="panel_body">
+<b><font color="red">谢谢大家的关注和支持，大家一起学习。</font></b>
+<hr>
+新浪微博：<font color="red"><a href="http://weibo.com/u/2534653810/home?wvr=5" target="_blank">二狗陈Chen</a></font><a href="http://weibo.com/u/2534653810/home?wvr=5" target="_blank"><br>
+</a>
+<center><a href="http://weibo.com/u/2534653810/home?wvr=5" target="_blank"></a><a href="http://weibo.com/u/2534653810/home?wvr=5" target="_blank"><img src="http://img.my.csdn.net/uploads/201411/08/1415438651_6545.jpg" width="150" height="“150”"></a></center>
+<a href="http://www.ed365.com" target="_blank">
+<hr>
+<hr>
+<font color="blue">博主简介</font>：Echo，游戏后台工程师。 <font color="red">博主拥有该Blog内全部原创文章的所有权利。欢迎以任何形式转载，但务必注明原文链接。任何个人、组织、网站、出版社不得在未经本人许可的情况下用于商业目的。</font>
+<hr>
+如果我的博文对你有所帮助，欢迎你评论留言，这是对我最大的鼓励。如果你发现我的博文有谬误，请你务必指正，这是对我和其他读者的莫大的帮助。 <br>
+</a></ul>
+<a href="http://www.ed365.com" target="_blank"></a></div>
+<a href="http://www.ed365.com" target="_blank"></a>
+
+</ul>
+</div><div id="panel_Category" class="panel">
+    <ul class="panel_head"><span>博客专栏</span></ul>
+    <ul class="panel_body" id="sp_column">
+    <table cellpadding="0" cellspacing="0"><tr>
+    <td style="padding:10px 10px 0 0;">
+    <a href="http://blog.csdn.net/column/details/niginxsourcelearning.html" target="_blank"><img src="http://img.blog.csdn.net/20151123180051317" style="width:75px;height:75px;" /></a>
+    </td>
+    <td style="padding:10px 0; vertical-align:top;">
+    <a href="http://blog.csdn.net/column/details/niginxsourcelearning.html" target="_blank">nginx源码剖析</a>
+    <p>文章：14篇</p>
+    <span>阅读：234845</span>
+    </td>
+    </tr></table>
+    <table cellpadding="0" cellspacing="0"><tr>
+    <td style="padding:10px 10px 0 0;">
+    <a href="http://blog.csdn.net/column/details/tcmalloclearning.html" target="_blank"><img src="http://img.blog.csdn.net/20151123180045989" style="width:75px;height:75px;" /></a>
+    </td>
+    <td style="padding:10px 0; vertical-align:top;">
+    <a href="http://blog.csdn.net/column/details/tcmalloclearning.html" target="_blank">TCMalloc原理和使用</a>
+    <p>文章：5篇</p>
+    <span>阅读：228552</span>
+    </td>
+    </tr></table>
+    </ul>
+</div><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/chen19870707/article/category/726519" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Lang. - C/C++</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2589985" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Dev. Tools - Compiler</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2593299" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - Database</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2607051" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - Perception</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2621993" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - Linux Kernal</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2628763" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - Tcmalloc</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2619017" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - 高级数据结构</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2647301" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - 菜鸟nginx源码剖析</a><span>(14)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/2617611" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Learning. - Plan</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/1228520" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">试题 - 算法/数据结构</a><span>(16)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/3065025" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server-nodejs</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/chen19870707/article/category/3065029" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Server - nodejs</a><span>(1)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/chen19870707/article/month/2015/03">2015年03月</a><span>(1)</span></li><li><a href="/chen19870707/article/month/2015/02">2015年02月</a><span>(1)</span></li><li><a href="/chen19870707/article/month/2015/01">2015年01月</a><span>(4)</span></li><li><a href="/chen19870707/article/month/2014/11">2014年11月</a><span>(10)</span></li><li><a href="/chen19870707/article/month/2014/10">2014年10月</a><span>(15)</span></li><li><a href="/chen19870707/article/month/2014/09">2014年09月</a><span>(6)</span></li><li><a href="/chen19870707/article/month/2012/09">2012年09月</a><span>(17)</span></li><li><a href="/chen19870707/article/month/2010/08">2010年08月</a><span>(4)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/chen19870707/article/details/40301783" title="TCMalloc 安装和使用">TCMalloc 安装和使用</a><span>(75952)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/40343827" title="菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t">菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t</a><span>(65090)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/40145565" title="使用Tcmalloc进行堆栈分析">使用Tcmalloc进行堆栈分析</a><span>(64647)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/40302911" title="TCMalloc 对MYSQL 性能 优化的分析">TCMalloc 对MYSQL 性能 优化的分析</a><span>(64289)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/41083183" title="CAS原子操作实现无锁及性能分析">CAS原子操作实现无锁及性能分析</a><span>(36309)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/41015613" title="菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t">菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t</a><span>(23455)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/43202679" title="为什么linux下多线程程序如此消耗虚拟内存">为什么linux下多线程程序如此消耗虚拟内存</a><span>(21555)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/41050379" title="菜鸟nginx源码剖析 框架篇（一） 从main函数看nginx启动流程">菜鸟nginx源码剖析 框架篇（一） 从main函数看nginx启动流程</a><span>(21471)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/39585277" title="手把手实现红黑树">手把手实现红黑树</a><span>(20375)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/39994303" title="眉目传情之并发无锁环形队列的实现">眉目传情之并发无锁环形队列的实现</a><span>(19419)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/chen19870707/article/details/43202679" title="为什么linux下多线程程序如此消耗虚拟内存">为什么linux下多线程程序如此消耗虚拟内存</a><span>(30)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/41083183" title="CAS原子操作实现无锁及性能分析">CAS原子操作实现无锁及性能分析</a><span>(20)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/41015613" title="菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t">菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t</a><span>(15)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/40343827" title="菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t">菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t</a><span>(12)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/40400719" title="菜鸟nginx源码剖析数据结构篇（三） 单向链表 ngx_list_t">菜鸟nginx源码剖析数据结构篇（三） 单向链表 ngx_list_t</a><span>(9)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/39994303" title="眉目传情之并发无锁环形队列的实现">眉目传情之并发无锁环形队列的实现</a><span>(9)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/39899743" title="眉目传情之匠心独运的kfifo">眉目传情之匠心独运的kfifo</a><span>(9)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/39694517" title="游戏服务器设计的一些感悟">游戏服务器设计的一些感悟</a><span>(8)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/39585277" title="手把手实现红黑树">手把手实现红黑树</a><span>(8)</span>
+</li>
+<li>
+<a href="/chen19870707/article/details/40515287" title="菜鸟nginx源码剖析数据结构篇（四）红黑树ngx_rbtree_t">菜鸟nginx源码剖析数据结构篇（四）红黑树ngx_rbtree_t</a><span>(7)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/laoyang360/article/details/53843771" target="_blank">* 而立之年——三线城市程序员的年终告白</a></li>
+<li><a href="http://blog.csdn.net/sdkfjksf/article/details/54380659" 
+target="_blank">* Java集合框架中隐藏的设计套路</a></li>
+<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/54092364" 
+target="_blank">* Python脚本下载今日头条视频(附加Android版本辅助下载器)</a></li>
+<li><a href="http://blog.csdn.net/caowenbin/article/details/54406716" target="_blank">* 人工智能的冷思考</a></li>
+<li><a href="http://blog.csdn.net/it_talk/article/details/54346566" 
+target="_blank">* React Native 实战系列教程之热更新原理分析与实现</a></li>
+
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="/chen19870707/article/details/39994303#comments">眉目传情之并发无锁环形队列的实现</a>
+    <p style="margin:0px;"><a href="/louisejackie" class="user_name">louisejackie</a>:
+测试了下，没有内存屏障不好使啊。
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/39899743#comments">眉目传情之匠心独运的kfifo</a>
+    <p style="margin:0px;"><a href="/linyt" class="user_name">linyt</a>:
+@mcv82:volatile和mb是两回事，达不到这个效果
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/39899743#comments">眉目传情之匠心独运的kfifo</a>
+    <p style="margin:0px;"><a href="/lbknxy" class="user_name">lbknxy</a>:
+谢谢楼主分享。 请问 in 和 out 修改和读取采用内存屏障，写线程正在写，此时读线程想去读，也通...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/40400719#comments">菜鸟nginx源码剖析数据结构篇（三） 单向链表 ngx_list_t</a>
+    <p style="margin:0px;"><a href="/zhangxiao93" class="user_name">zhangxiao93</a>:
+建议贴出运行结果可参考参考～
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/39546409#comments">MySQL bin-log分析方法</a>
+    <p style="margin:0px;"><a href="/oneunited01" class="user_name">oneunited01</a>:
+谢谢你的文章，处理了一个问题，谢谢
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/43202679#comments">为什么linux下多线程程序如此消耗虚拟内存</a>
+    <p style="margin:0px;"><a href="/anchenggang" class="user_name">anchenggang</a>:
+厉害~MALLOC_ARENA_MAX 原来是这个意思~
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/40343827#comments">菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t</a>
+    <p style="margin:0px;"><a href="/u014676491" class="user_name">u014676491</a>:
+ngx_array_destroy中为什么是p = a-&gt;pool而不是p=a-&gt;pool.d-&gt;n...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/40301783#comments">TCMalloc 安装和使用</a>
+    <p style="margin:0px;"><a href="/u012398613" class="user_name">u012398613</a>:
+看了你的很多博客，也分享了一些。想问问TCMalloc的堆栈分析感觉好麻烦，不如valgrind简洁...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/40371047#comments">菜鸟nginx源码剖析数据结构篇（二） 双向链表ngx_queue_t</a>
+    <p style="margin:0px;"><a href="/liwf616" class="user_name">liwf616</a>:
+你这个测试程序是怎么写的？
+    </p>
+    </li>
+    <li>
+   
+         <a href="/chen19870707/article/details/40371047#comments">为什么linux下多线程程序如此消耗虚拟内存</a>
+    <p style="margin:0px;"><a href="/9527" class="user_name">9527</a>:
+赞，我也遇到一样的问题，个人认为c语言的优点是程序员自己来处理这些问题，我认为他们越界了。。。
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                 <!-- 广告位开始 --> 
+                    <ins data-revive-zoneid="189" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+                <!-- 广告位结束 -->
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/cnick/cnick.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/newblog.min.js"></script>
+
+
+<script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=611880"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/JavaScript1.js"></script>
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>     <!--new top-->
+   
+    <link href="http://c.csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet" />
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/wmd.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/showdown.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/prettify.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/apps/ask_float_block.js'></script>
+   
+
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_code.css" />
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/saveToCode.js"></script>
+      <script type="text/javascript" src="//csdnimg.cn/rabbit/tracking-ad/main.js?75eacd8"></script>
+
+     <link rel="stylesheet" href="http://static.blog.csdn.net/css/fa.css" />
+
+    <div class="pop_CA_cover"  style="display:none"></div>
+    <div class="pop pop_CA"  style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon"  id="fapancle"  onclick="$('.pop_CA').hide();$('.pop_CA_cover').hide();"></span>
+          </div>
+          <iframe src="" id="fa" frameborder="0" width="100%" height="360"  scrolling="no" />
+    </div>
+</body>
+</html>   
+ 

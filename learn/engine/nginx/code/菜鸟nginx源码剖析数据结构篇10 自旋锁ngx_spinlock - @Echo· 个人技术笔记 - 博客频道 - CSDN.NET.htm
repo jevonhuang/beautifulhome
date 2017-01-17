@@ -15,10 +15,10 @@
   
  <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
 
-    <title>菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t - @Echo&#183; 个人技术笔记
+    <title>菜鸟nginx源码剖析数据结构篇（十） 自旋锁ngx_spinlock - @Echo&#183; 个人技术笔记
         - 博客频道 - CSDN.NET</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="description" content="disconf之前有搭建过一次但是没有成功，比较纠结它的基于nginx实现动静分离的思想，其实明明可以少一个组件的依赖和配置，或许开发者有其自己的考虑吧。这次终于搭建完毕并且跑通，下面写几个碰到但是官方文档中没给出的坎。&#160;&#160;&#160;&#160;搭建项目&#160;--就是一个disconf-web安装依赖软件安装Mysql（Ver 14.12 Dist" />
+    <meta name="description" content="Json文件：" />
     <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
       <script type="text/javascript" src="http://static.blog.csdn.net/scripts/jquery-version.js"></script>
     <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
@@ -96,7 +96,7 @@
     var _blogger = username;
     var blog_address = "http://blog.csdn.net/chen19870707";
     var static_host = "http://static.blog.csdn.net";
-    var currentUserName = "hfeng_2000";  
+    var currentUserName = "";  
 </script>
 
         <div id="body">
@@ -106,23 +106,23 @@
 <div class="notice tracking-ad" data-mod='popu_3' > 
 
 
-<a href="http://blog.csdn.net/vote/result.html
+<a href="http://blog.csdn.net/blogdevteam/article/details/53636007
 ">
-<font color=blue>CSDN 2016博客之星评选结果公布
+<font color=blue>【获奖公布】“我的2016”主题征文活动 
 
 
 </font></a>
 
 &nbsp;&nbsp;&nbsp;&nbsp
 
-<a href="http://edu.csdn.net/huiyiCourse/detail/263
+<a href="http://bss.csdn.net/m/topic/edu_develop
 ">
-<font color=red>【系列直播】零基础学习微信小程序！ 
+<font color=red>程序猿全指南，让【移动开发】更简单！ 
 </font></a>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-<a href="http://blog.csdn.net/turingbooks/article/details/53606998">
-<font color=blue>程序员12月书讯
+<a href="http://blog.csdn.net/PK.html">
+<font color=blue>【观点】移动原生App开发和HTML 5开发，你更看好哪个？
 </font></a>
 
 &nbsp;&nbsp;&nbsp;
@@ -157,7 +157,7 @@
             var isBole = false;
             
       
-      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=%e8%8f%9c%e9%b8%9fnginx%e6%ba%90%e7%a0%81%e5%89%96%e6%9e%90%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%af%87%ef%bc%88%e4%b8%80%ef%bc%89%e5%8a%a8%e6%80%81%e6%95%b0%e7%bb%84ngx_array_t&u=http://blog.csdn.net/chen19870707/article/details/40343827"
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=%e8%8f%9c%e9%b8%9fnginx%e6%ba%90%e7%a0%81%e5%89%96%e6%9e%90%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%af%87%ef%bc%88%e5%8d%81%ef%bc%89+%e8%87%aa%e6%97%8b%e9%94%81ngx_spinlock&u=http://blog.csdn.net/chen19870707/article/details/41017725"
 
     </script>
 <div id="article_details" class="details">
@@ -166,8 +166,8 @@
 
 
     <h1>
-        <span class="link_title"><a href="/chen19870707/article/details/40343827">
-        菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t            
+        <span class="link_title"><a href="/chen19870707/article/details/41017725">
+        菜鸟nginx源码剖析数据结构篇（十） 自旋锁ngx_spinlock            
         </a></span>
     </h1>
 </div>
@@ -178,15 +178,15 @@
         <div class="article_l">
             <span class="link_categories">
             标签：
-              <a href='http://www.csdn.net/tag/%e6%ba%90%e7%a0%81' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">源码</a><a href='http://www.csdn.net/tag/%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">数据结构</a><a href='http://www.csdn.net/tag/nginx' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">nginx</a><a href='http://www.csdn.net/tag/%e5%8a%a8%e6%80%81%e6%95%b0%e7%bb%84' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">动态数组</a>
+              <a href='http://www.csdn.net/tag/nginx' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">nginx</a><a href='http://www.csdn.net/tag/%e6%ba%90%e7%a0%81' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">源码</a><a href='http://www.csdn.net/tag/%e8%87%aa%e6%97%8b%e9%94%81' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">自旋锁</a><a href='http://www.csdn.net/tag/spinlock' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">spinlock</a><a href='http://www.csdn.net/tag/%e5%89%96%e6%9e%90' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">剖析</a>
             </span>
         </div>
         <div class="article_r">
-            <span class="link_postdate">2014-10-21 13:54</span>
-            <span class="link_view" title="阅读次数">65071人阅读</span>
-            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(12)</span>
-            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('%e8%8f%9c%e9%b8%9fnginx%e6%ba%90%e7%a0%81%e5%89%96%e6%9e%90%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%af%87%ef%bc%88%e4%b8%80%ef%bc%89%e5%8a%a8%e6%80%81%e6%95%b0%e7%bb%84ngx_array_t','40343827');return false;" title="收藏">收藏</a></span>
-             <span class="link_report"> <a href="#report" onclick="javascript:report(40343827,2);return false;" title="举报">举报</a></span>
+            <span class="link_postdate">2014-11-11 20:48</span>
+            <span class="link_view" title="阅读次数">16944人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(0)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('%e8%8f%9c%e9%b8%9fnginx%e6%ba%90%e7%a0%81%e5%89%96%e6%9e%90%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%af%87%ef%bc%88%e5%8d%81%ef%bc%89+%e8%87%aa%e6%97%8b%e9%94%81ngx_spinlock','41017725');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(41017725,2);return false;" title="举报">举报</a></span>
 
         </div>
     </div>
@@ -262,7 +262,7 @@
             <span>分类：</span>
         </div>
         <div class="category_r">
-                    <label  onclick="GetCategoryArticles('2647301','chen19870707','top','40343827');">
+                    <label  onclick="GetCategoryArticles('2647301','chen19870707','top','41017725');">
                         <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">Server - 菜鸟nginx源码剖析<em>（13）</em></span>
                       <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
                       <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
@@ -288,276 +288,138 @@
 <div id="article_content" class="article_content">
 
 <p align="center"><span style="font-size:32px"></span>&nbsp;</p>
-<p align="center"><span style="font-size:32px">菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t</span></p>
+<p align="center"><span style="font-size:32px">菜鸟nginx源码剖析数据结构篇（十） 自旋锁ngx_spinlock</span></p>
 <p>&nbsp;</p>
 <li>
 <p>Author：Echo Chen（陈斌）</p>
 </li><li>
 <p>Email：chenb19870707@gmail.com</p>
 </li><li>
-<p>Blog：<a target="_blank" href="http://blog.csdn.net/chen19870707" target="_blank">Blog.csdn.net/chen19870707</a></p>
-<p>Date：October 20h, 2014</p>
-<p>&nbsp;</p>
-<h1>&nbsp;</h1>
-<h2>1.ngx_array优势和特点</h2>
-<p>&nbsp;</p>
-<p>ngx_array _t是一个顺序容器，支持达到数组容量上限时动态改变数组的大小，类&#20284;于STL中vector，具有以下特性：</p>
-<ul>
-<li>下标直接索引，访问速度快 </li><li>动态增长 </li><li>由slab内存池统一管理分配出的内存，效率高 </li></ul>
-<h2>2.源代码位置</h2>
-<p>&nbsp;</p>
-<p>头文件：<a target="_blank" title="http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_array.h" href="http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_array.h">http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_array.h</a></p>
-<p>源文件：<a target="_blank" title="http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_array.c" href="http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_array.c">http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_array.c</a></p>
-<p>&nbsp;</p>
-<h2>3.数据结构定义</h2>
-<p>&nbsp;</p>
-<p id="codeSnippetWrapper"></p>
-<pre id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span style="color:#0000ff">typedef</span>&nbsp;<span style="color:#0000ff">struct</span> {
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">void</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *elts;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//elts指向数组的首地址</span>
-&nbsp;&nbsp;&nbsp; ngx_uint_t&nbsp;&nbsp; nelts;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//nelts是数组中已经使用的元素个数</span>
-&nbsp;&nbsp;&nbsp; size_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; size;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//每个数组元素占用内存大小</span>
-&nbsp;&nbsp;&nbsp; ngx_uint_t&nbsp;&nbsp; nalloc;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//当前数组中能容纳袁术个数的总大小</span>
-&nbsp;&nbsp;&nbsp; ngx_pool_t&nbsp; *pool;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//内存池对象</span>
-} ngx_array_t;</pre>
-<br>
-其结构如下图所示：
-<p style="text-align:center"><img src="http://img.blog.csdn.net/20141027211512880?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbjE5ODcwNzA3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""><br>
+<p>Blog：<a target="_blank" target="_blank" href="http://blog.csdn.net/chen19870707">Blog.csdn.net/chen19870707</a></p>
+</li><li>
+<p>Date：Nov 11th, 2014</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 自旋锁(Spinlock)是一种 Linux 内核中广泛运用的底层同步机制。自旋锁是一种工作于多处理器环境的特殊的锁，在单处理环境中自旋锁的操作被替换为空操作。当某个处理器上的内核执行线程申请自旋锁时，如果锁可用，则获得锁，然后执行临界区操作，最后释放锁；如果锁已被占用，线程并不会转入睡眠状态，而是忙等待该锁，一旦锁被释放，则第一个感知此信息的线程将获得锁。<br>
 </p>
-<h2>&nbsp;</h2>
-<h2>&nbsp;</h2>
-<h2>4.动态数组创建ngx_array_create和初始化ngx_array_init</h2>
+<h2>1.源代码位置</h2>
 <p>&nbsp;</p>
-<div>
-<pre id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><p><span style="color:#008000"></span>&nbsp;</p><p><span style="color:#008000">//p为内存池,n为初始分配的元素的个数，size为每个元素占的内存大小</span>
-</p><p>&nbsp;</p><p>ngx_array_t *
-ngx_array_create(ngx_pool_t *p, ngx_uint_t n, size_t size)
-{
-&nbsp;&nbsp;&nbsp; ngx_array_t *a;
-
-&nbsp;&nbsp;&nbsp; <span style="color:#008000">//分配动态数组指针</span>
-&nbsp;&nbsp;&nbsp; a = ngx_palloc(p, <span style="color:#0000ff">sizeof</span>(ngx_array_t));
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (a == NULL) {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> NULL;
-&nbsp;&nbsp;&nbsp; }
-
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (ngx_array_init(a, p, n, size) != NGX_OK) {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> NULL;
-&nbsp;&nbsp;&nbsp; }
-
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> a;
-}
-
-<span style="color:#0000ff">static</span> ngx_inline ngx_int_t
-ngx_array_init(ngx_array_t *array, ngx_pool_t *pool, ngx_uint_t n, size_t size)
-{
-&nbsp;&nbsp;&nbsp; <span style="color:#008000">/*</span>
-<span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp; * set &quot;array-&gt;nelts&quot; before &quot;array-&gt;elts&quot;, otherwise MSVC thinks</span>
-<span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp; * that &quot;array-&gt;nelts&quot; may be used without having been initialized</span>
-<span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp; */</span>
-&nbsp;&nbsp;&nbsp; 
-&nbsp;&nbsp;&nbsp; <span style="color:#008000">//初始化数据</span>
-&nbsp;&nbsp;&nbsp; array-&gt;nelts = 0;
-&nbsp;&nbsp;&nbsp; array-&gt;size = size;
-&nbsp;&nbsp;&nbsp; array-&gt;nalloc = n;
-&nbsp;&nbsp;&nbsp; array-&gt;pool = pool;
-
-&nbsp;&nbsp;&nbsp; <span style="color:#008000">//分配n个大小为size的内存，elts指向首地址</span>
-&nbsp;&nbsp;&nbsp; array-&gt;elts = ngx_palloc(pool, n * size);
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (array-&gt;elts == NULL) {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> NGX_ERROR;
-&nbsp;&nbsp;&nbsp; }
-
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> NGX_OK;
-}
-</p></pre>
-</div>
-<div>&nbsp;</div>
-<h2>5.动态数组释放ngx_array_destroy</h2>
+<p>源文件：<a target="_blank" target="_blank" title="http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_spinlock.c" href="http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_spinlock.c">http://trac.nginx.org/nginx/browser/nginx/src/core/ngx_spinlock.c</a></p>
 <p>&nbsp;</p>
-<div id="codeSnippetWrapper">
-<pre id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span style="color:#0000ff">void</span>
-ngx_array_destroy(ngx_array_t *a)
-{
-&nbsp;&nbsp;&nbsp; ngx_pool_t&nbsp; *p;
-
-&nbsp;&nbsp;&nbsp; p = a-&gt;pool;
-
-&nbsp;&nbsp;&nbsp; <span style="color:#008000">//释放动态数组每个元素</span>
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> ((u_char *) a-&gt;elts &#43; a-&gt;size * a-&gt;nalloc == p-&gt;d.last) {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p-&gt;d.last -= a-&gt;size * a-&gt;nalloc;
-&nbsp;&nbsp;&nbsp; }
-
-&nbsp;&nbsp;&nbsp; <span style="color:#008000">//释放动态数组首指针</span>
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> ((u_char *) a &#43; <span style="color:#0000ff">sizeof</span>(ngx_array_t) == p-&gt;d.last) {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p-&gt;d.last = (u_char *) a;
-&nbsp;&nbsp;&nbsp; }
-}</pre>
-<br>
-</div>
-<div>这里用到内存池的释放操作，再后面详细讲解，这里把它当作释放即可。</div>
-<h2>&nbsp;</h2>
-<h2>6.动态数组的添加元素操作ngx_array_push和ngx_array_push_n</h2>
-<div>&nbsp;</div>
-<h3>1.ngx_array_push</h3>
-<p>&nbsp;</p>
-<div>
-<div>
-<pre id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span style="color:#008000">//a为要添加到的动态数组的指针</span>
-<span style="color:#0000ff">void</span> * ngx_array_push(ngx_array_t *a)
-{
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">void</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *elt, *<span style="color:#0000ff">new</span>;
-&nbsp;&nbsp;&nbsp; size_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; size;
-&nbsp;&nbsp;&nbsp; ngx_pool_t&nbsp; *p;
-
-&nbsp;&nbsp;&nbsp; <span style="color:#008000">//使用的和预先分配的个数相等，数组已满</span>
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (a-&gt;nelts == a-&gt;nalloc) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">/* the array is full */</span>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//再分配预分配nalloc个，现在就有2*nalloc个了</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; size = a-&gt;size * a-&gt;nalloc; 
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p = a-&gt;pool;
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//如果内存池内存还够，直接从内存池分配，只分配一个</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> ((u_char *) a-&gt;elts &#43; size == p-&gt;d.last
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp;&amp; p-&gt;d.last &#43; a-&gt;size &lt;= p-&gt;d.end)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">/*</span>
-<span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * the array allocation is the last in the pool</span>
-<span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * and there is space for new allocation</span>
-<span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//内存池尾指针后移一个元素大小，分配内存一个元素，并把nalloc&#43;1</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p-&gt;d.last &#43;= a-&gt;size;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a-&gt;nalloc&#43;&#43;;
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//如果内存池内存不够了，分配一个新的数组，大小为两倍的nalloc</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } <span style="color:#0000ff">else</span> {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">/* allocate a new array */</span>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//内存分配</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">new</span> = ngx_palloc(p, 2 * size);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (<span style="color:#0000ff">new</span> == NULL) {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> NULL;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//将以前的数组拷贝到新数组，并将数组大小设置为以前二倍</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ngx_memcpy(<span style="color:#0000ff">new</span>, a-&gt;elts, size);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a-&gt;elts = <span style="color:#0000ff">new</span>;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a-&gt;nalloc *= 2;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
-&nbsp;&nbsp;&nbsp; }
-
-&nbsp;&nbsp;&nbsp; <span style="color:#008000">//已分配个数&#43;1 ，并返回之</span>
-&nbsp;&nbsp;&nbsp; elt = (u_char *) a-&gt;elts &#43; a-&gt;size * a-&gt;nelts;
-&nbsp;&nbsp;&nbsp; a-&gt;nelts&#43;&#43;;
-
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> elt;
-}</pre>
-</div>
-<div><br>
-<strong><span style="color:#dd8484">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 可以看到，当内存池有空间时，数组满后仅增加一个元素，当内存池没有未分配空间时，直接分配2*nalloc 个大小，有了内存池，比vector直接2n&#43;1更加有效。
-<br>
-</span></strong></div>
-<div><strong><span style="color:#dd8484"></span></strong></div>
-<span style="color:#666666"></span>
-<h3>2.ngx_array_push_n</h3>
-<p>&nbsp;</p>
-<div id="codeSnippetWrapper">
-<pre id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span style="color:#008000">//a为要放入的数组，n为要放入的个数</span>
-<span style="color:#0000ff">void</span> *ngx_array_push_n(ngx_array_t *a, ngx_uint_t n)
-{
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">void</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *elt, *<span style="color:#0000ff">new</span>;
-&nbsp;&nbsp;&nbsp; size_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; size;
-&nbsp;&nbsp;&nbsp; ngx_uint_t&nbsp;&nbsp; nalloc;
-&nbsp;&nbsp;&nbsp; ngx_pool_t&nbsp; *p;
-
-&nbsp;&nbsp;&nbsp; size = n * a-&gt;size;
-
-&nbsp;&nbsp;&nbsp; <span style="color:#008000">//如果数组剩余个数不够分配</span>
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (a-&gt;nelts &#43; n &gt; a-&gt;nalloc) {
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">/* the array is full */</span>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p = a-&gt;pool;
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//如果内存池中剩余的够分配n个元素，从内存池中分配</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> ((u_char *) a-&gt;elts &#43; a-&gt;size * a-&gt;nalloc == p-&gt;d.last
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp;&amp; p-&gt;d.last &#43; size &lt;= p-&gt;d.end)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">/*</span>
-<span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * the array allocation is the last in the pool</span>
-<span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * and there is space for new allocation</span>
-<span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */</span>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p-&gt;d.last &#43;= size;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a-&gt;nalloc &#43;= n;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//如果内存池中剩余的不够分配n个元素</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } <span style="color:#0000ff">else</span> {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">/* allocate a new array */</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//当n比数组预分配个数nalloc大时，分配2n个，否则分配2*nalloc个</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nalloc = 2 * ((n &gt;= a-&gt;nalloc) ? n : a-&gt;nalloc);
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">new</span> = ngx_palloc(p, nalloc * a-&gt;size);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (<span style="color:#0000ff">new</span> == NULL) {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> NULL;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//拷贝以前元素，设置nalloc</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ngx_memcpy(<span style="color:#0000ff">new</span>, a-&gt;elts, a-&gt;nelts * a-&gt;size);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a-&gt;elts = <span style="color:#0000ff">new</span>;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a-&gt;nalloc = nalloc;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
-&nbsp;&nbsp;&nbsp; }
-
-&nbsp;&nbsp;&nbsp; <span style="color:#008000">//增加已分配个数，并返回</span>
-&nbsp;&nbsp;&nbsp; elt = (u_char *) a-&gt;elts &#43; a-&gt;size * a-&gt;nelts;
-&nbsp;&nbsp;&nbsp; a-&gt;nelts &#43;= n;
-
-&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span> elt;
-}</pre>
-<br>
-<strong></strong></div>
-<h2>7.实战</h2>
-<p>&nbsp;</p>
-<p>&nbsp;&nbsp; 研究开源代码的主要意义就在于理解设计的原理和适用的场合，并在合适的场合使用代码，如果单纯的分析代码，但都不能使用，肯定达不到学习的目的，这里就给出ngx_array的测试代码，希望多动手。</p>
-</div>
-<p><span style="color:#666666"></span></p>
+<h2>2.相关结构定义</h2>
+<blockquote>
+<p><strong>原子锁结构 ngx_atomic_t：</strong></p>
+</blockquote>
+<blockquote>
 <div id="codeSnippetWrapper">
 <div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> <span style="color:#0000ff">typedef</span>&nbsp;<span style="color:#0000ff">struct</span></pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum2" style="color:#606060">   2:</span> {&nbsp;&nbsp;&nbsp; </pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum3" style="color:#606060">   3:</span>&nbsp;&nbsp;&nbsp;&nbsp; u_char *name;&nbsp;&nbsp;&nbsp; </pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum4" style="color:#606060">   4:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">int</span> age;</pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum5" style="color:#606060">   5:</span> }Student;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> <span style="color:#0000ff">typedef</span>&nbsp;<span style="color:#0000ff">unsigned</span>&nbsp;<span style="color:#0000ff">long</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ngx_atomic_uint_t;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum2" style="color:#606060">   2:</span> <span style="color:#0000ff">typedef</span>&nbsp;<span style="color:#0000ff">volatile</span> ngx_atomic_uint_t&nbsp; ngx_atomic_t;</pre>
+</div>
+</div>
+</blockquote>
+<blockquote>
+<p><strong>原子锁&#20540;类型 ngx_atomic_int_t:</strong></p>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> <span style="color:#0000ff">typedef</span>&nbsp;<span style="color:#0000ff">long</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ngx_atomic_int_t;</pre>
+</div>
+</div>
+</blockquote>
+<blockquote>
+<p><strong>原子的比较和交换，如果lock和old相等，则set写入lock</strong></p>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> #define ngx_atomic_cmp_set(lock, old, set)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum2" style="color:#606060">   2:</span>&nbsp;&nbsp;&nbsp;&nbsp; __sync_bool_compare_and_swap(lock, old, set)</pre>
+</div>
+</div>
+</blockquote>
+<blockquote>
+<p>说明：</p>
+<p>bool __sync_bool_compare_and_swap (type *ptr, type oldval type newval, ...) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; type __sync_val_compare_and_swap (type *ptr, type oldval type newval, ...)</p>
+<p>这两个函数是GCC提供原子的比较和交换，如果*ptr == oldval,就将newval写入*ptr。</p>
+<p><br>
+</p>
+<p><strong></strong></p>
+<p><strong>进程主动让出执行权，ngx_sched_yeld</strong></p>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> #define ngx_sched_yield()&nbsp; sched_yield()</pre>
+</div>
+</div>
+</blockquote>
+<blockquote></blockquote>
+<h2>3.源代码剖析</h2>
+<blockquote>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4">
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum1" style="color:#606060">   1:</span> <span style="color:#0000ff">void</span></pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum2" style="color:#606060">   2:</span> ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum3" style="color:#606060">   3:</span> {</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum4" style="color:#606060">   4:</span>&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum5" style="color:#606060">   5:</span> #<span style="color:#0000ff">if</span> (NGX_HAVE_ATOMIC_OPS)</pre>
 <pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum6" style="color:#606060">   6:</span>&nbsp; </pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum7" style="color:#606060">   7:</span> ngx_array_t* pArray = ngx_array_create(cf-&gt;pool,1,<span style="color:#0000ff">sizeof</span>(Student));</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum7" style="color:#606060">   7:</span>&nbsp;&nbsp;&nbsp;&nbsp; ngx_uint_t&nbsp; i, n;</pre>
 <pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum8" style="color:#606060">   8:</span>&nbsp; </pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum9" style="color:#606060">   9:</span> Student *pStudent = ngx_array_push(pArray);</pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum10" style="color:#606060">  10:</span> pStudent-&gt;age = 10;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum9" style="color:#606060">   9:</span>&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum10" style="color:#606060">  10:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">for</span> ( ;; ) {</pre>
 <pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum11" style="color:#606060">  11:</span>&nbsp; </pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum12" style="color:#606060">  12:</span> Students *pStudents&nbsp; = ngx_array_push_n(pArray,3);</pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum13" style="color:#606060">  13:</span> pStudents-&gt;age = 1;</pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum14" style="color:#606060">  14:</span> (pStudents&nbsp; &#43; 1 )-&gt;age =2;</pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum15" style="color:#606060">  15:</span> (pStudents&nbsp; &#43; 2 )-&gt;age = 3; </pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum16" style="color:#606060">  16:</span>&nbsp; </pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum17" style="color:#606060">  17:</span> <span style="color:#008000">//遍历</span></pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum18" style="color:#606060">  18:</span> Student *pStudent = pArray-&gt;elts;</pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum19" style="color:#606060">  19:</span> ngx_uint_i = 0;</pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum20" style="color:#606060">  20:</span> <span style="color:#0000ff">for</span>(; i &lt; pArray-&gt;nelts;i&#43;&#43;)</pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum21" style="color:#606060">  21:</span> {</pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum22" style="color:#606060">  22:</span>&nbsp;&nbsp;&nbsp;&nbsp; a = pStudent&nbsp; &#43; i;</pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum23" style="color:#606060">  23:</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//....</span></pre>
-<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum24" style="color:#606060">  24:</span> }</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum12" style="color:#606060">  12:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//*lock == 0,没有上锁则上锁，则调用ngx_atomic_cmp_set上锁，设置*lock=value，然后返回 </span></pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum13" style="color:#606060">  13:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (*lock == 0 &amp;&amp; ngx_atomic_cmp_set(lock, 0, value)) {</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum14" style="color:#606060">  14:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span>;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum15" style="color:#606060">  15:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum16" style="color:#606060">  16:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum17" style="color:#606060">  17:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">// 多核</span></pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum18" style="color:#606060">  18:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (ngx_ncpu &gt; 1) {</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum19" style="color:#606060">  19:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum20" style="color:#606060">  20:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//如果 spin 为 80，则第一次等待 1 个 ngx_cpu_pause() 操作，然后再次查看锁是否可用。接下来每轮分别等待 2个、4 个、8 个、16 个、32 个、64 个 ngx_cpu_pause() 操作后再试。</span></pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum21" style="color:#606060">  21:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//这中间过程中如果出现锁被释放从而可以使用的情况，则循环会被中止，spinlock 函数会返回&#20540;。如果重试仍没有成功，则执行 ngx_sched_yield，然后再重复上面的操作。</span></pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum22" style="color:#606060">  22:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">for</span> (n = 1; n &lt; spin; n &lt;&lt;= 1) {</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum23" style="color:#606060">  23:</span>&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum24" style="color:#606060">  24:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">for</span> (i = 0; i &lt; n; i&#43;&#43;) {</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum25" style="color:#606060">  25:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ngx_cpu_pause();</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum26" style="color:#606060">  26:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum27" style="color:#606060">  27:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum28" style="color:#606060">  28:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//检查是否上锁，如果 *lock == 0,则迅速上锁返回</span></pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum29" style="color:#606060">  29:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">if</span> (*lock == 0 &amp;&amp; ngx_atomic_cmp_set(lock, 0, value)) {</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum30" style="color:#606060">  30:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000ff">return</span>;</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum31" style="color:#606060">  31:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum32" style="color:#606060">  32:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum33" style="color:#606060">  33:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum34" style="color:#606060">  34:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum35" style="color:#606060">  35:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008000">//让出CPU执行权</span></pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum36" style="color:#606060">  36:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ngx_sched_yield();</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum37" style="color:#606060">  37:</span>&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum38" style="color:#606060">  38:</span>&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum39" style="color:#606060">  39:</span> <span style="color:#cc6633">#else</span></pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum40" style="color:#606060">  40:</span>&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum41" style="color:#606060">  41:</span> #<span style="color:#0000ff">if</span> (NGX_THREADS)</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum42" style="color:#606060">  42:</span>&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum43" style="color:#606060">  43:</span> #error ngx_spinlock() or ngx_atomic_cmp_set() are not defined !</pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum44" style="color:#606060">  44:</span>&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum45" style="color:#606060">  45:</span> <span style="color:#cc6633">#endif</span></pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum46" style="color:#606060">  46:</span>&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum47" style="color:#606060">  47:</span> <span style="color:#cc6633">#endif</span></pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum48" style="color:#606060">  48:</span>&nbsp; </pre>
+<pre style="border-top-style:none; overflow:visible; font-size:8pt; font-family:'Courier New',courier,monospace; width:100%; border-bottom-style:none; color:black; padding-bottom:0px; direction:ltr; text-align:left; padding-top:0px; border-right-style:none; padding-left:0px; margin:0em; border-left-style:none; line-height:12pt; padding-right:0px; background-color:#f4f4f4"><span id="lnum49" style="color:#606060">  49:</span> }</pre>
 </div>
 </div>
-<span style="color:#666666"></span>
-<div>&nbsp;</div>
+</blockquote>
+<blockquote>
 <p>&nbsp;</p>
-<p>-</p>
-<p>Echo Chen：<a target="_blank" href="http://blog.csdn.net/chen19870707" target="_blank">Blog.csdn.net/chen19870707</a></p>
+</blockquote>
+</li><li>
+<h2>4.参考资料</h2>
+<p>&nbsp;</p>
+<p>1.<a target="_blank" target="_blank" title="http://blog.csdn.net/poechant/article/details/8062969" href="http://blog.csdn.net/poechant/article/details/8062969">http://blog.csdn.net/poechant/article/details/8062969</a></p>
+<p>2.《深入理解Nginx》</p>
+</li><li>
+<p>&nbsp;</p>
+</li><li>
+<p>-Echo Chen</p>
+</li><li>
+<p><a target="_blank" target="_blank" href="http://blog.csdn.net/chen19870707">Blog.csdn.net/chen19870707</a></p>
+</li><li>
 <p>-</p>
 </li>   
 </div>
@@ -596,18 +458,19 @@ ngx_array_destroy(ngx_array_t *a)
 
  
 
-        <div id="digg" ArticleId="40343827" >
-            <dl id="btnDigg" class="digg digg_enable"  onclick="btndigga();">
+
+        <div id="digg" ArticleId="41017725" >
+            <dl id="btnDigg" class="digg digg_disable"  onclick="btndigga();">
                
                  <dt>顶</dt>
-                <dd>6</dd>
+                <dd>1</dd>
             </dl>
            
               
-            <dl id="btnBury" class="digg digg_enable"  onclick="btnburya();">
+            <dl id="btnBury" class="digg digg_disable"  onclick="btnburya();">
               
                   <dt>踩</dt>
-                <dd>1</dd>               
+                <dd>0</dd>               
             </dl>
             
         </div>
@@ -623,8 +486,8 @@ ngx_array_destroy(ngx_array_t *a)
             </script>
 
    <ul class="article_next_prev">
-                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/chen19870707/article/details/40302911';">上一篇</span><a href="/chen19870707/article/details/40302911" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">TCMalloc 对MYSQL 性能 优化的分析</a></li>
-                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/chen19870707/article/details/40371047';">下一篇</span><a href="/chen19870707/article/details/40371047" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">菜鸟nginx源码剖析数据结构篇（二） 双向链表ngx_queue_t</a></li>
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/chen19870707/article/details/41015613';">上一篇</span><a href="/chen19870707/article/details/41015613" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/chen19870707/article/details/41050379';">下一篇</span><a href="/chen19870707/article/details/41050379" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">菜鸟nginx源码剖析 框架篇（一） 从main函数看nginx启动流程</a></li>
     </ul>
 
     <div style="clear:both; height:10px;"></div>
@@ -635,7 +498,7 @@ ngx_array_destroy(ngx_array_t *a)
                 <div class="similar_c"style="margin:20px 0px 0px 0px">
                     <div class="similar_c_t">
                                 <label class="similar_cur">
-                                    <span  style="cursor:pointer"  onclick="GetCategoryArticles('2647301','chen19870707','foot','40343827');">Server - 菜鸟nginx源码剖析<em>（13）</em></span>
+                                    <span  style="cursor:pointer"  onclick="GetCategoryArticles('2647301','chen19870707','foot','41017725');">Server - 菜鸟nginx源码剖析<em>（13）</em></span>
                                 </label>
                     </div>
                    
@@ -651,20 +514,20 @@ ngx_array_destroy(ngx_array_t *a)
             </div>    
     <script  type="text/javascript">
         $(function () {
-            GetCategoryArticles('2647301', 'chen19870707','foot','40343827');
+            GetCategoryArticles('2647301', 'chen19870707','foot','41017725');
         });
     </script>
       
 </div>
 
      <div>
-    <ins data-revive-zoneid="206" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
-          </div>
+             <ins data-revive-zoneid="206" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+    </div>
 
 <div id="suggest"></div>
          <script  language="javascript" type='text/javascript'>     
              $(function(){
-                 $.get("/chen19870707/svc/GetSuggestContent/40343827",function(data){
+                 $.get("/chen19870707/svc/GetSuggestContent/41017725",function(data){
                      $("#suggest").html(data);
                  });     
              });             
@@ -715,8 +578,8 @@ background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gi
             csdn.position.showEdu({
                 sourceType: "blog",
                 searchType: "detail",
-                searchKey: "40343827",
-                username: "hfeng_2000",
+                searchKey: "41017725",
+                username: "",
                 recordcount: "5",
                 containerId: "adCollege" //容器DIV的id。 
             });
@@ -732,7 +595,7 @@ background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gi
 <script type="text/javascript">
     $(function () {
         setTimeout(function () {
-            var searchtitletags = '菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t' + ',' + $("#tags").html();
+            var searchtitletags = '菜鸟nginx源码剖析数据结构篇（十） 自旋锁ngx_spinlock' + ',' + $("#tags").html();
             searchService({
                 index: 'blog',
                 query: searchtitletags,
@@ -772,8 +635,8 @@ background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gi
 </div>
 
 <script type="text/javascript">
-    var fileName = '40343827';
-    var commentscount = 12;
+    var fileName = '41017725';
+    var commentscount = 0;
     var islock = false
 </script>
 <script type="text/javascript" src="http://static.blog.csdn.net/scripts/comment.js"></script>
@@ -999,21 +862,21 @@ background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gi
                </div>
 </div>
 <ul id="blog_rank">
-    <li>访问：<span>747204次</span></li>
-    <li>积分：<span>4983</span> </li>    
+    <li>访问：<span>748521次</span></li>
+    <li>积分：<span>4991</span> </li>    
     <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
             <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog5.png" alt="" style="vertical-align: middle;" id="leveImg">
             <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
             <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
-            积分：4983 </div>
+            积分：4991 </div>
         </span>  </li>
-    <li>排名：<span>第4431名</span></li>
+    <li>排名：<span>第4451名</span></li>
 </ul>
 <ul id="blog_statistics">
     <li>原创：<span>49篇</span></li>
     <li>转载：<span>4篇</span></li>
     <li>译文：<span>4篇</span></li>
-    <li>评论：<span>159条</span></li>
+    <li>评论：<span>160条</span></li>
 </ul>
 </ul>
 </div>
@@ -1055,7 +918,7 @@ background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gi
     <td style="padding:10px 0; vertical-align:top;">
     <a href="http://blog.csdn.net/column/details/niginxsourcelearning.html" target="_blank">nginx源码剖析</a>
     <p>文章：14篇</p>
-    <span>阅读：234601</span>
+    <span>阅读：234845</span>
     </td>
     </tr></table>
     <table cellpadding="0" cellspacing="0"><tr>
@@ -1065,7 +928,7 @@ background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gi
     <td style="padding:10px 0; vertical-align:top;">
     <a href="http://blog.csdn.net/column/details/tcmalloclearning.html" target="_blank">TCMalloc原理和使用</a>
     <p>文章：5篇</p>
-    <span>阅读：228379</span>
+    <span>阅读：228552</span>
     </td>
     </tr></table>
     </ul>
@@ -1126,34 +989,34 @@ background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gi
 
 <ul class="panel_body itemlist">
 <li>
-<a href="/chen19870707/article/details/40301783" title="TCMalloc 安装和使用">TCMalloc 安装和使用</a><span>(75865)</span>
+<a href="/chen19870707/article/details/40301783" title="TCMalloc 安装和使用">TCMalloc 安装和使用</a><span>(75952)</span>
 </li>
 <li>
-<a href="/chen19870707/article/details/40343827" title="菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t">菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t</a><span>(65070)</span>
+<a href="/chen19870707/article/details/40343827" title="菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t">菜鸟nginx源码剖析数据结构篇（一）动态数组ngx_array_t</a><span>(65090)</span>
 </li>
 <li>
-<a href="/chen19870707/article/details/40145565" title="使用Tcmalloc进行堆栈分析">使用Tcmalloc进行堆栈分析</a><span>(64620)</span>
+<a href="/chen19870707/article/details/40145565" title="使用Tcmalloc进行堆栈分析">使用Tcmalloc进行堆栈分析</a><span>(64647)</span>
 </li>
 <li>
-<a href="/chen19870707/article/details/40302911" title="TCMalloc 对MYSQL 性能 优化的分析">TCMalloc 对MYSQL 性能 优化的分析</a><span>(64285)</span>
+<a href="/chen19870707/article/details/40302911" title="TCMalloc 对MYSQL 性能 优化的分析">TCMalloc 对MYSQL 性能 优化的分析</a><span>(64289)</span>
 </li>
 <li>
-<a href="/chen19870707/article/details/41083183" title="CAS原子操作实现无锁及性能分析">CAS原子操作实现无锁及性能分析</a><span>(36144)</span>
+<a href="/chen19870707/article/details/41083183" title="CAS原子操作实现无锁及性能分析">CAS原子操作实现无锁及性能分析</a><span>(36309)</span>
 </li>
 <li>
-<a href="/chen19870707/article/details/41015613" title="菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t">菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t</a><span>(23436)</span>
+<a href="/chen19870707/article/details/41015613" title="菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t">菜鸟nginx源码剖析数据结构篇（九） 内存池ngx_pool_t</a><span>(23455)</span>
 </li>
 <li>
-<a href="/chen19870707/article/details/43202679" title="为什么linux下多线程程序如此消耗虚拟内存">为什么linux下多线程程序如此消耗虚拟内存</a><span>(21462)</span>
+<a href="/chen19870707/article/details/43202679" title="为什么linux下多线程程序如此消耗虚拟内存">为什么linux下多线程程序如此消耗虚拟内存</a><span>(21555)</span>
 </li>
 <li>
-<a href="/chen19870707/article/details/41050379" title="菜鸟nginx源码剖析 框架篇（一） 从main函数看nginx启动流程">菜鸟nginx源码剖析 框架篇（一） 从main函数看nginx启动流程</a><span>(21435)</span>
+<a href="/chen19870707/article/details/41050379" title="菜鸟nginx源码剖析 框架篇（一） 从main函数看nginx启动流程">菜鸟nginx源码剖析 框架篇（一） 从main函数看nginx启动流程</a><span>(21471)</span>
 </li>
 <li>
-<a href="/chen19870707/article/details/39585277" title="手把手实现红黑树">手把手实现红黑树</a><span>(20345)</span>
+<a href="/chen19870707/article/details/39585277" title="手把手实现红黑树">手把手实现红黑树</a><span>(20375)</span>
 </li>
 <li>
-<a href="/chen19870707/article/details/39994303" title="眉目传情之并发无锁环形队列的实现">眉目传情之并发无锁环形队列的实现</a><span>(19388)</span>
+<a href="/chen19870707/article/details/39994303" title="眉目传情之并发无锁环形队列的实现">眉目传情之并发无锁环形队列的实现</a><span>(19419)</span>
 </li>
 </ul>
 </div>
@@ -1176,13 +1039,13 @@ background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gi
 <a href="/chen19870707/article/details/40400719" title="菜鸟nginx源码剖析数据结构篇（三） 单向链表 ngx_list_t">菜鸟nginx源码剖析数据结构篇（三） 单向链表 ngx_list_t</a><span>(9)</span>
 </li>
 <li>
+<a href="/chen19870707/article/details/39994303" title="眉目传情之并发无锁环形队列的实现">眉目传情之并发无锁环形队列的实现</a><span>(9)</span>
+</li>
+<li>
 <a href="/chen19870707/article/details/39899743" title="眉目传情之匠心独运的kfifo">眉目传情之匠心独运的kfifo</a><span>(9)</span>
 </li>
 <li>
 <a href="/chen19870707/article/details/39694517" title="游戏服务器设计的一些感悟">游戏服务器设计的一些感悟</a><span>(8)</span>
-</li>
-<li>
-<a href="/chen19870707/article/details/39994303" title="眉目传情之并发无锁环形队列的实现">眉目传情之并发无锁环形队列的实现</a><span>(8)</span>
 </li>
 <li>
 <a href="/chen19870707/article/details/39585277" title="手把手实现红黑树">手把手实现红黑树</a><span>(8)</span>
@@ -1196,14 +1059,14 @@ background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gi
 <ul class="panel_head"><span>推荐文章</span></ul>
 <ul class="panel_body" id="ad_commend">
 <ul>
-<li><a href="http://blog.csdn.net/lmj623565791/article/details/53370414" target="_blank">* Android 反编译初探 应用是如何被注入广告的</a></li>
-<li><a href="http://blog.csdn.net/foruok/article/details/53500801" 
-target="_blank">* 凭兴趣求职80%会失败，为什么</a></li>
-<li><a href="http://blog.csdn.net/AndroidMsky/article/details/53490459" 
-target="_blank">* 安卓微信自动抢红包插件优化和实现</a></li>
-<li><a href="http://blog.csdn.net/poem_qianmo/article/details/53240330" target="_blank">* 【游戏设计模式】之四 《游戏编程模式》全书内容提炼总结</a></li>
-<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/53404018" 
-target="_blank">* 带你开发一款给Apk中自动注入代码工具icodetools(完善篇)</a></li>
+<li><a href="http://blog.csdn.net/laoyang360/article/details/53843771" target="_blank">* 而立之年——三线城市程序员的年终告白</a></li>
+<li><a href="http://blog.csdn.net/sdkfjksf/article/details/54380659" 
+target="_blank">* Java集合框架中隐藏的设计套路</a></li>
+<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/54092364" 
+target="_blank">* Python脚本下载今日头条视频(附加Android版本辅助下载器)</a></li>
+<li><a href="http://blog.csdn.net/caowenbin/article/details/54406716" target="_blank">* 人工智能的冷思考</a></li>
+<li><a href="http://blog.csdn.net/it_talk/article/details/54346566" 
+target="_blank">* React Native 实战系列教程之热更新原理分析与实现</a></li>
 
 
 </ul></ul>
@@ -1213,6 +1076,13 @@ target="_blank">* 带你开发一款给Apk中自动注入代码工具icodetools(
 <div id="newcomments" class="panel">
 <ul class="panel_head"><span>最新评论</span></ul>
 <ul class="panel_body itemlist">
+    <li>
+   
+         <a href="/chen19870707/article/details/39994303#comments">眉目传情之并发无锁环形队列的实现</a>
+    <p style="margin:0px;"><a href="/louisejackie" class="user_name">louisejackie</a>:
+测试了下，没有内存屏障不好使啊。
+    </p>
+    </li>
     <li>
    
          <a href="/chen19870707/article/details/39899743#comments">眉目传情之匠心独运的kfifo</a>
@@ -1276,13 +1146,6 @@ ngx_array_destroy中为什么是p = a-&gt;pool而不是p=a-&gt;pool.d-&gt;n...
 赞，我也遇到一样的问题，个人认为c语言的优点是程序员自己来处理这些问题，我认为他们越界了。。。
     </p>
     </li>
-    <li>
-   
-         <a href="/chen19870707/article/details/40039401#comments">TCMalloc:线程缓冲的Malloc</a>
-    <p style="margin:0px;"><a href="/wojiaowugen" class="user_name">wojiaowugen</a>:
-学习了
-    </p>
-    </li>
 </ul>
 </div>
     </div>
@@ -1309,6 +1172,7 @@ ngx_array_destroy中为什么是p = a-&gt;pool而不是p=a-&gt;pool.d-&gt;n...
 <script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=611880"></script>
 <script type="text/javascript" src="http://static.blog.csdn.net/scripts/JavaScript1.js"></script>
 
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
 <script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
 <script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
 <script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
