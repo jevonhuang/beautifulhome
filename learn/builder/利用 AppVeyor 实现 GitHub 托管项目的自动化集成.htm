@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+<link rel="alternate" type="application/rss+xml" title="atom 1.0" href="/feed">
+
+
+
+<title>利用 AppVeyor 实现 GitHub 托管项目的自动化集成</title>
+
+
+    <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1"/>
+    <meta name="keywords" content="game development" />
+    <meta name="description" content="" />
+    <meta name="renderer" content="webkit"/><!--[if lt IE 9]><script type="text/javascript" src="html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]--><!--[if IE]><link href="/template/sass/ie.scss" type="text/css" rel="stylesheet"/>
+<![endif]--><link href="/service/static_3rd/staticfile/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css" rel="stylesheet"/>
+<link href="/template/sass/normalize.scss" type="text/css" rel="stylesheet"/>
+<link href="/template/sass/screen.scss" type="text/css" rel="stylesheet"/>
+
+  </head>
+  <body>
+    <div id="wrap">
+      <header id="header" class="cf">
+        <div class="logo"><a href="/">Gu Lu's Blog</a>
+        </div>
+        <nav class="main-nav">
+          <ul class="menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/archive">Archive</a></li>
+            <li><a href="/about.md">About</a></li>
+          </ul>
+        </nav>
+      </header>
+      <div id="main" class="cf">
+
+
+<div class="primary">
+  <article class="post">
+    <header>
+      <h2><a href="/post/2015-05-01-appveyor-ci" >利用 AppVeyor 实现 GitHub 托管项目的自动化集成</a>
+      </h2>
+      <div class="entry-meta"><span><i class="fa fa-calendar">&nbsp;</i>2015-05-01
+</span><span><i class="fa fa-tags">&nbsp;</i><a href="/tags/CI" class="tag">&nbsp;CI</a><a href="/tags/Deployment" class="tag">&nbsp;Deployment</a></span><span class="count"><i class="fa fa-book"></i>&nbsp;<!--fb:ccb191b1de06e126116936d924741ad2:visits-->2491<!--/fb-->
+</span>
+      </div>
+    </header>
+    <div class="entry"><div class='toc'><ul>
+<li>
+<a href="#toc_0">基本流程</a>
+</li>
+<li>
+<a href="#toc_1">状态显示（Status Badge）</a>
+</li>
+<li>
+<a href="#toc_2">控制部署的触发</a>
+</li>
+</ul>
+</div><p><img src="/_image/2015-05-01-appveyor-ci/drawing-cd-header.png" alt="title"></p>
+
+<hr>
+
+<p>今天拿<a href="https://github.com/SeaSunOpenSource/usmooth">手头一个 GitHub 项目</a>实验了一下在线的集成服务，前后试用了 <a href="https://travis-ci.org/">TravisCI</a>, <a href="https://circleci.com/">CircleCI</a> 和 <a href="http://www.appveyor.com/">AppVeyor</a>。由于测试工程内包含了一些使用了 WPF 的 C# 代码，前面两个跑在 Linux/Mono 上不是很友好，而 AppVeyor 的配置非常顺利，与 GitHub 的互操作也没有任何问题，所以完成之后记录一下备忘。</p>
+
+<h2 id="toc_0">基本流程</h2>
+
+<p>首先将 AppVeyor 跟 GitHub 绑定后，就可以点击项目主页上的“ + New Project ”添加工程了。</p>
+
+<p><img src="/_image/2015-05-01-appveyor-ci/new_project.png" alt="new_project"></p>
+
+<p>添加工程之后，需要到 Settings 里面做一些对应的配置。这里择要说一下吧。</p>
+
+<hr>
+
+<p>General 一栏中，有一个变量是生成的版本字符串，通常在后面打包时会用到。{build} 是一个自增长的序列号。</p>
+
+<p><img src="/_image/2015-05-01-appveyor-ci/config_01_build_version_format.png" alt="cfg01"></p>
+
+<p>Environment 一栏中，比较重要的是 Init script 和 Install script 的区别——简单说，前者发生在 <code>git clone</code> 和 <code>git checkout</code> 前，后者发生在它们之后。</p>
+
+<p><img src="/_image/2015-05-01-appveyor-ci/config_02_install_script.png" alt="cfg02"></p>
+
+<p>如果像测试工程那样在库中包含 submodule，就需要在 Install script 内做 <code>git submodule update</code> （如上图）</p>
+
+<p>Build 一栏中的各种选项应该是不需要解释，程序员都很熟悉了。</p>
+
+<p>Artifacts 一栏中，如果指定的是目录， AppVeyor 会自动打成 zip 包，包名就是 <code>Deployment Name</code>，在这里可以用上前面的版本字符串。</p>
+
+<p><img src="/_image/2015-05-01-appveyor-ci/config_03_artifacts.png" alt="cfg03"></p>
+
+<p>接下来是最后也是最重要的一栏 —— Deployment。 如果前面的步骤都很顺利，这一步就会把生成并打包好的文件发布出去。由于我的测试项目在 GitHub 上，这里我就选了 <strong>GitHub Releases</strong> （需要填入 <code>GitHub authentication token</code>）。注意这里需要明确指出待发布的 Artifacts 列表。</p>
+
+<p>这里有一项是 <code>Draft Release</code>（以草稿方式发布）比较有用，发布的内容只有当手动确认后才会公开出现在 GitHub 项目的 Releases 栏内，以免造成误发布。</p>
+
+<p><img src="/_image/2015-05-01-appveyor-ci/deploy.png" alt="deploy03"></p>
+
+<p>以 draft 方式发布在 GitHub 上后效果如上图。</p>
+
+<hr>
+
+<p>好了，如果一切顺利的话，至此 AppVeyor 已完成了 <strong>从获取代码，编译，打包，部署到 GitHub ，并以 GitHub Release 方式发布</strong> 的整个流程，还算简单吧。注意，在整个过程中，无需自己手写一句 git, make, msbuild, zip, copy 等各种内部和外部的命令，甚至连 solution file (*.sln) 都不需要手动指定，俺觉得总体上还是非常简洁的。</p>
+
+<hr>
+
+<h2 id="toc_1">状态显示（Status Badge）</h2>
+
+<p>有了持续集成的服务以后，最自然的想法是给项目加上当前集成状态的标示。有了这个东东，任何查看项目的人都能第一时间获知集成的状态，不良提交造成 build break 的情况就能迅速得到重视和修复。</p>
+
+<p><img src="/_image/2015-05-01-appveyor-ci/badge.png" alt="badge"></p>
+
+<p>如何添加可以看<a href="http://www.appveyor.com/docs/status-badges">这个页面</a>。</p>
+
+<hr>
+
+<h2 id="toc_2">控制部署的触发</h2>
+
+<p>默认情况下 AppVeyor 是每个提交都会编译和部署的，也就是说，如果没有错误，每一次提交最终都会触发一次发布（Release）。而大多数时候我们需要的实际上是“每次提交的时候都编译，但只有指定的版本才触发部署”。读了<a href="http://www.appveyor.com/docs/branches#build-on-tags-github-only">一下文档</a>，我发现这个需求可以通过 <code>APPVEYOR_REPO_TAG</code> 这个环境变量（仅在 push 了包含 tagged commit 之后为真）来实现。</p>
+
+<p>具体做法如下图所示，在 Deployment 的选项里新增一个部署条件（Add deployment condition）判断一下 <code>APPVEYOR_REPO_TAG</code>，就可以做到只有打 tag 的提交才触发部署了。</p>
+
+<p><img src="/_image/2015-05-01-appveyor-ci/deploy_on_tag_1.png" alt="deploy1"></p>
+
+<p>打完之后测试了一下，这是一个 untagged commit 的行为，嗯，一切正常。</p>
+
+<p><img src="/_image/2015-05-01-appveyor-ci/deploy_on_tag_2.png" alt="deploy2"></p>
+
+<hr>
+
+<p>最后好奇看了一下针对 public projects 的收费版的价格，每个月 $29.5。不过俺觉得免费版日常已经基本够用了。</p>
+
+<hr>
+
+<p>[完]<br />Gu Lu<br />[2015-05-01]</p></div>
+<div id="fb_comments_container">
+  <div class="ds-thread"></div>
+  <script type="text/javascript">var duoshuoQuery = {short_name:"gulu-dev"};
+(function() { var ds = document.createElement('script'); ds.type = 'text/javascript';ds.async = true;
+ds.src = '//static.duoshuo.com/embed.js';ds.charset = 'UTF-8';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+</div>
+
+  </article>
+</div>
+<div class="sider">
+  <aside>
+    <h3><i class="fa fa-magic"></i><span>&nbsp; Recent Articles</span>
+    </h3>
+    <ul class="recent_posts">
+
+
+      <li class="listing-item"><a href="/post/perf_assist/2017-02-18-unity-gc-cheatsheet"  title="Unity GC Cheatsheet" >Unity GC Cheatsheet</a>
+      </li>
+      <li class="listing-item"><a href="/post/non-dev/2017-02-12-history-in-economy-1"  title="《王朝的家底》 记录 (1)" >《王朝的家底》 记录 (1)</a>
+      </li>
+      <li class="listing-item"><a href="/post/perf_assist/2017-01-25-unity-memoryprofiler"  title="Unity MemoryProfiler 的工作机制及可能的改进" >Unity MemoryProfiler 的工作机制及可能的改进</a>
+      </li>
+      <li class="listing-item"><a href="/post/2017-01-15-game-engine-talk-2016"  title="游戏引擎技术点滴" >游戏引擎技术点滴</a>
+      </li>
+      <li class="listing-item"><a href="/post/perf_assist/2016-12-20-unity-coroutine-optimizing"  title="Unity 协程运行时的监控和优化" >Unity 协程运行时的监控和优化</a>
+      </li>
+      <li class="listing-item"><a href="/post/vr/2016-12-18-oculus-connect-3-abrash"  title="VR 的未来五年 - Michael Abrash 在 Oculus Connect 3 上的回顾与展望" >VR 的未来五年 - Michael Abrash 在 Oculus Connect 3 上的回顾与展望</a>
+      </li>
+    </ul>
+  </aside>
+  <aside>
+    <h3><i class="fa fa-comments"></i><span>&nbsp; Recent Comments</span>
+    </h3>
+    <ul data-show-title="0" data-show-time="0" data-show-avatars="0" class="ds-recent-comments"></ul>
+  </aside>
+  <aside>
+    <h3><i class="fa fa-tags"></i><span>&nbsp;Tags</span>
+    </h3>
+    <div><a href="/tags/随笔">随笔 &nbsp;</a><a href="/tags/游戏开发">游戏开发 &nbsp;</a><a href="/tags/Programming">Programming &nbsp;</a><a href="/tags/C/C++">C/C++ &nbsp;</a><a href="/tags/Unity">Unity &nbsp;</a><a href="/tags/C++">C++ &nbsp;</a><a href="/tags/游戏设计">游戏设计 &nbsp;</a><a href="/tags/优化">优化 &nbsp;</a><a href="/tags/Unity3D">Unity3D &nbsp;</a><a href="/tags/软件开发">软件开发 &nbsp;</a><a href="/tags/idtech">idtech &nbsp;</a><a href="/tags/引擎设计">引擎设计 &nbsp;</a><a href="/tags/知乎">知乎 &nbsp;</a><a href="/tags/系统架构">系统架构 &nbsp;</a><a href="/tags/Production">Production &nbsp;</a><a href="/tags/中国文化">中国文化 &nbsp;</a><a href="/tags/项目管理">项目管理 &nbsp;</a><a href="/tags/游戏评论">游戏评论 &nbsp;</a><a href="/tags/资源管理">资源管理 &nbsp;</a><a href="/tags/资源流水线">资源流水线 &nbsp;</a><a href="/tags/效率">效率 &nbsp;</a><a href="/tags/网络">网络 &nbsp;</a><a href="/tags/方法论">方法论 &nbsp;</a><a href="/tags/模板编程">模板编程 &nbsp;</a><a href="/tags/Lua">Lua &nbsp;</a><a href="/tags/Oculus">Oculus &nbsp;</a><a href="/tags/渲染">渲染 &nbsp;</a><a href="/tags/VR">VR &nbsp;</a><a href="/tags/PerfAssist">PerfAssist &nbsp;</a><a href="/tags/Unity MemoryProfiler">Unity MemoryProfiler &nbsp;</a><a href="/tags/Productivity">Productivity &nbsp;</a><a href="/tags/经济学">经济学 &nbsp;</a><a href="/tags/信息过载">信息过载 &nbsp;</a><a href="/tags/图形">图形 &nbsp;</a><a href="/tags/网络编程">网络编程 &nbsp;</a><a href="/tags/协程">协程 &nbsp;</a><a href="/tags/Premake">Premake &nbsp;</a><a href="/tags/中间件">中间件 &nbsp;</a><a href="/tags/Game Engine">Game Engine &nbsp;</a><a href="/tags/新手引导">新手引导 &nbsp;</a><a href="/tags/CI">CI &nbsp;</a><a href="/tags/命令行解析">命令行解析 &nbsp;</a><a href="/tags/goroutine">goroutine &nbsp;</a><a href="/tags/ndk">ndk &nbsp;</a><a href="/tags/自动化">自动化 &nbsp;</a><a href="/tags/Scripting">Scripting &nbsp;</a><a href="/tags/摘录">摘录 &nbsp;</a><a href="/tags/Debugging">Debugging &nbsp;</a><a href="/tags/同步技术">同步技术 &nbsp;</a><a href="/tags/cppcon">cppcon &nbsp;</a><a href="/tags/C++模板">C++模板 &nbsp;</a><a href="/tags/DOOM3">DOOM3 &nbsp;</a><a href="/tags/技术评估">技术评估 &nbsp;</a><a href="/tags/Unity GC">Unity GC &nbsp;</a><a href="/tags/C++11">C++11 &nbsp;</a><a href="/tags/学习方法">学习方法 &nbsp;</a><a href="/tags/Surface Pro 3">Surface Pro 3 &nbsp;</a><a href="/tags/Engine Evaluation">Engine Evaluation &nbsp;</a><a href="/tags/EMC">EMC &nbsp;</a><a href="/tags/文化">文化 &nbsp;</a><a href="/tags/笔记">笔记 &nbsp;</a><a href="/tags/golang">golang &nbsp;</a><a href="/tags/图形编程">图形编程 &nbsp;</a><a href="/tags/多线程">多线程 &nbsp;</a><a href="/tags/Michael Abrash">Michael Abrash &nbsp;</a><a href="/tags/思维方法">思维方法 &nbsp;</a><a href="/tags/cppcon14">cppcon14 &nbsp;</a><a href="/tags/Unity Coroutine">Unity Coroutine &nbsp;</a><a href="/tags/跨语言可变参数列表">跨语言可变参数列表 &nbsp;</a><a href="/tags/团队协作">团队协作 &nbsp;</a><a href="/tags/货币">货币 &nbsp;</a><a href="/tags/Deployment">Deployment &nbsp;</a><a href="/tags/Modern C++">Modern C++ &nbsp;</a><a href="/tags/工程改进">工程改进 &nbsp;</a><a href="/tags/exp">exp &nbsp;</a><a href="/tags/开放世界">开放世界 &nbsp;</a><a href="/tags/比特币">比特币 &nbsp;</a><a href="/tags/域名">域名 &nbsp;</a><a href="/tags/虚拟现实">虚拟现实 &nbsp;</a><a href="/tags/系统重构">系统重构 &nbsp;</a><a href="/tags/slua">slua &nbsp;</a><a href="/tags/遮挡剔除">遮挡剔除 &nbsp;</a><a href="/tags/完美转发">完美转发 &nbsp;</a><a href="/tags/协作式调度">协作式调度 &nbsp;</a><a href="/tags/知乎回答">知乎回答 &nbsp;</a><a href="/tags/类型推导">类型推导 &nbsp;</a><a href="/tags/Memory Debugging">Memory Debugging &nbsp;</a><a href="/tags/个人成长">个人成长 &nbsp;</a><a href="/tags/小故事">小故事 &nbsp;</a><a href="/tags/暴雪">暴雪 &nbsp;</a><a href="/tags/测试">测试 &nbsp;</a><a href="/tags/历史">历史 &nbsp;</a><a href="/tags/错误处理">错误处理 &nbsp;</a><a href="/tags/Unity Profiler">Unity Profiler &nbsp;</a><a href="/tags/MOD">MOD &nbsp;</a>
+    </div>
+  </aside>
+</div>
+
+
+
+      </div>
+      <footer id="footer">
+        <div class="footer-right"><a href="/template" title="Clone Template"><i class="fa fa-cloud-download"></i></a>
+        </div>
+        <div class="copyright">Powered by &nbsp;<a href="https://www.farbox.com" target="_blank">FarBox &nbsp;</a>Theme by <a href="http://motype.org">Deepure</a> . Thanks for
+<a href="http://fontawesome.io/">Fontawesome</a>&nbsp; &
+<a href="http://dropbox.com/">Dropbox</a>
+        </div>
+      </footer>
+      <!-- for duoshuo recent comments-->
+      <script type="text/javascript">var duoshuoQuery = {short_name:"gulu-dev"};
+(function() { var ds = document.createElement('script'); ds.type = 'text/javascript';ds.async = true;
+ds.src = '//static.duoshuo.com/embed.js';ds.charset = 'UTF-8';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+    </div>
+  <p align="center">
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />本作品由<a xmlns:cc="http://creativecommons.org/ns#" href="http://gulu-dev.com" property="cc:attributionName" rel="cc:attributionURL">Gu Lu</a>创作，采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享Attribution-NonCommercial-NoDerivatives 4.0 国际许可协议</a>进行许可。
+
+</p>
+
+<p align="center">
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256630712'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1256630712' type='text/javascript'%3E%3C/script%3E"));</script>
+
+</p></body>
+</html>
