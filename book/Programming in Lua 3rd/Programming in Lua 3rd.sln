@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "25 An Overview of the C API", "25 An Overview of the C API\25 An Overview of the C API.vcxproj", "{BA5734BC-4F06-4C8F-AEA4-F10DD911A72B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "26 Extending Your Application", "26 Extending Your Application\26 Extending Your Application.vcxproj", "{BA4CA220-7CD6-442D-B338-59C720623D5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,6 +17,10 @@ Global
 		{BA5734BC-4F06-4C8F-AEA4-F10DD911A72B}.Debug|Win32.Build.0 = Debug|Win32
 		{BA5734BC-4F06-4C8F-AEA4-F10DD911A72B}.Release|Win32.ActiveCfg = Release|Win32
 		{BA5734BC-4F06-4C8F-AEA4-F10DD911A72B}.Release|Win32.Build.0 = Release|Win32
+		{BA4CA220-7CD6-442D-B338-59C720623D5D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BA4CA220-7CD6-442D-B338-59C720623D5D}.Debug|Win32.Build.0 = Debug|Win32
+		{BA4CA220-7CD6-442D-B338-59C720623D5D}.Release|Win32.ActiveCfg = Release|Win32
+		{BA4CA220-7CD6-442D-B338-59C720623D5D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
