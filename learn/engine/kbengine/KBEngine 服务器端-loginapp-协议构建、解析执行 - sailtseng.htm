@@ -1,0 +1,983 @@
+
+
+                        
+
+
+                                <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Language" content="zh-CN"/>
+    <meta name="robots" content="index, follow"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="sailtseng,zenglingfan">
+            <meta name="keywords" content="KBEngine,loginapp,协议"/>
+                <meta name="description" itemprop="description" content="服务器端 loginapp 构建协议，解析执行过程"/>
+        <title>KBEngine 服务器端-loginapp-协议构建、解析执行 - sailtseng</title>
+    <link rel="alternate" type="application/rss+xml" title="KBEngine 服务器端-loginapp-协议构建、解析执行 - sailtseng - 开源中国社区" href="https://my.oschina.net/zenglingfan/rss"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico?t=1451964198000"/>
+
+                        <meta itemprop="name" content="KBEngine 服务器端-loginapp-协议构建、解析执行 - sailtseng - 开源中国社区"/>
+<meta itemprop="image" content="https://www.oschina.net/img/logo_s2.png" />
+
+
+            <link type="text/css" href="/dist/www/css/icon-svg.min.css?t=1474905219000" rel="stylesheet"/>
+                    <link type="text/css" href="/dist/www/css/blog.min.css?t=1483458767000" rel="stylesheet"/>
+            
+            <val data-name="isMobileDevice" data-value="false"></val>
+    
+    <x-foo-define data-define="blog_detail"></x-foo-define>
+    <val data-name="owner_id" data-value="114296"></val>
+    <val data-name="owner_home_url" data-value="https://my.oschina.net/zenglingfan"></val>
+    <val data-name="this_page" data-value="https%3A%2F%2Fmy.oschina.net%2Fzenglingfan%2Fblog%2F617369"></val>
+
+            <val data-name="g_user_login" data-value="false"></val>
+        <val data-name="goto_this_page" data-value="https://www.oschina.net/home/login?goto_page=https%3A%2F%2Fmy.oschina.net%2Fzenglingfan%2Fblog%2F617369"></val>
+        <val data-name="is_owner" data-value="false"></val>
+            <val data-name="blog_id" data-value="617369"></val>
+                    </head>
+<body>
+            <header class="header-navbar">
+    <div class="layout-flex top-banner">
+        <div class="flex-grow">
+            <a href="https://www.oschina.net/" class="osc-logo"></a>
+            <div class="menus sm-hide">
+               <a class="menu-item" href="https://www.oschina.net/">首页</a>
+               <div class="menu-item menu-drop">
+                   <a href="https://www.oschina.net/project" class="project">
+                       开源项目
+                       <i class="icon-svg icon-arr-down-white"></i>
+                   </a>
+                   <div class="menu-drop-down">
+                       <ul class="drop-list">
+                           <li><a href="https://www.oschina.net/project/zh">国产开源项目</a></li>
+                           <li><a href="https://www.oschina.net/project/tags">项目分类</a></li>
+                           <li><a href="https://www.oschina.net/project/list?sort=time">最新收录项目</a></li>
+                           <li class="split"></li>
+                           <li><a href="https://www.oschina.net/project/lang/19/java">Java 开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/194/csharp">C# 开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/22/php">PHP 开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/21/c">C/C++ 开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/26/ruby">Ruby 开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/25/python">Python 开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/358/go">Go开源软件</a></li>
+                           <li><a href="https://www.oschina.net/project/lang/28/javascript">JS开源软件</a></li>
+                       </ul>
+                   </div>
+               </div>
+               <div class="menu-item menu-drop">
+                   <a href="https://www.oschina.net/question" class="question">
+                       问答
+                       <i class="icon-svg icon-arr-down-white"></i>
+                   </a>
+                   <div class="menu-drop-down">
+                       <ul class="drop-list">
+                           <li><a href="https://www.oschina.net/question?catalog=1"> 技术问答</a></li>
+                           <li><a href="https://www.oschina.net/question?catalog=2"> 技术分享</a></li>
+                           <li><a href="https://www.oschina.net/question?catalog=3"> IT大杂烩</a></li>
+                           <li><a href="https://www.oschina.net/question?catalog=100"> 职业生涯</a></li>
+                           <li><a href="https://www.oschina.net/question?catalog=4"> 站务/建议</a></li>
+                           <li><a href="https://www.oschina.net/alipay"> 支付宝专区</a></li>
+                           <li><a href="https://www.oschina.net/mopaas"> MoPaaS专区</a></li>
+                           <li><a href="https://www.oschina.net/hardware"> 开源硬件专区</a></li>
+                       </ul>
+                   </div>
+               </div>
+               <a href="https://www.oschina.net/tweets" class="menu-item tweets">动弹</a>
+               <a href="https://www.oschina.net/blog" class="menu-item blog">博客</a>
+               <a href="https://www.oschina.net/translate" class="menu-item tran">翻译</a>
+               <a href="https://www.oschina.net/news" class="menu-item news">资讯</a>
+               <div class="menu-item menu-drop">
+                   <a href="https://www.oschina.net/android" class="mobile">
+                       专题
+                       <i class="icon-svg icon-arr-down-white"></i>
+                   </a>
+                   <div class="menu-drop-down">
+                       <ul class="drop-list drop-list-inline">
+                           <li><a href="https://www.oschina.net/event/ych" class="font-red">源创会</a> <a href="https://www.oschina.net/video">视频</a></li>
+                           <li><a href="https://www.oschina.net/question/tag/%E9%AB%98%E6%89%8B%E9%97%AE%E7%AD%94">高手问答</a> <a href="https://www.oschina.net/question/tag/%E5%BC%80%E6%BA%90%E8%AE%BF%E8%B0%88">访谈</a></li>
+                           <li><a href="https://www.oschina.net/question/tag/%E5%BC%80%E6%BA%90%E5%91%A8%E5%88%8A">周刊</a> <a href="https://my.oschina.net/xxiaobian/blog">乱弹</a></li>
+                           <li><a href="https://www.oschina.net/company">公司开源导航页</a></li>
+                       </ul>
+                       <div class="split"></div>
+                       <ul class="drop-list mobile">
+                           <li class="android"><a href="https://www.oschina.net/android">Android开发专区</a></li>
+                           <li class="ios"><a href="https://www.oschina.net/ios/home">iOS开发专区</a></li>
+                           <li class="ios"><a href="https://www.oschina.net/ios/codingList">iOS代码库</a></li>
+                           <li class="wp7"><a href="https://www.oschina.net/wp">Windows Phone</a></li>
+                       </ul>
+                   </div>
+               </div>
+               <a href="https://www.oschina.net/event" class="menu-item event">活动</a>
+               <a href="https://job.oschina.net/" class="menu-item event">招聘</a>
+           </div>
+
+        </div>
+        <div class="user-bar">
+            <div class="user-info">
+                                                    [ <a href='https://www.oschina.net/home/login?goto_page=https%3A%2F%2Fmy.oschina.net%2Fzenglingfan%2Fblog%2F617369'>登录</a> | <a
+                        href="https://www.oschina.net/home/reg">注册</a> ]
+                            </div>
+        </div>
+    </div>
+</header>    <div>
+                        
+
+<val data-name="is_login" data-value="false"></val>
+<val data-name="hljs_js_url" data-value="/dist/www/vendor/highlight/9.5.0/highlight.js?t=1475077647000"></val>
+<val data-name="hljs_css_url" data-value="/build/www/vendor/highlight/9.4.0/styles/zenburn.css?t=1474300001000"></val>
+
+<val data-name="atwho_js_url" data-value="/dist/www/vendor/jquery.atwho/jquery.atwho.js?t=1475077647000"></val>
+<val data-name="atwho_css_url" data-value="/dist/www/vendor/jquery.atwho/jquery.atwho.css?t=1471280768000"></val>
+<val data-name="user_follow_url" data-value="/action/user/follow"></val>
+<val data-name="user_unfollow_url" data-value="/action/user/unfollow"></val>
+
+<!-- content     -->
+<div class="blog blog-article">
+    <div class="">
+        <!-- 侧边栏-目录 -->
+                                <div class="blog-wrapper">
+                <div class="sidebar md-hide">
+                    <div class="catalogWrap" id="catalogWrap">
+                        <span class="sidebar-scrollbar"></span>
+                        <ul class="anchor-content" id="catalogWrapMenu">
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                            <div class="blog-wrapper">
+            <div class="back-list">
+                <a href="https://www.oschina.net/blog" class="font-green">博客专区</a> > <a href="https://my.oschina.net/zenglingfan/blog" class="font-green">sailtseng的博客</a> > 博客详情
+            </div>
+        </div>
+
+        <!-- 广告 -->
+                <div class="blog-title-ad">
+            <div class="blog-wrapper">
+                
+<div id="blog-title-ad" data-traceid="blog_ali" data-tracepid="blogup" style=""><a href="http://click.aliyun.com/m/8845/&#10;" target="_blank" style="max-width:780px;"><!--<img src="https://static.oschina.net/uploads/space/2016/1208/124327_Ke03_2982602.jpg">--></a></div>
+<script>
+    function success_jsonpCallback(data) {
+        var obj = eval(data);
+        if( obj.success ){
+            var contents = eval(obj.data[0].content);
+            if(contents.length > 0){
+                var content = contents[0];
+                $('#blog-title-ad').prepend("<a  href='"+ content.url +"' target='_blank' style='max-width:780px;'><img src='"+content.img+"'/></a>");
+                $('#blog-title-ad').show();
+            }
+            
+        }else {
+            $('#blog-title-ad').hide();
+        }
+    }
+    window.addEventListener("load", function() {
+         var url="https://promotion.aliyun.com/promotion/adv/getAliyunAdv.htm?cback=success_jsonpCallback&s=9cd174d9efd443e3982131f97b07e70f&p=page_1470989078421&pin=pos_1475239274174";
+        $.ajax({
+            type: 'POST',
+            url: url,
+            jsonp: "callback",
+            dataType: 'jsonp',
+            jsonpCallback: 'success_jsonpCallback',
+            contentType: "application/json; charset=utf-8",
+            success: function( response ) {
+                // do in callback
+            },
+            error:function(){
+                $('#blog-title-ad').hide();
+            }
+        });
+    }, false);
+</script>            </div>
+        </div>
+                <div class="float-heading">
+            <div class="blog-wrapper">
+                <div class="layout-flex">
+                    <div class="flex-grow">
+                        <div class="heading">KBEngine 服务器端-loginapp-协议构建、解析执行</div>
+                        <div class="data-info">
+                            <a href="https://my.oschina.net/zenglingfan/home" class="link-blue" target="_blank">sailtseng</a>
+                            发表于1年前
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="opr-btn">
+                            <div class="opr-btn-blog btn-reward-blog ">
+                                <a href="javascript:void(0)"  data-popupbox-model="reward">
+                                    <i class="icon-svg icon-reward-blog"></i>
+                                </a>
+                            </div>
+                            <!-- 点赞 -->
+                            <div class="opr-btn-blog btn-like-blog ">
+                                                                <a href="javascript:void(0);" class="" onclick="page.vote(617369);" >
+                                    <i class="icon-svg icon-thumbs-o-up-blog"></i>
+                                </a>
+                            </div>
+                                                            <!-- 收藏 -->
+                                <div class="opr-btn-blog btn-favor-blog  hover">
+                                    <a href="javascript:void(0);" class=" " data-blogid="617369" data-blogtype="3" data-userid="" data-thispage="https://my.oschina.net/zenglingfan/blog/617369">
+                                        <i class="icon-svg icon-star-blog"></i>
+                                     </span>
+                                    </a>
+                                                                    </div>
+
+                                                        <!-- 分享 -->
+                            <div class="opr-btn-blog btn-share-blog hover">
+                                <a href="javascript:void(0);" class="">
+                                    <i class="icon-svg icon-share-o-blog"></i>
+                                </a>
+                                <div class="operate-dropdown share-dropdown">
+                                    <span class="share-title">分享到：</span>
+                                    <div class="bdsharebuttonbox">
+                                        <a href="#" class="bds_mshare" data-cmd="mshare" title="分享到一键分享">一键分享</a>
+                                        <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+                                        <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+                                        <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+                                        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+                                        <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友">QQ好友</a>
+                                        <a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记">有道云笔记</a>
+                                    </div>
+                                    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["mshare","qzone","tsina","weixin","tqq","sqq"],"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/js/bdshare_api/share.js?t=1466497427000'];</script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 文章内容 -->
+        <div class="blog-content">
+            <!-- 标题 -->
+            <div class="blog-heading">
+                <div class="title">
+                    <span class="status-tag original" title="原创博客">原</span>                                                                                KBEngine 服务器端-loginapp-协议构建、解析执行
+                </div>
+                <div class="info-opr layout">
+                    <div class="layout-right">
+                                                    
+                                                                <!-- 收藏 -->
+                                <div class="opr-btn-blog btn-favor-blog favor hover">
+                                    <a href="javascript:void(0);" class="btn btn-black-blog " data-blogid="617369" data-blogtype="3" data-userid="" data-thispage="https://my.oschina.net/zenglingfan/blog/617369">
+                                        <i class="icon-svg icon-star-blog"></i>
+                                     <span id="" class="operate_title">
+                                                                                    收藏
+                                                                             </span>
+                                    </a>
+                                                                    </div>
+                                                                        </div>
+                    <div class="layout-column">
+                        <div class="user-info">
+                                                                                                                <div class="name">
+                                <a href="https://my.oschina.net/zenglingfan/home" target="_blank">sailtseng</a>
+                            </div>
+                        </div>
+                        <div class="data-info text-gary">
+                            <ul>
+                                <li class="time">发表于 <span id="">1年前</span></li>
+                                <li class="read">阅读 <span id="read">132</span></li>
+                                <li class="favor">收藏 <span id="">0</span></li>
+                                <li class="vote">点赞 <span id="">1</span></li>
+                                <li class="comment">
+                                    <a href="#comment-list" data-href="#comment-list" class="link-blue">
+                                        评论 <span id="comment">0</span>
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                        
+                </div>
+            </div>
+            <!-- 文字链广告 -->
+            <div style="margin-top: 20px;">
+            <p style="margin:0 0 10px 0;"><a data-traceid="blog_detail_above_text_link_1" data-tracepid="blog_detail_above_text_link" style="color:#A00;font-weight:bold;" href="http://web.tanzhouedu.com/index/osc.html" target="_blank">【粉丝福利】-《web前端基础到实战系列课程》免费在线直播教学&gt;&gt;&gt; </a>&nbsp;&nbsp;<img src="https://my.oschina.net/img/hot3.png" align="absmiddle" style="max-height: 32px; max-width: 32px;"></p>            </div>
+            <!-- 摘要 -->
+                            <div class="blog-abstract">
+                    摘要: 服务器端 loginapp 构建协议，解析执行过程
+                </div>
+                        <!-- 正文 -->
+            <div class="blog-body" id="blogBody">
+                                    <val data-name="blog_content_type" data-value="richtext"></val>
+                    <div class='BlogContent'>
+                        <p> <span style="font-size:14px;font-family:'Microsoft YaHei';">前文</span><a href="http://my.oschina.net/zenglingfan/blog/616930" target="_blank" rel="nofollow"><span style="font-size:14px;font-family:'Microsoft YaHei';">《</span><span style="font-size:14px;font-family:'Microsoft YaHei';">KBEngine 客户端登录-loginapp-协议加载</span><span style="font-size:14px;font-family:'Microsoft YaHei';">》</span></a><span style="font-size:14px;font-family:'Microsoft YaHei';">提到服务器端 loginapp 通过加载&nbsp;</span><span style="font-size:14px;font-family:'Microsoft YaHei';">res/server/messages_fixed.xml 来构建协议，这里就详细讲一下这个协议的加载和构建过程。</span> </p> 
+<span id="OSC_h1_1"></span>
+<h1> 宏宏宏 </h1> 
+<p> <span style="font-family:'Microsoft YaHei';font-size:14px;">由于 C++ 是静态语言，不能像 js 一样通过函数名字符串来直接执行函数，所以将 messageId 映射到可执行函数的复杂性大大提升；KBEngine 使用了一系列精巧的「宏」来解决这个问题。</span> </p> 
+<p> <span><span style="line-height:21px;font-size:14px;color:#000000;">为了叙述方便，我把需要通过 messageId 来映射执行的函数</span></span><span style="line-height:1.5;font-size:14px;color:#000000;">称为<strong><span style="color:#003399;">「协议函数」</span></strong>，以区分普通的函数。</span> </p> 
+<p> <span style="font-size:14px;line-height:1.5;">loginapp 的宏，统一在 loginapp_interface_macros.h 中声明，在 loginapp_interface.h 中使用。</span><span style="font-size:14px;line-height:1.5;">我把 loginapp_interface.h 进行简化，只保留两个函数：importClientMessage，login。</span> </p> 
+<p> <span style="line-height:1.5;font-size:14px;color:#000000;"><img src="http://static.oschina.net/uploads/space/2016/0218/234351_G6mY_114296.png" width="500" height="192" alt=""><br> </span> </p> 
+<p> <span style="font-family:'Microsoft YaHei';font-size:14px;">可以看到，上面截图分为 3 个部分</span> </p> 
+<ul> 
+ <li> <span style="line-height:1.5;font-family:'Microsoft YaHei';font-size:14px;">第 5 、14 行是一个完整的宏</span> </li> 
+ <li> <span style="line-height:1.5;font-family:'Microsoft YaHei';font-size:14px;">第 8 行是将 importClientMessages 转化为「协议函数」的宏</span> </li> 
+ <li> <span style="line-height:1.5;font-family:'Microsoft YaHei';font-size:14px;">第 11、12 行是将 login 转化为「协议函数」的宏</span> </li> 
+</ul> 
+<span id="OSC_h2_2"></span>
+<h2> <span><span style="font-size:24px;line-height:21px;">namespace LoginappInterface</span></span> </h2> 
+<p> <span style="font-family:'Microsoft YaHei';font-size:14px;"><img src="http://static.oschina.net/uploads/space/2016/0218/234830_u1ea_114296.png" width="400" height="60" alt=""><br> </span> </p> 
+<p> <span><span style="font-size:14px;line-height:21px;">上图是将本文第一张图 5、14 行宏展开后的代码，这对 BEGIN/END 宏，不光是定义了一个 namespace，更重要的是，声明了 messageHandlers，这里面就存放了所有映射好的「协议函数」</span></span> </p> 
+<span id="OSC_h2_3"></span>
+<h2> <span><span style="font-size:14px;line-height:21px;"><span style="font-size:24px;line-height:21px;">importClientMessag<span style="font-size:24px;">e</span></span><span style="font-size:24px;">s</span></span></span> </h2> 
+<p> <img src="http://static.oschina.net/uploads/space/2016/0218/235249_159N_114296.jpg" width="600" height="515" alt=""> </p> 
+<p> <span style="font-family:'Microsoft YaHei';font-size:14px;">上图是将本文第一张图中第 8 行展开后的代码，由几个重要的逻辑组成：</span> </p> 
+<ul> 
+ <li> <span style="font-family:'Microsoft YaHei';line-height:1.5;font-size:14px;">30~38 行，声明了一个 MessageHandler 的派生类，这个类的 handle 函数，是个 virtual 函数，执行的就是 Loginapp::importClientMessages。（KBEngine 架构的 loginapp 是单例，所以这里才能这么玩，否则没法对应到想要执行的函数所在对象）</span> </li> 
+ <li> <span style="font-family:'Microsoft YaHei';line-height:1.5;"><span style="font-size:14px;font-family:'Microsoft YaHei';">40~45 行，将调用 messangeHandlers.add 函数，完成 messangeId 到 importClientMessagesLoginappMessagehandler0 类对象的映射；</span><br> <span style="font-size:14px;font-family:'Microsoft YaHei';"> 此后，就可以通过 messageId 找到一个 MessangeHandler 对象指针，然后执行他的 handle 函数，由于这是 virtual 函数，真正执行的就是&nbsp;</span><span style="font-family:'Microsoft YaHei';line-height:21px;font-size:14px;">importClientMessagesLoginappMessagehandler0 中的 handle 函数，也就是&nbsp;</span><span style="font-family:'Microsoft YaHei';line-height:21px;font-size:14px;">Loginapp::importClientMessages 函数</span><span style="font-size:14px;font-family:'Microsoft YaHei';">。</span></span> </li> 
+ <li> <span style="font-size:14px;font-family:'Microsoft YaHei';"><span style="line-height:21px;font-size:14px;font-family:'Microsoft YaHei';">47 行，保存添加过映射关系的 MessangeHandlers；<strong><span style="color:#003399;">这个主要是为了其他组件调用，如 baseapp 可</span></strong><strong><span style="color:#003399;"></span></strong><strong><span style="color:#003399;">以通过</span></strong><span style="font-family:'Microsoft YaHei';font-size:14px;line-height:21px;"><strong><span style="color:#003399;">(*pBundle).newMessage( Loginapp::importClientMessages); &nbsp;这样的形式调用到这个函数</span></strong>。</span></span></span> </li> 
+ <li> <span style="font-size:14px;font-family:'Microsoft YaHei';"><span style="line-height:21px;font-size:14px;font-family:'Microsoft YaHei';">49~69 行 importClientMessages 函数的参数对象，ARGS0 表示 importClientMessages 函数不需要参数。</span></span> </li> 
+</ul> 
+<span id="OSC_h2_4"></span>
+<h2> <span><span style="font-size:24px;line-height:21px;">login</span></span> </h2> 
+<p> <img src="http://static.oschina.net/uploads/space/2016/0219/001513_AQ5s_114296.jpg" width="600" height="588" alt=""> </p> 
+<p> <span style="font-size:14px;font-family:'Microsoft YaHei';">上图是将本文第一张图中第 11、12 行展开后的代码，由几个重要的逻辑组成：</span> </p> 
+<ul> 
+ <li> <span style="line-height:1.5;"><span style="font-size:14px;">28</span><span style="font-size:14px;"> 行，使用&nbsp;</span><span style="font-size:14px;">"Loginapp::login"</span><span style="font-size:14px;"> 作为&nbsp;messageHandlers.pushExposedMessage 的参数，即这个函数将会被导出到客户端，以便客户端调用。</span></span> </li> 
+ <li> <span style="line-height:1.5;"><span style="font-size:14px;">30~68 行，与前面逻辑基本一样，这里不再解释。</span></span> </li> 
+ <li> <span style="line-height:1.5;"><span style="font-size:14px;">主要看两个图的第 37 行的区别，可以看到，LOGINAPP_MESSAGE_DECLARE_<strong>ARGS0</strong> 宏展开后，这行除了 Channel，没有其他参数；LOGINAPP_MESSAGE_DECLARE_<strong>STREAM</strong> 宏展开后，除了 Channel，还有一个 MemoryStream 参数，表示这个函数的参数需要从流中读取。</span></span><span style="font-size:14px;line-height:21px;background-color:#F6F6F6;"></span> </li> 
+</ul> 
+<span id="OSC_h3_5"></span>
+<h3> <span style="font-size:14px;line-height:21px;"><span style="font-size:24px;font-family:'Microsoft YaHei';">MessageHandlers::add</span></span> </h3> 
+<p> <span style="font-size:14px;font-family:'Microsoft YaHei';">add 函数，将</span><span style="font-family:'Microsoft YaHei';font-size:14px;">"Loginapp::</span><span style="font-family:'Microsoft YaHei';font-size:14px;">login</span><span style="font-family:'Microsoft YaHei';font-size:14px;">" 形式的函数名转成 messageId，并与 MessageHandler* 建立映射关系。</span> </p> 
+<p> <img src="http://static.oschina.net/uploads/space/2016/0219/002840_Oacm_114296.png" width="600" height="422" alt=""> </p> 
+<p> <span style="font-family:'Microsoft YaHei';font-size:14px;">上图，150~171 行，先通过 FixedMessage 判断（</span><span style="font-family:'Microsoft YaHei';font-size:14px;">"Loginapp::</span><span style="font-family:'Microsoft YaHei';font-size:14px;">login</span><span style="font-family:'Microsoft YaHei';font-size:14px;">"）</span><span style="font-family:'Microsoft YaHei';font-size:14px;">函数名是否在&nbsp;</span><span style="font-family:'Microsoft YaHei';line-height:21px;font-size:14px;">res/server/messages_fixed.xml 中声明过，如果声明过，就取声明的 id 作为 messageId，否则就循环找到一个未被使用的 id。</span> </p> 
+<p> <span style="font-family:'Microsoft YaHei';line-height:21px;font-size:14px;"><img src="http://static.oschina.net/uploads/space/2016/0219/004240_TdOq_114296.png" width="420" height="126" alt=""><br> </span> </p> 
+<p> <span style="font-family:'Microsoft YaHei';line-height:21px;font-size:14px;">上图，180 行建立 message</span><span style="font-family:'Microsoft YaHei';font-size:14px;line-height:21px;">Id 到 MessageHandler* 的映射。msgHandlers_ 是一个 map。</span> </p> 
+<p> <span style="font-family:'Microsoft YaHei';font-size:14px;line-height:21px;"> </span> </p> 
+<p> <span style="font-family:'Microsoft YaHei';line-height:21px;font-size:14px;"><img src="http://static.oschina.net/uploads/space/2016/0219/004120_yC3D_114296.png" width="600" height="166" alt=""><br> </span> </p> 
+<p> <span style="font-family:'Microsoft YaHei';line-height:21px;font-size:14px;">上图，50 行，可以看到 FixMessages 加载的配置文件地址，就是我们一直提到的 messages_fixed.xml。</span> </p> 
+<span id="OSC_h1_6"></span>
+<h1> 协议执行 </h1> 
+<p> <span style="font-size:14px;font-family:'Microsoft YaHei';">通过上面的宏，我们可以看到 messageId -&gt; 「协议函数」的映射关系已经建立起来，那么这个在什么时候回被调用到呢？</span> </p> 
+<p> <span style="font-size:14px;font-family:'Microsoft YaHei';"><img src="http://static.oschina.net/uploads/space/2016/0219/004626_3NOq_114296.png" width="720" height="334" alt=""><br> </span> </p> 
+<p> <span style="font-size:14px;font-family:'Microsoft YaHei';">上图是 login 函数的调用堆栈，我们来看一下 Loginapp::handleMainTick 函数</span> </p> 
+<p> <span style="font-size:14px;font-family:'Microsoft YaHei';"><img src="http://static.oschina.net/uploads/space/2016/0219/004909_2Dxv_114296.png" width="600" height="104" alt=""><br> </span> </p> 
+<p> <span><span style="font-size:14px;line-height:21px;">可以看到，112 行的参数是&nbsp;&amp;LoginappInterface::messageHandlers，也就是在宏里已经填好&nbsp;<span style="font-family:'Microsoft YaHei';font-size:14px;line-height:21px;">messageId -&gt; 「协议函数」映射关系</span>的全局变量。</span></span> </p> 
+<p> <span><span style="font-size:14px;line-height:21px;">真正的执行逻辑，在&nbsp;PacketReader::processMessages 函数里。</span></span> </p> 
+<p> <span><span style="font-size:14px;line-height:21px;"><img src="http://static.oschina.net/uploads/space/2016/0219/005623_nexW_114296.jpg" width="720" height="316" alt=""></span></span> </p> 
+<p> <span><span style="font-size:14px;line-height:21px;">如上图，先在 81 行取到 messageId，然后在 85 行，在 messageHandlers 里 find （简单的 map 的查找即可）到对应的 MessageHandler，再调用 handle 函数，按我们前面的分析，handle 函数里面会调用到 messageId 对应的 「协议函数」。</span></span> </p> 
+<p> <span><span style="font-size:14px;line-height:21px;">至此，整个 loginapp 服务器端协议从构建到解析执行的整个过程解释完成。</span></span> </p> 
+<span id="OSC_h1_7"></span>
+<h1> <span><span style="font-size:24px;line-height:21px;">后记</span></span> </h1> 
+<p> <span style="font-size:14px;font-family:'Microsoft YaHei';">KBEngine 支持的几种宏说明</span> </p> 
+<ul> 
+ <li> <span style="font-family:'Microsoft YaHei';font-size:14px;line-height:1.5;">LOGINAPP_MESSAGE_DECLARE_ARGS0， &nbsp;「协议函数」有 0 个参数</span> </li> 
+ <li> <span style="font-family:'Microsoft YaHei';font-size:14px;line-height:1.5;">LOGINAPP_MESSAGE_DECLARE_ARGS1， &nbsp;<span style="font-family:'Microsoft YaHei';font-size:14px;line-height:21px;">「协议函数」有&nbsp;</span>1 个参数</span> </li> 
+ <li> <span style="font-family:'Microsoft YaHei';font-size:14px;line-height:1.5;">LOGINAPP_MESSAGE_DECLARE_ARGS2， &nbsp;<span style="font-family:'Microsoft YaHei';font-size:14px;line-height:21px;">「协议函数」有&nbsp;</span>2 个参数</span> </li> 
+ <li> <span style="font-family:'Microsoft YaHei';font-size:14px;line-height:1.5;">LOGINAPP_MESSAGE_DECLARE_STREAM，<span style="font-family:'Microsoft YaHei';font-size:14px;line-height:21px;">「协议函数」</span>参数为 MemoryStream</span> </li> 
+ <li> <span style="font-family:'Microsoft YaHei';font-size:14px;line-height:1.5;">LOGINAPP_MESSAGE_EXPOSED，「协议函数」将被暴露给客户端，即会在 importClientMessages 中发送给客户端<br> </span> </li> 
+</ul>
+                    </div>
+                            </div>
+            <div class="blog-opr">
+                <!-- 版权 -->
+                <div class="blog-copyright">
+                                            <span title="OSCHINA 博客文章版权属于作者，受法律保护。未经作者同意不得转载。">© 著作权归作者所有</span>
+                                    </div>
+                <!-- 分类、标签、字数 -->
+                <div class="related-info">
+                    <ul>
+                                                    <li class="classify">分类：<span id="classify"><a href="https://my.oschina.net/zenglingfan/blog?catalog=3486473">KBEngine</a></span></li>
+                                                <li class="Words">字数：<span id="Words">1132</span></li>
+                                            </ul>
+                </div>
+                <div class="tags">
+                                            标签：
+                                                                                                    <span class="tag" id="tag"><a href="https://my.oschina.net/zenglingfan/blog?search=KBEngine">KBEngine</a></span>
+                                                                                                    <span class="tag" id="tag"><a href="https://my.oschina.net/zenglingfan/blog?search=loginapp">loginapp</a></span>
+                                                                                                    <span class="tag" id="tag"><a href="https://my.oschina.net/zenglingfan/blog?search=%E5%8D%8F%E8%AE%AE">协议</a></span>
+                                                            </div>
+            </div>
+            <!-- 赞、收藏、分享 -->
+            <div class="operate">
+                <ul>
+                                                            <val data-name="isAllowBlogDonate" data-value="true"></val>
+                                        <!-- 打賞 -->
+                    <li class="opr-btn-blog btn-reward-blog ">
+                        <a href="javascript:void(0);" data-popupbox-model="reward" class="btn btn-black-blog">
+                            <i class="icon-svg icon-reward-blog"></i>
+                             <span id="" class="operate_title">
+                                打赏
+                             </span>
+                        </a>
+                    </li>
+                                        <!-- 点赞 -->
+                    <li class="opr-btn-blog btn-like-blog ">
+                                                <a href="javascript:void(0);" class="btn btn-black-blog" onclick="page.vote(617369);" >
+                            <i class="icon-svg icon-thumbs-o-up-blog"></i>
+                             <span id="" class="operate_title">
+                                                                    点赞
+                                                             </span>
+                        </a>
+                    </li>
+                                            <!-- 收藏 -->
+                        <li class="opr-btn-blog btn-favor-blog hover">
+                            <a href="javascript:void(0);" class="btn btn-black-blog " data-blogid="617369" data-blogtype="3" data-userid="" data-thispage="https://my.oschina.net/zenglingfan/blog/617369">
+                                <i class="icon-svg icon-star-blog"></i>
+                             <span id="" class="operate_title">
+                                                                    收藏
+                                                             </span>
+                            </a>
+                                                    </li>
+
+                                        <!-- 分享 -->
+                    <li class="opr-btn-blog btn-share-blog hover">
+                        <a href="javascript:void(0);" class="btn btn-black-blog">
+                            <i class="icon-svg icon-share-o-blog"></i>
+                            分享
+                        </a>
+                        <div class="operate-dropdown share-dropdown">
+                            <span class="share-title">分享到：</span>
+                            <div class="bdsharebuttonbox">
+                                <a href="#" class="bds_mshare" data-cmd="mshare" title="分享到一键分享">一键分享</a>
+                                <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+                                <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+                                <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+                                <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+                                <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友">QQ好友</a>
+                                <a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记">有道云笔记</a>
+                            </div>
+                            <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["mshare","qzone","tsina","weixin","tqq","sqq"],"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/js/bdshare_api/share.js?t=1466497427000'];</script>
+                        </div>
+                    </li>
+                </ul>
+                <div data-type="tip" data-tip-type="fixed">
+                    <div  class="tooltips" id="error_tip"></div>
+                </div>
+
+            </div>
+                        <div class="reward-list hide">
+                <div class="reward-list-title">
+                    共有 <span id="reward-num"></span>  人打赏支持<span id="donate_money"></span>
+                </div>
+                                <div class="donate-user-list" id="donate_user_list">
+                    <p></p>
+                </div>
+            </div>
+                    </div>
+
+        <!-- 个人名片 -->
+        <div class="user-card">
+            <div class="blog-wrapper">
+                <div class="layout-flex">
+                    <div class="flex-grow">
+                        <div class="layout-flex">
+                            <div class="flex-left">
+                                <div class="user-info">
+                                    <div class="icon">
+                                        <a href="https://my.oschina.net/zenglingfan/home" class="article_editor_head_img" target="_blank"><img src="https://static.oschina.net/uploads/user/57/114296_100.jpg" align="absmiddle" alt="sailtseng" title="sailtseng" class="LargePortrait"/></a>
+                                    </div>
+                                    <div class="follow-status">
+                                                                                    
+                                            <span class="btn btn-green btn-follow "
+                                             data-follow-value="1" 
+                                                                                        data-follow="btn" data-fansid="114296"> + 关注 </span>
+                                                                            </div>
+                                </div>
+                            </div>
+                            <div class="flex-grow">
+
+                                <div class="opus-info">
+                                    <div class="title">
+                                        <a href="https://my.oschina.net/zenglingfan/home" class="name" target="_blank">sailtseng
+                                        </a>
+                                        <div class="medal medal-osc">
+                                                                                                                                                                                            <div class="medal-item">
+                                                        <a class="medal-logo" href="javascript:void(0);" target="_blank">
+                                                            <img src="https://static.oschina.net/uploads/medals/slogo1389066580601.png" alt="开源马克杯" title="开源马克杯"/>
+                                                        </a>
+                                                        <div class="dropdown tooltip-box">
+                                                            <div class="layout-flex">
+                                                                <div class="medal-logo">
+                                                                    <img src="https://static.oschina.net/uploads/medals/logo1389066580601.png" alt="开源马克杯">
+                                                                </div>
+                                                                <div class="flex-start">
+                                                                    <span class="panel-row title">开源马克杯</span>
+                                                                    <span class="panel-row font-green">领取时间：2014-01-14</span>
+                                                                    <span class="panel-row ">开源马克杯是开源中国定制的“高大上”Coders 喝水利器！</span>
+                                                                    <span class="panel-row"><span class="font-red">领取条件：</span><span class="font-gray">购买或拥有开源马克杯的OSCer可领取</span></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                                                                                                                                                </div>
+                                    </div>
+                                    <div class="card-post-info">
+                                                                                                                        <span class="card-address">
+                                             <i class="icon-svg icon-address-blog"></i>
+                                             杨浦
+                                        </span>
+                                                                            </div>
+                                    <div  class="opus-opr">
+                                        <div class="opus-opr-item">粉丝 <span>25</span></div>
+                                        <div class="opus-opr-item">博文 <span>142</span></div>
+                                        <div class="opus-opr-item">码字总数 <span>95890 </span></div>
+                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-right">
+                        <!-- 技能雷达 -->
+                        <div class="user-radar hide" data-user="114296">
+                            <div id="radar-skill" style="width: 200px;height: 120px; margin: auto;" data-detail="https://www.oschina.net/radar/zenglingfan">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 相关博客 -->
+                        <div class="blog-related">
+            <div class="blog-wrapper">
+                 <div class="panel panel-related" id="blog-related">
+                     <div class="panel-heading">
+                          相关博客
+                     </div>
+                     <div class="panel-body">
+                         <div class="related-blogs-list flex-item">
+                                                                                            <div class="blog-item">
+                                    <div class="layout-flex">
+                                                                                  <span class="img">
+                                                <img src="http://static.oschina.net/uploads/space/2016/0219/123402_sYId_114296.png" />
+                                           </span>
+                                                                              <div class="flex-grow">
+                                            <a href="https://my.oschina.net/zenglingfan/blog/617613" class="title" title="KBEngine loginapp-登录" target="_self">
+                                                KBEngine loginapp-登录
+                                            </a>
+                                            <div class="author-info">
+                                                <span class="icon">
+                                                    <img src="https://static.oschina.net/uploads/user/57/114296_50.jpg " />
+                                                </span>
+                                                sailtseng
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="relation-data text-right">
+                                        <span class="view data-item"><i class="icon-svg icon-eye"></i>106</span>
+                                        <a class="reply data-item" href="http://my.oschina.com:8888/J25/blog/190490#comment-list" target="_blank"><i class="icon-svg icon-reply"></i>0</a>
+                                    </div>
+                                </div>
+                                                                                                                            <div class="blog-item">
+                                    <div class="layout-flex">
+                                                                                  <span class="img">
+                                                <img src="http://static.oschina.net/uploads/space/2016/0218/131520_cdY0_114296.jpg" />
+                                           </span>
+                                                                              <div class="flex-grow">
+                                            <a href="https://my.oschina.net/zenglingfan/blog/616930" class="title" title="KBEngine 客户端-loginapp-协议加载" target="_self">
+                                                KBEngine 客户端-loginapp-协议加载
+                                            </a>
+                                            <div class="author-info">
+                                                <span class="icon">
+                                                    <img src="https://static.oschina.net/uploads/user/57/114296_50.jpg " />
+                                                </span>
+                                                sailtseng
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="relation-data text-right">
+                                        <span class="view data-item"><i class="icon-svg icon-eye"></i>287</span>
+                                        <a class="reply data-item" href="http://my.oschina.com:8888/J25/blog/190490#comment-list" target="_blank"><i class="icon-svg icon-reply"></i>0</a>
+                                    </div>
+                                </div>
+                                                                                                                            <div class="blog-item">
+                                    <div class="layout-flex">
+                                                                                  <span class="img">
+                                                <img src="http://static.oschina.net/uploads/img/201510/05132231_z2Tf.png" />
+                                           </span>
+                                                                              <div class="flex-grow">
+                                            <a href="https://my.oschina.net/u/2479043/blog/513579" class="title" title="kbengine视频教程" target="_self">
+                                                kbengine视频教程
+                                            </a>
+                                            <div class="author-info">
+                                                <span class="icon">
+                                                    <img src="https://www.oschina.net/img/portrait.gif " />
+                                                </span>
+                                                uwaw
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="relation-data text-right">
+                                        <span class="view data-item"><i class="icon-svg icon-eye"></i>50</span>
+                                        <a class="reply data-item" href="http://my.oschina.com:8888/J25/blog/190490#comment-list" target="_blank"><i class="icon-svg icon-reply"></i>0</a>
+                                    </div>
+                                </div>
+                                                                                     </div>
+                     </div>
+                 </div>
+            </div>
+        </div>
+                <!-- 评论 -->
+        <div class="blog-comments">
+            <div class="blog-wrapper">
+                <div class="panel panel-comments" id="comment-list">
+                    <div class="panel-heading" id="blog-comments-list">评论
+                        <em>
+                            (<span class="reply_count">0</span>)
+                        </em>
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel-comment-form">
+                            <!-- 发表评论表单 -->
+                                                            <!--  -->
+<val data-name="emoji_js_url" data-value="/build/www/vendor/emoji/emoji_github.js?t=1471883054000"></val>
+<val data-name="emoji_css_url" data-value="/build/www/vendor/emoji/emoji.min.css?t=1471883054000"></val>
+<div class='SpaceList'>
+    <a name="comments" id="postform"></a>
+        <div class="layout BlogCommentForm blog-comment-form comment-emoji">
+                    <form id="form_comment" action="/action/blog/add_comment?blog=617369" method="POST">
+                                                                                                <div class="comment_form layout-column">
+                    <textarea name="content" id="wmd-input" placeholder=""></textarea>
+                    <div class="layout">
+                        <div class="layout-right">
+                            <span class="text-muted">
+                                Ctrl+Enter
+                            </span>
+                            <button type="submit" class="btn btn-green blg_submit_btn">发表评论</button>
+                        </div>
+                        <div class="layout-column">
+                            <a href="javascript:;" class="blog_emotion">
+                                <i class="icon-svg icon-emotions-hollow-gray"></i>
+                                <div data-emoji="wrapper">
+                                    <ul data-emoji="nav">
+                                        <li data-emoji-nav="People" class="active">People</li>
+                                        <li data-emoji-nav="Nature">Nature</li>
+                                        <li data-emoji-nav="Objects">Objects</li>
+                                        <li data-emoji-nav="Places">Places</li>
+                                        <li data-emoji-nav="Symbols">Symbols</li>
+                                    </ul>
+                                    <div data-emoji="panel">
+                                        <div data-emoji-item="People" class="active"></div>
+                                        <div data-emoji-item="Nature"></div>
+                                        <div data-emoji-item="Objects"></div>
+                                        <div data-emoji-item="Places"></div>
+                                        <div data-emoji-item="Symbols"></div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:page.insert_projects();" class="blog_soft">
+                                <i class="icon-svg icon-project-hollow-gray"></i>
+                            </a>
+                            <span class="NoData" id="cmt_tip"></span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+                                                    </div>
+    </div>
+<div id='inline_reply_editor' style='display:none;'>
+    <div class="BlogCommentForm blog-comment-form">
+        <form id="form_inline_comment" action="/action/blog/add_comment?blog=617369" method="POST">
+          <input type='hidden' id='inline_reply_id' name='reply_id' value=''/>
+          <textarea name="content" id="ccom_content""></textarea>
+          <div class="layout">
+              <div class="layout-right">
+                <input type="button" value="关闭" class="btn btn-text" id='btn_close_inline_reply' />
+                <input type="submit" value="回复" id="btn_comment" class="btn btn-green"/> 
+              </div>
+              <div class="layout-column">
+                  插入：
+                    <a href="javascript:;" class="blog_emotion">
+                        <i class="icon-svg icon-emotions-hollow-gray"></i>
+                        <div data-emoji="wrapper">
+                            <ul data-emoji="nav">
+                                <li data-emoji-nav="People" class="active">People</li>
+                                <li data-emoji-nav="Nature">Nature</li>
+                                <li data-emoji-nav="Objects">Objects</li>
+                                <li data-emoji-nav="Places">Places</li>
+                                <li data-emoji-nav="Symbols">Symbols</li>
+                            </ul>
+                            <div data-emoji="panel">
+                                <div data-emoji-item="People" class="active"></div>
+                                <div data-emoji-item="Nature"></div>
+                                <div data-emoji-item="Objects"></div>
+                                <div data-emoji-item="Places"></div>
+                                <div data-emoji-item="Symbols"></div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="javascript:page.insert_projects_c();" class="blog_soft">
+                        <i class="icon-svg icon-project-hollow-gray"></i>
+                    </a>
+                    <span class="NoData" id="ficmp_msg" style="color:#F00"></span>
+              </div>
+          </div>
+        </form>
+    </div>
+</div>                                                    </div>
+                        <div class="panel-list" id="BlogComments">
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 微信分享二维码 -->
+       <!--  <div class="float-share md-hide">
+            <div class="weixin-share" id="weixin-share">
+            </div>
+            <span>微信分享</span>
+        </div> -->
+
+        <!-- 右侧工具条 -->
+        <div class="tool-bar blog-tool-bar md-hide">
+            <div class="item tool-top">
+                <a href="javascript:void(0)" class="over">
+                    <div class="icon">
+                        <i class="icon-svg icon-go-top"></i>
+                    </div>
+                    <div class="txt">顶部</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="reward-popups" data-popups-for="reward">
+    <span data-popups-close="true">×</span>
+    <div data-popups="body">
+        <form action="" method="post" id="blog_donate_form">
+            <div class="form-wapper">
+                <div class="blogger-info text-center">
+                    <span class="icon">
+                        <a href="https://my.oschina.net/zenglingfan/home" class="article_editor_head_img" target="_blank"><img src="https://static.oschina.net/uploads/user/57/114296_100.jpg" align="absmiddle" alt="sailtseng" title="sailtseng" class="LargePortrait"/></a>
+                    </span>
+                    <div class="text">
+                        如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="form-label">
+                        <span class="font-red">*</span>
+                        金额(元)
+                    </div>
+                    <div class="form-ctrl">
+                        <div>
+                            <input name="payMoney" value="2" type="text" placeholder="请输入金额￥" />
+                            <input name="money" value="2" type="hidden" placeholder="请输入金额￥" />
+                        </div>
+                        <div class="reward-money-box">
+                            <span data-value="1" class="reward-money">￥1</span>
+                            <span data-value="5" class="reward-money">￥5</span>
+                            <span data-value="10" class="reward-money">￥10</span>
+                            <span data-value="20" class="reward-money">￥20</span>
+                            <span data-value="" class="reward-money other-money active">其他金额</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="form-label">
+                        打赏人
+                    </div>
+                    <div class="form-ctrl">
+                        <input type="text" name="donaterName" maxlength="100" value="" placeholder="请输入姓名/昵称/邮箱" />
+                    </div>
+                </div>
+                <div class="form-item items-center">
+                    <div class="form-label">
+                        留言
+                    </div>
+                    <div class="form-ctrl">
+                        <textarea maxlength="100" name="message" id="" cols="30" rows="3" placeholder="你想对TA说"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-item items-center">
+                    <div class="form-label">
+                        <span class="font-red">*</span>
+                        支付类型
+                    </div>
+                    <div class="form-ctrl">
+                        <div class="reward-way form-radios reward-alipay">
+                            <input type="radio" value="alipay" id="rewardAliPay" checked="checked" name="reward-way">
+                            <label for="rewardAliPay">
+                                <span class="hide">支付宝支付</span>
+                            </label>
+                        </div>
+                        <div class="reward-way form-radios reward-wechat">
+                            <input type="radio" value="wepay" id="rewardWechat" name="reward-way">
+                            <label for="rewardWechat">
+                                <i class="icon-svg icon-wechat"></i>
+                                <span class="">微信支付</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                                <div class="hide">
+                    <input name="objType" type="hidden" value="16344358">
+                    <input name="objId" type="hidden" value="617369">
+                    <input name="donater" type="hidden" value="0">
+                    <input name="subject" maxlength="50" type="hidden" value="KBEngine 服务器端-loginapp-协议构建、解析执行">
+                    <input name="author" type="hidden" value="114296">
+                    <input name="returnUrl" maxlength="900" type="hidden" value="https://my.oschina.net/zenglingfan/blog/617369">
+                    <input name="notifyUrl" maxlength="900" type="hidden" value="https://my.oschina.net/action/blog/paySuccess">
+                    <input name="sign" type="hidden" value="">
+                </div>
+                <div class="form-button text-right">
+                    <input type="button"  class="btn btn-orange" value="打赏" id="blog_donate_button"/>
+                </div>
+            </div>
+
+            <div class="reward-status reward-wechat-box text-center">
+                <span class="wechat-qr">
+                    <i class="icon-svg icon-scan-green"></i>
+                    微信扫码支付
+                </span>
+                <div class="wepay-amount">
+                    打赏金额: <span class="h1 font-green">￥<em id="wepayAmount"></em></span>
+                </div>
+                <span class="wechat-qr-img" id="result_area">
+                </span>
+            </div>
+
+            <div class="reward-status reward-success text-center">
+                <span class="wechat-qr">
+                    <i class="icon-svg icon-wechat"></i>
+                    已支付成功
+                </span>
+                <div>
+                    打赏金额: <span class="h1 font-green">￥<em id="wepayAmount"></em></span>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div data-popups="mask">
+
+</div>
+    <script type="text/javascript" src="/action/visit/blog?id=617369" defer="defer"></script>
+    <script type="text/javascript" src="/action/visit/space?id=114296"></script>
+
+<val data-name="radar_chart_js_url" data-value="/dist/www/vendor/radarChart/radarChart.js?t=1475077647000"></val>
+<script>
+    window.addEventListener("load", function() {
+        var radarChartJsUrl = $("val[data-name=radar_chart_js_url]").data("value");
+        if(radarChartJsUrl) {
+            require.requireJS(radarChartJsUrl, function() {
+                // 雷达图配置选项
+                function getRadarOption(skills, values, maxLevel) {
+                    var radarChartOptions = {},
+                        skillArr = skills ? skills : [],
+                        valuesArr = values ? values : [],
+                        maxLevelArr = [];
+                        valuesArr.forEach(function(element, index) {
+                            maxLevelArr.push(maxLevel);
+                        });
+
+                    radarChartOptions.data = {
+                        maxValue: maxLevelArr,
+                        value: valuesArr,
+                        description: skillArr
+                    };
+                    radarChartOptions.config = {
+                        scale: 0.9,
+                        dataFill: {
+                            fillStyle: "rgba(24, 236, 111, .4)"
+                        },
+                        bg: {
+                            layer: 4,
+                            evenFillStyle: "#828282",
+                            oddFillStyle: "#828282",
+                            evenStrokeStyle: "#ccc",
+                            oddStrokeStyle: "#ccc"
+                        },
+                        dataCircle: {
+                            r: 1,
+                            strokeStyle: "#18ec6f",
+                            fillStyle: "#18ec6f",
+                            lineWidth: 0.5
+                        },
+                        dataLine: {
+                            strokeStyle: "#18ec6f",
+                            lineWidth: 2
+                        },
+                        font: {
+                            fontColor: "#eee"
+                        }
+                    };
+                    return radarChartOptions;
+                }
+                var sendRequest = function () {
+                    var user_id = $("val[data-name='owner_id']").attr("data-value");
+                    $.ajax({
+                        type: "POST",
+                        url: "/action/radar/searchUserRadarMap",
+                        data: {user_id: user_id},
+                        dataType: "json",
+                        success: function (msg) {
+                            if (msg.result) {
+                                // 显示雷达面板
+                                $(".user-radar").show();
+                                radarChart.init(document.querySelector("#radar-skill"), getRadarOption(msg.data.skills, msg.data.skillsLevel, msg.data.maxSkillLevel));
+                                // 打开雷达详情页
+                                var radarDetailLink = $('#radar-skill').data("detail");
+                                if (radarDetailLink) {
+                                    $('#radar-skill').on('click', function (params) {
+                                        window.open(radarDetailLink);
+                                    });
+                                }
+                            }
+                        }
+                    });
+                }
+                sendRequest();
+            });
+        }
+    }, false);
+</script>
+
+            <script>
+        window.addEventListener("load", function() {
+            (function(){
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                }
+                else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        });
+    </script>
+    <script type="text/javascript">
+     (function (ww, dt) {
+         ww.__gac = {
+             domain: 'www.oschina.net'
+         };
+         if(!(/\/marketing\/ad-slice/.test(location.href))){
+             var script = dt.createElement('script');
+             script.setAttribute('type', 'text/javascript');
+             script.setAttribute('src', '//www.oschina.net/public/javascripts/cjl/ga.js?t=20160926');
+             dt.body.appendChild(script);
+         }
+     } (window, window.document));
+ </script>
+            </div>
+                        <script type="text/javascript" src="/dist/www/js/common.min.js?t=1479139723000"></script>
+            <script type="text/javascript" src="/dist/www/js/blog.min.js?t=1487011978000"></script>
+                <div class="footer">
+    <div class="container">
+        <div class="layout">
+            <div class="layout-right">
+                <div class="oscapp">
+                    <span>开源中国手机客户端：</span>
+                    <a href="https://www.oschina.net/app" class="android" title="Android客户端">Android</a>
+                    <a href="https://www.oschina.net/app" class="iphone" title="iPhone 客户端">iPhone</a>
+                    <a href="https://www.oschina.net/app" class="wp7" title="Windows Phone 客户端">WP7</a>
+                </div>
+            </div>
+            <div class="layout-column">
+                <div>
+                    &copy; 开源中国(OSChina.NET) | <a href="https://www.oschina.net/home/aboutosc">关于我们</a> | <a href="mailto:market@oschina.cn">广告联系</a> | <a href="http://weibo.com/oschina2010" target="_blank">@新浪微博</a> | <a href="https://m.oschina.net/">开源中国手机版</a> | <a href='http://www.miitbeian.gov.cn/' target='_blank' style='color:#737573;text-decoration:none;'>粤ICP备12009483号-3</a></div>
+                 <div>开源中国社区(OSChina.net)是工信部 <a href='http://www.copu.org.cn/' target='_blank'>开源软件推进联盟</a> 指定的官方社区</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+    
+<!-- Generated by OsChina.NET (init:0[ms],page:50[ms],ip:110.80.46.142) -->
