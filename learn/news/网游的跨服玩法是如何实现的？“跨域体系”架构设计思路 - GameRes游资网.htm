@@ -1,0 +1,1012 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 - GameRes游资网</title>
+<link href="http://www.gameres.com/thread_704078_1_1.html" rel="canonical" />
+<meta name="keywords" content="程序,服务器,游戏程序" />
+<meta name="description" content=" 网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 " />
+<meta name="MSSmartTagsPreventParsing" content="True" />
+<meta http-equiv="MSThemeCompatible" content="Yes" />
+<base href="http://www.gameres.com/" /><link rel="stylesheet" type="text/css" href="data/cache/style_1_common.css?v55" /><link rel="stylesheet" type="text/css" href="data/cache/style_1_forum_viewthread.css?v55" /><link rel="stylesheet" id="css_extstyle" type="text/css" href="./template/default/style/t1/style.css" /><script type="text/javascript">var STYLEID = '1', STATICURL = 'static/', IMGDIR = 'static/image/common', VERHASH = 'v55', charset = 'utf-8', discuz_uid = '0', cookiepre = 'yHah_16ed_', cookiedomain = '.gameres.com', cookiepath = '/', showusercard = '1', attackevasive = '0', disallowfloat = 'newthread|debate|nav|usergroups|task', creditnotice = '1|威望|,2|金钱|,3|贡献|', defaultstyle = './template/default/style/t1', REPORTURL = 'aHR0cDovL3d3dy5nYW1lcmVzLmNvbS83MDQwNzguaHRtbA==', SITEURL = 'http://www.gameres.com/', JSPATH = 'static/js/';</script>
+<script src="static/js/common.js?v55" type="text/javascript"></script>
+<meta name="application-name" content="GameRes游资网" />
+<meta name="msapplication-tooltip" content="GameRes游资网" />
+<meta name="msapplication-task" content="name=门户;action-uri=http://www.gameres.com/portal.php;icon-uri=http://www.gameres.com/static/image/common/portal.ico" /><meta name="msapplication-task" content="name=论坛;action-uri=http://bbs.gameres.com;icon-uri=http://www.gameres.com/static/image/common/bbs.ico" />
+<link rel="archives" title="GameRes游资网" href="http://www.gameres.com/archiver/" />
+<script src="static/js/forum.js?v55" type="text/javascript"></script>
+
+
+</head>
+
+<body id="nv_forum" class="pg_viewthread" onkeydown="if(event.keyCode==27) return false;">
+<div id="append_parent"></div><div id="ajaxwaitid"></div>
+
+<div id="toptb" class="cl">
+<div class="wp">
+<div class="z"></div>
+<div class="y">
+</div>
+</div>
+</div>
+
+
+<div id="qmenu_menu" class="p_pop blk" style="display: none;">
+<div class="ptm pbw hm">
+请 <a href="javascript:;" class="xi2" onclick="lsSubmit()"><strong>登录</strong></a> 后使用快捷导航<br />没有帐号？<a href="member.php?mod=create_user2016" class="xi2 xw1">立即注册</a>
+</div>
+</div>
+<div id="hd">
+<div class="wp">
+<div class="hdc cl"><h2><a href="./" title="GameRes游资网"><img src="http://img.gameres.com/images2013/2013_new_title.png" alt="GameRes游资网" border="0" /></a></h2>
+
+<script src="static/js/logging.js?v55" type="text/javascript"></script>
+<form method="post" autocomplete="off" id="lsform" action="member.php?mod=logging&amp;action=login&amp;loginsubmit=yes&amp;infloat=yes&amp;lssubmit=yes" onsubmit="return lsSubmit()">
+<div class="fastlg cl" style="color:#fff">
+<span id="return_ls" style="display:none"></span>
+<div class="y pns">
+<table cellspacing="0" cellpadding="0">
+<tr>
+<td>
+<span class="ftid" style="color:#fff;">用户名
+<!--
+<select name="fastloginfield" id="ls_fastloginfield" width="40" tabindex="900" style="color:#fff;">
+<option value="username">用户名</option>
+<option value="uid">UID</option>
+<option value="email">Email</option>
+</select>
+-->
+</span>
+<script type="text/javascript">simulateSelect('ls_fastloginfield')</script>
+</td>
+<td><input type="text" name="username" id="ls_username" autocomplete="off" class="px vm" tabindex="901" /></td>
+<td class="fastlg_l"><label for="ls_cookietime"><input type="checkbox" name="cookietime" id="ls_cookietime" class="pc" value="2592000" tabindex="903" />自动登录</label></td>
+<td>&nbsp;<a style="color:#fff" href="javascript:;" onclick="showWindow('login', 'member.php?mod=logging&action=login&viewlostpw=1')">找回密码</a></td>
+</tr>
+<tr>
+<td><label for="ls_password" class="z psw_w">密码</label></td>
+<td><input type="password" name="password" id="ls_password" class="px vm" autocomplete="off" tabindex="902" /></td>
+<td class="fastlg_l"><button type="submit" class="pn vm" tabindex="904" style="width: 75px;"><em>登录</em></button></td>
+<td>&nbsp;<a style="color:#fff" href="member.php?mod=create_user2016" class="xi2 xw1">立即注册</a></td>
+</tr>
+</table>
+<input type="hidden" name="quickforward" value="yes" />
+<input type="hidden" name="handlekey" value="ls" />
+</div>
+</div>
+</form>
+</div>
+
+<div id="nv">
+<ul><li class="a" id="mn_Nb179" ><a href="http://www.gameres.com" hidefocus="true" target="_blank"  >首页</a></li><li id="mn_Nc601" onmouseover="showMenu({'ctrlid':this.id,'ctrlclass':'hover','duration':2})"><a href="http://bbs.gameres.com" hidefocus="true"  >论坛</a></li><li id="mn_N3e76" onmouseover="showMenu({'ctrlid':this.id,'ctrlclass':'hover','duration':2})"><a href="http://www.gameres.com/zuixin_1.html" hidefocus="true" target="_blank"  >新闻</a></li><li id="mn_N0e6e" onmouseover="showMenu({'ctrlid':this.id,'ctrlclass':'hover','duration':2})"><a href="http://www.gameres.com/yanfa_1.html" hidefocus="true" target="_blank"  >文档</a></li><li id="mn_Ne589" ><a href="http://bbs.gameres.com/forum_47_1.html" hidefocus="true" target="_blank"  >招聘</a></li><li id="mn_N9e1d" onmouseover="showMenu({'ctrlid':this.id,'ctrlclass':'hover','duration':2})"><a href="http://cp.gameres.com" hidefocus="true" target="_blank"   style="font-weight: bold;color: yellow">产品</a></li><li id="mn_Na7fe" ><a href="http://www.gameres.com/fabu.html" hidefocus="true" target="_blank"  >投稿</a></li></ul>
+</div>
+<ul class="p_pop h_pop" id="mn_Nc601_menu" style="display: none"><li><a href="http://bbs.gameres.com/forum_6_1.html" hidefocus="true" >游戏策划</a></li><li><a href="http://bbs.gameres.com/forum_1_1.html" hidefocus="true" >游戏程序</a></li><li><a href="http://bbs.gameres.com/forum_55_1.html" hidefocus="true" >游戏运营</a></li><li><a href="#" hidefocus="true"  style="color: red">——————</a></li><li><a href="http://bbs.gameres.com/forum_20_1.html" hidefocus="true" >行业消息</a></li><li><a href="http://bbs.gameres.com/forum_45_1.html" hidefocus="true" >游戏职场</a></li><li><a href="http://bbs.gameres.com/forum_122_1.html" hidefocus="true" >游戏八卦</a></li><li><a href="#" hidefocus="true"  style="color: red">——————</a></li><li><a href="http://job.gameres.com" hidefocus="true"  style="color: blue">人才招聘</a></li><li><a href="http://bbs.gameres.com/forum_49_1.html" hidefocus="true" >投资交易</a></li><li><a href="http://bbs.gameres.com/forum_111_1.html" hidefocus="true" >游戏外包</a></li></ul><ul class="p_pop h_pop" id="mn_N3e76_menu" style="display: none"><li><a href="http://www.gameres.com/changshang_1.html" hidefocus="true" target="_blank"  style="color: red">— 游戏厂商 —</a></li><li><a href="http://www.gameres.com/guancha_1.html" hidefocus="true" target="_blank" >观察/分析</a></li><li><a href="http://www.gameres.com/zhuanfang_1.html" hidefocus="true" target="_blank" >人物/专访</a></li><li><a href="http://www.gameres.com/shichang_1.html" hidefocus="true" target="_blank" >市场动态</a></li><li><a href="http://www.gameres.com/dianjing_1.html" hidefocus="true" >电子竞技</a></li><li><a href="http://www.gameres.com/touzi_1.html" hidefocus="true" target="_blank" >投资收购</a></li><li><a href="http://www.gameres.com/bagua_1.html" hidefocus="true" target="_blank" >游戏八卦</a></li><li><a href="http://www.gameres.com/chanpindongtai_1.html" hidefocus="true" target="_blank"  style="color: red">— 产品动态 —</a></li><li><a href="http://www.gameres.com/shouyou_1.html" hidefocus="true" target="_blank"  style="color: blue">手机游戏</a></li><li><a href="http://www.gameres.com/vr_1.html" hidefocus="true" >虚拟/VR</a></li><li><a href="http://www.gameres.com/yeyou_1.html" hidefocus="true" target="_blank" >网页游戏</a></li><li><a href="http://www.gameres.com/duanyou_1.html" hidefocus="true" target="_blank" >端游/微端</a></li><li><a href="http://www.gameres.com/shejiao_1.html" hidefocus="true" target="_blank" >社交游戏</a></li><li><a href="http://www.gameres.com/danji_1.html" hidefocus="true" target="_blank" >单机游戏</a></li><li><a href="http://www.gameres.com/zhuji_1.html" hidefocus="true" target="_blank" >游戏机/TV</a></li><li><a href="#" hidefocus="true"  style="color: red">——————</a></li><li><a href="http://www.gameres.com/huodong_1.html" hidefocus="true" target="_blank" >展会/活动</a></li><li><a href="http://www.gameres.com/qita_1.html" hidefocus="true" target="_blank" >其它</a></li></ul><ul class="p_pop h_pop" id="mn_N0e6e_menu" style="display: none"><li><a href="http://www.gameres.com/chanpinfenxi_1.html" hidefocus="true" target="_blank" >产品分析</a></li><li><a href="http://www.gameres.com/yanfa_1.html" hidefocus="true" target="_blank"  style="color: red">— 游戏研发 —</a></li><li><a href="http://www.gameres.com/yinqing_1.html" hidefocus="true" target="_blank" >游戏引擎</a></li><li><a href="http://www.gameres.com/cehua_1.html" hidefocus="true" target="_blank"  style="color: blue">游戏策划</a></li><li><a href="http://www.gameres.com/chengxu_1.html" hidefocus="true" target="_blank" >游戏程序</a></li><li><a href="http://www.gameres.com/yunying_1.html" hidefocus="true" target="_blank"  style="color: red">— 游戏运营 —</a></li><li><a href="http://www.gameres.com/baogao_1.html" hidefocus="true" target="_blank" >产业报告</a></li><li><a href="http://www.gameres.com/shuju_1.html" hidefocus="true" target="_blank" >游戏数据</a></li><li><a href="http://www.gameres.com/zhichang_1.html" hidefocus="true" target="_blank"  style="color: red">— 游戏职场 —</a></li><li><a href="http://www.gameres.com/chuangye_1.html" hidefocus="true" target="_blank" >游戏创业</a></li><li><a href="http://www.gameres.com/guanli_1.html" hidefocus="true" target="_blank" >团队管理</a></li><li><a href="http://www.gameres.com/xinqing_1.html" hidefocus="true" target="_blank" >游戏心情</a></li><li><a href="#" hidefocus="true"  style="color: red">——————</a></li><li><a href="http://www.gameres.com/meishu_1.html" hidefocus="true" target="_blank" >游戏美术</a></li><li><a href="http://www.gameres.com/yinyue_1.html" hidefocus="true" target="_blank" >游戏音乐</a></li><li><a href="http://www.gameres.com/ceshi_1.html" hidefocus="true" target="_blank" >测试/QA</a></li></ul><ul class="p_pop h_pop" id="mn_N9e1d_menu" style="display: none"><li><a href="http://cp.gameres.com/cplist.php" hidefocus="true" target="_blank" >找产品</a></li><li><a href="http://cp.gameres.com/marketlist.php" hidefocus="true" target="_blank" >找渠道</a></li><li><a href="http://cp.gameres.com/servicelist.php" hidefocus="true" target="_blank" >找外包</a></li></ul><div id="mu" class="cl">
+</div><div class="a_mu"><table style="width: 958px;height:30px;background-color: #F2F2F2;" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td style="text-align: left">
+
+
+
+<font style="font-size: 14px;">　<span style="color:#999">论坛入口：</span>
+<a href="http://bbs.gameres.com/forum_6_1.html">游戏策划</a>　<a href="http://bbs.gameres.com/forum_1_1.html">游戏程序</a>　<b>|</b>　<b><a href="http://bbs.gameres.com/forum_55_1.html">游戏运营</a></b>　<a href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=55&filter=typeid&typeid=18">游戏报告</a>　<a href="http://bbs.gameres.com/forum_28.html">独立游戏</a>　<b>|</b>　<a href="http://bbs.gameres.com/forum_20_1.html">行业消息</a>　<a href="http://bbs.gameres.com/forum_45_1.html">游戏职场</a>　<a href="http://bbs.gameres.com/forum_122_1.html">游戏八卦</a>　<b>|</b>　<b><a href="http://bbs.gameres.com/forum_49_1.html">投资交易</a></b>　<a href="http://bbs.gameres.com/forum_111_1.html">项目外包</a>　<b>|</b>　<a href="http://bbs.gameres.com/forum_47_1.html">人才招聘</a>
+</font>
+
+</td>
+
+</tr>
+</table></div></div>
+</div>
+
+
+<div id="wp" class="wp"><script type="text/javascript">var fid = parseInt('1'), tid = parseInt('704078');</script>
+<form method="post" autocomplete="off" name="modactions" id="modactions">
+<input type="hidden" name="formhash" value="555beef3" />
+<input type="hidden" name="optgroup" />
+<input type="hidden" name="operation" />
+<input type="hidden" name="listextra" value="page%3D1" />
+</form>
+
+<script src="static/js/forum_viewthread.js?v55" type="text/javascript"></script>
+<script type="text/javascript">zoomstatus = parseInt(0);var imagemaxwidth = '600';var aimgcount = new Array();</script>
+
+
+
+
+
+
+<style id="diy_style" type="text/css">#frame83q9PP {  margin:1px !important;border:#cccccc 1px solid !important;}#portal_block_50 .dxb_bc {  margin:8px !important;font-size:15px !important;}#portal_block_52 .dxb_bc {  font-size:15px !important;margin:12px !important;}#portal_block_52 .dxb_bc a {  color:#666666 !important;}#portal_block_50 .dxb_bc a {  color:#666666 !important;}</style>
+<div class="wp">
+<!--[diy=diy1]--><div id="diy1" class="area"></div><!--[/diy]-->
+</div>
+
+<br>
+
+<div id="ct" class="ct2 wp cl">
+<div class="mn">
+<div class="bm vw pl">
+<!-- 广告位：文章模板 横幅 
+<div id="PAGE_AD_top" style="width:728px;height:90px;"></div>-->
+<div class="h hm">
+<h1 class="ph">网游的跨服玩法是如何实现的？“跨域体系”架构设计思路</h1>
+<p class="xg1">
+发布者:
+<a href="home.php?mod=space&amp;uid=233455">小篱</a>
+<span class="pipe">|</span>
+发布时间: 2017-3-13 14:45<span class="pipe">|</span>
+评论数: 1</p>
+</div>
+<div class="d">
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td><div class="pcb"  style="width:100%;">
+<div class="typeoption">
+<table summary="分类信息" cellpadding="0" cellspacing="0" class="cgtl mbm">
+<caption>游戏程序</caption>
+<tbody><tr>
+<th>平台类型:</th>
+<td>&nbsp; </td>
+</tr>
+<tr>
+<th>程序设计:</th>
+<td>设计思想/框架&nbsp;服务器&nbsp; </td>
+</tr>
+<tr>
+<th>编程语言:</th>
+<td>&nbsp; </td>
+</tr>
+<tr>
+<th>引擎/SDK:</th>
+<td>&nbsp; </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="t_fsz">
+<table cellspacing="0" cellpadding="0"><tr><td class="t_f" id="postmessage_2056549">
+　　虽然游戏市场竞争激烈，产品格局变动较大，但游戏产业一直处于稳步增长阶段，无论是在端游，页游，手游还是已经初露端倪的HTML5游戏。可以预见，游戏类型中，MMOARPG游戏仍然会是引领市场的主流趋势，贡献着大部分流水，市场上也仍然在不断涌现精品。研发团队对MMO游戏的探索从来未间断过，从付费模式的改变，到题材多元化，次时代的视觉效果，更成熟的玩法及数值体系，本文主要针对跨服玩法上的探索和实现做一些思考和分析。<br />
+<br />
+　　根据2016年《中国游戏产业报告》数据显示，随着游戏人口红利逐渐消失，获取用户的成本居高不下，几年来至少翻了十倍以上，目前平均导量成本页游为10~15元/人，手游在15~20元/人，其中IOS上成本30~50元/人，“洗”用户模式的效果正在变得微弱，用户流失严重。让我们先来看看滚服玩法的局限性，滚服洗量模式下存在着如下的弊端：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451299" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/1435530vf4x4js4fjus4fj.png" file="data/attachment/forum/201703/13/1435530vf4x4js4fjus4fj.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451299" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451299_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:35:53 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMjk5fGIxOTJiNzQ1fDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈486.png 下载次数:44" target="_blank"><strong>下载附件</strong> <span class="xs0">(50.16 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　在上述背景下，一款长留存，低流失的精品游戏就成了平台方，渠道商，研发方追捧的目标，设想一下，如果让所有服务器玩家通过“跨域体系”实现自由畅通交互，在此基础上，玩家可以体验到前所未有的“国战系统”——7×24小时昼夜不停服的国家战争，随时开战；突破单地图承载容量极限的国战对决，带来真正万人国战的刺激体验，形成全区玩家能够互动的游戏社交环境。依托平台运营来打造一款真正意义上摆脱传统游戏运营模式的全新产品，为平台吸纳足够的市场份额，大幅降低流失率。<br />
+<br />
+　　我们的蓝图是开创“1=1000” 模式，让所有玩家，身处一个服务器却如同同时存在于所有服务器，这种打破服务器屏障的设定，杜绝了游戏出现“被迫滚服”现象出现，玩家不用再担心鬼服人烟稀少，不用担心交易所一无所有，所有的数据共享，让玩家轻松Hold住全世界。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451300" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/1435545lz28cr2brd2k8n8.png" file="data/attachment/forum/201703/13/1435545lz28cr2brd2k8n8.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451300" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451300_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:35:54 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzAwfDdkMDZlOGFhfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈956.png 下载次数:51" target="_blank"><strong>下载附件</strong> <span class="xs0">(335.49 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　项目组当时面临的现状是游戏各种档期计划、宣传推广安排都已经就绪，两个月后该独代项目要在腾讯平台按时上线，开发不能因引入跨服机制而导致所有完成度100%的功能都要去分别去增加跨服的支持，而技术人员在跨服功能开发这块经验的积累上也不充分。<br />
+<br />
+　　技术小组分析了时下项目的现状，跨服业务需求及现有的框架结构，明确了几点原则：<br />
+<br />
+<ul type="1" class="litype_1"><li>为了实现跨服，游戏代码从底层架构到上层业务逻辑的代码改动成本尽量降低<li>业务逻辑里尽量少关心或者不用关心是否在本服或者跨服，降低开发人员的跨服功能开发复杂度，提高开发的效率，缩短开发周期。那么，我们需要解决哪些技术疑点呢？<br />
+</ul><br />
+<font color="#8b0000">　　<strong>客户端直连还是服务器转发</strong></font><br />
+<br />
+　　方案A，直连。如果直连，那么，跨服玩法时客户端要维持两个连接，在跨服里，要模拟玩家登陆，绑定session的过程，游戏服和跨服两边要同时维护两份玩家数据，如何做到数据的同步？跨服要暴露给玩家，需要有公网访问IP和端口。对客户端连接管理来说较复杂。<br />
+<br />
+　　方案B，转发。如果通过大区服务器消息转发，那么，服务器之间做RPC通信，连接管理，消息需额外做一步跳转，性能能否满足？跨不跨服，对于客户端来说透明，跨服隐藏在大区之后，更加安全，不需再浪费公网IP和端口。<br />
+<br />
+　　综合考虑了下，采用了B方案。<br />
+<br />
+　　<strong>1. RPC框架设计需求</strong><br />
+<br />
+　　那么，我们需要先准备一套高性能轻量级的RPC框架。业界有很多典型的RPC框架，比如Motan、Thrift、gRPC、Hessian、Hprose、Wildfly、Dubbo、DubboX，为什么我们还要重复造轮子呢？综合考虑了下，框架要满足以下几点业务需求:<br />
+<br />
+<ul type="1" class="litype_1"><li>该框架要简单、易用、支持高并发的跨服请求；<li>根据现有的游戏服务器框架，会有很多定制化的场景；<li>通过NIO TCP长连接获取服务，但无需跨语言的需求；<li>支持同步请求，异步请求，异步回调CallBack；<li>要有服务发现的功能，要有Failfast能力；<li>具备负载均衡，分组等路由策略；<br />
+</ul><br />
+　　基于有以上的诉求，结合团队以前的开发经验，于是就决定自主研发。我们选用的技术栈有 Netty、Apache Commons Pool、Redis等。<br />
+<br />
+　　框架分为服务提供方（RPC Server）、服务调用方（RPC Client）、注册中心（Registry）三个角色，基于Redis为服务注册中心，通过其Pub/Sub实现服务动态的注册和发现。Server 端会在服务初始化时向Registry 注册声明所提供的服务；Client 向 Registry 订阅到具体提供服务的 Server 列表，根据需要与相关的 Server 建立连接，进行 RPC 服务调用。同时，Client 通过 Registry 感知 Server 的状态变更。三者的交互关系如图：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451301" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143555oblf9fpcfmpxmvdd.png" file="data/attachment/forum/201703/13/143555oblf9fpcfmpxmvdd.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451301" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451301_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:35:55 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzAxfDUyODRkYmQ1fDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈2229.png 下载次数:43" target="_blank"><strong>下载附件</strong> <span class="xs0">(92.2 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　通过Global server提供路由策略，负载均衡策略，分组策略。具备 Failfast 能力，保障RPC服务一定程度的高可用。<br />
+<br />
+　　<strong>2. RPC请求的有序性</strong><br />
+<br />
+　　连接池在设计过程中，比较重要的是要考虑请求的顺序性，也就是先请求的先完成。如果玩家的跨服请求通过不同的RPC连接并发执行，就有可能单个玩家请求因错序而导致逻辑矛盾，比如玩家移动，见图2：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451302" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143557ooo3cwowtyozownn.png" file="data/attachment/forum/201703/13/143557ooo3cwowtyozownn.png" class="zoom" onclick="zoom(this, this.src)" width="550" id="aimg_451302" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451302_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:35:57 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzAyfDM2MmMzZWIwfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈2521.png 下载次数:45" target="_blank"><strong>下载附件</strong> <span class="xs0">(74.17 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　玩家移动是很频繁的，如果A请求让玩家从位置1移动到位置2，B请求从位置2移动到位置3，有可能B请求先被跨服接收处理，这就会产生逻辑问题。<br />
+<br />
+　　那么，如何做到请求的有序性呢？其本质是让同一份数据的访问能串行化，方法就是让同一个玩家的跨服请求通过同一条RPC连接执行，加上逻辑上的有效性验证，如图3所示：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451303" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143558c4osa66k0kcz6row.png" file="data/attachment/forum/201703/13/143558c4osa66k0kcz6row.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451303" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451303_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:35:58 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzAzfGYwYzI3YjJifDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈2789.png 下载次数:45" target="_blank"><strong>下载附件</strong> <span class="xs0">(121.47 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　<strong>　3. 同步RPC实现细节</strong><br />
+<br />
+　　限于篇幅，这里只讲同步请求的RPC连接池实现。同步请求的时序图如图所示：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451304" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143600039959h97brb91v1.png" file="data/attachment/forum/201703/13/143600039959h97brb91v1.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451304" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451304_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:00 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzA0fDU4MzAzM2UyfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈2957.png 下载次数:45" target="_blank"><strong>下载附件</strong> <span class="xs0">(150.1 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　上图为进入跨服战场的一次同步请求，场景切换控制器StageControllAction发起进入跨服战场的请求applyChangeByBattlefield()，场景管理器StageControllManager首先要调用登录跨服的RPC请求GameRpcClient.loginCrossServer(LoginCrossServerReq)，跨服RPC请求的工作流是这样的:<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451305" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/1436012uiwcl9b1lbchl9w.png" file="data/attachment/forum/201703/13/1436012uiwcl9b1lbchl9w.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451305" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451305_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:01 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzA1fGNkODZlMjgxfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈3266.png 下载次数:44" target="_blank"><strong>下载附件</strong> <span class="xs0">(55.5 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　该请求第一步先从连接池里获取一个连接RpcClient rpcClient = rpcClientPool.getResource(roleId)，然后发起一个同步请求RpcClient.sendWithReturn()，等待直到结果返回，然后把资源归还连接池。<br />
+<br />
+　　我们重点来看看sendWithReturn代码实现：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451306" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143605pcgccr4h4vjpzi0h.png" file="data/attachment/forum/201703/13/143605pcgccr4h4vjpzi0h.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451306" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451306_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:05 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzA2fGZhODg2YjM0fDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈3544.png 下载次数:56" target="_blank"><strong>下载附件</strong> <span class="xs0">(297.07 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　测试场景为分别在连接数在1，8，并发数1，8，数据大小在22byte，94byte，2504byte情况下，做测试，消息同步传输，原样返回，以下是针对同步请求压力测试的结果（取均值）：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451307" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/1436064jbwdojbhsd44b6w.png" file="data/attachment/forum/201703/13/1436064jbwdojbhsd44b6w.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451307" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451307_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:06 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzA3fGVhOWUwY2E4fDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈3757.png 下载次数:45" target="_blank"><strong>下载附件</strong> <span class="xs0">(48.08 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+<p align="left">　　<strong><font color="#8b0000">服务器之间主动推，还是被动拉取</font></strong></p><br />
+<p align="left"><strong>　　1. 被动拉取模式（Pull）</strong></p><br />
+　　由于我们的游戏服务器和跨服服务器代码基本一致，所以只要能在跨服中获得游戏功能所要的数据，那么，就能完成任何原有的功能，并且改造成本基本为零，我们选择了被动拉取。<br />
+<br />
+　　这里要提出一个概念：数据源的相对性。<br />
+<br />
+　　提供数据方，C向B请求一份数据，B是C的数据源，B向A请求一份数据，A是B的数据源。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451308" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143607oqdq76zh6lddnn2q.png" file="data/attachment/forum/201703/13/143607oqdq76zh6lddnn2q.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451308" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451308_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:07 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzA4fDZmODdlOWMwfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈4050.png 下载次数:42" target="_blank"><strong>下载附件</strong> <span class="xs0">(21.35 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　一个玩家跨服过去后，往游戏原服拉取数据的细节图如图：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451309" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143608zoxf0yindjanbrni.png" file="data/attachment/forum/201703/13/143608zoxf0yindjanbrni.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451309" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451309_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:08 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzA5fGI2Y2M4MTg3fDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈4195.png 下载次数:48" target="_blank"><strong>下载附件</strong> <span class="xs0">(122.24 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　玩家先跨服过去，loginCrossServer(LoginCrossServerReq)，然后，在用到任意数据时（主角、技能、坐骑、装备、宠物等），反向同步请求各个系统的数据。<br />
+<br />
+　　我们的实现如下图所示：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451310" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/1436103qtkf752n2q6ctfn.png" file="data/attachment/forum/201703/13/1436103qtkf752n2q6ctfn.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451310" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451310_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:10 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzEwfDljOWMwNDBmfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈4416.png 下载次数:49" target="_blank"><strong>下载附件</strong> <span class="xs0">(172.48 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451311" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143613o9wz0ond335nrhcm.png" file="data/attachment/forum/201703/13/143613o9wz0ond335nrhcm.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451311" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451311_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:13 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzExfGE5ZGJmZWM4fDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈4535.png 下载次数:51" target="_blank"><strong>下载附件</strong> <span class="xs0">(278.25 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+<ul type="1" class="litype_1"><li>如果玩家在本服，和调整前一样的处理流程，如果玩家在跨服，客户端请求的指令，发布的事件，异步事件需要在场景Stage线程处理的，就转发到跨服，需要在其他个人业务线程（bus），公共业务线程（public）处理的，仍旧在本服处理。<li>场景业务线程不再允许有DB操作。<li>内部指令的转发、事件分发系统、异步事件系统要在底层支持跨服。<li>玩家在登录本服时就会构PlayerTemplate， 场景用到的数据会实时更新，玩家去跨服，则会把场景中用到的数据PlayerTemplate主动推送给跨服。主动推送模式如下图所示。<br />
+</ul><br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451312" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/14361425t2y2l202557jft.png" file="data/attachment/forum/201703/13/14361425t2y2l202557jft.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451312" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451312_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:14 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzEyfGRkZTgyNGFmfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈5443.png 下载次数:45" target="_blank"><strong>下载附件</strong> <span class="xs0">(85.65 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451313" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143619beubegwwwmi0wwnr.png" file="data/attachment/forum/201703/13/143619beubegwwwmi0wwnr.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451313" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451313_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:18 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzEzfGE0OTA3ZTIyfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈5562.png 下载次数:54" target="_blank"><strong>下载附件</strong> <span class="xs0">(585.36 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　看下事件分发代码的改造：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451314" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143621335y3zyq0myokkpq.png" file="data/attachment/forum/201703/13/143621335y3zyq0myokkpq.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451314" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451314_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:21 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzE0fDgyNjgwM2NhfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈5694.png 下载次数:50" target="_blank"><strong>下载附件</strong> <span class="xs0">(213.62 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451315" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143623ba181wk48d1dddww.png" file="data/attachment/forum/201703/13/143623ba181wk48d1dddww.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451315" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451315_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:23 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzE1fGIwMjQzMTVjfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈5812.png 下载次数:44" target="_blank"><strong>下载附件</strong> <span class="xs0">(28.09 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　如下图，举个例子，在跨服怪物死亡后，会抛出 MonsterDeadEvent事件，在跨服进程直接处理场景的监听对应的逻辑：<br />
+<br />
+　　场景中道具掉落，尸体处理；其他的监听逻辑抛回游戏服处理，根据这事件，任务模块处理完成任务，获得奖励；成就模块处理完成成就，获得奖励；主角模块获得经验，金币等奖励；活动模块处理完成活动，获得奖励。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451316" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143624lxz1lbbm9xxtbqfb.png" file="data/attachment/forum/201703/13/143624lxz1lbbm9xxtbqfb.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451316" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451316_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:24 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzE2fGU2NDBiNjUwfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈6091.png 下载次数:49" target="_blank"><strong>下载附件</strong> <span class="xs0">(149.14 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　其他方面的优化1. 消息组播机制<br />
+<br />
+　　消息组播的优化，在跨服，来自同一服的全部玩家广播从分别单独消息转发，改成一个消息发回本服，然后再广播给玩家（比如来自同一个服n个玩家，原本广播一条消息，服务器之间之间要处理n个RPC消息，现在只需要处理1个消息，降到了原先的1/n）。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451317" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143625thf6whif06b0hzd0.png" file="data/attachment/forum/201703/13/143625thf6whif06b0hzd0.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451317" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451317_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:25 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzE3fGQzZDIxYTMxfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈6344.png 下载次数:45" target="_blank"><strong>下载附件</strong> <span class="xs0">(88.78 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　<strong>2. 通信数据量</strong><br />
+<br />
+　　一个完整的PlayerTemplate模版数据由于包含了玩家在场景里用到的所有数据，比如角色、宠物、坐骑、装备、神器、法宝、时装、技能、翅膀等等， 数据量比较大，平均能达到5KB左右，需要在服务器之间传输时做zlib压缩，比如，做了压缩后，11767 Byte的玩家数据能压缩到2337Byte，压缩率可达到19.86%。<br />
+<br />
+　<strong>　3. 序列化/反序列化</strong><br />
+<br />
+　　改造前，所有的请求都需要先在本服做AMF3反序列化，如果请求是需要转发到跨服的，再通过JSON序列化传输给跨服，在跨服通过JSON反序列化，最终该请求被处理。<br />
+<br />
+　　但实际上，中间过程JSON序列化和反序列化似乎是没有必要的，经过改造，对需要转发给跨服的请求，在本服先不做AMF3反序列化，发送到跨服后再处理，这样就少了一次JSON的序列化和反序列化，同时收益了另外的一个好处:降低了传输的字节。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451318" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/1436267x2s2iax2rrs6ric.png" file="data/attachment/forum/201703/13/1436267x2s2iax2rrs6ric.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451318" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451318_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:26 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzE4fDk1MTlkOGJifDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈6841.png 下载次数:46" target="_blank"><strong>下载附件</strong> <span class="xs0">(131.82 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451319" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143627jv1kgmvdjjjd1zdc.png" file="data/attachment/forum/201703/13/143627jv1kgmvdjjjd1zdc.png" class="zoom" onclick="zoom(this, this.src)" width="252" id="aimg_451319" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451319_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:27 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzE5fDIzMTc5YTAzfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈6960.png 下载次数:49" target="_blank"><strong>下载附件</strong> <span class="xs0">(258.67 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　<strong>4. 内存占用优化</strong><br />
+<br />
+　　Oracle JVM目前只能在JVM停止运行的时候才能做到释放占有内存，直到下次重启，所以为了防止资源浪费，各种类型的跨服服务器，游戏服务器都需要设置不同的启动参数。启动参数的设定根据我们自行设置的公式，如图所示。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451320" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143627zt1gt060o2icl62w.png" file="data/attachment/forum/201703/13/143627zt1gt060o2icl62w.png" class="zoom" onclick="zoom(this, this.src)" width="325" id="aimg_451320" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451320_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:27 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzIwfDNiOWU2YjBifDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈7196.png 下载次数:47" target="_blank"><strong>下载附件</strong> <span class="xs0">(90.45 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　但内存占用仍然会经常突破预警线90%，由于一旦系统分配内存发现不够时，就会触发自我保护机制，进行OOM killer，所以需要预留很大的内存给每个JVM进程，而且每次维护的时候去脚本修改内存也比较麻烦。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451321" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143628wl9z850vvv1zqlva.png" file="data/attachment/forum/201703/13/143628wl9z850vvv1zqlva.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451321" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451321_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:28 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzIxfDJlOWM4ZTUwfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈7416.png 下载次数:45" target="_blank"><strong>下载附件</strong> <span class="xs0">(142.88 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　内存占用状况如上图，服务器更新维护后，内存占用一路上扬，一直到最后维持在一定的值，不会回收，除非等下次维护或者系统触发OOM killer。<br />
+<br />
+　　基于阿里 JVM 1.8，只要开启-XX:+DeallocateHeapPages，CMS能在不重启应用的情况下把不使用的HEAP归还给系统的物理内存，这样，我们就不需要预留很多空间给JVM，再也不用担心被误杀了。<br />
+<br />
+　　拿我们一款内测阶段的游戏举例，使用了ALI JVM后， 64内存配置的机器最后开到了24个新区，相比起以前64G内存的机器，单台只能放9个独立的游戏区的状况下，单区的成本将会节省62.5% 机器资源，非常可观。完美的解决了内存经常吃紧的问题，并大幅节省了成本，这里特别感谢阿里云团队和@坤谷提供黑科技，大家有需求的话，可以去申请成为种子用户。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451322" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143628ji7ccvj4niscqvva.png" file="data/attachment/forum/201703/13/143628ji7ccvj4niscqvva.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451322" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451322_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:28 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzIyfDA5MWMwMzJmfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈7885.png 下载次数:50" target="_blank"><strong>下载附件</strong> <span class="xs0">(145.39 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　上图就是使用了Ali JDK后的锯齿形效果，每隔一定时间闲置内存会被系统回收，这在Oracle JVM是难以做到的。<br />
+<br />
+　　<strong>5. 服务器分组机制</strong><br />
+<br />
+　　不定向跨服是指任意游戏区的玩家都有可能匹配到一起进行游戏玩法的体验，比如跨服战场，比如跨服副本匹配，如图所示（分别表示服务器分组前和分组后）。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451323" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/1436300zievyz0d5550b0v.png" file="data/attachment/forum/201703/13/1436300zievyz0d5550b0v.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451323" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451323_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:30 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzIzfDIyNDAzYjE1fDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈8146.png 下载次数:50" target="_blank"><strong>下载附件</strong> <span class="xs0">(227.38 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451324" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143631fc45kh2s8lcs5js4.png" file="data/attachment/forum/201703/13/143631fc45kh2s8lcs5js4.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451324" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451324_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:31 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzI0fGFjMzIwOWQ3fDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈8264.png 下载次数:46" target="_blank"><strong>下载附件</strong> <span class="xs0">(190.29 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　如何在游戏正式大区中选择几个服做灰度服，又不影响不定向跨服体验，以及如何解决新老服玩家战力发展不在同一起跑线而导致的不平衡问题曾一度让人纠结。<br />
+<br />
+　　比如游戏产品推出了大型资料片，想先做下灰度测试，让1~4区的玩家先做下新功能的体验，同时又能防止玩家穿了一件旧版本不存在的装备而在跨服环境下报异常，根据运营需求通过分组，就很完美的解决了上述问题。<br />
+<br />
+<strong>　　6. 战区自动分配机制</strong><br />
+<br />
+　　定向跨服是指在一定时间内会固定参与跨服玩法的几个国家，常用于战区中国家之间对战，如图所示，需要运营在后台配置;当一段时间后，随着玩家流失，又需要运营根据战力进行战区的调整，对运营人员的要求比较高。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451325" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143632yswgk7ssgswg6k64.png" file="data/attachment/forum/201703/13/143632yswgk7ssgswg6k64.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451325" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451325_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:32 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzI1fGEzNTNjODlhfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈8665.png 下载次数:47" target="_blank"><strong>下载附件</strong> <span class="xs0">(139.65 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　调整后，每一种基于战区的跨服类型都可以自定义调整时间间隔，到时间点全局服务器（global server）系统自动根据全区的活跃战力匹配进行调整，让运营人员从繁杂的配置中解脱出来。<br />
+<br />
+　<strong>　7. 跨服断线重连机制</strong><br />
+<br />
+　　比如战场系统或组队副本，由于网络状况而掉线，如果重新登录后，没法进入，将会严重影响战场的战况，顺风局马上就可能会变成逆风局，主力DPS掉线副本就有可能通不了，这个机制就弥补了这块的缺陷。<br />
+<br />
+　<strong>　支持的玩法</strong><br />
+<br />
+　　目前，我们已经能支持任意的游戏区玩家可以到任意的跨服服务器进行游戏功能的体验。比如已经实现的跨服组队副本、跨服战场、跨服国战、跨服皇城争夺、跨服资源战、虫群入侵战、跨服押镖、挖矿争夺等。<br />
+<br />
+　　也支持玩家在本服就可以进行跨服互动，比如和别的区的玩家聊天、加好友、送礼等无缝交互，及国家拍卖行，世界拍卖行的跨服贸易。甚至支持玩家穿越到另外的游戏区做任意的游戏体验，比如一区的玩家听说二区服在举行抢亲活动，你可以跑到2区去观赏参与，也跑到任意的区的中央广场去显摆你的极品套装。<br />
+<br />
+　　<strong><font color="#8b0000">跨服在线数据</font></strong><br />
+<br />
+　　跨服定向玩法有战区国家玩法，虫群入侵，跨服押镖，挖矿争夺， 跨服皇城争夺，跨服国战等，如下图所示，我们可以看出这种玩法的规律:每次活动开启，跨服就会迎来一波波玩家涌入，活动一结束，玩家就会离开，4个跨服进程支持了7600在线的玩家。<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451326" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143633vylphrj7hlkwp0r3.png" file="data/attachment/forum/201703/13/143633vylphrj7hlkwp0r3.png" class="zoom" onclick="zoom(this, this.src)" width="530" id="aimg_451326" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451326_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:33 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzI2fDI0MGI0NDU4fDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈9345.png 下载次数:45" target="_blank"><strong>下载附件</strong> <span class="xs0">(36.04 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　跨服非定向性玩法有跨服组队副本，跨服战场等，支持负载均衡，可以随时动态增加跨服。这些玩法的规律是24小时随时可以体验进入，在线比较稳定，8个跨服进程支持了28000在线的玩家。<br />
+<br />
+　　<strong><font color="#8b0000">技术架构</font></strong><br />
+<br />
+　　下图为跨服通信拓扑图，属于整体架构的核心部分，关于这一部分的说明见图表：<br />
+<br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451327" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143635rk8kxfi0rikxf6of.png" file="data/attachment/forum/201703/13/143635rk8kxfi0rikxf6of.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451327" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451327_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:35 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzI3fDRiNDcyOTUzfDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈9595.png 下载次数:50" target="_blank"><strong>下载附件</strong> <span class="xs0">(160.72 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+<p align="center">
+<ignore_js_op>
+
+<img id="aimg_451328" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201703/13/143637zc8jw8tqnz5watjl.png" file="data/attachment/forum/201703/13/143637zc8jw8tqnz5watjl.png" class="zoom" onclick="zoom(this, this.src)" width="600" id="aimg_451328" inpost="1" alt="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." title="网游的跨服玩法是如何实现的？“跨域体系”架构设计思路 ..." onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
+
+<div class="tip tip_4 aimg_tip" id="aimg_451328_menu" style="position: absolute; display: none">
+<div class="tip_c xs0">
+<div class="y">2017-3-13 14:36:37 上传</div>
+<a href="forum.php?mod=attachment&amp;aid=NDUxMzI4fGRiODNhYTE1fDE0OTAwNzYzMjN8MHw3MDQwNzg%3D&amp;nothumb=yes" title="虽然游戏市场竞争激烈9714.png 下载次数:46" target="_blank"><strong>下载附件</strong> <span class="xs0">(116.65 KB)</span></a>
+
+</div>
+<div class="tip_horn"></div>
+</div>
+</ignore_js_op>
+</p><br />
+　　关于整体架构的介绍，卖个关子，后续的文章会和大家分享。请大家关注聊聊架构公众号。另外此套架构历经了《大闹天宫OL》、《诸神黄昏》、《暴风王座》、《惊天动地》、《三打白骨精》、《英雄领主》、《封神霸业》等先后近两万组服务器运行的验证和考验。<br />
+<br />
+　<strong>　作者介绍</strong><br />
+<br />
+　　江贵龙，游戏行业从业8年，历任多款游戏项目服务器主程，上海灵娱服务器负责人。 关注游戏服务器架构及优化，监控预警，智能运维，数据统计分析等。<br />
+<br />
+　<font color="#8b0000">　相关阅读：</font><a href="http://www.gameres.com/661941.html" target="_blank">游戏服务端的逻辑分服与物理分服</a><br />
+<br />
+via：游戏技术网<br />
+<br />
+</td></tr></table>
+</div>
+<div id="comment_2056549" class="cm">
+</div>
+<div id="post_rate_div_2056549"></div>
+</div><div class="modact xs1"><a href="forum.php?mod=misc&amp;action=viewthreadmod&amp;tid=704078" title="帖子模式" onclick="showWindow('viewthreadmod', this.href)">本主题由 小篱 于 2017-3-13 14:45:45 审核通过</a></div><!-- 广告位：文章模版 中间 文后 -->
+
+
+<hr style="width:98%;" color=#dddddd size=1>
+<br>
+<center>
+<table><tr>
+
+<td width="33%">
+<center>
+<img alt="GameRes游资网微信公众号二维码" src="http://img.gameres.com/images2015/G.jpg" width="180" height="180"><br>
+<span style="color:#333;"><b>关注我们官方微信公众号</b><br></span>
+</td>
+
+
+<td width="33%">
+<center>
+<img alt="游戏行APP二维码" src="http://www.16p.com/app/imgs/liantu.png" width="180" height="180"><br>
+<span style="color:#333;"><b>下载我们官方APP-游戏行</b><br></span>
+</td>
+
+<td width="34%">
+<center>
+<img alt="游戏行APP二维码" src="http://img.gameres.com/images2015/cp.jpg" width="180" height="180"><br>
+<span style="color:#333;"><b>关注手游动态微信公众号</b><br></span>
+</td>
+
+
+</tr></table>
+</center>
+
+
+<br>
+
+
+
+
+
+<div id="p_btn" class="mtw mbm cl xs1">
+<a href="home.php?mod=spacecp&amp;ac=favorite&amp;type=thread&amp;id=704078" id="k_favorite" onclick="showWindow(this.id, this.href, 'get', 0);" onmouseover="this.title = $('favoritenumber').innerHTML + ' 人收藏'"><i><img src="static/image/common/fav.gif" alt="收藏" />收藏<span id="favoritenumber">1</span></i></a>
+<a id="recommend_add" href="forum.php?mod=misc&amp;action=recommend&amp;do=add&amp;tid=704078&amp;hash=555beef3"  onclick="showWindow('login', this.href)" onmouseover="this.title = $('recommendv_add').innerHTML + ' 人支持'"><i><img src="static/image/common/rec_add.gif" alt="支持" />支持<span id="recommendv_add">0</span></i></a>
+<a id="recommend_subtract" href="forum.php?mod=misc&amp;action=recommend&amp;do=subtract&amp;tid=704078&amp;hash=555beef3"  onclick="showWindow('login', this.href)" onmouseover="this.title = $('recommendv_subtract').innerHTML + ' 人反对'"><i><img src="static/image/common/rec_subtract.gif" alt="反对" />反对<span id="recommendv_subtract">0</span></i></a>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" reload="1">
+aimgcount[2056549] = ['451328','451327','451326','451325','451324','451323','451322','451321','451320','451319','451318','451317','451316','451315','451314','451313','451312','451311','451310','451309','451308','451307','451306','451305','451304','451303','451302','451301','451300','451299'];
+attachimggroup(2056549);
+</script>
+</div>
+
+<div class="bm vw pl" id="comment">
+<div class="bm_h cl">
+<h2>最新评论</h2>
+</div>
+<div class="bm_c"><div id="post_2057291" class="xld xlda mbm"><dl class="bbda cl">
+<dd class="m avt"><a href="home.php?mod=space&amp;uid=206210"><img src="http://bbs.gameres.com/uc_server/avatar.php?uid=206210&size=small" /></a></dd>
+<dt>
+<span class="y xw0">
+
+</span>
+<a href="home.php?mod=space&amp;uid=206210" target="_blank" class="xi2">__BlueGuy__</a><em id="author_2057291"> 发表于</em>
+<span class="xg1 xw0"><span title="2017-3-15 09:44:42">6&nbsp;天前</span></span>
+</dt>
+<dd class="z"><div class="pcb"  style="width:100%;">
+<div class="t_fsz">
+<table cellspacing="0" cellpadding="0"><tr><td class="t_f" id="postmessage_2057291">
+<p style="line-height:30px;text-indent:2em;text-align:left"><img src="static/image/smiley/default/smile.gif" smilieid="1" border="0" alt="" /></p><br />
+</td></tr></table>
+</div>
+<div id="comment_2057291" class="cm">
+</div>
+<div id="post_rate_div_2057291"></div>
+</div></dd>
+
+</dl>
+
+
+
+</div>
+<div id="postlistreply" class="xld xlda mbm"><div id="post_new" class="viewthread_table" style="display: none;"></div></div>
+</div>
+
+</div>
+
+</div>
+<div class="sd">
+
+<div class="drag">
+<!--[diy=diy2]--><div id="diy2" class="area"><div id="frame83q9PP" class=" frame move-span cl frame-1"><div id="frame83q9PP_left" class="column frame-1-c"><div id="frame83q9PP_left_temp" class="move-span temp"></div><div id="portal_block_47" class="block move-span"><div id="portal_block_47_content" class="dxb_bc"><div class="portal_block_summary"><center>
+<a title="游戏行" href="http://www.16p.com/app/" target="_blank" rel="nofollow"><img src="http://img.gameres.com/images/data/16p.jpg" width="260" height="120"></a><br>
+<br>
+<div class="jiathis_style_32x32">
+<table>
+<tr>
+<td ><span class="jiathis_txt" style="font-size:18px;">关注我们：</span></td>
+<td>
+<a class="jiathis_follow_weixin" rel="http://img.gameres.com/images2013/wx.jpg"></a>
+<a class="jiathis_follow_tsina" rel="http://weibo.com/gamerescom"></a>
+</td>
+<td>
+<a href="http://www.gameres.com/msg_202023.html" target="_blank">QQ群<img src="http://img.gameres.com/images2013/qq.jpg" style="width:28px;"></a>
+</td></tr>
+</table>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1851706" charset="utf-8"></script>
+<br>
+<form action="http://zhannei.baidu.com/cse/search" target="_blank">
+<input type="hidden" name="s" value="13698104158759869988">
+<input type="text" name="q" size="16" maxlength="100" style="font-size:18px;height:22px;padding-left:6px;vertical-align:middle;">
+<input type="submit" value=" 搜 索 "  style="height:22px;vertical-align:middle;" >
+</form>
+<br></div></div></div><div id="portal_block_62" class="block move-span"><div id="portal_block_62_content" class="dxb_bc"><div class="portal_block_summary"><center>
+
+<br>
+<a title="绯雨音乐" href="http://www.gameres.com/zt/jump_lightrain.htm" rel="nofollow" target="_blank"><img src="http://img.gameres.com/images/data/feiyu_260_120.gif" style="" width="260" height="120"></a><br>
+
+
+
+<a title="投稿" href="http://www.gameres.com/fabu.html" rel="nofollow" target="_blank"><img src="http://img.gameres.com/images/data/tougao.jpg" style="" width="266"></a><br>
+
+
+<br>
+<script type="text/javascript">
+    var cpro_id = "u2577505";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script></div></div></div><div id="portal_block_52" class="block move-span"><div class="blocktitle title" style="background-image: none; background-color: rgb(204, 204, 204); background-repeat: repeat repeat;"><span class="titletext" style="float:;margin-left:px;font-size:16px;color:;">　最新消息</span></div><div id="portal_block_52_content" class="dxb_bc"><div class="module cl xl xl1" style="text-align: left;">
+<ul><li><a href="http://www.gameres.com/699844.html" title="2017年，我眼中的手游恐惧与忧思" target="_blank">2017年，我眼中的手游恐惧与忧思</a></li><li><a href="http://www.gameres.com/699840.html" title="为什么越来越多的独立开发者正在回归3A工作室？" target="_blank">为什么越来越多的独立开发者正在回归3A工作</a></li><li><a href="http://www.gameres.com/699839.html" title="UML类图在游戏开发中的应用" target="_blank">UML类图在游戏开发中的应用</a></li><li><a href="http://www.gameres.com/699832.html" title="11亿收购北京趣酷62%股权 德力股份再战游戏市场" target="_blank">11亿收购北京趣酷62%股权 德力股份再战游戏</a></li><li><a href="http://www.gameres.com/699824.html" title="《彼岸》：我的GameJam之旅和心得分享" target="_blank">《彼岸》：我的GameJam之旅和心得分享</a></li><li><a href="http://www.gameres.com/699821.html" title="外媒：腾讯将成下一个迪士尼" target="_blank">外媒：腾讯将成下一个迪士尼</a></li></ul>
+</div></div></div><div id="portal_block_33" class="block move-span"><div id="portal_block_33_content" class="dxb_bc"><div class="portal_block_summary"><hr style='width:95%;border:1px dashed #BEAA7E;' />
+<br>
+
+
+<table style="width:100%;" cellspacing="0" cellpadding="0" >
+<tr><td>
+<p class="style45">
+&nbsp;<a target="_blank" href="http://job.gameres.com"><span style="color:#888888;font-
+size:12px;">招聘信息</span></a>&nbsp;&nbsp;<a target="_blank" href="http://bbs.gameres.com/forum.php?
+
+mod=post&action=newthread&fid=47"><span style="color:#888888;font-size:12px;">免费发布</span></a><img 
+
+src="http://img.gameres.com/images/hot.gif"><br>
+<center><b>
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=1">北京
+
+</a>] 
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=3">上海
+
+</a>] 
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=6">杭州
+
+</a>]
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=5">成都
+
+</a>]<br/> 
+
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=4">广州
+
+</a>]
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=8">深圳
+
+</a>]
+[<a target="_blank" href="http://bbs.gameres.com/forum.php?mod=forumdisplay&fid=47&filter=typeid&typeid=9">厦门
+
+</a>]
+[<a target="_blank" href="http://bbs.gameres.com/forum_47_1.html">更多</a>] 
+</b></p>
+
+</td>
+</tr>
+</table></div></div></div><div id="portal_block_50" class="block move-span"><div id="portal_block_50_content" class="dxb_bc"><div class="module cl xl xl1" style="text-align: left;">
+<ul><li><a href="http://www.gameres.com/696844.html" title="【上海博羡】高薪招聘第二波" target="_blank"><font style="color: #8F2A90;">【上海博羡】高薪招聘第二波</font></a></li><li><a href="http://www.gameres.com/693293.html" title="哆可梦高薪诚聘各路人才" target="_blank"><font style="color: #996600;">哆可梦高薪诚聘各路人才</font></a></li><li><a href="http://www.gameres.com/448568.html" title="擎天柱 诚聘系统、数值、文案策划、运营策划、游戏开发" target="_blank"><font style="color: #EE1B2E;">擎天柱 诚聘系统、数值、文案策划、运营策</font></a></li><li><a href="http://www.gameres.com/685187.html" title="天象互动招聘用户运营，待遇好，福利多" target="_blank">天象互动招聘用户运营，待遇好，福利多</a></li><li><a href="http://www.gameres.com/680218.html" title="2017年优质项目--暗沙游戏招:策划/C++/as3/各类2D和3D美术人才" target="_blank">2017年优质项目--暗沙游戏招:策划/C++/as3/</a></li><li><a href="http://www.gameres.com/694648.html" title="杭州掌优科技有限公司北京分公司招聘市场经理" target="_blank"><font style="color: #996600;">杭州掌优科技有限公司北京分公司招聘市场经</font></a></li><li><a href="http://www.gameres.com/692557.html" title="成都天府五街招人（豪华团队，潜力项目）" target="_blank"><font style="font-weight: 900;color: #EE5023;">成都天府五街招人（豪华团队，潜力项目）</font></a></li><li><a href="http://www.gameres.com/675900.html" title="上海异界 VR游戏美术" target="_blank"><font style="font-weight: 900;color: #EE1B2E;">上海异界 VR游戏美术</font></a></li></ul>
+</div></div></div></div></div></div><!--[/diy]-->
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+new lazyload();
+</script>
+
+<div class="wp mtn">
+<!--[diy=diy3]--><div id="diy3" class="area"></div><!--[/diy]-->
+</div>
+
+<!--
+<script src="http://cbjs.baidu.com/js/m.js" type="text/javascript"></script>
+<script type="text/javascript">
+BAIDU_CLB_fillSlotAsync('554159','PAGE_AD_top');
+BAIDU_CLB_fillSlotAsync('554434','PAGE_AD_bottom');
+BAIDU_CLB_fillSlotAsync('554143','PAGE_AD_right');
+</script>
+-->
+
+<div class="jiathis_share_slide jiathis_share_24x24" id="jiathis_share_slide">
+<div class="jiathis_share_slide_top" id="jiathis_share_title"></div>
+<div class="jiathis_share_slide_inner">
+<div class="jiathis_style_24x24">
+<a class="jiathis_button_weixin"></a>
+<a class="jiathis_button_tsina"></a>
+<a class="jiathis_button_tqq"></a>
+<a class="jiathis_button_qzone"></a>
+<a href="http://www.gameres.com" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+<script type="text/javascript">
+var jiathis_config = {
+slide:{
+divid:'wp',
+pos:'left',
+gt:"true",
+bgcolor:'#ffffff',
+mt:74
+}
+};
+</script>
+<script src="http://v3.jiathis.com/code/jia.js?uid=1851706" type="text/javascript" charset="utf-8"></script>	
+<script src="http://v3.jiathis.com/code/jiathis_slide.js" type="text/javascript" charset="utf-8"></script>
+</div></div></div>	</div>
+<div id="ft" class="wp cl">
+<div id="flk" class="y">
+<p><a href="http://www.gameres.com/ad.html" target="_blank" >广告投放</a><span class="pipe">|</span><a href="http://www.gameres.com/fabu.html" target="_blank" >信息发布</a><span class="pipe">|</span><a href="http://www.gameres.com/about.html" target="_blank" >关于本站</a><span class="pipe">|</span><a href="forum.php?mobile=yes" >手机版</a><span class="pipe">|</span><strong><a href="http://www.gameres.com" target="_blank">GameRes游资网</a></strong>
+( <a href="http://www.miitbeian.gov.cn/" target="_blank">闽ICP备05005107</a> )<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fda15d801c31af4462f4da256d5cf95e8' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</p>
+<p class="xs0">
+GMT+8, 2017-3-21 14:05<span id="debuginfo">
+</span>
+</p>
+</div>
+
+<!-- ɾ����discuz���� --></div>
+
+<div id="g_upmine_menu" class="tip tip_3" style="display:none;">
+<div class="tip_c">
+积分 0, 距离下一级还需  积分
+</div>
+<div class="tip_horn"></div>
+</div>
+<script src="home.php?mod=misc&ac=sendmail&rand=1490076323" type="text/javascript"></script>
+
+</body>
+</html>
