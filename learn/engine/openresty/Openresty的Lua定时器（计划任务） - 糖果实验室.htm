@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="zh-CN"><!--<![endif]-->
+<html xmlns:wb="http://open.weibo.com/wb">
+<head>
+  <meta charset="utf-8">
+  <title>Openresty的Lua定时器（计划任务） - 糖果实验室</title>
+  <meta property="wb:webmaster" content="7f08aeb6bf5d15a7" />
+  <meta name="author" content="糖果" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="MobileOptimized" content="320" />
+  <meta name="baidu_union_verify" content="0b4419def85546127bc155783d6f6ad1" />
+  <meta property="wb:webmaster" content="7f08aeb6bf5d15a7" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="wb:webmaster" content="7f08aeb6bf5d15a7" />
+  <meta name="baidu_union_verify" content="9ac0d7ab67ad9c0c8062ea73200ce00b">
+  <meta name="majestic-site-verification" content="MJ12_c45239e7-48c0-4bcc-9f6e-ce75e401c7a7">  
+  <link rel="alternate" type="application/rss+xml" title="糖果实验室 RSS Feed" href="http://www.lua.ren/feed" />
+  <link rel="shortcut icon" href="http://www.lua.ren/favicon.ico" type="image" />
+  <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+  <!--
+  <link href="/static/themes/octopress/css/screen_edit.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <link href="/static/themes/octopress/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <link href="/static/octopress/screen_edit.css" media="screen, projection" rel="stylesheet" type="text/css">
+  -->
+
+  <link href="/static/themes/octopress/css/screen_black.css" media="screen, projection" rel="stylesheet" type="text/css" />
+
+  <script src="http://lib.sinaapp.com/js/jquery/1.6.2/jquery.min.js"></script>
+  <script src="/static/themes/octopress/js/main.js"></script>
+  <script src="/static/octopress/js/modernizr-2.0.js"></script>
+<!--
+  <script src="/static/octopress/js/ender.js"></script>
+-->
+  <script src="/static/octopress/js/octopress.js"></script>
+
+
+
+  <link rel='index' title='糖果实验室' href='http://www.lua.ren/' />
+  <link rel='start' title='Openresty的Lua定时器（计划任务）' href='http://www.lua.ren/topic/114/openresty的lua定时器-计划任务' /> 
+  <link rel='prev' title='MoonScript脚本开发简介' href='http://www.lua.ren/topic/115/moonscript脚本开发简介' /> 
+  <link rel='next' title='WEB IDE环境运行Lua网页应用' href='http://www.lua.ren/topic/113/web-ide环境运行lua网页应用' /> 
+  <link rel='shortlink' href='http://www.lua.ren/t/114' />
+  <meta name="description" content="Openresty的Lua定时器（计划任务） - 糖果实验室 在系统中有一类需求是：周期性的执行某些任务，利用定时的timer去实现这种操作。Openresty为Lua提供了这种机制实现的API，通过设定timer来完成这种类似计划任务功能。" />
+  <meta name="keywords" content="lua,openresty,timer" />
+  <link rel="canonical" href="http://www.lua.ren/topic/114/openresty%E7%9A%84lua%E5%AE%9A%E6%97%B6%E5%99%A8-%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1" />
+
+<script type="text/javascript">
+    $(function(){
+        $("#go-to-top").click(function(){
+            $("html, body").animate({'scrollTop': 0}, 400);
+            return false;
+        });
+        $(window).scroll(function() {
+            var top = $(document).scrollTop();
+            var g = $("#go-to-top");
+            if (top > 300 && g.is(":hidden")) {
+                g.fadeIn();
+            } else if(top < 300 && g.is(":visible")) {
+                g.fadeOut();
+            }
+        }); 
+    })
+    
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+   var hm = document.createElement("script");
+     hm.src = "//hm.baidu.com/hm.js?14cc93bf3f08d31c458639d309dde522";
+       var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+	 })();
+</script>
+
+
+</head>
+<body>
+  <header role="banner">
+    <hgroup>
+      <h1><a href="/">糖果实验室</a></h1>
+        <h2>Candy Lab</h2>
+    </hgroup>
+  </header>
+  <nav role=navigation>
+    <ul role=subscription data-subscription="rss">
+      <li><a href="/feed" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    </ul>
+    <script type="text/javascript">
+        var dispatch = function() {
+            q = document.getElementById("q");
+            if (q.value != "") {
+                window.open('http://www.google.com/search?q=site:http://www.lua.ren/topic/%20' + q.value, "_blank");
+                return false;
+            } else {
+                return false;
+            }
+        }
+    </script>    
+    <form onsubmit="return dispatch()">
+      <fieldset role="site-search">
+        <input class="search" type="search" id="q" placeholder="Search" />
+      </fieldset>
+    </form>
+    <ul role=main-navigation>
+      <li><a href="/">博客</a></li>
+      <li><a href="/topic/157/lua书">资源</a></li>
+      <li><a href="http://lua.ren/tag/lapis/">Lapis</a></li>
+      <li><a href="http://lua.ren/category/moonscript/">Moonscript</a></li>
+      <li><a href="http://lua.ren/category/openresty/">Openresty</a></li>
+      <li><a href="http://lua.ren/category/orange/">Orange</a></li>
+      <li><a href="http://lua.ren/category/lua/">Lua</a></li>
+      <li><a href="/topic/103/关于">赞助</a></li>
+    </ul>
+  </nav>
+  <div id="main">
+    <div id="content">
+
+<!-- block content -->
+
+   <div>
+    <article class="hentry" role="article">
+        <header>
+            <h1 class="entry-title">Openresty的Lua定时器（计划任务）</h1>
+            <p class="meta">
+                <small>1 year ago
+                <a href="http://www.lua.ren/topic/114/openresty的lua定时器-计划任务#respond" title="Comment on Openresty的Lua定时器（计划任务）" class="count">0</a>
+                </small>
+            </p>
+
+        <wb:share-button appkey="1913157465" addition="full" type="button"></wb:share-button>
+        </header>
+        <div class="entry-content" id="postcondiv">
+	    <!--
+	    <p>在系统中有一类需求是：周期性的执行某些任务，利用定时的timer去实现这种操作。</p><p>Openresty为Lua提供了这种机制实现的API，通过设定timer来完成这种类似计划任务功能。</p><p></p><p>下面，就是一个典型的Openresty的timer API的使用例子：</p><p>实现思路是，通过一个timer设定调用一个函数，在函数内部还有一个循环递归的timer调用，调用函数自身，实现周期性的函数执行。</p><p>--此函数的主要的目的是6秒钟的时间，对redis中某Key，进行数值累加。</p><p>```lua<br/>local handler</p><p>function handler(premature, params)</p><p>--定时执行一个redis的累加计数操作。</p><p>RedisCommon.add()</p><p>--递归的timer，重复调用handler函数。</p><p>local ok, err = ngx.timer.at(6, handler, "params-data")</p><p>        ngx.log(ngx.DEBUG, "ok:", ok, " err:", err)</p><p>end<br/>```<br/>--第一次设定timer，调用hander函数。</p><p>```lua<br/>local ok, err = ngx.timer.at(6, handler, "params-data")</p><p>ngx.log(ngx.DEBUG, "ok:", ok, " err:", err)</p><p>if not ok then</p><p>        ngx.log(ngx.ERR, "err:", err)</p><p>end</p><p>```</p><p>timer一般用于，定时去服务器上取一些数据，或是定时扫描本地文件是否有变动，根据目地不同功能也不一样。</p><p></p><p>作者：糖果</p><p>PS:转载到其它平台请注明作者姓名及原文链接，请勿用于商业用途。</p> 
+	    -->
+	    <p>在系统中有一类需求是：周期性的执行某些任务，利用定时的timer去实现这种操作。</p>
+
+<p>Openresty为Lua提供了这种机制实现的API，通过设定timer来完成这种类似计划任务功能。</p>
+
+<p>下面，就是一个典型的Openresty的timer API的使用例子：</p>
+
+<p>实现思路是，通过一个timer设定调用一个函数，在函数内部还有一个循环递归的timer调用，调用函数自身，实现周期性的函数执行。</p>
+
+<p>--此函数的主要的目的是6秒钟的时间，对redis中某Key，进行数值累加。</p>
+
+<figure class='code'>
+<figcaption><span>None</span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>local handler</span>
+<span class='line'></span>
+<span class='line'>function handler(premature, params)</span>
+<span class='line'></span>
+<span class='line'>--定时执行一个redis的累加计数操作。</span>
+<span class='line'></span>
+<span class='line'>RedisCommon.add()</span>
+<span class='line'></span>
+<span class='line'>--递归的timer，重复调用handler函数。</span>
+<span class='line'></span>
+<span class='line'>local ok, err = ngx.timer.at(6, handler, "params-data")</span>
+<span class='line'></span>
+<span class='line'>        ngx.log(ngx.DEBUG, "ok:", ok, " err:", err)</span>
+<span class='line'></span>
+<span class='line'>end</span></code></pre></td></tr></table></div>
+</figure>
+
+<p>--第一次设定timer，调用hander函数。</p>
+
+<figure class='code'>
+<figcaption><span>None</span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="kd">local</span> <span class="n">ok</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">ngx</span><span class="p">.</span><span class="n">timer</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s">params-data&quot;</span><span class="p">)</span></span>
+<span class='line'></span>
+<span class='line'><span class="n">ngx</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">ngx</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s">ok:&quot;</span><span class="p">,</span> <span class="n">ok</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s"> err:&quot;</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span></span>
+<span class='line'></span>
+<span class='line'><span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span> <span class="k">then</span></span>
+<span class='line'></span>
+<span class='line'>        <span class="n">ngx</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">ngx</span><span class="p">.</span><span class="n">ERR</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s">err:&quot;</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span></span>
+<span class='line'></span>
+<span class='line'><span class="k">end</span></span></code></pre></td></tr></table></div>
+</figure>
+
+<p>timer一般用于，定时去服务器上取一些数据，或是定时扫描本地文件是否有变动，根据目地不同功能也不一样。</p>
+
+<p>作者：糖果</p>
+
+<p>PS:转载到其它平台请注明作者姓名及原文链接，请勿用于商业用途。</p>
+
+	    <a href="http://www.openresty.com.cn">Openresty中文编程网</a><br>
+	</div>
+        <footer>
+            <p class="meta grey">
+                <span>Posted by <strong>糖果</strong></span> |
+
+                <span class="categories greyhref">
+                    category:
+                    <a href="http://www.lua.ren/category/lua/" rel="category tag">lua</a>
+                </span>
+                <span class="categories greyhref">
+                  | Tags: <a href="http://www.lua.ren/tag/lua/" rel="tag">lua</a>, <a href="http://www.lua.ren/tag/openresty/" rel="tag">openresty</a>, <a href="http://www.lua.ren/tag/timer/" rel="tag">timer</a>
+                </span>
+            </p>
+            
+            <div  style="display:block;margin-bottom:20px;">
+
+            <!--
+	    <wb:share-button appkey="1913157465" addition="full" type="button"></wb:share-button>
+	    -->
+	    <wb:publish action="pubilish" type="web" language="zh_cn" button_type="red" button_size="middle" button_text="发微博给糖果" uid="3732639263" default_text="http://www.lua.ren" tag="糖果实验室" refer="y" appkey="35dfoR" ></wb:publish>
+	    <!--
+	    <wb:share-button appkey="1913157465" addition="full" type="button"></wb:share-button>
+-->
+
+	    <!--
+	    <wb:comments url="auto" width="auto" appkey="1913157465" ralateuid="3732639263" ></wb:comments>
+	    -->
+            <div class="c"></div>
+            </div>            
+            
+            <p class="topline grey">See also:</p>
+            <ul class="greyhref">
+            <li><a href="http://www.lua.ren/topic/279/tail-call-到底有啥用" rel="bookmark">Tail Call 到底有啥用？</a></li>
+            <li><a href="http://www.lua.ren/topic/282/openresty-china的登陆处理与发贴限制" rel="bookmark">OpenResty China的登陆处理与发贴限制</a></li>
+            <li><a href="http://www.lua.ren/topic/284/lua判断空表的正确姿势" rel="bookmark">Lua判断空表的正确姿势</a></li>
+            <li><a href="http://www.lua.ren/topic/286/openrestychina一个merge引起的bug" rel="bookmark">OpenrestyChina一个Merge引起的BUG</a></li>
+            <li><a href="http://www.lua.ren/topic/287/用orc自动生成的openresty配置文件和目录结构" rel="bookmark">用ORC自动生成的OpenResty配置文件和目录结构</a></li>
+            </ul>
+            
+            <div class="topline greyhref grey">
+            上一页 &rsaquo; <a href="http://www.lua.ren/topic/115/moonscript脚本开发简介" rel="prev">MoonScript脚本开发简介</a>
+            <br/> 
+            
+            下一页 &rsaquo; <a href="http://www.lua.ren/topic/113/web-ide环境运行lua网页应用" rel="next">WEB IDE环境运行Lua网页应用</a> 
+            </div>
+            
+        </footer>
+    </article>
+    
+    <a name="comments"></a>
+    
+    <section id="commentsec" style="display:none;">
+        <h1 class="topline">Comments</h1>
+        <div id="comments">
+            <h2 class="comments">There are 1 Comment to "Openresty的Lua定时器（计划任务）"</h2>
+            <ul class="singlecomments" id="commentlist">
+            </ul>
+        </div>
+    </section>
+    
+    
+    <!-- new comment -->
+    <section>
+    <div id="respond" class="topline">
+    
+<a rel="nofollow" id="cancel-comment-reply-link" href="http://www.lua.ren/topic/114/openresty的lua定时器-计划任务#respond" style="display:none;">Cancel Reply</a><h2 class="respond">Write a Comment</h2>
+<form action="http://www.lua.ren/topic/114/openresty的lua定时器-计划任务" method="post" id="commentform">
+    <p>
+    <input type="text" id="author" name="author" placeholder="名字" required tabindex="1" /> 
+    <label for="name">* 名字 (必填)</label> 
+    </p>
+    <p> 
+    <input type="text" id="email" name="email" placeholder="example@domain.com" required tabindex="2" /> 
+    <label for="email">* 邮件 (必填, 不公开)</label>
+    </p>
+    <p> 
+    <input type="text" id="url" name="url" placeholder="http://www.lua.ren" tabindex="3" /> 
+    <label for="email">网站 (选填)</label>
+    </p>
+    <p><label for="comment">* 评论 (必填) 10~500字</label> </p>
+    <textarea name="comment" id="commentbox" tabindex="4"></textarea> 
+    <p>
+    <input name="submit" class="submit" type="button" id="submit" tabindex="5" value="Submit Comment" /> 
+    </p>
+    
+    <input type='hidden' value='114' id='postkeyname' /> 
+    <input type='hidden' value='' id='toid' />
+    <p id="text"></p>
+
+</form>
+<!--
+<wb:topic uid="3732639263" topmid="Dz2k1qgON" column="y" border="n" width="821" height="1580" tags="%23%E7%B3%96%E6%9E%9C%E6%A0%87%E8%AE%B0%23" red_text="%E5%A5%BD%E7%94%A8" blue_text="%E4%B8%8D%E5%A5%BD%E7%94%A8" language="zh_cn" version="pk" appkey="35dfoR" refer="y" footbar="y" url="http%3A%2F%2Fwww.lua.ren" filter="n" ></wb:topic>
+-->
+
+<script src="/static/jquery-plugin/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+
+<script  type="text/javascript">
+
+function testReg(reg,str){
+    return reg.test(str);
+}
+
+$('#submit').click(function(){
+    var emailreg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/g;
+    var urlreg = /^http:\/\/.+\..+/;
+    var email = $('#email').val();
+    var url = $('#url').val();
+    var con = $('#commentbox').val();
+    var author = $('#author').val();
+    
+    if(author.length< 1 || author.length > 30){
+        $('#author').focus();
+        return;
+    }
+        
+    if(!testReg(emailreg,email)){
+        $('#email').focus();
+        return;
+    }
+    if(url.length>0){
+        if(!testReg(urlreg,url)){
+            $('#url').focus();
+            return;
+        }
+    }
+    if(con.length< 10 || con.length > 500){
+        $('#commentbox').focus();
+        return;
+    }
+        
+    $('#submit').attr('disabled', 'disabled');
+    $('#text').html("Sending now.....");
+    $.cookie('author', author, { expires: 365, path: '/' });
+    $.cookie('email', email, { expires: 365, path: '/' });
+    $.cookie('url', url, { expires: 365, path: '/' });
+    $.ajax({
+        type: 'POST',
+        url: '/topic/114/openresty%E7%9A%84lua%E5%AE%9A%E6%97%B6%E5%99%A8-%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1',
+        dataType: "json",
+        data: {'act': 'postcomment', 'author': author, 'email':email, 'url': url, 'con': con,'postid': $('#postkeyname').val(), 'toid': $('#toid').val()},
+        success: function(data){
+              if(data.status == 200){
+                  $('#commentlist').append(data.msg);
+                  scroll(0,$("#h").position().top);
+                  $('#commentsec').fadeIn("slow");
+                  $('#commentbox').val('');
+                  $('#text').html('');
+                  var cnum = Number($.cookie('usercomnum'));
+                  if(cnum == null){
+                      cnum = 1;
+                  }else{
+                      cnum += 1;
+                  }
+                  $.cookie('usercomnum', cnum, { expires: 1, path: '/' });
+		  
+                  $('#submit').removeAttr("disabled");
+                  window.location.reload();
+              }else{
+                  $('#text').html(data.msg);
+              }
+              $('#submit').removeAttr("disabled");
+        }
+        
+    });
+    
+    return false;
+    
+});
+
+function reply(toid, name){
+    var ct = $('#commentbox');
+    ct.focus();
+    ct.val('@'+name + ' ' + ct.val());
+    $('#toid').val(toid);
+    return false;
+}
+
+$(document).ready(function(){      
+    $('#author').val($.cookie('author'));
+    $('#email').val($.cookie('email'));
+    $('#url').val($.cookie('url'));    
+});
+
+</script>
+    
+    </div>
+    </section>
+    <!-- new comment end -->
+    
+    
+</div>
+
+
+<!--  block content end -->
+
+      
+            <!-- block sidebar -->
+<aside role=sidebar>
+<section> 
+<!--
+    <wb:follow-button uid="3732639263" type="red_4" width="100%" height="64" ></wb:follow-button>
+<script>document.write(unescape('%3Cdiv id="hm_t_111023"%3E%3C/div%3E%3Cscript charset="utf-8" src="http://crs.baidu.com/t.js?siteId=14cc93bf3f08d31c458639d309dde522&planId=111023&async=0&referer=') + encodeURIComponent(document.referrer) + '&title=' + encodeURIComponent(document.title) + '&rnd=' + (+new Date) + unescape('"%3E%3C/script%3E'));</script>
+-->
+    <h1>最新评论</h1>
+    <ul id="recent_posts">
+        <li class="post">
+            糖果 Says: <span class="grey">2 months ago</span> <br/> <a href="http://www.lua.ren/t/324#r50">@sumory 饭总的头像就是帅！ </a>
+        </li>
+        <li class="post">
+            sumory Says: <span class="grey">2 months ago</span> <br/> <a href="http://www.lua.ren/t/324#r49">无脑点赞！！！:-D </a>
+        </li>
+        <li class="post">
+            testcsae Says: <span class="grey">2 months ago</span> <br/> <a href="http://www.lua.ren/t/328#r48">123123123123 </a>
+        </li>
+        <li class="post">
+            mlboy Says: <span class="grey">9 months ago</span> <br/> <a href="http://www.lua.ren/t/216#r37">看$就知道饭总写php </a>
+        </li>
+        <li class="post">
+            tangguo Says: <span class="grey">9 months ago</span> <br/> <a href="http://www.lua.ren/t/178#r36">@萝卜 没太看明白，什么意思？ </a>
+        </li>
+    </ul>
+</section>
+<!--
+<section style="position: absolute;right: -210px;top: 0;">
+-->
+<!--
+    <wb:livestream skin="silver" topic="%E7%B3%96%E6%9E%9C%E6%A0%87%E8%AE%B0|%E7%B3%96%E6%9E%9C%E6%A0%87%E8%AE%B0" width="auto" height="500" ></wb:livestream>
+-->
+<section id="tg-category"> 
+    <h1>分类</h1>
+    <ul id="Category_list">
+        <li class="category">
+            <a title="View all posts filed under c" href="http://www.lua.ren/category/c/">c <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under graylog" href="http://www.lua.ren/category/graylog/">graylog <span class="tag_meta">(4)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under jekyll" href="http://www.lua.ren/category/jekyll/">jekyll <span class="tag_meta">(3)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under openresty最佳实践" href="http://www.lua.ren/category/openresty最佳实践/">openresty最佳实践 <span class="tag_meta">(25)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under orange" href="http://www.lua.ren/category/orange/">orange <span class="tag_meta">(13)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under orc" href="http://www.lua.ren/category/orc/">orc <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under orchina" href="http://www.lua.ren/category/orchina/">orchina <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under tmux" href="http://www.lua.ren/category/tmux/">tmux <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under weibo" href="http://www.lua.ren/category/weibo/">weibo <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under pyqt" href="http://www.lua.ren/category/pyqt/">pyqt <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under honeymap" href="http://www.lua.ren/category/honeymap/">honeymap <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under ossec" href="http://www.lua.ren/category/ossec/">ossec <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under coding" href="http://www.lua.ren/category/coding/">coding <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under logstash" href="http://www.lua.ren/category/logstash/">logstash <span class="tag_meta">(4)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under sitegen" href="http://www.lua.ren/category/sitegen/">sitegen <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under zsh" href="http://www.lua.ren/category/zsh/">zsh <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under Octopress" href="http://www.lua.ren/category/Octopress/">Octopress <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under css" href="http://www.lua.ren/category/css/">css <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under markdown" href="http://www.lua.ren/category/markdown/">markdown <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under awk" href="http://www.lua.ren/category/awk/">awk <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 机械键盘" href="http://www.lua.ren/category/机械键盘/">机械键盘 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under svn" href="http://www.lua.ren/category/svn/">svn <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under php" href="http://www.lua.ren/category/php/">php <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under lua库" href="http://www.lua.ren/category/lua库/">lua库 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under syslog" href="http://www.lua.ren/category/syslog/">syslog <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under es" href="http://www.lua.ren/category/es/">es <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under leafo" href="http://www.lua.ren/category/leafo/">leafo <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under OpenResty China" href="http://www.lua.ren/category/OpenResty China/">OpenResty China <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under lua编辑器" href="http://www.lua.ren/category/lua编辑器/">lua编辑器 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under lua web" href="http://www.lua.ren/category/lua web/">lua web <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 建站" href="http://www.lua.ren/category/建站/">建站 <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under concurrent" href="http://www.lua.ren/category/concurrent/">concurrent <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under lor" href="http://www.lua.ren/category/lor/">lor <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under web framework" href="http://www.lua.ren/category/web framework/">web framework <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 锤子手机" href="http://www.lua.ren/category/锤子手机/">锤子手机 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 好玩的" href="http://www.lua.ren/category/好玩的/">好玩的 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 书评" href="http://www.lua.ren/category/书评/">书评 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under lapis" href="http://www.lua.ren/category/lapis/">lapis <span class="tag_meta">(12)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under luafaq" href="http://www.lua.ren/category/luafaq/">luafaq <span class="tag_meta">(5)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under webSockets" href="http://www.lua.ren/category/webSockets/">webSockets <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 英语" href="http://www.lua.ren/category/英语/">英语 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 项目" href="http://www.lua.ren/category/项目/">项目 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 新闻" href="http://www.lua.ren/category/新闻/">新闻 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under download" href="http://www.lua.ren/category/download/">download <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under book" href="http://www.lua.ren/category/book/">book <span class="tag_meta">(9)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under vanilla" href="http://www.lua.ren/category/vanilla/">vanilla <span class="tag_meta">(5)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under lua, lua_balacer" href="http://www.lua.ren/category/lua, lua_balacer/">lua, lua_balacer <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under openresty" href="http://www.lua.ren/category/openresty/">openresty <span class="tag_meta">(12)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under nginx" href="http://www.lua.ren/category/nginx/">nginx <span class="tag_meta">(5)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under sae" href="http://www.lua.ren/category/sae/">sae <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 工具" href="http://www.lua.ren/category/工具/">工具 <span class="tag_meta">(3)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 加密" href="http://www.lua.ren/category/加密/">加密 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under wiki" href="http://www.lua.ren/category/wiki/">wiki <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under moonscript" href="http://www.lua.ren/category/moonscript/">moonscript <span class="tag_meta">(8)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 翻译" href="http://www.lua.ren/category/翻译/">翻译 <span class="tag_meta">(4)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under knewzen" href="http://www.lua.ren/category/knewzen/">knewzen <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under vim" href="http://www.lua.ren/category/vim/">vim <span class="tag_meta">(6)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 效果图" href="http://www.lua.ren/category/效果图/">效果图 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under JavaScript" href="http://www.lua.ren/category/JavaScript/">JavaScript <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under div" href="http://www.lua.ren/category/div/">div <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under tenjin" href="http://www.lua.ren/category/tenjin/">tenjin <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 测试" href="http://www.lua.ren/category/测试/">测试 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under nodjs" href="http://www.lua.ren/category/nodjs/">nodjs <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 测试新的数据库" href="http://www.lua.ren/category/测试新的数据库/">测试新的数据库 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under lisp" href="http://www.lua.ren/category/lisp/">lisp <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 图书" href="http://www.lua.ren/category/图书/">图书 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 资源" href="http://www.lua.ren/category/资源/">资源 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 算法" href="http://www.lua.ren/category/算法/">算法 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under lua" href="http://www.lua.ren/category/lua/">lua <span class="tag_meta">(51)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under listview" href="http://www.lua.ren/category/listview/">listview <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under mac" href="http://www.lua.ren/category/mac/">mac <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 数据结构" href="http://www.lua.ren/category/数据结构/">数据结构 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 随笔" href="http://www.lua.ren/category/随笔/">随笔 <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 评测" href="http://www.lua.ren/category/评测/">评测 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under html" href="http://www.lua.ren/category/html/">html <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under PySide" href="http://www.lua.ren/category/PySide/">PySide <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under RUBY" href="http://www.lua.ren/category/RUBY/">RUBY <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 基础" href="http://www.lua.ren/category/基础/">基础 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 文档" href="http://www.lua.ren/category/文档/">文档 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under QT" href="http://www.lua.ren/category/QT/">QT <span class="tag_meta">(3)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under mysql" href="http://www.lua.ren/category/mysql/">mysql <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under django" href="http://www.lua.ren/category/django/">django <span class="tag_meta">(5)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 备忘录" href="http://www.lua.ren/category/备忘录/">备忘录 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 海报" href="http://www.lua.ren/category/海报/">海报 <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 设计" href="http://www.lua.ren/category/设计/">设计 <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 线程" href="http://www.lua.ren/category/线程/">线程 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under C++" href="http://www.lua.ren/category/C++/">C++ <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 娱乐" href="http://www.lua.ren/category/娱乐/">娱乐 <span class="tag_meta">(1)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under python" href="http://www.lua.ren/category/python/">python <span class="tag_meta">(32)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under socket" href="http://www.lua.ren/category/socket/">socket <span class="tag_meta">(4)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under Linux" href="http://www.lua.ren/category/Linux/">Linux <span class="tag_meta">(10)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 小说" href="http://www.lua.ren/category/小说/">小说 <span class="tag_meta">(6)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 记事" href="http://www.lua.ren/category/记事/">记事 <span class="tag_meta">(2)</span></a>
+        </li>
+        <li class="category">
+            <a title="View all posts filed under 编程" href="http://www.lua.ren/category/编程/">编程 <span class="tag_meta">(1)</span></a>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h1>标签</h1>
+    <p id="top_tags">
+        <a title="lua" href="http://www.lua.ren/tag/lua/">lua</a> <span class="tag_meta">(97)</span> 
+        <a title="python" href="http://www.lua.ren/tag/python/">python</a> <span class="tag_meta">(32)</span> 
+        <a title="openresty" href="http://www.lua.ren/tag/openresty/">openresty</a> <span class="tag_meta">(32)</span> 
+        <a title="lapis" href="http://www.lua.ren/tag/lapis/">lapis</a> <span class="tag_meta">(31)</span> 
+        <a title="moonscript" href="http://www.lua.ren/tag/moonscript/">moonscript</a> <span class="tag_meta">(18)</span> 
+        <a title="web" href="http://www.lua.ren/tag/web/">web</a> <span class="tag_meta">(10)</span> 
+        <a title="linux" href="http://www.lua.ren/tag/linux/">linux</a> <span class="tag_meta">(9)</span> 
+        <a title="c" href="http://www.lua.ren/tag/c/">c</a> <span class="tag_meta">(9)</span> 
+        <a title="book" href="http://www.lua.ren/tag/book/">book</a> <span class="tag_meta">(8)</span> 
+        <a title="django" href="http://www.lua.ren/tag/django/">django</a> <span class="tag_meta">(8)</span> 
+        <a title="vanilla" href="http://www.lua.ren/tag/vanilla/">vanilla</a> <span class="tag_meta">(8)</span> 
+        <a title="nginx" href="http://www.lua.ren/tag/nginx/">nginx</a> <span class="tag_meta">(8)</span> 
+        <a title="C++" href="http://www.lua.ren/tag/C++/">C++</a> <span class="tag_meta">(7)</span> 
+        <a title="lua快速入门" href="http://www.lua.ren/tag/lua快速入门/">lua快速入门</a> <span class="tag_meta">(6)</span> 
+        <a title="coding" href="http://www.lua.ren/tag/coding/">coding</a> <span class="tag_meta">(6)</span> 
+        <a title="快速入门" href="http://www.lua.ren/tag/快速入门/">快速入门</a> <span class="tag_meta">(6)</span> 
+        <a title="jekyll" href="http://www.lua.ren/tag/jekyll/">jekyll</a> <span class="tag_meta">(5)</span> 
+        <a title="socket" href="http://www.lua.ren/tag/socket/">socket</a> <span class="tag_meta">(5)</span> 
+        <a title="vim" href="http://www.lua.ren/tag/vim/">vim</a> <span class="tag_meta">(5)</span> 
+        <a title="http" href="http://www.lua.ren/tag/http/">http</a> <span class="tag_meta">(5)</span> 
+        <a title="luafaq" href="http://www.lua.ren/tag/luafaq/">luafaq</a> <span class="tag_meta">(5)</span> 
+        <a title="orc" href="http://www.lua.ren/tag/orc/">orc</a> <span class="tag_meta">(4)</span> 
+        <a title="logstash" href="http://www.lua.ren/tag/logstash/">logstash</a> <span class="tag_meta">(4)</span> 
+        <a title="flask" href="http://www.lua.ren/tag/flask/">flask</a> <span class="tag_meta">(4)</span> 
+        <a title="lor" href="http://www.lua.ren/tag/lor/">lor</a> <span class="tag_meta">(4)</span> 
+        <a title="OpenResty China" href="http://www.lua.ren/tag/OpenResty China/">OpenResty China</a> <span class="tag_meta">(4)</span> 
+        <a title="css" href="http://www.lua.ren/tag/css/">css</a> <span class="tag_meta">(4)</span> 
+        <a title="syslog" href="http://www.lua.ren/tag/syslog/">syslog</a> <span class="tag_meta">(4)</span> 
+        <a title="syslog-ng" href="http://www.lua.ren/tag/syslog-ng/">syslog-ng</a> <span class="tag_meta">(3)</span> 
+        <a title="tornado" href="http://www.lua.ren/tag/tornado/">tornado</a> <span class="tag_meta">(3)</span> 
+        <a title="SAE" href="http://www.lua.ren/tag/SAE/">SAE</a> <span class="tag_meta">(3)</span> 
+        <a title="orchina" href="http://www.lua.ren/tag/orchina/">orchina</a> <span class="tag_meta">(3)</span> 
+        <a title="graylog" href="http://www.lua.ren/tag/graylog/">graylog</a> <span class="tag_meta">(3)</span> 
+        <a title="redis" href="http://www.lua.ren/tag/redis/">redis</a> <span class="tag_meta">(3)</span> 
+        <a title="luacurl" href="http://www.lua.ren/tag/luacurl/">luacurl</a> <span class="tag_meta">(3)</span> 
+        <a title="coding.net" href="http://www.lua.ren/tag/coding.net/">coding.net</a> <span class="tag_meta">(3)</span> 
+        <a title="leafo" href="http://www.lua.ren/tag/leafo/">leafo</a> <span class="tag_meta">(3)</span> 
+        <a title="ruby" href="http://www.lua.ren/tag/ruby/">ruby</a> <span class="tag_meta">(3)</span> 
+        <a title="ngx.ctx" href="http://www.lua.ren/tag/ngx.ctx/">ngx.ctx</a> <span class="tag_meta">(2)</span> 
+        <a title="post" href="http://www.lua.ren/tag/post/">post</a> <span class="tag_meta">(2)</span> 
+        <a title="json" href="http://www.lua.ren/tag/json/">json</a> <span class="tag_meta">(2)</span> 
+        <a title="mongorover" href="http://www.lua.ren/tag/mongorover/">mongorover</a> <span class="tag_meta">(2)</span> 
+        <a title="elk" href="http://www.lua.ren/tag/elk/">elk</a> <span class="tag_meta">(2)</span> 
+        <a title="Elasticsearch" href="http://www.lua.ren/tag/Elasticsearch/">Elasticsearch</a> <span class="tag_meta">(2)</span> 
+        <a title="blog" href="http://www.lua.ren/tag/blog/">blog</a> <span class="tag_meta">(2)</span> 
+        <a title="templates" href="http://www.lua.ren/tag/templates/">templates</a> <span class="tag_meta">(2)</span> 
+        <a title="markdown" href="http://www.lua.ren/tag/markdown/">markdown</a> <span class="tag_meta">(2)</span> 
+        <a title="sitegen" href="http://www.lua.ren/tag/sitegen/">sitegen</a> <span class="tag_meta">(2)</span> 
+        <a title="mysql" href="http://www.lua.ren/tag/mysql/">mysql</a> <span class="tag_meta">(2)</span> 
+        <a title="pages" href="http://www.lua.ren/tag/pages/">pages</a> <span class="tag_meta">(2)</span> 
+        <a title="php" href="http://www.lua.ren/tag/php/">php</a> <span class="tag_meta">(2)</span> 
+        <a title="Octopress" href="http://www.lua.ren/tag/Octopress/">Octopress</a> <span class="tag_meta">(2)</span> 
+        <a title="get" href="http://www.lua.ren/tag/get/">get</a> <span class="tag_meta">(2)</span> 
+        <a title="log_by_lua" href="http://www.lua.ren/tag/log_by_lua/">log_by_lua</a> <span class="tag_meta">(2)</span> 
+        <a title="docker" href="http://www.lua.ren/tag/docker/">docker</a> <span class="tag_meta">(2)</span> 
+        <a title="zerbobrane" href="http://www.lua.ren/tag/zerbobrane/">zerbobrane</a> <span class="tag_meta">(2)</span> 
+        <a title="tmux" href="http://www.lua.ren/tag/tmux/">tmux</a> <span class="tag_meta">(2)</span> 
+        <a title="set keeplive" href="http://www.lua.ren/tag/set keeplive/">set keeplive</a> <span class="tag_meta">(2)</span> 
+        <a title="static" href="http://www.lua.ren/tag/static/">static</a> <span class="tag_meta">(2)</span> 
+        <a title="html" href="http://www.lua.ren/tag/html/">html</a> <span class="tag_meta">(2)</span> 
+        <a title="so" href="http://www.lua.ren/tag/so/">so</a> <span class="tag_meta">(2)</span> 
+        <a title="ubuntu" href="http://www.lua.ren/tag/ubuntu/">ubuntu</a> <span class="tag_meta">(2)</span> 
+        <a title="timer" href="http://www.lua.ren/tag/timer/">timer</a> <span class="tag_meta">(2)</span> 
+        <a title="gunicorn" href="http://www.lua.ren/tag/gunicorn/">gunicorn</a> <span class="tag_meta">(2)</span> 
+        <a title="web ide" href="http://www.lua.ren/tag/web ide/">web ide</a> <span class="tag_meta">(2)</span> 
+        <a title="pyqt" href="http://www.lua.ren/tag/pyqt/">pyqt</a> <span class="tag_meta">(2)</span> 
+        <a title="weibo" href="http://www.lua.ren/tag/weibo/">weibo</a> <span class="tag_meta">(2)</span> 
+        <a title="md5" href="http://www.lua.ren/tag/md5/">md5</a> <span class="tag_meta">(2)</span> 
+        <a title="stomp" href="http://www.lua.ren/tag/stomp/">stomp</a> <span class="tag_meta">(2)</span> 
+        <a title="curl" href="http://www.lua.ren/tag/curl/">curl</a> <span class="tag_meta">(2)</span> 
+        <a title="pool" href="http://www.lua.ren/tag/pool/">pool</a> <span class="tag_meta">(2)</span> 
+        <a title="pyside" href="http://www.lua.ren/tag/pyside/">pyside</a> <span class="tag_meta">(1)</span> 
+        <a title="rest" href="http://www.lua.ren/tag/rest/">rest</a> <span class="tag_meta">(1)</span> 
+        <a title="csrf_exempt" href="http://www.lua.ren/tag/csrf_exempt/">csrf_exempt</a> <span class="tag_meta">(1)</span> 
+        <a title="scaffold" href="http://www.lua.ren/tag/scaffold/">scaffold</a> <span class="tag_meta">(1)</span> 
+        <a title="gui" href="http://www.lua.ren/tag/gui/">gui</a> <span class="tag_meta">(1)</span> 
+        <a title="机械键盘" href="http://www.lua.ren/tag/机械键盘/">机械键盘</a> <span class="tag_meta">(1)</span> 
+        <a title="scoping" href="http://www.lua.ren/tag/scoping/">scoping</a> <span class="tag_meta">(1)</span> 
+        <a title="qml" href="http://www.lua.ren/tag/qml/">qml</a> <span class="tag_meta">(1)</span> 
+        <a title="svn" href="http://www.lua.ren/tag/svn/">svn</a> <span class="tag_meta">(1)</span> 
+        <a title="火焰图" href="http://www.lua.ren/tag/火焰图/">火焰图</a> <span class="tag_meta">(1)</span> 
+        <a title="web service" href="http://www.lua.ren/tag/web service/">web service</a> <span class="tag_meta">(1)</span> 
+        <a title="flame" href="http://www.lua.ren/tag/flame/">flame</a> <span class="tag_meta">(1)</span> 
+        <a title="saepy-log" href="http://www.lua.ren/tag/saepy-log/">saepy-log</a> <span class="tag_meta">(1)</span> 
+        <a title="graphs" href="http://www.lua.ren/tag/graphs/">graphs</a> <span class="tag_meta">(1)</span> 
+        <a title="参考" href="http://www.lua.ren/tag/参考/">参考</a> <span class="tag_meta">(1)</span> 
+        <a title="代码规范" href="http://www.lua.ren/tag/代码规范/">代码规范</a> <span class="tag_meta">(1)</span> 
+        <a title="OptParse" href="http://www.lua.ren/tag/OptParse/">OptParse</a> <span class="tag_meta">(1)</span> 
+        <a title="access log" href="http://www.lua.ren/tag/access log/">access log</a> <span class="tag_meta">(1)</span> 
+        <a title="awk" href="http://www.lua.ren/tag/awk/">awk</a> <span class="tag_meta">(1)</span> 
+        <a title="HttpResponse" href="http://www.lua.ren/tag/HttpResponse/">HttpResponse</a> <span class="tag_meta">(1)</span> 
+        <a title="判空" href="http://www.lua.ren/tag/判空/">判空</a> <span class="tag_meta">(1)</span> 
+        <a title="lefao" href="http://www.lua.ren/tag/lefao/">lefao</a> <span class="tag_meta">(1)</span> 
+        <a title="中文乱码" href="http://www.lua.ren/tag/中文乱码/">中文乱码</a> <span class="tag_meta">(1)</span> 
+        <a title="ez_setup" href="http://www.lua.ren/tag/ez_setup/">ez_setup</a> <span class="tag_meta">(1)</span> 
+        <a title="request" href="http://www.lua.ren/tag/request/">request</a> <span class="tag_meta">(1)</span> 
+        <a title="正向代理服务器" href="http://www.lua.ren/tag/正向代理服务器/">正向代理服务器</a> <span class="tag_meta">(1)</span> 
+        <a title="正向代理" href="http://www.lua.ren/tag/正向代理/">正向代理</a> <span class="tag_meta">(1)</span> 
+        <a title="lvs" href="http://www.lua.ren/tag/lvs/">lvs</a> <span class="tag_meta">(1)</span> 
+        <a title="swagger-codegen" href="http://www.lua.ren/tag/swagger-codegen/">swagger-codegen</a> <span class="tag_meta">(1)</span> 
+    </p>
+</section>
+
+<section>
+    <h1>友情链接</h1>
+    <ul id="Category_list">
+        <li class="category"><a href="http://www.candylab.net" target="_blank">糖果实验室</a></li>
+        <li class="category"><a href="http://www.openresty.com.cn" target="_blank">OpenResty中文编程</a></li>
+        <li class="category"><a href="http://www.zjsj.bid" target="_blank">OpenResty最佳实践</a></li>
+        <li class="category"><a href="http://www.moonscript.cn" target="_blank">MoonScript中文站点</a></li>
+        <li class="category"><a href="http://www.leandre.cn" target="_blank">leandre</a></li>
+        <li class="category"><a href="https://yufan.me/" target="_blank">且听书吟</a></li>
+        <li class="category"><a href="http://istrone.com/" target="_blank">★流影部落阁☆</a></li>
+    </ul>
+</section>
+
+</aside>
+            <!-- block sidebar end -->
+        
+    </div>
+  </div>
+  <footer>
+    <p>
+    &copy; 2016 Copyright <a href="http://www.lua.ren">糖果实验室</a> - 
+<!--
+    Powered by <a href="http://upblog.sinaapp.com/" target="_blank">SAEpy-log</a> -
+-->
+    Theme by <a href="http://www.octopress.org/" target="_blank">Octopress</a>, Improved by <a href="http://www.yqfy.net" target="_blank">Candy</a> -
+    Time: <span id="requesttime">10</span> ms -
+    <a href="http://www.lua.ren/admin/" rel="nofollow">Admin</a>
+    <!--
+    <a class="fr" target="_blank" href="http://sae.sina.com.cn"><img title="Powered by Sina App Engine" src="http://static.sae.sina.com.cn/image/poweredby/117X12px.gif"></a>
+    -->
+    </p>
+    <a style="display: none; " rel="nofollow" href="#top" id="go-to-top">▲</a>
+  </footer>
+
+<!--
+-->
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258735645'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/stat.php%3Fid%3D1258735645' type='text/javascript'%3E%3C/script%3E"));</script>
+
+
+</body>
+</html>
