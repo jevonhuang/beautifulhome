@@ -1,0 +1,1203 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+     
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>  
+
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <title>Unix NetWork Programming——环境搭建（解决unp.h等源码编译问题） - liming&#39;s blog
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="下面开始用简单但典型的客户端和服务器端程序说明如何进行网络编程。这一小节讲的是客户端，一个用来连接并读取服务器发送来的时间的客户端。这里涉及到了编写代码，因此要搭建unix网络编程环境unix系统我没安装，系统不易获得而且也没必要安装unix。用linux是最佳选择。再者我本来就是ubuntu系统，所以就在ubuntu下搭建环境了。1，安装编译器，为了齐全还是安装一下bui" />
+    <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+      <script type="text/javascript" src="http://static.blog.csdn.net/scripts/jquery-version.js"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
+        <!--new top-->
+               <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css">        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/tracking.js"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/dark1/css/style.css?v=1.1" />
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/a649518776/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/simple.css" />
+ 
+
+
+<script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+</script>
+
+
+</head>
+<body>
+
+
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/a649518776">liming&#39;s blog</a></h2>
+            <h3>Nothing Seek, Nothing Find——没有探索，就没有发现</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/a649518776?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/a649518776?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/a649518776/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "a649518776";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/a649518776";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+
+<a href="http://blog.csdn.net/turingbooks/article/details/65631771">
+<font color=blue><strong>程序员3月书讯</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/69303279">
+<font color=red>CSDN日报20170405 ——《未来的世界没有程序员》
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://edu.csdn.net/huiyiCourse/series_detail/27?ref=blog&loc=r1">
+<font color=blue>Python数据分析与机器学习
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/60961185">
+<font color=red><strong>博客搬家，有礼相送</strong>
+</font></a>
+</div>                        </div>
+                        
+
+
+
+  
+<link href="http://static.blog.csdn.net/css/comment1.css" type="text/css" rel="stylesheet" />
+<link href="http://static.blog.csdn.net/css/style1.css" type="text/css" rel="stylesheet" />
+<script language='JavaScript' type='text/javascript' src='http://download.csdn.net/js/jquery.cookie.js'></script>
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/search-service/main.js"></script>
+<link rel="stylesheet" href="http://static.blog.csdn.net/public/res-min/markdown_views.css?v=1.0" />
+<link rel="stylesheet" href="http://static.blog.csdn.net/css/category.css?v=1.0" />
+<script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/web-storage-cache.min.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/replace.min.js"></script>
+
+<link rel="stylesheet" href="http://static.blog.csdn.net/code/prettify.css" />
+<script type="text/javascript" src="http://static.blog.csdn.net/code/prettify.js"></script>
+
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=Unix+NetWork+Programming%e2%80%94%e2%80%94%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba%ef%bc%88%e8%a7%a3%e5%86%b3unp.h%e7%ad%89%e6%ba%90%e7%a0%81%e7%bc%96%e8%af%91%e9%97%ae%e9%a2%98%ef%bc%89&u=http://blog.csdn.net/a649518776/article/details/6724121"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/a649518776/article/details/6724121">
+        Unix NetWork Programming——环境搭建（解决unp.h等源码编译问题）            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href='http://www.csdn.net/tag/unix' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">unix</a><a href='http://www.csdn.net/tag/network' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">network</a><a href='http://www.csdn.net/tag/function' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">function</a><a href='http://www.csdn.net/tag/basic' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">basic</a><a href='http://www.csdn.net/tag/ubuntu' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">ubuntu</a><a href='http://www.csdn.net/tag/struct' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">struct</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2011-08-29 16:45</span>
+            <span class="link_view" title="阅读次数">20544人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(19)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('Unix+NetWork+Programming%e2%80%94%e2%80%94%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba%ef%bc%88%e8%a7%a3%e5%86%b3unp.h%e7%ad%89%e6%ba%90%e7%a0%81%e7%bc%96%e8%af%91%e9%97%ae%e9%a2%98%ef%bc%89','6724121');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(6724121,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody"  style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script  type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label>
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">网络编程<em></em></span>                       
+                    </label>      
+        </div>
+    </div>
+    <script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>  
+        <div   class="bog_copyright">         
+            <p  class="copyright_p" >版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+
+<p><span style="font-size:13px">下面开始用简单但典型的客户端和服务器端程序说明如何进行网络编程。这一小节讲的是客户端，一个用来连接并读取服务器发送来的时间的客户端。</span></p>
+<p><span style="font-size:13px">这里涉及到了编写代码，因此要</span></p>
+<p><span style="color:rgb(255,0,0)"><span style="font-size:24px">搭建unix网络编程环境</span></span></p>
+<p><span style="font-size:16px; color:#ff0000"><br>
+</span></p>
+<p><span style="font-size:13px">unix系统我没安装，系统不易获得而且也没必要安装unix。用linux是最佳选择。再者我本来就是ubuntu系统，所以就在ubuntu下搭建环境了。</span></p>
+<p><span style="background-color:rgb(255,255,255)"><span style="font-size:16px"><span style="font-weight:bold">1，安装编译器，为了齐全还是安装一下<span style="font-family:Verdana,Tahoma,sans-serif; line-height:22px"><span style="margin-top:0px; margin-right:0px; margin-bottom:0px; margin-left:0px; padding-top:0px; padding-right:0px; padding-bottom:0px; padding-left:0px"><span style="margin-top:0px; margin-right:0px; margin-bottom:0px; margin-left:0px; padding-top:0px; padding-right:0px; padding-bottom:0px; padding-left:0px">build-essential</span></span></span></span></span></span></p>
+<p><span style="font-size:13px"><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px; line-height:22px"><span style="margin-top:0px; margin-right:0px; margin-bottom:0px; margin-left:0px; padding-top:0px; padding-right:0px; padding-bottom:0px; padding-left:0px"><span style="margin-top:0px; margin-right:0px; margin-bottom:0px; margin-left:0px; padding-top:0px; padding-right:0px; padding-bottom:0px; padding-left:0px"></span></span></span></span></p>
+<pre name="code" class="python">sudo apt-get install build-essential</pre><br>
+<span style="font-size:16px"><strong>2，下载本书的头文件及示例源码</strong></span>
+<p></p>
+<p><span style="font-size:13px"><span style="font-family:Verdana,Tahoma,sans-serif; line-height:22px"><a href="http://www.kohala.com/start/unpv12e/unpv12e.tar.gz">点此下载unpv12e.tar.gz</a>（这个编译有问题）<a href="http://ishare.iask.sina.com.cn/f/13238521.html">点此下载unpv13e.tar.gz</a>（这个经itnovice</span><span style="font-family:Arial,Helvetica,sans-serif; color:#888888"><span style="line-height:26px">回复中告诉我已经解决了错误，所以最好用这个，能节省很多时间）</span></span></span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"><br>
+</span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; background-color:rgb(192,192,192)"><strong><span style="font-size:16px">（下载unpv13e的话，3中解决问题的地方就可以略过了）</span></strong></span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; background-color:rgb(192,192,192)"><strong><span style="font-size:16px">3，解压unpv12e.tar.gz后进入目录查看README，然后可以按照里面提示操作，不过会遇到问题</span></strong></span></p>
+<blockquote style="margin:0 0 0 40px; border:none; padding:0px">
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px; color:#ff6666">第一步：在终端中进入upnv12e目录，然后执行代码：</span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"></span></p>
+<pre name="code" class="python">./configure</pre>
+<p></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px; color:#ff6666"><br>
+</span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px; color:#ff6666">第二步：这里有问题及解决方法</span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"></span></p>
+<pre name="code" class="python">cd lib</pre>
+<p></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"><br>
+</span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"></span></p>
+<pre name="code" class="python">make  //这一步我出错了</pre>
+<p></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"><br>
+</span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px">错误代码为：</span></p>
+<p><span style="font-family:monospace; white-space:pre; background-color:rgb(232,232,232); font-size:13px"></span></p>
+<pre name="code" class="python">gcc -g -O2 -D_REENTRANT -Wall   -c -o connect_nonb.o connect_nonb.c
+In file included from connect_nonb.c:1:
+unp.h:114: error: redefinition of ‘struct in_pktinfo’
+make: *** [connect_nonb.o] 错误 1</pre><br>
+<p></p>
+<p><span style="font-family:monospace; font-size:13px"><span style="white-space:pre"><span style="background-color:rgb(255,255,153)">redefinition of ‘struct in_pktinfo’的解决方法如下：</span>&nbsp;</span></span></p>
+<p><span style="font-family:monospace; font-size:13px"><span style="white-space:pre">结构in_pktinfo已经包含在标准头文件bits/in.h中了, 它又通过 netinet/in.h 在unp.h中被包括进来. 只要将 unp.h 中的结构定义comment out注释掉就行了.&nbsp;<br>
+</span></span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px">注释掉之后重新</span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"></span></p>
+<pre name="code" class="python">make //build the basic library that all programs need</pre>
+<p></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"><br>
+</span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px">这次就成功了！生成了../libunp.a文件。</span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"><br>
+</span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px; color:#ff6666">第三步：这一步没有问题</span></p>
+<p></p>
+<pre name="code" class="python">cd ../libfree  # continue building the basic library
+make</pre><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px; color:#ff6666"></span>
+<p></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px; color:#ff6666"><br>
+</span></p>
+<span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px; color:#ff6666">第四步：这步解决方法麻烦一点<br>
+<br>
+</span>
+<p></p>
+<pre name="code" class="python">cd ../libgai   # the getaddrinfo() and getnameinfo() functions
+make</pre>错误提示如下：
+<p></p>
+<p></p>
+<pre name="code" class="python">gcc -g -O2 -D_REENTRANT -Wall   -c -o getaddrinfo.o getaddrinfo.c
+getaddrinfo.c: In function ‘getaddrinfo’:
+getaddrinfo.c:58: error: ‘EAI_ADDRFAMILY’ undeclared (first use in this function)
+getaddrinfo.c:58: error: (Each undeclared identifier is reported only once
+getaddrinfo.c:58: error: for each function it appears in.)
+getaddrinfo.c:116: error: ‘EAI_NODATA’ undeclared (first use in this function)
+make: *** [getaddrinfo.o] 错误 1</pre>
+<p></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px; background-color:rgb(255,255,102)">解决方法如下：</span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"><span style="font-family:宋体,Arial; line-height:15px; background-color:rgb(245,247,248)"></span></span></p>
+<p style="margin-top:0px; margin-bottom:0px; padding-top:5px; padding-bottom:0px; line-height:1.5; font-size:14px">
+回到unpv12e目录:&nbsp;</p>
+<p style="margin-top:0px; margin-bottom:0px; padding-top:5px; padding-bottom:0px">
+</p>
+<pre name="code" class="python">cd ..
+gedit configure.in </pre><span style="font-family:Verdana,Tahoma,sans-serif"><span style="color:#0000f0"><span style="font-size:14px; line-height:21px"><strong>找到下面一行注释掉<br>
+</strong></span></span><span style="font-size:14px; color:rgb(0,0,240); line-height:1.5"><span style="color:#000000; line-height:1.5">LIBGAI_OBJS=&quot;getaddrinfo.o getnameinfo.o freeaddrinfo.o gai_strerror.o&quot;</span></span><strong><span style="color:#0000f0; line-height:1.5"><br>
+</span></strong>然后用下面的代码代替注释掉的那行</span>
+<p></p>
+<span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"></span>
+<div id="codeText" class="codeText" style="margin-top:0px; margin-right:0px; margin-bottom:1.1em; margin-left:0px; padding-top:0px; padding-right:0px; padding-bottom:0px; padding-left:0px; border-top-width:1px; border-right-width:1px; border-bottom-width:1px; border-left-width:1px; border-top-style:solid; border-right-style:solid; border-bottom-style:solid; border-left-style:solid; border-top-color:rgb(221,221,221); border-right-color:rgb(221,221,221); border-bottom-color:rgb(221,221,221); border-left-color:rgb(221,221,221); width:658px; overflow-x:auto; overflow-y:auto; word-break:break-all; letter-spacing:0.1px; background-color:rgb(255,255,255); font:normal normal normal 12px/normal Consolas,monospace; line-height:1.5">
+<ol start="1" class="dp-css" style="margin-top:0pt; margin-right:1px; margin-bottom:0pt; margin-left:0pt; padding-top:5px; padding-right:0pt; padding-bottom:5px; padding-left:0pt; list-style-type:decimal; list-style-position:outside; line-height:1.3; color:rgb(92,92,92); background-color:rgb(255,255,255)">
+<li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+LIBGAI_OBJS=</li><li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+if test &quot;$ac_cv_func_getaddrinfo&quot; = no ; then</li><li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+LIBGAI_OBJS=&quot;$LIBGAI_OBJS getaddrinfo.o&quot;</li><li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+fi</li><li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+if test &quot;$ac_cv_func_getnameinfo&quot; = no ; then</li><li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+LIBGAI_OBJS=&quot;$LIBGAI_OBJS getnameinfo.o&quot;</li><li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+fi</li><li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+if test &quot;$ac_cv_func_freeaddrinfo&quot; = no ; then</li><li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+LIBGAI_OBJS=&quot;$LIBGAI_OBJS freeaddrinfo.o&quot;</li><li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+fi</li><li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+if test &quot;$ac_cv_func_gai_strerror&quot; = no ; then</li><li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+LIBGAI_OBJS=&quot;$LIBGAI_OBJS gai_strerror.o&quot;</li><li style="margin-top:1px; margin-right:1px; margin-bottom:1px; margin-left:1px; padding-top:1px; padding-right:1px; padding-bottom:1px; padding-left:10px; list-style-type:decimal; list-style-position:outside; line-height:1.5; background-color:rgb(255,255,255)">
+fi</li></ol>
+</div>
+<pre name="code" class="python">autoconf
+./configure</pre><pre name="code" class="python">gedit Make.defines </pre><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"><span style="color:#0000f0">在文件末尾加上下面这句：<br>
+</span>CFLAGS = -g -O2 -D_REENTRANT -Wall&nbsp;<strong><span style="color:#0000f0; line-height:1.5">-D_GNU_SOURCE<br>
+</span></strong><br>
+</span>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px">然后重新执行代码：</span></p>
+<p><span style="font-family:Verdana,Tahoma,sans-serif; font-size:13px"></span></p>
+<pre name="code" class="python">cd libgai  # continue building the basic library
+make</pre>
+<p>ok，问题解决了！</p>
+</blockquote>
+<p><strong><span style="font-size:16px">4，将生成的<span style="font-family:SimSun; color:rgb(51,51,51); line-height:26px">libunp.a</span><span style="color:rgb(51,51,51); font-family:SimSun; line-height:26px">静态库</span><span style="font-family:SimSun; color:rgb(51,51,51); line-height:26px">复制到/usr/lib/和/usr/lib64/中。</span></span></strong></p>
+<p><span style="font-family:SimSun; font-size:13px; color:rgb(51,51,51); line-height:26px"></span></p>
+<pre name="code" class="html">cd ..   //回到unpv12e目录</pre><pre name="code" class="html">sudo cp libunp.a /usr/lib
+sudo cp libunp.a /usr/lib64</pre>
+<p></p>
+<p><span style="font-family:SimSun; font-size:13px; color:rgb(51,51,51); line-height:26px"><br>
+</span></p>
+<span style="font-family:SimSun; color:rgb(51,51,51); line-height:26px"><strong><span style="font-size:16px">5，修改unp.h并将其和config.h拷贝到/usr/include中，为了以后include方便</span></strong><br>
+<span style="font-size:13px"></span></span><pre name="code" class="python">gedit lib/unp.h   //将unp.h中#include &quot;../config.h&quot;修改为#include &quot;config.h&quot;</pre><pre name="code" class="python">sudo cp lib/unp.h /usr/include
+sudo cp config.h /usr/include</pre><br>
+<span style="font-family:SimSun; color:rgb(51,51,51); line-height:26px"><span style="font-size:13px"><span style="color:rgb(51,51,51); font-family:SimSun; line-height:26px"><strong><span style="font-size:16px">6，编译源代码</span></strong></span><br>
+</span></span><pre name="code" class="python">cd ./intro
+gcc daytimetcpcli.c -o daytimetcpcli -lunp</pre><br>
+<p><span style="font-family:SimSun; color:rgb(51,51,51); line-height:26px"><span style="font-size:13px">跟普通的编译不一样的是要在最后加上刚才那个链接库，-l参数加上刚才那个libunp.a去掉lib和后面的.a。最后得到参数-lunp。</span></span></p>
+<p><span style="font-family:SimSun; font-size:13px; color:#333333"><span style="line-height:26px"><strong>7，编写程序</strong><br>
+</span></span></p>
+<p><span style="font-family:SimSun; color:#333333"><span style="line-height:26px"><span style="color:rgb(51,51,51); font-family:SimSun; line-height:26px"><span style="font-size:13px">以后编写完的程序安装6中的代码编译就行了，然后代码可以完全跟书上的一样。代码编辑器或IDE等就按自己的喜好来选了。这个网上很多c语言编程环境搭建教程。</span></span><br>
+</span></span></p>
+<p><span style="font-family:SimSun; font-size:13px; color:#333333"><span style="line-height:26px">我选择命令行用<a href="http://www.douban.com/note/55836955/">vi编写程序</a>，主要为了锻炼一下自己。</span></span></p>
+<p><span style="font-family:SimSun; font-size:13px; color:#333333"><span style="line-height:26px"><br>
+</span></span></p>
+<p></p>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_detail.css" />
+
+    
+<!--172.16.140.12-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+<script type="text/javascript">
+    var fromjs = $("#fromjs");
+    if (fromjs.length > 0) {
+            $("#fromjs .markdown_views pre").addClass("prettyprint");
+            prettyPrint();
+
+            $('pre.prettyprint code').each(function () {
+                var lines = $(this).text().split('\n').length;
+                var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                $(this).addClass('has-numbering').parent().append($numbering);
+                for (i = 1; i <= lines; i++) {
+                    $numbering.append($('<li/>').text(i));
+                };
+                $numbering.fadeIn(1700);
+            });
+
+            $('.pre-numbering li').css("color", "#999");
+        }
+
+    
+
+</script>
+
+ 
+
+
+        <div id="digg" ArticleId="6724121" >
+            <dl id="btnDigg" class="digg digg_disable"  onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>23</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable"  onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>2</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/a649518776/article/details/6724452';">上一篇</span><a href="/a649518776/article/details/6724452" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">如何利用Qt Creator打包Meego程序</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/a649518776/article/details/6973659';">下一篇</span><a href="/a649518776/article/details/6973659" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">linux各个文件夹代表的意义</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+        <div class="similar_article"  style="display:none">
+                <h4>我的同类文章</h4>
+                <div class="similar_c"style="margin:20px 0px 0px 0px">
+                    <div class="similar_c_t">
+                    </div>
+                   
+                    <div class="similar_wrap tracking-ad" data-mod="popu_141"  style="max-height:195px;">
+                        <a href="http://blog.csdn.net" style="display:none">http://blog.csdn.net</a>
+                        <ul class="similar_list fl">                          
+                        </ul>
+
+                        <ul class="similar_list fr">                           
+                        </ul>
+                    </div>
+                </div>
+            </div>    
+    <script  type="text/javascript">
+        $(function () {
+            GetCategoryArticles('0', 'a649518776','foot','6724121');
+        });
+    </script>
+      
+</div>
+
+     <div>
+             <ins data-revive-zoneid="206" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+    </div>
+
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/a649518776/svc/GetSuggestContent/6724121",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ <link rel="stylesheet" href="http://static.blog.csdn.net/css/replace.css"/>
+<div id="relate" data-mod="popu_218"  class="tracking-ad">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c">
+        </div>
+</div>
+ 
+
+<dl class="blog-ass-articl" id="res-relatived" > 
+    <div class="embody embody_b" id="libkeyparent"  style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="http://csdnimg.cn/jobreco/job_reco.js" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "6724121",
+                username: "",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+            
+            setEduLoc();
+
+            function setEduLoc() {               
+                var edus = $("#adCollege div dd a");
+                if (edus.length == 0) {
+                    setTimeout(function () {
+                        setEduLoc();
+                    }, 500);
+                }
+                else {
+                    var eduLoc = "?ref=blog&loc=0";
+                    $.each(edus, function (index,item) {
+                        var href = $(this).attr("href") + eduLoc;
+                        $(this).attr("href", href);
+                    });
+                }
+            }
+
+        </script> 
+    </div>  
+
+    
+     <div id="res"  data-mod="popu_36"  class="tracking-ad" style="width: 42%;float: left;margin-right: 30px;"></div>
+   
+</dl>
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = 'Unix NetWork Programming——环境搭建（解决unp.h等源码编译问题）' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>  
+
+
+    <div id="ad_cen">        
+                      <ins data-revive-zoneid="199" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    </div>  
+
+    <!-- 广告位开始 -->
+    <ins data-revive-zoneid="72" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '6724121';
+    var commentscount = 19;
+    var islock = false
+</script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/comment.js"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="display:none"></div>
+  <script  language="javascript" type='text/javascript'>     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/a649518776/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+</script>
+ <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/async_new.js"></script>      
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/a649518776" target="_blank">
+    <img src="http://avatar.csdn.net/6/5/C/1_a649518776.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/a649518776" class="user_name" target="_blank">a649518776</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=a649518776','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>353071次</span></li>
+    <li>积分：<span>3584</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog5.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：3584 </div>
+        </span>  </li>
+    <li>排名：<span>第7805名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>42篇</span></li>
+    <li>转载：<span>17篇</span></li>
+    <li>译文：<span>1篇</span></li>
+    <li>评论：<span>71条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字" /></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog" />
+        <input type="hidden" name="q" id="inputQ" />
+        <input type="hidden" name="t" value="blog" />
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";
+            window.location.href = url;
+        }   
+    });
+</script><div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/a649518776/article/details/39433883" title="Linux服务器配置——搭建SVN服务器">Linux服务器配置——搭建SVN服务器</a><span>(52728)</span>
+</li>
+<li>
+<a href="/a649518776/article/details/6636578" title="Qt学习——堆栈窗体QStackedWidget类">Qt学习——堆栈窗体QStackedWidget类</a><span>(35661)</span>
+</li>
+<li>
+<a href="/a649518776/article/details/6724121" title="Unix NetWork Programming——环境搭建（解决unp.h等源码编译问题）">Unix NetWork Programming——环境搭建（解决unp.h等源码编译问题）</a><span>(20538)</span>
+</li>
+<li>
+<a href="/a649518776/article/details/6648347" title="Qt学习——进度条QProgressBar/QProgressDialog类">Qt学习——进度条QProgressBar/QProgressDialog类</a><span>(20271)</span>
+</li>
+<li>
+<a href="/a649518776/article/details/6636490" title="Qt学习——停靠窗体QDockWidget类">Qt学习——停靠窗体QDockWidget类</a><span>(17307)</span>
+</li>
+<li>
+<a href="/a649518776/article/details/7342059" title="php将图片保存到mysql数据库及从数据库中读取图片的方法源码">php将图片保存到mysql数据库及从数据库中读取图片的方法源码</a><span>(16847)</span>
+</li>
+<li>
+<a href="/a649518776/article/details/6633857" title="Qt学习——分割窗口QSplitter类">Qt学习——分割窗口QSplitter类</a><span>(16805)</span>
+</li>
+<li>
+<a href="/a649518776/article/details/6602662" title="平板电脑Viewpad10安装win7与Android双系统">平板电脑Viewpad10安装win7与Android双系统</a><span>(15109)</span>
+</li>
+<li>
+<a href="/a649518776/article/details/41701163" title="极路由2-极贰9007的降级root攻略">极路由2-极贰9007的降级root攻略</a><span>(12332)</span>
+</li>
+<li>
+<a href="/a649518776/article/details/7493148" title="软件工程积累——UML之用例图">软件工程积累——UML之用例图</a><span>(12235)</span>
+</li>
+</ul>
+</div>
+<div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/a649518776/article/category/1085250" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Weego工作室</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/958996" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">iPhone</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/845447" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Meego</a><span>(22)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/1064837" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">大学实验</a><span>(13)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/831323" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C语言</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/831325" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C++语言</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/831322" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Java语言</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/831319" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据库</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/831318" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据结构</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/831320" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">英语</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/831321" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">计算机组成原理</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/837153" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">黑客学习</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/842441" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">IT世界</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/875368" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">网络编程</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/1096864" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">网站</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/1132411" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">软件工程</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/a649518776/article/category/2575829" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">服务器</a><span>(3)</span>
+                </li>
+</ul>
+</div><div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="/a649518776/article/details/6724121#comments">Unix NetWork Programming——环境搭建（解决unp.h等源码编译问题）</a>
+    <p style="margin:0px;"><a href="/qq_30330939" class="user_name">qq_30330939</a>:
+我碰到1楼一样的问题，我是用了里面的Writen这个包裹函数，我生成的libunp.a的静态库文件，...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/a649518776/article/details/6724121#comments">Unix NetWork Programming——环境搭建（解决unp.h等源码编译问题）</a>
+    <p style="margin:0px;"><a href="/qq_30330939" class="user_name">qq_30330939</a>:
+我碰到1楼一样的问题，我是用了里面的Writen这个包裹函数，我生成的libunp.a的静态库文件，...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/a649518776/article/details/7493148#comments">软件工程积累——UML之用例图</a>
+    <p style="margin:0px;"><a href="/tgbyn" class="user_name">tgbyn</a>:
+谢谢分享
+    </p>
+    </li>
+    <li>
+   
+         <a href="/a649518776/article/details/6633857#comments">Qt学习——分割窗口QSplitter类</a>
+    <p style="margin:0px;"><a href="/qq_19923217" class="user_name">qq_19923217</a>:
+嗯 写的不错
+    </p>
+    </li>
+    <li>
+   
+         <a href="/a649518776/article/details/7233704#comments">回顾大学--大二数据结构实验--实验二 排序算法</a>
+    <p style="margin:0px;"><a href="/yixin5733" class="user_name">yixin5733</a>:
+求补充快速排序，基数排序和归并排序的代码
+    </p>
+    </li>
+    <li>
+   
+         <a href="/a649518776/article/details/6648120#comments">Qt学习——布局管理器QLayout类</a>
+    <p style="margin:0px;"><a href="/a686432" class="user_name">a686432</a>:
+你也是山大的？
+    </p>
+    </li>
+    <li>
+   
+         <a href="/a649518776/article/details/39433883#comments">Linux服务器配置——搭建SVN服务器</a>
+    <p style="margin:0px;"><a href="/fuluoce" class="user_name">fuluoce</a>:
+要改成 害我半天啊   文章挺好的  就是这里错了
+    </p>
+    </li>
+    <li>
+   
+         <a href="/a649518776/article/details/6648347#comments">Qt学习——进度条QProgressBar/QProgressDialog类</a>
+    <p style="margin:0px;"><a href="/u013782830" class="user_name">u013782830</a>:
+要调用show();不然出不来；
+    </p>
+    </li>
+    <li>
+   
+         <a href="/a649518776/article/details/6648347#comments">Qt学习——进度条QProgressBar/QProgressDialog类</a>
+    <p style="margin:0px;"><a href="/u013782830" class="user_name">u013782830</a>:
+对话框方式一闪而过，压根不对
+    </p>
+    </li>
+    <li>
+   
+         <a href="/a649518776/article/details/6648347#comments">Qt学习——进度条QProgressBar/QProgressDialog类</a>
+    <p style="margin:0px;"><a href="/rl529014" class="user_name">rl529014</a>:
+请问博主， progressDlg-&gt;setMinimumDuration(5);  ，这句代码有什...
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                   <!-- 广告位开始 --> 
+                    <ins data-revive-zoneid="190" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+                    <!-- 广告位结束 -->
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/cnick/cnick.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/newblog.min.js"></script>
+
+
+<script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=1125444"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/JavaScript1.js"></script>
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>     <!--new top-->
+   
+    <link href="http://c.csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet" />
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/wmd.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/showdown.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/prettify.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/apps/ask_float_block.js'></script>
+   
+
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_code.css" />
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/saveToCode.js"></script>
+      <script type="text/javascript" src="//csdnimg.cn/rabbit/tracking-ad/main.js?75eacd8"></script>
+
+     <link rel="stylesheet" href="http://static.blog.csdn.net/css/fa.css" />
+
+    <div class="pop_CA_cover"  style="display:none"></div>
+    <div class="pop pop_CA"  style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon"  id="fapancle"  onclick="$('.pop_CA').hide();$('.pop_CA_cover').hide();"></span>
+          </div>
+          <iframe src="" id="fa" frameborder="0" width="100%" height="360"  scrolling="no" />
+    </div>
+</body>
+</html>   
+ 
