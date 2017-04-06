@@ -1,0 +1,682 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>你值得拥有：25个Linux性能监控工具 - 51CTO.COM</title>
+<meta name="description" content="在这篇文章中我们将罗列一系列使用最频繁的性能监控工具，并对介绍到的每一个工具提供了相应的简介链接，大致将其划分为两类，基于命令行的和提供图形化接口的。"/>
+<meta name="keywords" content="Linux,性能监控"/>
+<base target="_blank" />
+<link href="http://images.51cto.com/images/art1105/css/grid.css" rel="stylesheet" type="text/css" />
+<link type="text/css" rel="stylesheet" href="http://images.51cto.com/images/art/css/art_master_top.css" />
+<link href="http://book.51cto.com/images/bookspec/css/css3.css" rel="stylesheet" type="text/css" />
+<script language="javaScript" src="http://www.51cto.com/php/base_art.js"></SCRIPT>
+<script src="http://www.51cto.com/images/homepage/index_1_down.js"></script>
+<style type="text/css">
+.bds_tools a{ padding:0; margin:0;}
+</style>
+</head>
+<body >
+<!-- 导航 开始-->
+<script id="allmobilize" charset="utf-8" src="http://a.yunshipei.com/a3b9823c927173ada250e3f2f84f4703/allmobilize.min.js"></script><meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+<div id="home_top">    <div class="top_nav">        <div class="left" style="width:400px"><div class="logo_51cto" title="51CTO.COM - 技术成就梦想 -  中国领先的IT技术网站"></div><a href="http://www.51cto.com/">首页</a><img width="16" height="25" align="absmiddle" src="http://home.51cto.com/public/themes/blue/images/top_bg_xian.gif" style="padding-top: 2px;"><a onmouseover="show(1,this);" onmouseout="popupClose();" href="http://www.51cto.com/col/35/" target="_blank">技术频道<img align="absmiddle" src="http://images.51cto.com/images/art/top_images/nav_ico1.gif" style="padding-left: 4px;"></a><img width="16" height="25" align="absmiddle" src="http://home.51cto.com/public/themes/blue/images/top_bg_xian.gif"><a onmouseover="show(2,this);" onmouseout="popupClose();" href="http://www.51cto.com" target="_blank">51CTO旗下网站<img align="absmiddle" src="http://images.51cto.com/images/art/top_images/nav_ico1.gif" style="padding-left: 4px;"></a><img width="16" height="25" align="absmiddle" src="http://home.51cto.com/public/themes/blue/images/top_bg_xian.gif"><a href="http://www.51cto.com/about/map.htm" target="_blank">地图</a> <a href="http://www.51cto.com/about/rss.html" target="_blank"><img src="http://images.51cto.com/files/uploadimg/20110922/143749870.gif" style="vertical-align:middle; margin-bottom: 5px; margin-left:5px;"></a>       </div>        <div class="right">            <div class="more"><img width="27" height="16" align="absmiddle" src="http://home.51cto.com/public/themes/blue/images/top_shequ.gif"><a href="http://wot.51cto.com/" target="_blank" style="color:#CC0000">WOT</a><a href="http://edu.51cto.com/" target="_blank" style="color:#CC0000">学院</a><a href="http://down.51cto.com" target="_blank">下载</a><a href="http://bbs.51cto.com" target="_blank">论坛</a><a href="http://blog.51cto.com" target="_blank">博客</a><a onmouseover="show(3,this)" onmouseout="popupClose()" href="javascript:viod(0);">更多<img align="absmiddle" src="http://images.51cto.com/images/art/top_images/nav_ico1.gif" style="padding-left: 4px;"></a>            </div>            <span id="login_status"><div class="login" id="login_status"></div>    </span>                </div>    </div></div>
+<div class="subMenu1" id="s1" onmouseover="popupNoClose();" onmouseout="popupClose();">
+<ul>
+<li><a href="http://network.51cto.com" target="_blank">网络</a></li>
+<li><a href="http://netsecurity.51cto.com" target="_blank">安全</a></li>
+<li><a href="http://developer.51cto.com" target="_blank">开发</a></li>
+<li><a href="http://database.51cto.com" target="_blank">数据库</a></li>
+<li><a href="http://server.51cto.com" target="_blank">服务器</a></li>
+<li><a href="http://os.51cto.com" target="_blank">系统</a></li>
+<li><a href="http://virtual.51cto.com" target="_blank">虚拟化</a></li>
+<li><a href="http://cloud.51cto.com" target="_blank">云计算</a></li>
+<li><a href="http://developer.51cto.com/embed/" target="_blank">嵌入式</a></li>
+<li><a href="http://mobile.51cto.com/" target="_blank">移动开发</a></li>
+</ul>
+</div> 
+<div class="subMenu2" id="s2" onmouseover="popupNoClose()" onmouseout="popupClose()">
+<ul>
+<li><a href="http://www.51cto.com" target="_blank" title="中国领先的IT技术网站">51CTO.COM</a></li>
+<li><a href="http://cio.51cto.com" target="_blank" title="中国首个专门服务于CIO的专业网站">CIOage.com</a></li>
+<li><a href="http://www.watchstor.com/" target="_blank"  title="领先的中文存储网络媒体">WatchStor.com</a></li>
+<li><a href="http://www.hc3i.cn/" target="_blank"  title="中国首家专注于数字医疗及医疗信息化的专业网站">HC3i.cn</a></li>
+</ul>
+</div>
+<script src="http://www.51cto.com/js/jquery-1.8.3.min.js"></script>
+<script>
+$(function(){
+	$(".bann").height(265);	 
+	$(".bann").css("background-color","white");
+	var s=window.location.toString();
+	var s1=s.substr(7,s.length);
+	var s2=s1.indexOf(".");
+	s=s.substr(7,s2);
+	if (s == 'cloud') {
+	     $(".hot").css("top","1200px");
+		$(".g_13").find(".focus").css("height","1390px");
+	}else{
+		$(".hot").css("top","450px");
+
+	}
+	//$(".fixfloat").css("height","640px");
+	$(".g_13").find(".focus").css("height","640px");
+	var url = window.location.host;
+	if (url.indexOf('developer.51cto.com/col')) {
+		$('.banner_r').css('position', 'relative');
+		$('.banner_r').children().append('<div style="right: 0px; width: 24px; height: 14px; z-index: 12; position: absolute; background: transparent url(http://s5.51cto.com/wyfs02/M00/86/BB/wKiom1fI4nWStYqXAAAEoZQn6vs942.png) repeat scroll 0% 0%; bottom: 2px;"></div>');
+	}
+});
+var edunum=2;
+$(function(){
+	$("#change").click(function(){
+		$("#edu > ul").css("display","none");
+		var eduid='edu'+edunum;
+		$("#" + eduid).css("display","block");	
+		if(edunum<4){
+			edunum++;	
+		}else{
+			edunum=1;	
+		}							
+	});  
+});
+</script>
+
+<script src="http://www.51cto.com/head_art_more1.js"></script>
+<!-- 登陆信息 -->
+<!-- 导航 结束--> 
+ <div class="g_39 mb10">
+	<div id="tonglanad" class="fl"></div>
+	<div id="list4" class="fr">
+		<ul>
+			<li id="wordlinkad1"></li>
+			<li id="wordlinkad2"></li>
+			<li id="wordlinkad3"></li>
+			<li id="wordlinkad4"></li>
+		</ul>
+	</div>
+<br class="dle"/>
+</div>
+
+<div class="g_39 menu">
+<DIV class=subNav_logo>
+<A href="http://os.51cto.com/" target=_blank><IMG src="http://www.51cto.com/images/sunbanner/caozuoxitong_logo.gif" border="0"></a></DIV>
+<DIV class=subNav_l>
+<A href="http://os.51cto.com/col/543/" target=_blank>新闻</A> | 
+<A href="http://os.51cto.com/linux/" target=_blank>Linux</A> | 
+<A href="http://os.51cto.com/windows/" target=_blank>Windows</A> | 
+<A href="http://os.51cto.com/col/975/" target=_blank>浏览器</A> | 
+<A href="http://os.51cto.com/col/610/" target=_blank>开源</A> | 
+<A href="http://os.51cto.com/col/545/" target=_blank>运维</A> | 
+<A href="http://publish.51cto.com/list/519/" target=_blank>全部</A> | 
+<A href="http://os.51cto.com/art/201106/266501.htm" target=_blank>投稿指南</A> | 
+<a href="http://os.51cto.com/art/201109/292676.htm"><img src="http://images.51cto.com/files/uploadimg/20110922/143749870.gif" width="15" height="16" alt="RSS" > RSS订阅</a>
+</DIV>
+  
+<div class="search fr">
+<dl>
+<form name=searchform action="http://www.51cto.com/php/search.php" target="_blank" method=post style="margin:0px; padding:0px;">
+<dt class="fl"><input name="keyword" type="text" class="searchInput f14 input" value="请输入关键字" onfocus="doempty(this, '请输入关键字');" onblur="doempty(this, '请输入关键字');" /></dt>
+<dd class="fl"><input type="image" src="http://images.51cto.com/images/art/newart1012/images/search.gif" /></dd></form>
+</dl>
+</div>
+<br class="dle"/>
+</div>
+<div class="g_39 b3-s-4273B3 rel">
+<!--width : 26*25 - 15 = 635px-->
+<div class="g_26 fl m_l">
+<div class="brief bgF8F8F8">
+<p class="crumb ">您所在的位置：<a href='http://os.51cto.com'>操作系统</a> &gt; <a href='http://os.51cto.com/col/523/'>Linux</a> &gt; <a href='http://os.51cto.com/col/1336/'>加固、定制与优化</a> &gt;  <b>你值得拥有：25个Linux性能监控工具</b> </p>
+<h1>你值得拥有：25个Linux性能监控工具</h1>
+<div class="msg">
+<div>2014-12-19 10:55  译者：andyxue  Linux中国 </span> 字号：<span class="f14-b"><a href="javascript:setfont(12);" target="_self">T</a></span> | <span class="f16-b"><a href="javascript:setfont(16);" target="_self">T</a></span></div>
+<div class='artHd' id='books' style='padding:5px 25px;display:none;'></div>
+<div class="fav"><a href="javascript:favorBox('open');" title="一键收藏，随时查看，分享好友！" target="_self"><img src="http://images.51cto.com/images/art/newart1012/images/Fav.gif" alt="一键收藏，随时查看，分享好友！" border="0" /></a></div>
+</div>
+<div class="brieftext">
+<p class="f14 green">在这篇文章中我们将罗列一系列使用最频繁的性能监控工具，并对介绍到的每一个工具提供了相应的简介链接，大致将其划分为两类，基于命令行的和提供图形化接口的。</p>
+<p class="ad">AD：<script src="http://www.51cto.com/js/article/keywords_ad_new.js"></script>
+</p>
+</div>
+<!--  <div style="border-left:5px solid #4065aa;height:25px; line-height:25px;margin-top:10px;background:#eef7ff;padding-left:10px;">
+<a style="text-decoration: none;color:red" target="_blank" href="http://server.51cto.com/exp/OpenPower/">IBM POWER8通过一年充分融入了“开放”基因，现在有哪些成效？快来注册观看直播，一起拥抱开源的力量。</a>
+</div> -->
+
+
+
+</div>
+<div class="tag bgF8F8F8" id="indexlist" style="display:none;">
+<ul id="indexliststr">
+</ul>
+<br class="dle"/>
+</div>
+<div class="content bgF8F8F8 f14">
+<div id="content">
+<p><p>一段时间以来，我们在网上向读者介绍了如何为Linux以及类Linux操作系统配置多种不同的性能监控工具。在这篇文章中我们将罗列一系列使用最频繁的性能监控工具，并对介绍到的每一个工具提供了相应的简介链接，大致将其划分为两类，基于命令行的和提供图形化接口的。</p>
+<p><strong>一、基于命令行的性能监控工具</strong></p>
+<p><strong>1.dstat - 多类型资源统计工具</strong></p>
+<p>该命令整合了<strong>vmstat</strong>，<strong>iostat</strong>和<strong>ifstat</strong>三种命令。同时增加了新的特性和功能可以让你能及时看到各种的资源使用情况，从而能够使你对比和整合不同的资源使用情况。通过不同颜色和区块布局的界面帮助你能够更加清晰容易的获取信息。它也支持将信息数据导出到<strong>cvs</strong>格式文件中，从而用其他应用程序打开，或者导入到数据库中。你可以用该命令来<a href="http://linux.cn/article-3215-1.html">监控cpu，内存和网络状态随着时间的变化</a>。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s3.51cto.com/wyfs02/M00/57/2C/wKiom1STlK2RHifPAACUKLidNls959.jpg" /></p>
+<p><strong>2.atop - 相比top更好的ASCII码体验</strong></p>
+<p>这个使用<strong>ASCII</strong>码显示方式的命令行工具是一个显示所有进程活动的性能监控工具。它可以展示每日的系统日志以进行长期的进程活动分析，并高亮显示过载的系统使用资源。它包含了CPU，内存，交换空间，磁盘和网络层的度量指标。所有这些功能只需在终端运行<strong>atop</strong>即可。</p>
+<pre class="prettyprint linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="com"># atop</span></li></ol></pre>
+<p>当然你也可以使用<a href="http://linoxide.com/monitoring-2/guide-using-linux-atop/">交互界面来显示</a>数据并进行排序。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s5.51cto.com/wyfs02/M01/57/2A/wKioL1STlVDBEhbeAACtyIf8ZHc572.jpg" /></p>
+<p><strong>3.Nmon - 类Unix系统的性能监控</strong></p>
+<p>Nmon是<strong>Nigel's Monitor</strong>缩写，它最早开发用来作为<strong>AIX</strong>的系统监控工具。如果使用<strong>在线模式</strong>，可以使用光标键在屏幕上操作实时显示在终端上的监控信息。使用<strong>捕捉模式</strong>能够将数据保存为<strong>CSV</strong>格式，方便进一步的处理和图形化展示。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s4.51cto.com/wyfs02/M02/57/2D/wKiom1STlK2A8zCNAADNyWovsJ8257.jpg" /></p>
+<p>更多的信息参考我们的<a href="http://linoxide.com/monitoring-2/install-nmon-monitor-linux-performance/">nmon性能监控文章</a>。</p>
+<p><strong>4.slabtop - 显示内核slab缓存信息</strong></p>
+<p>这个应用能够显示<strong>缓存分配器</strong>是如何管理Linux内核中缓存的不同类型的对象。这个命令类似于top命令，区别是它的重点是实时显示内核slab缓存信息。它能够显示按照不同排序条件来排序显示缓存列表。它同时也能够显示一个slab层信息的统计信息的题头。举例如下：</p>
+<pre class="prettyprint linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="com"># slabtop --sort=a</span></li><li class="L1"><span class="com"># slabtop -s b</span></li><li class="L2"><span class="com"># slabtop -s c</span></li><li class="L3"><span class="com"># slabtop -s l</span></li><li class="L4"><span class="com"># slabtop -s v</span></li><li class="L5"><span class="com"># slabtop -s n</span></li><li class="L6"><span class="com"># slabtop -s o</span></li></ol></pre>
+<p><strong>更多信息参阅</strong><a href="http://linux.cn/article-3702-1.html">内核slab缓存文章</a>。</p>
+<p><strong>5.sar - 性能监控和瓶颈检查</strong></p>
+<p><strong>sar</strong> 命令可以将操作系统上所选的累积活动计数器内容信息输出到标准输出上。其基于计数值和时间间隔参数的<strong>审计系统</strong>，会按照指定的时间间隔输出指定次数的监控信息。如果时间间隔参数为设置为0，那么<a href="http://linoxide.com/linux-command/linux-system-performance-monitoring-using-sar-command/">sar命令将会显示系统从开机到当时时刻的平均统计信息</a>。有用的命令如下：</p>
+<pre class="prettyprint linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="com"># sar -u 2 3</span></li><li class="L1"><span class="com"># sar -u -f /var/log/sa/sa05</span></li><li class="L2"><span class="com"># sar -P ALL 1 1</span></li><li class="L3"><span class="com"># sar -r 1 3</span></li><li class="L4"><span class="com"># sar -W 1 3</span></li></ol></pre>
+<p><strong>6.Saidar - 简单的统计监控工具</strong></p>
+<p>Saidar是一个<strong>简单</strong>且<strong>轻量</strong>的系统信息监控工具。虽然它无法提供大多性能报表，但是它能够通过一个简单明了的方式显示最有用的系统运行状况数据。你可以很容易地看到<a href="http://linoxide.com/monitoring-2/monitor-linux-saidar-tool/">运行时间、平均负载、CPU、内存、进程、磁盘和网络接口</a>统计信息。</p>
+<pre class="prettyprint linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="typ">Usage</span><span class="pun">:</span><span class="pln"> saidar </span><span class="pun">[-</span><span class="pln">d delay</span><span class="pun">]</span><span class="pln"> </span><span class="pun">[-</span><span class="pln">c</span><span class="pun">]</span><span class="pln"> </span><span class="pun">[-</span><span class="pln">v</span><span class="pun">]</span><span class="pln"> </span><span class="pun">[-</span><span class="pln">h</span><span class="pun">]</span></li><li class="L1"><span class="pln">&nbsp;</span></li><li class="L2"><span class="pun">-</span><span class="pln">d </span><span class="pun">设置更新时间（秒）</span></li><li class="L3"><span class="pun">-</span><span class="pln">c </span><span class="pun">彩色显示</span></li><li class="L4"><span class="pun">-</span><span class="pln">v </span><span class="pun">显示版本号</span></li><li class="L5"><span class="pun">-</span><span class="pln">h </span><span class="pun">显示本帮助</span></li></ol></pre>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s2.51cto.com/wyfs02/M01/57/2D/wKiom1STlK7jYggtAACfzwaPRpg181.jpg" /></p>
+<p><strong>7.top - 经典的Linux任务管理工具</strong></p>
+<p>作为一个广为人知的<strong>Linux</strong>工具，<strong>top</strong>是大多数的类Unix操作系统任务管理器。它可以显示当前正在运行的进程的列表，用户可以按照不同的条件对该列表进行排序。它主要显示了系统进程对<strong>CPU</strong>和内存的使用状况。top可以快速检查是哪个或哪几个进程挂起了你的系统。你可以在<a href="http://linux.cn/article-2352-1.html">这里</a>看到top使用的例子。 你可以在终端输入top来运行它并进入到交互模式：</p>
+<pre class="prettyprint linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="pun">交互模式的一些快捷操作:</span></li><li class="L1"><span class="pln">&nbsp;</span></li><li class="L2"><span class="pln">    </span><span class="pun">全局命令:</span><span class="pln"> </span><span class="pun">&lt;回车/空格&gt;</span><span class="pln"> </span><span class="pun">?,</span><span class="pln"> </span><span class="pun">=,</span><span class="pln"> A</span><span class="pun">,</span><span class="pln"> B</span><span class="pun">,</span><span class="pln"> d</span><span class="pun">,</span><span class="pln"> G</span><span class="pun">,</span><span class="pln"> h</span><span class="pun">,</span><span class="pln"> I</span><span class="pun">,</span><span class="pln"> k</span><span class="pun">,</span><span class="pln"> q</span><span class="pun">,</span><span class="pln"> r</span><span class="pun">,</span><span class="pln"> s</span><span class="pun">,</span><span class="pln"> W</span><span class="pun">,</span><span class="pln"> Z</span></li><li class="L3"><span class="pln">    </span><span class="pun">统计区的命令:</span><span class="pln"> l</span><span class="pun">,</span><span class="pln"> m</span><span class="pun">,</span><span class="pln"> t</span><span class="pun">,</span><span class="pln"> </span><span class="lit">1</span></li><li class="L4"><span class="pln">    </span><span class="pun">任务区的命令：</span></li><li class="L5"><span class="pln">         </span><span class="pun">外观:</span><span class="pln"> b</span><span class="pun">,</span><span class="pln"> x</span><span class="pun">,</span><span class="pln"> y</span><span class="pun">,</span><span class="pln"> z </span><span class="pun">内容:</span><span class="pln"> c</span><span class="pun">,</span><span class="pln"> f</span><span class="pun">,</span><span class="pln"> H</span><span class="pun">,</span><span class="pln"> o</span><span class="pun">,</span><span class="pln"> S</span><span class="pun">,</span><span class="pln"> u </span><span class="pun">大小:</span><span class="pln"> </span><span class="com">#, i, n 排序: &lt;, &gt;, F, O, R</span></li><li class="L6"><span class="pln">    </span><span class="pun">色彩方案:</span><span class="pln"> </span><span class="pun">&lt;</span><span class="typ">Ret</span><span class="pun">&gt;,</span><span class="pln"> a</span><span class="pun">,</span><span class="pln"> B</span><span class="pun">,</span><span class="pln"> b</span><span class="pun">,</span><span class="pln"> H</span><span class="pun">,</span><span class="pln"> M</span><span class="pun">,</span><span class="pln"> q</span><span class="pun">,</span><span class="pln"> S</span><span class="pun">,</span><span class="pln"> T</span><span class="pun">,</span><span class="pln"> w</span><span class="pun">,</span><span class="pln"> z</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="pun">-</span><span class="pln"> </span><span class="lit">7</span></li><li class="L7"><span class="pln">    </span><span class="pun">窗口命令:</span><span class="pln">  </span><span class="pun">-,</span><span class="pln"> _</span><span class="pun">,</span><span class="pln"> </span><span class="pun">=,</span><span class="pln"> </span><span class="pun">+,</span><span class="pln"> A</span><span class="pun">,</span><span class="pln"> a</span><span class="pun">,</span><span class="pln"> G</span><span class="pun">,</span><span class="pln"> g</span><span class="pun">,</span><span class="pln"> w</span></li></ol></pre>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s3.51cto.com/wyfs02/M00/57/2A/wKioL1STlVGShVpFAAEKl9wTtI0503.jpg" /></p>
+<p><strong>8.Sysdig - 系统进程的高级视图</strong></p>
+<p><strong>Sysdig</strong>是一个能够让系统管理员和开发人员以前所未有方式洞察其系统行为的监控工具。其开发团队希望改善系统级的监控方式，通过提供关于<strong>存储，进程，网络和内存</strong>子系统的<strong>统一有序</strong>以及<strong>粒度可见</strong>的方式来进行错误排查，并可以创建系统活动记录文件以便你可以在任何时间轻松分析。</p>
+<p>简单例子:</p>
+<pre class="prettyprint linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="com"># sysdig proc.name=vim</span></li><li class="L1"><span class="com"># sysdig -p&quot;%proc.name %fd.name&quot; &quot;evt.type=accept and proc.name!=httpd&quot;</span></li><li class="L2"><span class="com"># sysdig evt.type=chdir and user.name=root</span></li><li class="L3"><span class="com"># sysdig -l</span></li><li class="L4"><span class="com"># sysdig -L</span></li><li class="L5"><span class="com"># sysdig -c topprocs_net</span></li><li class="L6"><span class="com"># sysdig -c fdcount_by fd.sport &quot;evt.type=accept&quot;</span></li><li class="L7"><span class="com"># sysdig -p&quot;%proc.name %fd.name&quot; &quot;evt.type=accept and proc.name!=httpd&quot;</span></li><li class="L8"><span class="com"># sysdig -c topprocs_file</span></li><li class="L9"><span class="com"># sysdig -c fdcount_by proc.name &quot;fd.type=file&quot;</span></li><li class="L0"><span class="com"># sysdig -p &quot;%12user.name %6proc.pid %12proc.name %3fd.num %fd.typechar %fd.name&quot; evt.type=open</span></li><li class="L1"><span class="com"># sysdig -c topprocs_cpu</span></li><li class="L2"><span class="com"># sysdig -c topprocs_cpu evt.cpu=0</span></li><li class="L3"><span class="com"># sysdig -p&quot;%evt.arg.path&quot; &quot;evt.type=chdir and user.name=root&quot;</span></li><li class="L4"><span class="com"># sysdig evt.type=open and fd.name contains /etc</span></li></ol></pre>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s8.51cto.com/wyfs02/M02/57/2A/wKioL1STlVKAFzKZAAB_43PotoU883.jpg" /></p>
+<p><strong>更多信息</strong> 可以在 <a href="http://linux.cn/article-4341-1.html">如何利用sysdig改善系统层次的监控和错误排查</a>。</p>
+<p></p>
+<p><strong>9.netstat - 显示开放的端口和连接</strong></p>
+<p>它是<strong>Linux管理员</strong>使用来显示各种网络信息的工具，如查看什么端口开放和什么网络连接已经建立以及何种进程运行在该连接之上。同时它也显示了不同程序间打开的<strong>Unix套接字</strong>的信息。作为大多数Linux发行版本的一部分，netstat的许多命令在 <a href="http://linux.cn/article-2434-1.html">netstat和它的不同输出</a>中有详细的描述。最为常用的如下：</p>
+<pre class="prettyprint linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="pln">$ netstat </span><span class="pun">|</span><span class="pln"> head </span><span class="pun">-</span><span class="lit">20</span></li><li class="L1"><span class="pln">$ netstat </span><span class="pun">-</span><span class="pln">r</span></li><li class="L2"><span class="pln">$ netstat </span><span class="pun">-</span><span class="pln">rC</span></li><li class="L3"><span class="pln">$ netstat </span><span class="pun">-</span><span class="pln">i</span></li><li class="L4"><span class="pln">$ netstat </span><span class="pun">-</span><span class="pln">ie</span></li><li class="L5"><span class="pln">$ netstat </span><span class="pun">-</span><span class="pln">s</span></li><li class="L6"><span class="pln">$ netstat </span><span class="pun">-</span><span class="pln">g</span></li><li class="L7"><span class="pln">$ netstat </span><span class="pun">-</span><span class="pln">tapn</span></li></ol></pre>
+<p><strong>10.tcpdump - 洞察网络封包</strong></p>
+<p><strong>tcpdump</strong>可以用来查看<strong>网络连接</strong>的<strong>封包</strong>内容。它显示了传输过程中封包内容的各种信息。为了使得输出信息更为有用，它允许使用者通过不同的过滤器获取自己想要的信息。可以参照的例子如下：</p>
+<pre class="prettyprint linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="com"># tcpdump -i eth0 not port 22</span></li><li class="L1"><span class="com"># tcpdump -c 10 -i eth0</span></li><li class="L2"><span class="com"># tcpdump -ni eth0 -c 10 not port 22</span></li><li class="L3"><span class="com"># tcpdump -w aloft.cap -s 0</span></li><li class="L4"><span class="com"># tcpdump -r aloft.cap</span></li><li class="L5"><span class="com"># tcpdump -i eth0 dst port 80</span></li></ol></pre>
+<p>你可以文章&ldquo;<a href="http://linoxide.com/linux-how-to/network-traffic-capture-tcp-dump-command/">在topdump和捕捉包</a>&rdquo;中找到详细描述。</p>
+<p><strong>11.vmstat - 虚拟内存统计信息</strong></p>
+<p><strong>vmstat</strong>是虚拟内存(<strong>virtual memory</strong> statistics)的缩写，作为一个<strong>内存监控</strong>工具，它收集和显示关于<strong>内存</strong>，<strong>进程</strong>，<strong>终端</strong>和<strong>分页</strong>和<strong>I/O阻塞</strong>的概括信息。作为一个开源程序，它可以在大部分Linux发行版本中找到，包括Solaris和FreeBSD。它用来诊断大部分的内存性能问题和其他相关问题。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s6.51cto.com/wyfs02/M00/57/2D/wKiom1STlK6Sv1-pAADC5cUJk0Y210.jpg" /></p>
+<p><strong>M更多信息</strong> 参考 <a href="http://linux.cn/article-2472-1.html">vmstat命令文章</a>。</p>
+<p><strong>12.free - 内存统计信息</strong></p>
+<p>free是另一个能够在终端中显示内存和交换空间使用的命令行工具。由于它的简易，它经常用于快速查看内存使用或者是应用于不同的脚本和应用程序中。在这里你可以看到<a href="http://linux.cn/article-2443-1.html">这个小程序的许多应用</a>。几乎所有的系统管理员日常都会用这个工具。:-)</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s5.51cto.com/wyfs02/M02/57/2D/wKiom1STlK7Tr3cmAAB1GAu-ZTo363.jpg" /></p>
+<p><strong>13.Htop - 更加友好的top</strong></p>
+<p><strong>Htop</strong>基本上是一个top改善版本，它能够以更加多彩的方式显示更多的统计信息，同时允许你采用不同的方式进行排序，它提供了一个<strong>用户友好</strong>的接口。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s3.51cto.com/wyfs02/M01/57/2A/wKioL1STlVLCS4qQAAEdlGFiWiE710.jpg" /></p>
+<p>你可以在文章&ldquo;<a href="http://linux.cn/article-3141-1.html">关于htop和top的比较</a>&rdquo;中找到<strong>更多的信息</strong> 。</p>
+<p><strong>14.ss - 网络管理的现代替代品</strong></p>
+<p><strong>ss</strong>是<strong>iproute2</strong>包的一部分。iproute2是用来替代一整套标准的<strong>Unix网络</strong>工具组件，它曾经用来完成<a href="http://linux.cn/article-4372-1.html">网络接口配置，路由表和管理ARP表</a>任务。ss工具用来记录套接字统计信息，它可以显示类似netstat一样的信息，同时也能显示更多TCP和状态信息。一些例子如下：</p>
+<pre class="prettyprint linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="com"># ss -tnap</span></li><li class="L1"><span class="com"># ss -tnap6</span></li><li class="L2"><span class="com"># ss -tnap</span></li><li class="L3"><span class="com"># ss -s</span></li><li class="L4"><span class="com"># ss -tn -o state established -p</span></li></ol></pre>
+<p><strong>15.lsof - 列表显示打开的文件</strong></p>
+<p><strong>lsof</strong>命令，意为&ldquo;<strong>list open files</strong>&rdquo;, 用于在许多类Unix系统中显示所有打开的文件及打开它们的进程。在大部分Linux发行版和其他类Linux操作系统中系统管理员用它来检查不同的进程打开了哪些文件。</p>
+<pre class="prettyprint linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="com"># lsof +p process_id</span></li><li class="L1"><span class="com"># lsof | less</span></li><li class="L2"><span class="com"># lsof &ndash;u username</span></li><li class="L3"><span class="com"># lsof /etc/passwd</span></li><li class="L4"><span class="com"># lsof &ndash;i TCP:ftp</span></li><li class="L5"><span class="com"># lsof &ndash;i TCP:80</span></li></ol></pre>
+<p>你可以找到 <strong>更多例子</strong> 在<a href="http://linux.cn/article-4099-1.html">lsof 文章</a></p>
+<p><strong>16.iftop - 类似top的了网络连接工具</strong></p>
+<p><strong>iftop</strong>是另一个基于网络信息的类似top的程序。它能够显示当前时刻按照<strong>带宽使用</strong>量或者上传或者下载量排序的<strong>网络连接</strong>状况。它同时提供了下载文件的预估完成时间。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s4.51cto.com/wyfs02/M00/57/2A/wKioL1STlVKw8eipAAFSTfBbMng414.jpg" /></p>
+<p><strong>更多信息</strong>可以参考<a href="http://linux.cn/article-1843-1.html">网络流量iftop文章</a>。</p>
+<p></p>
+<p><strong>17.iperf - 网络性能工具</strong></p>
+<p><strong>iperf</strong>是一个<strong>网络测试</strong>工具，能够创建<strong>TCP</strong>和<strong>UDP</strong>数据连接并在网络上测量它们的<strong>传输性能</strong>。它支持调节关于时间，协议和缓冲等不同的参数。对于每一个测试，它会报告带宽，丢包和其他的一些参数。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s6.51cto.com/wyfs02/M01/57/2D/wKiom1STlLCzr838AAEXWipNXlE623.jpg" /></p>
+<p>如果你想用使用这个工具，可以参考这篇文章： <a href="http://linoxide.com/monitoring-2/install-iperf-test-network-speed-bandwidth/">如何安装和使用iperf</a></p>
+<p><strong>18.Smem - 高级内存报表工具</strong></p>
+<p><strong>Smem</strong>是最先进的<strong>Linux</strong>命令行工具之一，它提供关于系统中已经使用的和共享的实际内存大小，试图提供一个更为可靠的当前<strong>内存</strong>使用数据。</p>
+<pre class="prettyprint linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="pln">$ smem </span><span class="pun">-</span><span class="pln">m</span></li><li class="L1"><span class="pln">$ smem </span><span class="pun">-</span><span class="pln">m </span><span class="pun">-</span><span class="pln">p </span><span class="pun">|</span><span class="pln"> grep firefox</span></li><li class="L2"><span class="pln">$ smem </span><span class="pun">-</span><span class="pln">u </span><span class="pun">-</span><span class="pln">p</span></li><li class="L3"><span class="pln">$ smem </span><span class="pun">-</span><span class="pln">w </span><span class="pun">-</span><span class="pln">p</span></li></ol></pre>
+<p>参考我们的文章：<a href="http://linoxide.com/tools/memory-usage-reporting-smem/">Smem更多的例子</a></p>
+<p><strong>二、图形化或基于Web的性能工具</strong></p>
+<p><strong>19.Icinga - Nagios的社区分支版本</strong></p>
+<p><strong>Icinga</strong>是一个<strong>开源免费</strong>的网络监控程序，作为Nagios的分支，它继承了前者现有的大部分功能，同时基于这些功能又增加了社区用户要求已久的功能和补丁。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s3.51cto.com/wyfs02/M00/57/2D/wKiom1STlLDii6kpAAC0znwmrgM659.jpg" /></p>
+<p><strong>更多信息</strong>请参考<a href="http://linoxide.com/monitoring-2/install-configure-icinga-linux/">安装和配置lcinga文章</a>。</p>
+<p><strong>20.Nagios - 最为流行的监控工具</strong></p>
+<p>作为在Linux上使用最为广泛和最为流行的<strong>监控方案</strong>，它有一个守护程序用来收集不同进程和远程主机的信息，这些收集到的信息都通过功能强大<strong>的web界面</strong>进行呈现。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s1.51cto.com/wyfs02/M02/57/2A/wKioL1STlVXDUzvZAADYIIKVx1M540.jpg" /></p>
+<p>你可以在文章&ldquo;<a href="http://linux.cn/article-2436-1.html">如何安装nagios</a>&rdquo;里面<strong>找到更多的信息</strong></p>
+<p><strong><span style="display: none;" id="1446192851355S">&nbsp;</span></strong></p>
+<p><strong>21.Linux process explorer - Linux下的procexp</strong></p>
+<p><span style="display: none;" id="1446192851168E">&nbsp;</span></p>
+<p><strong>Linux process explorer</strong>是一个Linux下的图形化进程浏览工具。它能够显示不同的进程信息，如进程数，TCP/IP连接和每一个进程的性能指标。作为<strong>Windows</strong>下<strong>procexp</strong>在Linux的替代品，是由<strong>Sysinternals</strong>开发的，其目标是比<strong>top</strong>和<strong>ps</strong>提供更好用户体验。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s6.51cto.com/wyfs02/M01/57/2A/wKioL1STlVbQnDlBAAHqk7bdi8M386.jpg" /></p>
+<p>查看 <a href="http://sourceforge.net/projects/procexp/">linux process explorer 文章</a>获取更多信息。</p>
+<p><strong>22.Collectl - 性能监控工具</strong></p>
+<p>你可以既可以通过交互的方式使用这个<strong>性能监控</strong>工具，也可以用它把<strong>报表</strong>写到磁盘上，并通过web服务器来访问。它以一种<strong>易读易管理</strong>的格式，显示了<strong>CPU，磁盘，内存，网络，网络文件系统，进程，slabs</strong>等统计信息。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s9.51cto.com/wyfs02/M02/57/2D/wKiom1STlLLRoeTaAABA2wgm7Qk527.jpg" /></p>
+<p><strong>更多</strong> 关于<a href="http://linux.cn/article-3154-1.html">Collectl的文章</a>。</p>
+<p><strong>23.MRTG - 经典网络流量监控图形工具</strong></p>
+<p>这是一个采用<strong>rrdtool</strong>的生成图形的流量监控工具。作为<strong>最早</strong>的提供<strong>图形化界面</strong>的流量监控工具，它被广泛应用在类Unix的操作系统中。查看我们关于<a href="http://linoxide.com/tools/multi-router-traffic-grapher/">如何使用MRTG</a>的文章获取更多关于安装和配置的信息。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s1.51cto.com/wyfs02/M01/57/2D/wKiom1STlLLwUebUAABUe8oi160557.jpg" /></p>
+<p><strong>24.Monit - 简单易用的监控工具</strong></p>
+<p><strong>Monit</strong>是一个用来<strong>监控进程</strong>，<strong>系统加载</strong>，<strong>文件系统</strong>和<strong>目录文件</strong>等的开源的Linux工具。你能够让它自动化维护和修复，也能够在运行错误的情景下执行特定动作或者发邮件报告提醒系统管理员。如果你想要用这个工具，你可以查看<a href="http://linoxide.com/monitoring-2/monit-linux/">如何使用Monit的文章</a>。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s6.51cto.com/wyfs02/M00/57/2A/wKioL1STlVbxPu1VAACZYMOoyA0974.jpg" /></p>
+<p><strong>25.Munin - 为服务器提供监控和提醒服务</strong></p>
+<p>作为一个网络资源监控工具，<em>Munin</em><em>能够帮助分析</em><em>资源趋势</em><em>和</em><em>查看薄弱环节</em><em>以及导致产生</em><em>性能问题</em><em>的原因。开发此软件的团队希望它能够易用和用户体验友好。该软件是用Perl开发的，并采用</em><em>rrdtool</em><em>来绘制图形，使用了</em><em>web界面</em><em>进行呈现。开发人员推广此应用时声称当前已有500多个监控插件可以&ldquo;</em><em>即插即用</em>*&rdquo;。</p>
+<p style="text-align: center;"><img  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' alt="" src="http://s5.51cto.com/wyfs02/M02/57/2A/wKioL1STlVeTsD4JAACwawT3d-Q370.jpg" />&nbsp;</p>
+<p><strong>更多信息</strong>可以在<a href="http://linoxide.com/ubuntu-how-to/install-munin/">关于Munin的文章</a>。</p>
+<hr />
+<p>via: <a href="http://linoxide.com/monitoring-2/linux-performance-monitoring-tools/">http://linoxide.com/monitoring-2/linux-performance-monitoring-tools/</a></p>
+<p>作者：<a href="http://linoxide.com/author/adriand/">Adrian Dinu</a> 译者：<a href="https://github.com/andyxue">andyxue</a> 校对：<a href="https://github.com/wxy">wxy</a></p>
+<p>【编辑推荐】</p>
+<div>
+<ol>
+    <li><a href="http://os.51cto.com/art/201411/458249.htm" target="_blank">领先SUSE两倍，红帽企业Linux再创世界纪录</a></li>
+    <li><a href="http://os.51cto.com/art/201412/458595.htm" target="_blank">系统之锹sysdig：Linux服务器监控和排障利器</a></li>
+    <li><a href="http://os.51cto.com/art/201412/458665.htm" target="_blank">Systemd这个有争议的项目正在接管你身边的Linux发行版</a></li>
+    <li><a href="http://os.51cto.com/art/201412/460124.htm" target="_blank">如何在 Linux 上用 SQL 语句来查询 Apache 日志</a></li>
+    <li><a href="http://os.51cto.com/art/201412/460128.htm" target="_blank">linux 系统监控、诊断工具之 IO wait</a></li>
+</ol>
+</div>
+<div align="right">【责任编辑：<a class="ln" href="mailto:linss@51cto.com">林师授</a> TEL：（010）68476606】</div><br> 
+<p class="blank10"></p> 
+ 
+ 
+
+
+<div class="f12"> <span class="fl">原文：<a href="http://os.51cto.com/art/201412/460698.htm" class="blue"><b>你值得拥有：25个Linux性能监控工具</b></a></span> <span class="fr"><a href="http://os.51cto.com">返回操作系统首页</a></span> </div>
+<p class="blank1"></p>
+</div>
+<hr style="border-top: #555555 1px solid; height: 1px; border-right: medium none; border-bottom: medium none; border-left: medium none"  />
+<div style="width: 600px; background: #ffffff"><img width="600" height="140" alt="" src="http://s3.51cto.com/wyfs02/M01/76/4A/wKioL1ZOwrbDjDqxAABJOr5GFjU021.png" border="0"  /></div>
+<hr style="border-top: #555555 1px solid; height: 1px; border-right: medium none; border-bottom: medium none; border-left: medium none"  />
+<iframe width="600" height="239" src="http://widget.weibo.com/relationship/bulkfollow.php?language=zh_cn&amp;uids=1708729084,1706976420,1888399833,1422974343,1878468181,1734475394&amp;wide=0&amp;color=C2D9F2,FFFFFF,0082CB,666666&amp;showtitle=1&amp;showinfo=1&amp;sense=0&amp;verified=1&amp;count=6&amp;refer='+encodeURIComponent(location.href)+'&amp;dpc=1" frameborder="0" scrolling="no"></iframe>
+<div class="tips">
+<div style="float:left;">
+<span style="float:left; margin-top:4px;">分享到：</span>
+<!-- Baidu Button BEGIN -->
+    <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare" style="margin-right:5px; float:left;">
+        <a class="bds_qzone"></a>
+        <a class="bds_tsina"></a>
+        <a class="bds_tqq"></a>
+        <a class="bds_renren"></a>
+        <a class="bds_t163"></a>
+        <span class="bds_more"></span>
+		<a class="shareCount"></a>
+
+</div>
+<!--<div class="fl"> 
+    </div>
+--><script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=585532" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+	var bds_config = {'snsKey':{'tsina':'2378297317'}};
+	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?t=" + new Date().getHours();
+</script>
+<!-- Baidu Button END -->
+
+
+
+</div><div class="fr blue"><a href="javascript:AddFavorite(document.location.href,document.title);" target="_self">收藏</a>|<a href="javascript:window.print();" target="_self">打印</a>|<a id="msnqqcopy" title="分享本资源给好友" target="_self">复制</a></div>
+</div>
+</div>
+<!--内容 end-->
+<p class="blank10"></p>
+<div class='comment center'>
+	<div class='inner center' id="cmscmt_iframe"></div>
+</div>
+<script type="text/javascript" id="UYScript" src="http://comment.51cto.com/static/js/api_js/iframe_cmt.js" async=""></script>
+
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg pl15">关于<a href='http://www.51cto.com/php/search.php?keyword=Linux' target='_blank' class='underline'>Linux</a>&nbsp;&nbsp;<a href='http://www.51cto.com/php/search.php?keyword=%D0%D4%C4%DC%BC%E0%BF%D8' target='_blank' class='underline'>性能监控</a>的更多文章</div>
+<div class="reltag">
+<ul class="fl list02">
+  <li><a href="http://os.51cto.com/art/201506/480780.htm" title="在linux上使用交换文件扩展交换空间">在linux上使用交换文件扩展交换空间</a></li><li><a href="http://os.51cto.com/art/201505/477735.htm" title="Inxi：获取Linux的系统和硬件信息">Inxi：获取Linux的系统和硬件信息</a></li><li><a href="http://os.51cto.com/art/201502/465566.htm" title="如何在Linux命令行中创建以及展示演示稿">如何在Linux命令行中创建以及展示演示稿</a></li><li><a href="http://os.51cto.com/art/201502/464636.htm" title="Linux之父Linus说：并行计算基本上就是浪费大家的时间">Linux之父Linus说：并行计算基本上就是浪费</a></li><li><a href="http://os.51cto.com/art/201501/463248.htm" title="教你用n2n在Linux上配置一个非常实用免费的VPN解决方案">教你用n2n在Linux上配置一个非常实用免费的</a></li>
+</ul>
+<div class="fr">
+<div class="h5 f12"><a href="http://os.51cto.com/art/201510/494546.htm" title="你需要了解的Linux实用命令大全"><b>你需要了解的Linux实用命令大全</b></a></div>
+<a href="http://os.51cto.com/art/201510/494546.htm" title="你需要了解的Linux实用命令大全"><img src="http://s6.51cto.com/wyfs02/M01/74/C6/wKiom1YopNjDjaOUAADEn0h32Qg062.jpg" alt="你需要了解的Linux实用命令大全" width="100" height="80" border="0" /></a>
+<p class="c666">Linux系统的魅力之一就是你可以直接从终端使用命令行来管理整个<a class="blue"href="http://os.51cto.com/art/201510/494546.htm" title="你需要了解的Linux实用命令大全">[详细]</a></p>
+</div>
+</div>
+<!--reltag end-->
+</div>
+<p class="blank10"></p>
+
+<!--box end-->
+<p class="blank10"></p>
+<div class="relart fl bor">
+<div class="titbg">
+<h3 class="fl t1">栏目热门</h3>
+<a href="/click/1336" class="tmore">更多&gt;&gt;</a></div>
+<ul>
+  
+	  <li><a href="http://developer.51cto.com/art/201501/464174.htm" title="近200篇机器学习&深度学习资料分享（含各种文档，视频，源码等）">近200篇机器学习&深度学习资料分享（含各种</a></li>
+	  
+	  <li><a href="http://os.51cto.com/art/201505/477735.htm" title="Inxi：获取Linux的系统和硬件信息">Inxi：获取Linux的系统和硬件信息</a></li>
+	  
+	  <li><a href="http://os.51cto.com/art/201501/463248.htm" title="教你用n2n在Linux上配置一个非常实用免费的VPN解决方案">教你用n2n在Linux上配置一个非常实用免费的</a></li>
+	  
+	  <li><a href="http://os.51cto.com/art/201407/446838.htm" title="ubuntu14.04中安装配置bochs详解">ubuntu14.04中安装配置bochs详解</a></li>
+	  
+	  <li><a href="http://os.51cto.com/art/201412/458596.htm" title="如何在 CentOS 7 上安装 Docker">如何在 CentOS 7 上安装 Docker</a></li>
+	  
+</ul>
+</div>
+<div class="cathot fr bor">
+<div class="titbg">
+<h3 class="fl t1">同期最新</h3>
+<a href="/col/1336" class="tmore">更多&gt;&gt;</a></div>
+<ul>
+	
+	  <li><a href="http://os.51cto.com/art/201412/460128.htm" title="linux 系统监控、诊断工具之 IO wait">linux 系统监控、诊断工具之 IO wait</a></li>
+	  
+	  <li><a href="http://os.51cto.com/art/201412/458662.htm" title="20个关于Postfix的面试题">20个关于Postfix的面试题</a></li>
+	  
+	  <li><a href="http://os.51cto.com/art/201412/458596.htm" title="如何在 CentOS 7 上安装 Docker">如何在 CentOS 7 上安装 Docker</a></li>
+	  
+	  <li><a href="http://os.51cto.com/art/201412/458595.htm" title="系统之锹sysdig：Linux服务器监控和排障利器">系统之锹sysdig：Linux服务器监控和排障利</a></li>
+	  
+	  <li><a href="http://os.51cto.com/art/201411/458362.htm" title="CentOS 下安装LEMP服务(Nginx、MariaDB/MySQL和PHP)">CentOS 下安装LEMP服务(Nginx、MariaDB/MyS</a></li>
+	  
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="fl t1"><a href="http://os.51cto.com">操作系统</a></h3>
+<span class="pl10">频道导航</span></div>
+ <ul class="xtlist">
+<li><span class="tit">生产环境</span>
+<div><a href="http://os.51cto.com/linux/">Linux</a>
+|<a href="http://os.51cto.com/windows/">Windows</a>
+|<a href="http://os.51cto.com/col/522/">Unix</a>
+|<a href="http://os.51cto.com/col/545/">运维教程</a>
+|<a href="http://os.51cto.com/art/201011/233915.htm">Linux运维趋势</a>
+</div>
+</li>
+<li class="last"><span class="tit">OS前沿</span>
+<div><a href="http://os.51cto.com/col/975/">浏览器</a>
+|<a href="http://os.51cto.com/col/610/">开源技术</a>
+|<a href="http://os.51cto.com/windows7/">Windows 7</a>
+|<a href="http://os.51cto.com/windows2008/">Server 08</a>
+|<a href="http://os.51cto.com/col/1417/">移动OS</a>
+</div>
+</li>
+</ul> 
+</div> 
+<p class="blank10"></p>
+<p class=blank10></p>
+<DIV class=leftbotcon>
+<DIV class="bor jdlist">
+<DIV class=titbg>
+<H3 class=t2>热点推荐</H3></DIV>
+<UL>
+<LI><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-t-4']);" href="http://mobile.51cto.com/mobile-182392.htm"><IMG src="http://images.51cto.com/files/uploadimg/20100202/153546162.jpg"></A> 
+<DIV class=name><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-t-4']);" href="http://mobile.51cto.com/mobile-182392.htm">Android开发应用详解</A></DIV></LI>
+<LI><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-t-4']);" href="http://developer.51cto.com/art/201106/266369.htm"><IMG src="http://images.51cto.com/files/uploadimg/20110608/133620622.jpg"></A> 
+<DIV class=name><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-t-4']);" href="http://developer.51cto.com/art/201106/266369.htm">那些性感的让人尖叫的程序员</A></DIV></LI>
+<LI><A href="http://developer.51cto.com/art/200907/133407.htm"><IMG src="http://images.51cto.com/files/uploadimg/20090702/134217922.jpg"></A> 
+<DIV class=name><A href="http://developer.51cto.com/art/200907/133407.htm">HTML5 下一代Web开发标准详解</A></DIV></LI>
+<LI><A href="http://developer.51cto.com/art/201104/257581.htm"><IMG src="http://images.51cto.com/files/uploadimg/20110426/123123954.jpg"></A> 
+<DIV class=name><A href="http://developer.51cto.com/art/201104/257581.htm">高性能WEB开发应用指南</A></DIV></LI>
+<LI><A href="http://os.51cto.com/art/200706/49181.htm"><IMG src="http://images.51cto.com/files/uploadimg/20070613/195816929.jpg"></A> 
+<DIV class=name><A href="http://os.51cto.com/art/200706/49181.htm">Ubuntu开源技术交流频道</A></DIV></LI></UL></DIV>
+<P class=blank10></P>
+<DIV class="bor hotTag"><STRONG>热门标签：</STRONG> <A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-2]);" href="http://os.51cto.com/windows/">windows频道</A><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-w']);" href="http://mobile.51cto.com/">移动开发</A><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-w']);" href="http://cloud.51cto.com/">云计算</A><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-w']);" href="http://mobile.51cto.com/mobile/objc/">objective-c</A><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-w']);" href="http://network.51cto.com/art/200909/151122.htm">tp-link路由器设置图解</A><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-w']);" href="http://developer.51cto.com/art/200907/133407.htm">html5</A> </DIV></DIV>
+<div class="leftbotbox"> </div>
+</div>
+<!--left end-->
+<div class="g_13 fr">
+<div class="focus fixfloat"> 
+ <img width="298" style="border: 1px solid #CCCCCC; margin:5px 0px 5px;" src="http://www.51cto.com/images/weixin.jpg"><div class="hot">
+<ul>
+<li class="tit"><em>头条</em> <a href="http://os.51cto.com/art/201604/509584.htm">36款顶级的开源音频/视频应用程序</a> </li>
+<li class="con"><dl><dt><a href="http://os.51cto.com/art/201604/509584.htm"><img border="0" src=""/></a></dt>
+<dd></dd>
+</dl></li></ul><ol class="hotlist"><li><a href="http://os.51cto.com/art/201605/511472.htm">修复Windows系统还原功能的12个小窍门</a></li><li><a href="http://os.51cto.com/art/201605/510755.htm">九个经受严苛评测的安全Windows免费软件下载站</a></li></ol></div>
+<p>
+<script language="JavaScript" src="http://www.51cto.com/ad/art/hzh/ad.js" type="text/javascript"></script>
+</p>
+</div>
+<div class="bor vlist" id="edu">
+	<div class="titbg">
+    <h3 class="fl t1"><a href="http://edu.51cto.com/" target="_blank">视频课程</a></h3>
+    <a class="tmore" id="change" style="cursor:pointer">换一换</a>
+    </div>
+    
+    	<ul class="plist01" id="edu1"><li><a class="ico" href="http://edu.51cto.com/course/course_id-4657.html"  target="_blank" ></a><a  href="http://edu.51cto.com/course/course_id-4657.html"  target="_blank"><img title="学好PPT ，干掉老板【升职加薪】视频课程" alt="学好PPT ，干掉老板【升职加薪】视频课程" src="http://i1.51cto.com/images/201510/d262d7a80b84991df29795f0f5d4c702293155.jpg" height="80" width="100"></a><h5><a title="学好PPT ，干掉老板【升职加薪】视频课程" href="http://edu.51cto.com/course/course_id-4657.html"  target="_blank">学好PPT ，干掉老板【升职加薪】视频课程</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-9744984.html"  target="_blank">易刚</a></p><p> 4人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-4656.html"  target="_blank" ></a><a  href="http://edu.51cto.com/course/course_id-4656.html"  target="_blank"><img title="Hadoop架构分析启动脚本分析视频课程" alt="Hadoop架构分析启动脚本分析视频课程" src="http://i1.51cto.com/images/201510/654cdc9131d41bf08fe5429207ce1b89d8cbd6.jpg" height="80" width="100"></a><h5><a title="Hadoop架构分析启动脚本分析视频课程" href="http://edu.51cto.com/course/course_id-4656.html"  target="_blank">Hadoop架构分析启动脚本分析视频课程</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-10771539.html"  target="_blank">徐培成</a></p><p> 13人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-4655.html"  target="_blank" ></a><a  href="http://edu.51cto.com/course/course_id-4655.html"  target="_blank"><img title="名动精品视频课程之原画的素描关系" alt="名动精品视频课程之原画的素描关系" src="http://i1.51cto.com/images/201510/01edf6e8644b7f158b05018742701e5f0ecdaf.png" height="80" width="100"></a><h5><a title="名动精品视频课程之原画的素描关系" href="http://edu.51cto.com/course/course_id-4655.html"  target="_blank">名动精品视频课程之原画的素描关系</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-10803152.html"  target="_blank">名动漫官方账号</a></p><p> 4人学习过</p></div></li></ul><ul class="plist01" id="edu2" style="display:none"><li><a class="ico" href="http://edu.51cto.com/course/course_id-4652.html"  target="_blank" ></a><a  href="http://edu.51cto.com/course/course_id-4652.html"  target="_blank"><img title="Spark 大讲堂（纯实战手动操作）－ 精华篇视频课程" alt="Spark 大讲堂（纯实战手动操作）－ 精华篇视频课程" src="http://i1.51cto.com/images/201510/010c6e903e9749eb6fa206ae7a56c0be19b0b3.jpg" height="80" width="100"></a><h5><a title="Spark 大讲堂（纯实战手动操作）－ 精华篇视频课程" href="http://edu.51cto.com/course/course_id-4652.html"  target="_blank">Spark 大讲堂（纯实战手动操作）－ 精华篇视</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-10220506.html"  target="_blank">王老师</a></p><p> 10人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-4650.html"  target="_blank" ></a><a  href="http://edu.51cto.com/course/course_id-4650.html"  target="_blank"><img title="PHP搭建人事管理系统视频课程" alt="PHP搭建人事管理系统视频课程" src="http://i1.51cto.com/images/201510/46b3e39642fb325c1c30894715fff889f5fbeb.jpg" height="80" width="100"></a><h5><a title="PHP搭建人事管理系统视频课程" href="http://edu.51cto.com/course/course_id-4650.html"  target="_blank">PHP搭建人事管理系统视频课程</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-10303548.html"  target="_blank">周清</a></p><p> 23人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-4649.html"  target="_blank" ></a><a  href="http://edu.51cto.com/course/course_id-4649.html"  target="_blank"><img title="CCNA基础知识专题讲解--Port-Security（端口安全）视频课程" alt="CCNA基础知识专题讲解--Port-Security（端口安全）视频课程" src="http://i1.51cto.com/images/201510/04aeec657a447433b0b292c6285e4dd89c83ef.jpg" height="80" width="100"></a><h5><a title="CCNA基础知识专题讲解--Port-Security（端口安全）视频课程" href="http://edu.51cto.com/course/course_id-4649.html"  target="_blank">CCNA基础知识专题讲解--Port-Security（端口</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-532091.html"  target="_blank">晁海江</a></p><p> 8人学习过</p></div></li></ul><ul class="plist01" id="edu3" style="display:none"><li><a class="ico" href="http://edu.51cto.com/course/course_id-4647.html"  target="_blank" ></a><a  href="http://edu.51cto.com/course/course_id-4647.html"  target="_blank"><img title="大数据之Hadoop第四季架构分析实战视频课程" alt="大数据之Hadoop第四季架构分析实战视频课程" src="http://i1.51cto.com/images/201510/d67165661d0ca364c1d10680d795e681736b3a.jpg" height="80" width="100"></a><h5><a title="大数据之Hadoop第四季架构分析实战视频课程" href="http://edu.51cto.com/course/course_id-4647.html"  target="_blank">大数据之Hadoop第四季架构分析实战视频课程</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-10771539.html"  target="_blank">徐培成</a></p><p> 59人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-4645.html"  target="_blank" ></a><a  href="http://edu.51cto.com/course/course_id-4645.html"  target="_blank"><img title="Unity3D移动端手机优化技术讲解视频课程" alt="Unity3D移动端手机优化技术讲解视频课程" src="http://i1.51cto.com/images/201510/48000b125661b73c25a412b3e20134e887b66e.jpg" height="80" width="100"></a><h5><a title="Unity3D移动端手机优化技术讲解视频课程" href="http://edu.51cto.com/course/course_id-4645.html"  target="_blank">Unity3D移动端手机优化技术讲解视频课程</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-943299.html"  target="_blank">姜雪伟</a></p><p> 8人学习过</p></div></li></ul>
+	
+</div>
+<div class="rank">
+<div class="tlt">
+      <h3>文章排行</h3>
+      <a onmouseover="change_top10(3);" id="top_3">本月</a><a onmouseover="change_top10(2);" id="top_2">本周</a><a onmouseover="change_top10(1);" class="myon" id="top_1">24小时</a> </div>
+ <div id="top10_1" style="display: block;" class="list"><ul>
+<li><a href="http://os.51cto.com/art/201009/223806.htm" target="_blank" title="十五个常用Linux命令行总汇">十五个常用Linux命令行总汇</a>
+<li><a href="http://os.51cto.com/art/201608/515547.htm" target="_blank" title="推荐 | 基于Linux命令行的五个文件下载">推荐 | 基于Linux命令行的五个文件下载</a>
+<li><a href="http://os.51cto.com/art/201403/432079.htm" target="_blank" title="从Linux终端管理进程：10个你必须知道">从Linux终端管理进程：10个你必须知道</a>
+<li><a href="http://os.51cto.com/art/201410/456046.htm" target="_blank" title="Git Rebase教程： 用Git Rebase让时光">Git Rebase教程： 用Git Rebase让时光</a>
+<li><a href="http://os.51cto.com/art/201607/514679.htm" target="_blank" title="Linux终于足够好，可以取代Windows了吗">Linux终于足够好，可以取代Windows了吗</a>
+<li><a href="http://os.51cto.com/art/201012/240726.htm" target="_blank" title="df、du、fdisk：Linux磁盘管理三板斧的">df、du、fdisk：Linux磁盘管理三板斧的</a>
+<li><a href="http://os.51cto.com/art/201103/249398.htm" target="_blank" title="CentOS下配置iptables防火墙">CentOS下配置iptables防火墙</a>
+<li><a href="http://os.51cto.com/art/201608/515452.htm" target="_blank" title="如何在Linux上运行Windows应用程序？">如何在Linux上运行Windows应用程序？</a>
+<li><a href="http://os.51cto.com/art/201602/505148.htm" target="_blank" title="如何升级到Windows 10并完美解决开机闪">如何升级到Windows 10并完美解决开机闪</a>
+<li><a href="http://os.51cto.com/art/201001/177059.htm" target="_blank" title="Linux删除目录的命令">Linux删除目录的命令</a>
+</ul></div>
+<div id="top10_2" style="display: none;" class="list"><ul>
+<li><a href="http://os.51cto.com/art/201608/515452.htm" target="_blank" title="如何在Linux上运行Windows应用程序？">如何在Linux上运行Windows应用程序？</a>
+<li><a href="http://os.51cto.com/art/201607/515011.htm" target="_blank" title="这10款最佳开源协作软件工具，你值得拥">这10款最佳开源协作软件工具，你值得拥</a>
+<li><a href="http://os.51cto.com/art/201607/515065.htm" target="_blank" title="Windows 10免费升级计划的利与弊">Windows 10免费升级计划的利与弊</a>
+<li><a href="http://os.51cto.com/art/201607/515068.htm" target="_blank" title="基础拾掇之http基础应用详解">基础拾掇之http基础应用详解</a>
+<li><a href="http://os.51cto.com/art/201607/515105.htm" target="_blank" title="awk 系列：如何使用 awk 复合表达式">awk 系列：如何使用 awk 复合表达式</a>
+<li><a href="http://os.51cto.com/art/201607/515107.htm" target="_blank" title="Windows 10周年更新无法关闭Cortana？">Windows 10周年更新无法关闭Cortana？</a>
+<li><a href="http://os.51cto.com/art/201607/515108.htm" target="_blank" title="在Docker和Kubernetes上运行MongoDB微">在Docker和Kubernetes上运行MongoDB微</a>
+<li><a href="http://os.51cto.com/art/201608/515456.htm" target="_blank" title="Git 系列（一）：什么是 Git">Git 系列（一）：什么是 Git</a>
+<li><a href="http://os.51cto.com/art/201608/515451.htm" target="_blank" title="Linux 上 10 个最好的 Markdown 编辑器">Linux 上 10 个最好的 Markdown 编辑器</a>
+<li><a href="http://os.51cto.com/art/201608/515402.htm" target="_blank" title="专为分布式系统管理员打造的五款开源支">专为分布式系统管理员打造的五款开源支</a>
+</ul></div>
+<div id="top10_3" style="display: none;" class="list"><ul>
+<li><a href="http://os.51cto.com/art/201607/514679.htm" target="_blank" title="Linux终于足够好，可以取代Windows了吗">Linux终于足够好，可以取代Windows了吗</a>
+<li><a href="http://os.51cto.com/art/201608/515452.htm" target="_blank" title="如何在Linux上运行Windows应用程序？">如何在Linux上运行Windows应用程序？</a>
+<li><a href="http://os.51cto.com/art/201607/514092.htm" target="_blank" title="在Windows 10使用上，哪些是效果最佳和">在Windows 10使用上，哪些是效果最佳和</a>
+<li><a href="http://os.51cto.com/art/201607/515011.htm" target="_blank" title="这10款最佳开源协作软件工具，你值得拥">这10款最佳开源协作软件工具，你值得拥</a>
+<li><a href="http://os.51cto.com/art/201607/514006.htm" target="_blank" title="你不要升级到Windows 10的十大理由">你不要升级到Windows 10的十大理由</a>
+<li><a href="http://os.51cto.com/art/201607/514821.htm" target="_blank" title="11个炫酷的Linux终端命令大全">11个炫酷的Linux终端命令大全</a>
+<li><a href="http://os.51cto.com/art/201607/514876.htm" target="_blank" title="你应该安装Linux系统的五个理由">你应该安装Linux系统的五个理由</a>
+<li><a href="http://os.51cto.com/art/201607/514836.htm" target="_blank" title="Windows 10那么好用 你为啥不升级？">Windows 10那么好用 你为啥不升级？</a>
+<li><a href="http://os.51cto.com/art/201607/514936.htm" target="_blank" title="你必须要避免Linux桌面的这六大错误">你必须要避免Linux桌面的这六大错误</a>
+<li><a href="http://os.51cto.com/art/201607/513796.htm" target="_blank" title="程序员喜欢的9款最佳的Linux文件比较工">程序员喜欢的9款最佳的Linux文件比较工</a>
+</ul></div>
+ 
+ </div>
+<p class="blank1"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="fl t1">热点职位</h3>
+<a href="http://gaozhao.51cto.com/job-search/list" class="tmore">更多&gt;&gt;</a></div>
+	<div class="rmzwn_xx"></div>
+</div>
+<div class="blank10"></div>
+<script src="http://www.51cto.com/images/home_2015/js/51cto_sha1.js"></script>
+<div class="bor">
+<div class="titbg">
+<h3 class="fl t1">热点专题</h3>
+<a href="http://os.51cto.com/speclist/1336" class="tmore">更多&gt;&gt;</a></div>
+<ul class="plist01">
+<li><a href="http://os.51cto.com/art/201403/433214.htm" title="Nagios，我的监控我做主"><img src="http://s3.51cto.com/wyfs02/M00/22/E1/wKioL1MqkqbR_Dk2AAARO82Ozjc063.jpg" alt="Nagios，我的监控我做主" width="100" height="80" /></a>
+<h5><a href="http://os.51cto.com/art/201403/433214.htm" title="Nagios，我的监控我做主">Nagios，我的监控我做</a></h5>
+<div class="c666">Nagios是一个流行的电脑系统和网络监控程序，能监视所</div>
+</li><li><a href="http://os.51cto.com/art/201403/432226.htm" title="企业自动化运维工具：Zabbix你值得拥有"><img src="http://s3.51cto.com/wyfs02/M02/22/A6/wKiom1Miqr_ygal4AAAw1iHA0OU591.jpg" alt="企业自动化运维工具：Zabbix你值得拥有" width="100" height="80" /></a>
+<h5><a href="http://os.51cto.com/art/201403/432226.htm" title="企业自动化运维工具：Zabbix你值得拥有">企业自动化运维工具：</a></h5>
+<div class="c666">Zabbix能监视各种网络参数，保证服务器系统的安全运营</div>
+</li><li><a href="http://os.51cto.com/art/201402/430050.htm" title="Linux 性能监测实战"><img src="http://s5.51cto.com/wyfs02/M02/12/5D/wKioL1MEaruDZpUFAAAK2wu1X2Q024.jpg" alt="Linux 性能监测实战" width="100" height="80" /></a>
+<h5><a href="http://os.51cto.com/art/201402/430050.htm" title="Linux 性能监测实战">Linux 性能监测实战</a></h5>
+<div class="c666">性能监测是系统优化过程中重要的一环，如果没有监测、</div>
+</li> 
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="tagCloud">
+<div class="tlt">
+<h3>热点标签</h3>
+</div>
+<div class="taglist"><A title="IIS服务" href="http://os.51cto.com/art/201104/256478.htm">IIS服务</A>
+<A title="Windows 8" href="http://os.51cto.com/art/201104/256380.htm">Windows 8</A>
+<A title="浏览器战报" href="http://os.51cto.com/art/201103/250662.htm">浏览器战报</A>
+
+<A title="Ubuntu 11.04" href="http://os.51cto.com/art/201101/244030.htm">Ubuntu 11.04</A>
+<A title="运维秘诀" href="http://os.51cto.com/art/201101/244021.htm">运维秘诀</A>
+<A title="活动目录" href="http://os.51cto.com/art/201012/236185.htm">活动目录</A>
+<A title="Linux管理员" href="http://os.51cto.com/art/201104/253193.htm">Linux管理员</A>
+<A title="Fedora 15" href="http://os.51cto.com/art/201103/246763.htm">Fedora 15</A>
+<A title="Linux运维趋势" href="http://os.51cto.com/art/201011/233915.htm">Linux运维趋势</A>
+<A title="开源社区" href="http://os.51cto.com/art/201010/230570.htm">开源社区</A>
+<A title="开源社区" href="http://gaozhao.51cto.com/job-search/list/category-0-36" class="imp">系统招聘</A></div>
+</div>
+<div class="rss">
+<ul>
+<li class="lin f12-c"><a href="http://news.51cto.com/col/1323/"><strong>点击这里查看样刊</strong></a></li>
+<li>
+<dl>
+<dt> </dt>
+<dd><a href="http://home.51cto.com/index.php?s=/Subscribe"><img src="http://images.51cto.com/images/art0910/images/dingy.gif" /></a></dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="bor">
+<div class="titbg">
+<h3 class="t1">全站热点</h3>
+</div>
+<div class="webhot fixfloat">
+<ul>
+
+<li>
+  <a href="http://cloud.51cto.com/art/201507/483819.htm"  title="云时代运维生存启示录"><img src="http://s8.51cto.com/wyfs02/M01/70/57/wKiom1W24OOwmPHgAABwBz7zl4I481.jpg" /></a>
+  <div><a href="http://cloud.51cto.com/art/201507/483819.htm"  title="云时代运维生存启示录">云时代运维生存启示录</a></div>
+</li>
+
+<li>
+  <a href="http://cloud.51cto.com/art/201507/482722.htm"  title="跨越OpenStack学习障碍的正确姿势"><img src="http://s7.51cto.com/wyfs02/M02/6F/77/wKioL1Wd1fDii53bAABf8cKBh-g467.jpg" /></a>
+  <div><a href="http://cloud.51cto.com/art/201507/482722.htm"  title="跨越OpenStack学习障碍的正确姿势">跨越OpenStack学习障碍的正确姿势</a></div>
+</li>
+
+</ul>
+</div>
+<p class="blank1"></p>
+<ul class="list03">
+
+<li><a href="http://developer.51cto.com/art/201510/494746.htm"  title="你不是在数据分析  你是在炒菜">你不是在数据分析  你是在炒菜</a></li>
+
+<li><a href="http://developer.51cto.com/art/201510/494745.htm"  title="写给那些傻傻的，想做服务器开发的应届生">写给那些傻傻的，想做服务器开发的应</a></li>
+
+<li><a href="http://developer.51cto.com/art/201510/494744.htm"  title="只有程序员看的懂的面试圣经｜如何拿下编程面试">只有程序员看的懂的面试圣经｜如何拿</a></li>
+
+<li><a href="http://os.51cto.com/art/201510/494743.htm"  title="Linux的24年发展是怎样的一步一个脚印">Linux的24年发展是怎样的一步一个脚</a></li>
+
+<li><a href="http://network.51cto.com/art/201510/494741.htm"  title="摩尔定律与物联网：多的是你不知道的事">摩尔定律与物联网：多的是你不知道的</a></li>
+
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="t1">读书</h3>
+</div>
+  
+<div class="catbook"><a href="http://book.51cto.com/art/200801/63508.htm" title="Java (JDK 6)学习笔记"><img src="http://new.51cto.com/files/uploadimg/20080102/193918315.gif" width="66" height="98" border="0" /></a>
+<h5><a href="http://book.51cto.com/art/200801/63508.htm">Java (JDK 6)学习笔记</a></h5>
+<div class="c666 text">Java学习笔记在JavaWorld技术论坛（http://www.javaworld.com.tw/）和作者的网站（http://caterpillar.onlyfun.net/Gossip/）提</div>
+</div>
+
+
+<ul class="list03">
+
+<li><a href="http://book.51cto.com/art/200704/45836.htm" title="精通EJB 3.0">精通EJB 3.0</a></li>
+
+<li><a href="http://book.51cto.com/art/200704/45839.htm" title="精通SOA：基于服务总线的Struts+EJB+Web Service整合应用开发">精通SOA：基于服务总线的Struts+EJB+Web Service</a></li>
+
+<li><a href="http://book.51cto.com/art/200704/45842.htm" title="敏捷Acegi、CAS：构建安全的Java系统">敏捷Acegi、CAS：构建安全的Java系统</a></li>
+
+<li><a href="http://book.51cto.com/art/200704/45845.htm" title="实时UML与Rational Rose RealTime建模案例剖析">实时UML与Rational Rose RealTime建模案例剖析</a></li>
+
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="t1 fl">博文推荐</h3>
+<a class="tmore" href="http://blog.51cto.com/">更多&gt;&gt;</a></div>
+
+<ul class="list03">
+ <li><a href="http://bj007.blog.51cto.com/1701577/328884/" target="_blank" title="给软件工程师的12条单体测试的建议">给软件工程师的12条单体测试的建议</a></li><li><a href="http://leelei.blog.51cto.com/856755/328874/" target="_blank" title="asp.net MVC2 初探十四">asp.net MVC2 初探十四</a></li><li><a href="http://servershuji.blog.51cto.com/1283121/328861/" target="_blank" title="详解网络系统的搭建案例">详解网络系统的搭建案例</a></li><li><a href="http://deidara.blog.51cto.com/400447/328770/" target="_blank" title="使用xen-shell来管理xen vps">使用xen-shell来管理xen vps</a></li>
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="tj">
+<div class="tlt">
+<h3>最新热帖</h3>
+<a class="more" href="http://bbs.51cto.com/hotthreads.php">更多&gt;&gt;</a></div>
+<ul>
+<li><a href="http://bbs.51cto.com/thread-818279-1.html" target="_blank" title="CCNA重点知识点">CCNA重点知识点</a></li><li><a href="http://bbs.51cto.com/thread-817761-1.html" target="_blank" title="XenServer老死机怎么回事">XenServer老死机怎么回事</a></li><li><a href="http://bbs.51cto.com/thread-814108-1.html" target="_blank" title="大公司里的草还是小公司里的宝？">大公司里的草还是小公司里的宝？</a></li><li><a href="http://bbs.51cto.com/thread-682482-1.html" target="_blank" title="一道局域网布线的基础题目">一道局域网布线的基础题目</a></li><li><a href="http://bbs.51cto.com/thread-609530-1.html" target="_blank" title="一次RAID0崩溃的思考">一次RAID0崩溃的思考</a></li>
+</ul>
+</div>
+<div class="picAD">
+<iframe class="bann" frameborder="0" src="http://www.51cto.com/iframe/article/baidu.htm" scrolling="No" style=" background-color:#DBDBDB; height:250px; width:300px; padding:0px;margin:0px;overflow:hidden;"></iframe>
+</div>
+</div>
+<p class="blank1"></p> 
+<!--leftbotcon end-->
+</div> 
+<div class="subweb">
+<h4>51CTO旗下网站</h4>
+<div>
+<a target="_blank" href="http://www.51cto.com/">领先的IT技术网站 51CTO</a>
+<a target="_blank" href="http://www.watchstor.com/">领先的中文存储媒体 WatchStor</a>
+<a target="_blank" href="http://cio.51cto.com/">中国首个CIO网站 CIOage</a>
+<a target="_blank" href="http://www.hc3i.cn/">中国首家数字医疗网站 HC3i</a>
+</div>
+</div>
+<div id="ft"><div id="foot" align="center"><script src="http://images.51cto.com/images/copy_right/copy_right.js"></script></div></div>
+<script src="http://logs.51cto.com/rizhi/count/count.js"></script>
+<script type="text/javascript">
+	$("#uyan_cmt_list").next().remove();	
+	$("#uyan_cmt_list").next().css("display","none");	
+</script>
+<!-- 悬浮广告 -->
+
+<!--end-->
+
+<style>
+.Nfloat { position: fixed; right: 2%; top: 35%; z-index: 801; }
+</style>
+
+<!-- 新监测代码 -->
+<!-- 新监测代码 -->
+<div id="MyMoveAd" style="display:none">
+<span id="wordlink_1"><script src="http://www.51cto.com/ad/art/wordlink/wordlink1.js"></script></span>
+<span id="wordlink_2"><script src="http://www.51cto.com/ad/art/wordlink/wordlink2.js"></script></span>
+<span id="wordlink_3"><script src="http://www.51cto.com/ad/art/wordlink/wordlink3.js"></script></span>
+<span id="wordlink_4"><script src="http://www.51cto.com/ad/art/wordlink/wordlink4.js"></script></span>
+<span id="pinglun"><script language="JavaScript" src="http://www.51cto.com/php/getArtCount.php?artid=460698&type=all"></script></span>
+<span id="tonglan"><script language="JavaScript" src="http://www.51cto.com/ad/art/tonglan/ad.js"></script></span>
+<span id="wordlink"><script language="JavaScript" src="http://www.51cto.com/ad/art/wordlink/ad.js"></script></span>
+<script src="http://www.51cto.com/ad/art/wordlink/ad.js"></script>
+<span id="bookss"><script language="JavaScript" src="http://www.51cto.com/php/getBookData.php?artid="></script></span>
+</div>   
+<script language="javascript" src="http://www.51cto.com/js/article/favorite.js"></script>
+
+<script language="javaScript" src="http://www.51cto.com/php/dialog_utf8.js"></SCRIPT>
+<script language="javaScript" src="http://www.51cto.com/mail.js"></script>  
+<script type="text/javascript" src="http://home.51cto.com/apps/favorite/Tpl/default/Public/js/favorbox.js"></script>
+<script language="javascript" src="http://images.51cto.com/images/art/newart1012/clipboard.js"></script>
+<script language="javaScript"> 
+	var thistid=460698; 
+	
+	//收藏按钮
+	var favor_url = 'http://os.51cto.com/art/201412/460698.htm';  // 如：http://bbs.51cto.com/thread-789649-1.html
+	var favor_title = '你值得拥有：25个Linux性能监控工具';       //  
+	
+	//绑定复制按钮
+	copy('msnqqcopy', 'http://os.51cto.com/art/201412/460698.htm', '分享到MSN/QQ的链接复制成功!');
+//	copy('bbscopy', '[url=http://os.51cto.com/art/201412/460698.htm][u]你值得拥有：25个Linux性能监控工具[/u][/url]', '分享到论坛的UBB代码复制成功!');
+
+</script> 
+<script src=" http://home.51cto.com/index.php?s=/Index/getLoginStatus/reback/http%253A%252F%252Fos.51cto.com%252Fart%252F201412%252F460698.htm" charset='utf-8'></script>
+<script src="http://www.51cto.com/php/count.php?view=yes&artID=460698" language="javascript"></script>
+<script language="javascript">
+document.getElementById('books').innerHTML = document.getElementById("bookss").innerHTML; 
+</script>
+
+</body>
+</html>
