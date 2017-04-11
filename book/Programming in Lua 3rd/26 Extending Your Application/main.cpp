@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <lua.hpp>
+#include <string>
 
 const int MAX_COLOR = 255;
 
@@ -86,6 +87,94 @@ void setcolor(lua_State* L, ColorTable* color)
 	lua_setglobal(L, color->name);//name = table
 }
 
+double f(lua_State* L, double x, double y)
+{
+	double z;
+	lua_getglobal(L, "f");
+	lua_pushnumber(L, x);
+	lua_pushnumber(L, y);
+
+	if (lua_pcall(L, 2, 1, 0) != 0)
+		error(L, "error running function 'f': %s", lua_tostring(L, -1));
+
+	if (!lua_isnumber(L, -1))
+		error(L, "function 'f' must return a number");
+	
+	z = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+	return z;
+}
+
+void call_va(lua_State* L, const char* function, const char* signal, ...)
+{
+	va_list vl;
+	va_start(vl, signal);
+
+	int narg = 0;
+	int nres = 0;
+	lua_getglobal(L, function);
+	for ( ; *signal; ++narg)
+	{
+		luaL_checkstack(L, 1, "too many arguments");
+		switch (*signal++)
+		{
+		case 'd':
+			lua_pushnumber(L, va_arg(vl, double));
+			break;
+		case 'i':
+			lua_pushinteger(L, va_arg(vl, int));
+			break;
+		case 's':
+			lua_pushstring(L, va_arg(vl, char*));
+			break;
+		case '>':
+			goto endargs;
+		default:
+			error(L, "invalid option %c", *(signal - 1));
+		}
+	}
+	endargs:
+
+	nres = strlen(signal);
+	if (lua_pcall(L, narg, nres, 0) != 0)
+		error(L, "error calling %s %s", function, lua_tostring(L, -1));
+
+	nres = -nres;
+	while (*signal)
+	{
+		switch (*signal++)
+		{
+		case 'd':
+		{
+			if (!lua_isnumber(L, nres))
+				error(L, "wrong result type number need");
+			*va_arg(vl, double*) = lua_tonumber(L, nres);
+			break;
+		}
+		case 'i':
+		{
+			if (!lua_isnumber(L, nres))
+				error(L, "wrong result type integer need");
+			*va_arg(vl, int*) = lua_tointeger(L, nres);
+			break;
+		}
+		case 's':
+		{
+			if (!lua_isstring(L, nres))
+				error(L, "wrong result type string need");
+			*va_arg(vl, const char**) = lua_tostring(L, nres);
+			break;
+
+		}
+		default:
+			error(L, "invalid option %c", *(signal - 1));
+		}
+		nres++;
+	}
+
+	va_end(vl);
+}
+
 int main(int argc, const char* argv[])
 {
 	lua_State* L = luaL_newstate();
@@ -137,6 +226,19 @@ int main(int argc, const char* argv[])
 		error(L, "invalid value for 'backgroud'");
 	}
 	std::cout << "red = " << red << "green = " << green << "blue = " << blue << std::endl;
+
+
+	//-------------------------------------------------------------------------
+	//test call lua function
+	std::cout << "function call result = " << f(L, 2, 1) << std::endl;
+
+
+	//-------------------------------------------------------------------------
+	//test call_va
+	double res = 0.0;
+	call_va(L, "f", "ii>d", 2, 1, res);
+	lua_settop(L, 1);
+	std::cout << res << std::endl;
 
 
 	//-------------------------------------------------------------------------
