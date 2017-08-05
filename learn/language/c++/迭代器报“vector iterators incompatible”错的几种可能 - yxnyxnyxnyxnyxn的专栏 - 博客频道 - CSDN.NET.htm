@@ -1,0 +1,1389 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+     
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>  
+
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <title>迭代器报“vector iterators incompatible”错的几种可能 - yxnyxnyxnyxnyxn的专栏
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="总结：结构体里面有vector等成员时，不要用memset清零（从库的跟踪中我发现向量是使用名称为“_Myproxy”、“_Mynextiter”这两个指针来寻找与之相邻的值的，在我们定义一个向量时，它便初始化一个“_Myproxy”，而我的代码却在类的构造函数中对定义的结构体执行了一个清零的操作）由于平时迭代器与向量用的并不是很多，因此今天上午遇到了一个非常怪异的问题，浪费了我整整4个小" />
+    <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+      <script type="text/javascript" src="http://static.blog.csdn.net/scripts/jquery-version.js"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
+        <!--new top-->
+               <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css">        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/tracking.js"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/default/css/style.css?v=1.1" />
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/yxnyxnyxnyxnyxn/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+ 
+
+
+<script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+</script>
+
+
+</head>
+<body>
+
+
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/yxnyxnyxnyxnyxn">yxnyxnyxnyxnyxn的专栏</a></h2>
+            <h3></h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/yxnyxnyxnyxnyxn?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/yxnyxnyxnyxnyxn?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/yxnyxnyxnyxnyxn/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "yxnyxnyxnyxnyxn";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/yxnyxnyxnyxnyxn";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/68486442">
+<font color=blue> CSDN日报20170330 ——《我们错过了那么多机会，怎么办》 </font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://lib.csdn.net/nigelyq/408704/chart/%5B%E8%B5%84%E6%BA%90%E6%8E%A8%E8%8D%90%5DCSDN%E4%B8%8B%E8%BD%BD%E9%A2%91%E9%81%93%E4%BC%98%E8%B4%A8%E6%BA%90%E7%A0%81%E9%9B%86%E9%94%A6">
+<font color=red>十二大技术领域优质资源汇总图谱
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://blog.csdn.net/turingbooks/article/details/65631771">
+<font color=blue>程序员3月书讯
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/60961185">
+<font color=red>博客搬家，有礼相送
+</font></a>
+</div>                        </div>
+                        
+
+
+
+  
+<link href="http://static.blog.csdn.net/css/comment1.css" type="text/css" rel="stylesheet" />
+<link href="http://static.blog.csdn.net/css/style1.css" type="text/css" rel="stylesheet" />
+<script language='JavaScript' type='text/javascript' src='http://download.csdn.net/js/jquery.cookie.js'></script>
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/search-service/main.js"></script>
+<link rel="stylesheet" href="http://static.blog.csdn.net/public/res-min/markdown_views.css?v=1.0" />
+<link rel="stylesheet" href="http://static.blog.csdn.net/css/category.css?v=1.0" />
+<script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/web-storage-cache.min.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/replace.min.js"></script>
+
+<link rel="stylesheet" href="http://static.blog.csdn.net/code/prettify.css" />
+<script type="text/javascript" src="http://static.blog.csdn.net/code/prettify.js"></script>
+
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=%e8%bf%ad%e4%bb%a3%e5%99%a8%e6%8a%a5%e2%80%9cvector+iterators+incompatible%e2%80%9d%e9%94%99%e7%9a%84%e5%87%a0%e7%a7%8d%e5%8f%af%e8%83%bd&u=http://blog.csdn.net/yxnyxnyxnyxnyxn/article/details/17610899"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Repost"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/yxnyxnyxnyxnyxn/article/details/17610899">
+        迭代器报“vector iterators incompatible”错的几种可能            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_r">
+            <span class="link_postdate">2013-12-27 14:07</span>
+            <span class="link_view" title="阅读次数">9277人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(6)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('%e8%bf%ad%e4%bb%a3%e5%99%a8%e6%8a%a5%e2%80%9cvector+iterators+incompatible%e2%80%9d%e9%94%99%e7%9a%84%e5%87%a0%e7%a7%8d%e5%8f%af%e8%83%bd','17610899');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(17610899,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody"  style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script  type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label>
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">STL<em></em></span>                       
+                    </label>      
+        </div>
+    </div>
+    <script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>  
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14px; line-height:28px">
+<strong><span style="color:#ff0000">总结：结构体里面有vector等成员时，不要用memset清零（</span>从库的跟踪中我发现向量是使用名称为“_Myproxy”、“_Mynextiter”这两个指针来寻找与之相邻的&#20540;的，在我们定义一个向量时，它便初始化一个“_Myproxy”，而我的代码却在类的构造函数中对定义的结构体执行了一个清零的操作<span style="color:#ff0000">）</span></strong></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+由于平时迭代器与向量用的并不是很多，因此今天上午遇到了一个非常怪异的问题，浪费了我整整4个小时！心疼呀！！<span style="text-indent:2em">下面是详细经过，不想看经过的可略过直接看我的总结。</span><span style="text-indent:2em">&nbsp;我的项目需要处理非常复杂的数据结构，而且有很多结构都是自增长的，因此如果要想妥善的管理并处理这些数据就要有十几个不同的动态数组支持才行，为了使代码更加简洁，因此打算使用向量来代替动态数据。</span><span style="text-indent:2em">&nbsp;
+ 没想到就是这个看&#20284;合理的选择却给我带来了烦恼，在我调试到代码最复杂的地方，正当我的大脑频率与大脑缓存都异常吃紧时，突然弹出了一个让我摸不到头脑的错误，大脑直接宕机……</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+<span style="text-indent:2em">&nbsp; &nbsp; &nbsp; &nbsp;这个错误是“vector iterators incompatible”，提示我向量与迭代器不兼容，但是这很明显是不可能的，我当时的代码大致如下：</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+--------------------------------------------------------------------------------</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;<span style="text-indent:2em">....</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+....</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+typdef struct _STRUCT</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+{</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp; ....</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp; ....</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp; vector&lt;INFO&gt; vecInfo;</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+}STRUCT;</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+STRUCT stcStruct;</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+....</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+....</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+for (vector&lt;INFO&gt;::iterator i= stcStruct.vecInfo.begin();</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp;&nbsp; i != stcStruct.vecInfo.end();</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp;&nbsp; i&#43;&#43;) // 这里报错</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+{</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp; .... www.2cto.com</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp; ....</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+}</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;<span style="text-indent:2em">--------------------------------------------------------------------------------</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;<span style="text-indent:2em">&nbsp; &nbsp; &nbsp; &nbsp;由代码可知，我并没有使用任何其他类型的向量，仅有INFO这一个类型，怎会出现这个错误呢，百思不得其解，跟进库代码暂时也没有什么收获。</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 没有办法，想Google大叔求助吧，网上给出了以下几种会引起此错误的情况，虽然对我没用，但还是整理出来，方便各位查阅：</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+1、类型不匹配，例如用int型的向量迭代器与char型的向量迭代器进行比对操作。</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+2、比对时向量结构发生变化，比如以下代码：</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;<span style="text-indent:2em">--------------------------------------------------------------------------------</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+<span style="text-indent:2em">for (vector&lt;int&gt;::iterator i= vector.begin();</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp;&nbsp; i != vector.end();</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp;&nbsp; i&#43;&#43;) // 这里报错</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+{</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp; vector.erase(i);</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp; ....</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+}</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;<span style="text-indent:2em">--------------------------------------------------------------------------------</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;<span style="text-indent:2em">&nbsp; &nbsp; &nbsp; &nbsp;在erase操作后，没有将循环变量i指向修改后的向量迭代器，就继续循环，再与end()比较时断言出现。</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 解决方法是将“vector.erase(i);”替换为“i = vector.erase(i);”，这是因为STL里的所有容器类中的erase实现都会返回一个迭代器，这个迭代器指向了“当前删除元素的后继元素，或是end()”。</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 除了以上两条，在也没有其他解释了，无奈之后再次尝试跟进库代码，在向量类的不等号重载中跟到了以下代码中，而后发现玄机……</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+--------------------------------------------------------------------------------</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+void _Compat(const _Myiter&amp; _Right) const</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+{&nbsp;&nbsp; // test for compatible iterator pair</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp; if (this-&gt;_Getcont() == 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 判断_Myproxy是否为0，为0则报错，否则获取所属容器</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp; || this-&gt;_Getcont() != _Right._Getcont())&nbsp;&nbsp; // 判断两个向量的型类是否一致</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp; // report error</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _DEBUG_ERROR(&quot;vector iterators incompatible&quot;);</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _SCL_SECURE_INVALID_ARGUMENT;</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp; }</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+}</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;<span style="text-indent:2em">--------------------------------------------------------------------------------</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;<span style="text-indent:2em">&nbsp; &nbsp; &nbsp; &nbsp;我们在跟进_Getcont()，_Getcont()代码如下：</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;<span style="text-indent:2em">--------------------------------------------------------------------------------</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+<span style="text-indent:2em">const _Container_base12 *_Getcont() const</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+{&nbsp;&nbsp; // get owning container</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp; return (_Myproxy == 0 ? 0 : _Myproxy-&gt;_Mycont);</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+}</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+<span style="text-indent:2em">--------------------------------------------------------------------------------</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+<span style="text-indent:2em">&nbsp; &nbsp; &nbsp; &nbsp;在这里我发现我那段代码中的_Myproxy是为0的，也就是说我们的类型应该不存在问题，而是向量的“链条”断掉了。</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 从库的跟踪中我发现向量是使用名称为“_Myproxy”、“_Mynextiter”这两个指针来寻找与之相邻的&#20540;的，在我们定义一个向量时，它便初始化一个“_Myproxy”，而我的代码却在类的构造函数中对定义的结构体执行了一个清零的操作：</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+ZeroMemory(&amp;m_stcStruct, sizeof(STRUCT));</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;<span style="text-indent:2em">&nbsp; &nbsp; &nbsp; &nbsp;从而导致了向量中的“_Myproxy”丢失，虽然仍可以对其进行push_back()等其他几乎一切操作，但是这个向量缺唯独不能执行遍历者一种操作，多么隐晦的一个错误呀……</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;<span style="text-indent:2em">&nbsp; &nbsp; &nbsp; &nbsp;总结，写代码时不忘初始化自己构造出来的玩意是个好习惯，但也要注意不要滥竽充数，懂得东西随便怎么操作都可以，如果是不懂的东西，还是先了解一下为好。</span></p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 要时刻对你&#30524;前的电脑保持一颗敬畏的心……</p>
+<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14px; line-height:28px">
+摘自：A1Pass的风清月朗居</p>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_detail.css" />
+
+    
+<!--172.16.140.15-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+<script type="text/javascript">
+    var fromjs = $("#fromjs");
+    if (fromjs.length > 0) {
+            $("#fromjs .markdown_views pre").addClass("prettyprint");
+            prettyPrint();
+
+            $('pre.prettyprint code').each(function () {
+                var lines = $(this).text().split('\n').length;
+                var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                $(this).addClass('has-numbering').parent().append($numbering);
+                for (i = 1; i <= lines; i++) {
+                    $numbering.append($('<li/>').text(i));
+                };
+                $numbering.fadeIn(1700);
+            });
+
+            $('.pre-numbering li').css("color", "#999");
+        }
+
+    
+
+</script>
+
+ 
+
+
+        <div id="digg" ArticleId="17610899" >
+            <dl id="btnDigg" class="digg digg_disable"  onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>4</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable"  onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/yxnyxnyxnyxnyxn/article/details/17578107';">上一篇</span><a href="/yxnyxnyxnyxnyxn/article/details/17578107" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">xutility 中的max（）使用 需要包含头文件 &lt;windows.h&gt;</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/yxnyxnyxnyxnyxn/article/details/17683735';">下一篇</span><a href="/yxnyxnyxnyxnyxn/article/details/17683735" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">hpp 和 h 区别</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+        <div class="similar_article"  style="display:none">
+                <h4>我的同类文章</h4>
+                <div class="similar_c"style="margin:20px 0px 0px 0px">
+                    <div class="similar_c_t">
+                    </div>
+                   
+                    <div class="similar_wrap tracking-ad" data-mod="popu_141"  style="max-height:195px;">
+                        <a href="http://blog.csdn.net" style="display:none">http://blog.csdn.net</a>
+                        <ul class="similar_list fl">                          
+                        </ul>
+
+                        <ul class="similar_list fr">                           
+                        </ul>
+                    </div>
+                </div>
+            </div>    
+    <script  type="text/javascript">
+        $(function () {
+            GetCategoryArticles('0', 'yxnyxnyxnyxnyxn','foot','17610899');
+        });
+    </script>
+      
+</div>
+
+    <div>
+            <ins data-revive-zoneid="205" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+     </div>
+
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/yxnyxnyxnyxnyxn/svc/GetSuggestContent/17610899",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ <link rel="stylesheet" href="http://static.blog.csdn.net/css/replace.css"/>
+<div id="relate" data-mod="popu_218"  class="tracking-ad">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c">
+        </div>
+</div>
+ 
+
+<dl class="blog-ass-articl" id="res-relatived" > 
+    <div class="embody embody_b" id="libkeyparent"  style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="http://csdnimg.cn/jobreco/job_reco.js" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "17610899",
+                username: "",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+            
+            setEduLoc();
+
+            function setEduLoc() {               
+                var edus = $("#adCollege div dd a");
+                if (edus.length == 0) {
+                    setTimeout(function () {
+                        setEduLoc();
+                    }, 500);
+                }
+                else {
+                    var eduLoc = "?ref=blog&loc=0";
+                    $.each(edus, function (index,item) {
+                        var href = $(this).attr("href") + eduLoc;
+                        $(this).attr("href", href);
+                    });
+                }
+            }
+
+        </script> 
+    </div>  
+
+    
+     <div id="res"  data-mod="popu_36"  class="tracking-ad" style="width: 42%;float: left;margin-right: 30px;"></div>
+   
+</dl>
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = '迭代器报“vector iterators incompatible”错的几种可能' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>  
+
+
+    <div id="ad_cen">        
+<ins data-revive-zoneid="71" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>    </div>  
+
+    <!-- 广告位开始 -->
+    <ins data-revive-zoneid="72" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '17610899';
+    var commentscount = 6;
+    var islock = false
+</script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/comment.js"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="display:none"></div>
+  <script  language="javascript" type='text/javascript'>     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/yxnyxnyxnyxnyxn/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+</script>
+ <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/async_new.js"></script>      
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/yxnyxnyxnyxnyxn" target="_blank">
+    <img src="http://avatar.csdn.net/F/4/1/1_yxnyxnyxnyxnyxn.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/yxnyxnyxnyxnyxn" class="user_name" target="_blank">yxnyxnyxnyxnyxn</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=yxnyxnyxnyxnyxn','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>239424次</span></li>
+    <li>积分：<span>3029</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog5.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：3029 </div>
+        </span>  </li>
+    <li>排名：<span>第9782名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>50篇</span></li>
+    <li>转载：<span>126篇</span></li>
+    <li>译文：<span>1篇</span></li>
+    <li>评论：<span>37条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字" /></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog" />
+        <input type="hidden" name="q" id="inputQ" />
+        <input type="hidden" name="t" value="blog" />
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1362367" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">linux</a><span>(33)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1363369" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">tool</a><span>(12)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364170" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">编程</a><span>(13)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364591" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">名人博客</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364926" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">OpenCL</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364927" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">c</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364932" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">memcached</a><span>(23)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364936" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">hash</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364938" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">win7-wifi</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364939" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">c++</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364942" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">debug</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364943" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">gdb</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364945" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">automake</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364946" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">bitbucket</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364947" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">makefile</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364948" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">汇编</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364949" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">english</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364950" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">pktgen</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364951" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">mcblaster</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364952" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">亲和性</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364954" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">网络</a><span>(13)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364955" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">内核</a><span>(14)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364956" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">驱动</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1364959" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">workqueue</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1368598" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">内核模块</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1369516" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">timer</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1378402" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">epoll</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1385944" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">内核 list</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1393901" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">log</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1397459" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">git</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1400497" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">锁</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1402493" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">list</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1402751" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">todo</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1412001" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">struct</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1412913" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">学习笔记</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1413201" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">换行符</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1415147" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">R</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1415148" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">RTSP</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1416097" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">live555</a><span>(9)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1422931" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">流媒体</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1429326" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">多线程</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1429327" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">select</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1431495" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">wireshark</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1433132" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">回调函数</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1578397" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">cmake</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1681839" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">装系统</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1760451" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">HEVC</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1781863" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">codeXL</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1827707" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">STL</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1834973" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Andriod</a><span>(10)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1837887" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">图像视频处理</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1846761" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">ARM</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1846765" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">ARM&amp;NEON</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/1848777" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">平台移植</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/2121843" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">camera</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/2126483" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">色彩管理</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/2241731" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Andriod_</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/2241735" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Andriod_overlay</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/2651821" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">jni</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/2740581" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">driver</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/2854577" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">opencv</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/3213413" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">opengl</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/yxnyxnyxnyxnyxn/article/category/5644137" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">unity3d</a><span>(0)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/yxnyxnyxnyxnyxn/article/month/2016/03">2016年03月</a><span>(1)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2015/05">2015年05月</a><span>(1)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2015/01">2015年01月</a><span>(2)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2014/12">2014年12月</a><span>(4)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2014/11">2014年11月</a><span>(1)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2014/10">2014年10月</a><span>(1)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2014/06">2014年06月</a><span>(1)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2014/05">2014年05月</a><span>(3)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2014/03">2014年03月</a><span>(4)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2014/02">2014年02月</a><span>(2)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2014/01">2014年01月</a><span>(22)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2013/12">2013年12月</a><span>(6)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2013/11">2013年11月</a><span>(4)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2013/10">2013年10月</a><span>(1)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2013/09">2013年09月</a><span>(2)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2013/08">2013年08月</a><span>(3)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2013/07">2013年07月</a><span>(4)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2013/06">2013年06月</a><span>(3)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2013/05">2013年05月</a><span>(23)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2013/04">2013年04月</a><span>(10)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2013/03">2013年03月</a><span>(27)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2013/02">2013年02月</a><span>(6)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2012/10">2012年10月</a><span>(8)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2012/09">2012年09月</a><span>(14)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2012/08">2012年08月</a><span>(21)</span></li><li><a href="/yxnyxnyxnyxnyxn/article/month/2012/07">2012年07月</a><span>(3)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/18036459" title="NDK Android* 应用移植方法 APP_ABI := armeabi armeabi-v7a x86">NDK Android* 应用移植方法 APP_ABI := armeabi armeabi-v7a x86</a><span>(16747)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/10147461" title="cmake 编译 32/64位">cmake 编译 32/64位</a><span>(11333)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/18263977" title="ARM和NEON指令  very nice">ARM和NEON指令  very nice</a><span>(10022)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/17610899" title="迭代器报“vector iterators incompatible”错的几种可能">迭代器报“vector iterators incompatible”错的几种可能</a><span>(9259)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/18267955" title="ARM Cortex系列(A8/A9/A15/A7) NEON多媒体处理SIMD引擎优化">ARM Cortex系列(A8/A9/A15/A7) NEON多媒体处理SIMD引擎优化</a><span>(5121)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/8663860" title="beyond compare 使用时的tab与空格转换">beyond compare 使用时的tab与空格转换</a><span>(4764)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/7962604" title="Memcached一些特性和限制 。在一些严重的情形下（通常应该不会遇到），服务器将在发送这行错误后关闭连接。这是服务器主动关闭连接的唯一情况。">Memcached一些特性和限制 。在一些严重的情形下（通常应该不会遇到），服务器将在发送这行错误后关闭连接。这是服务器主动关闭连接的唯一情况。</a><span>(3987)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/8659295" title="skb_put(skb,len)和skb_push（skb,len）的区别">skb_put(skb,len)和skb_push（skb,len）的区别</a><span>(3983)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/7869900" title="Memcached源码分析之内存管理篇之item结构图及slab结构图">Memcached源码分析之内存管理篇之item结构图及slab结构图</a><span>(3904)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/7977924" title="上传代码至bitbucket 及遇到的问题汇总">上传代码至bitbucket 及遇到的问题汇总</a><span>(3482)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/17610899" title="迭代器报“vector iterators incompatible”错的几种可能">迭代器报“vector iterators incompatible”错的几种可能</a><span>(6)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/11774821" title="win7  同步 局域网 两台电脑 时间">win7  同步 局域网 两台电脑 时间</a><span>(3)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/18263977" title="ARM和NEON指令  very nice">ARM和NEON指令  very nice</a><span>(3)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/9793017" title="vs2010 将类图导入visio">vs2010 将类图导入visio</a><span>(2)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/8672040" title="socket通信的几个关键步骤">socket通信的几个关键步骤</a><span>(2)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/7869900" title="Memcached源码分析之内存管理篇之item结构图及slab结构图">Memcached源码分析之内存管理篇之item结构图及slab结构图</a><span>(2)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/8659390" title="linux协议栈skb操作函数">linux协议栈skb操作函数</a><span>(2)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/8968755" title="RTSP  SET PARAMETER">RTSP  SET PARAMETER</a><span>(2)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/8687521" title="内核程序，makefile分析（转自CSDN）">内核程序，makefile分析（转自CSDN）</a><span>(1)</span>
+</li>
+<li>
+<a href="/yxnyxnyxnyxnyxn/article/details/8671406" title="玩转c链表  链表模板list.h">玩转c链表  链表模板list.h</a><span>(1)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/cyq1162/article/details/64919386" target="_blank">* 一个想法照进现实-《IT连》创业项目：关于团队组建</a></li>
+<li><a href="http://blog.csdn.net/blogdevteam/article/details/66480095" target="_blank">* CSDN日报20170326——《谈谈程序员解决问题的能力》</a></li>
+<li><a href="http://blog.csdn.net/carson_ho/article/details/64904691" 
+target="_blank">* 最全面总结 Android WebView与 JS 的交互方式</a></li>
+<li><a href="http://blog.csdn.net/yueqian_scut/article/details/62229262"target="_blank">*  蓝牙DA14580开发：固件格式、二次引导和烧写</a></li>
+<li><a href="http://blog.csdn.net/carson_ho/article/details/64904635" 
+target="_blank">* 你不知道的 Android WebView 使用漏洞</a></li>
+
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="/yxnyxnyxnyxnyxn/article/details/17610899#comments">迭代器报“vector iterators incompatible”错的几种可能</a>
+    <p style="margin:0px;"><a href="/zggxyx2004" class="user_name">zggxyx2004</a>:
+谢谢，这个错误 我调了半天
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yxnyxnyxnyxnyxn/article/details/8658566#comments">linux驱动问题讲解--dev_queue_xmit</a>
+    <p style="margin:0px;"><a href="/u012385733" class="user_name">u012385733</a>:
+dev_queue_xmit 只是一个抽象队列的实现，与驱动的实现无关，skb在入queue之前是标...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yxnyxnyxnyxnyxn/article/details/8658566#comments">迭代器报“vector iterators incompatible”错的几种可能</a>
+    <p style="margin:0px;"><a href="/changquanhao" class="user_name">changquanhao</a>:
+谢谢，这个错误 我调了半天。
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yxnyxnyxnyxnyxn/article/details/18263977#comments">ARM和NEON指令  very nice</a>
+    <p style="margin:0px;"><a href="/d442130165" class="user_name">d442130165</a>:
+@yxnyxnyxnyxnyxn:NB
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yxnyxnyxnyxnyxn/article/details/18263977#comments">迭代器报“vector iterators incompatible”错的几种可能</a>
+    <p style="margin:0px;"><a href="/wlss1990" class="user_name">wlss1990</a>:
+跟着楼主体验了一把楼主的调试思路，多谢楼主的分享。
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yxnyxnyxnyxnyxn/article/details/8976477#comments">live555学习（二十一） --多线程</a>
+    <p style="margin:0px;"><a href="/hellodingchaosu" class="user_name">hellodingchaosu</a>:
+请问有没有线程改造的Demo？
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yxnyxnyxnyxnyxn/article/details/9793017#comments">vs2010 将类图导入visio</a>
+    <p style="margin:0px;"><a href="/u010121883" class="user_name">u010121883</a>:
+反向工程保存在哪里？
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yxnyxnyxnyxnyxn/article/details/9793017#comments">vs2010 将类图导入visio</a>
+    <p style="margin:0px;"><a href="/zhuzhuhuahu" class="user_name">zhuzhuhuahu</a>:
+反向工程在哪里，没有找到。能否再详细一点？。。
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yxnyxnyxnyxnyxn/article/details/9793017#comments">迭代器报“vector iterators incompatible”错的几种可能</a>
+    <p style="margin:0px;"><a href="/xschool2010" class="user_name">xschool2010</a>:
+感谢分享 thanks   遇到了同样的问题  现在采用分开初始化的方式 即memset时第三个参数...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yxnyxnyxnyxnyxn/article/details/16878763#comments">HEVC中名词的解释</a>
+    <p style="margin:0px;"><a href="/u012397362" class="user_name">u012397362</a>:
+希望留下原文链接
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                   <!-- 广告位开始 --> 
+                    <ins data-revive-zoneid="190" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+                    <!-- 广告位结束 -->
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/cnick/cnick.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/newblog.min.js"></script>
+
+
+<script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=1279304"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/JavaScript1.js"></script>
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>     <!--new top-->
+   
+    <link href="http://c.csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet" />
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/wmd.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/showdown.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/prettify.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/apps/ask_float_block.js'></script>
+   
+
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_code.css" />
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/saveToCode.js"></script>
+      <script type="text/javascript" src="//csdnimg.cn/rabbit/tracking-ad/main.js?75eacd8"></script>
+
+     <link rel="stylesheet" href="http://static.blog.csdn.net/css/fa.css" />
+
+    <div class="pop_CA_cover"  style="display:none"></div>
+    <div class="pop pop_CA"  style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon"  id="fapancle"  onclick="$('.pop_CA').hide();$('.pop_CA_cover').hide();"></span>
+          </div>
+          <iframe src="" id="fa" frameborder="0" width="100%" height="360"  scrolling="no" />
+    </div>
+</body>
+</html>   
+ 
