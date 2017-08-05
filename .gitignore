@@ -1,2 +1,5 @@
 /book/Programming in Lua 3rd/Debug/*
+/book/Programming in Lua 3rd/*/*.user
+/book/Programming in Lua 3rd/*.opensdf
+/book/Programming in Lua 3rd/*.suo
 /book/Programming in Lua 3rd/Programming in Lua 3rd.sdf
