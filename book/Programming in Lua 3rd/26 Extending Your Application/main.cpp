@@ -148,6 +148,7 @@ void call_va(lua_State* L, const char* function, const char* signal, ...)
 		{
 			if (!lua_isnumber(L, nres))
 				error(L, "wrong result type number need");
+
 			*va_arg(vl, double*) = lua_tonumber(L, nres);
 			break;
 		}
@@ -235,8 +236,8 @@ int main(int argc, const char* argv[])
 
 	//-------------------------------------------------------------------------
 	//test call_va
-	double res = 0.0;
-	call_va(L, "f", "ii>d", 2, 1, res);
+	double res = 7.0;
+	call_va(L, "f", "ii>d", 2, 1, &res);
 	lua_settop(L, 1);
 	std::cout << res << std::endl;
 
