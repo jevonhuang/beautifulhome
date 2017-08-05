@@ -1,7 +1,7 @@
 function string.split(str, delimiter)
     str = tostring(str)
     delimiter = tostring(delimiter)
-    if delimiter == '' then 
+    if str == '' or delimiter == '' then 
 		return {} 
 	end
 	
