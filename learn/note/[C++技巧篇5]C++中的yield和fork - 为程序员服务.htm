@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+    <meta content="telephone=no" name="format-detection">
+    <meta name="apple-mobile-web-app-capable">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="description" content="各位看官，您没有看错，C++是可以有yield和fork的，这个主题小麦很早以前就打算写，只是一直没有一个契机给我这个动力。前段日子，小麦帮朋友处理一个用单线程模拟多线程的活儿的时候，再次想到了这个事情，决定写一下，也算是自己的一个回顾。本文其实也可以叫做boost::asio::coroutine原理解析。。。
+当然，C++本身是没有yield这个关键字的，这个关键字的意义可以参考C#对其的定义"/>
+    <meta name="keywords" content="{麦片学堂},C++ [C++技巧篇5]C++中的yield和fork"/>
+    <title>[C++技巧篇5]C++中的yield和fork - 为程序员服务</title>
+    <link href="http://outofmemory.cn/v5/s/5/17.1.css" type="text/css" rel="stylesheet"/>
+    
+    <link rel="shortcut icon" href="http://outofmemory.cn/favicon.ico" type="image/x-icon" >
+    
+</head>
+<body>
+
+<header class="head">
+<div class="head-left">
+    <div class="logo"><a href="http://outofmemory.cn/">OutOfMemory.CN</a></div>
+    <div class="beta"><sup>β</sup></div>
+    <div class="nav">
+        <ul id="headNav">
+            <li  class="current"><a href="http://ju.outofmemory.cn/" title="聚客：编程技术网站牛人牛博聚集地">聚客</a></li>
+            <li ><a href="http://outofmemory.cn/code-snippet/" title="代码：分享代码 分享经验">代码</a></li>
+            <li ><a href="http://j.outofmemory.cn/" title="技术专栏，精华">专栏</a></li>
+            <li><a href="http://outofmemory.cn/tutorial/" title="简单易学的技术教程">教程</a></li>
+            <li style="width:65px"><a href="http://maven.outofmemory.cn/" title="Maven信息库速查">Maven</a></li>
+            <li ><a  href="http://outofmemory.cn/github/" title="Github上的中国开源人">Gitter</a></li>
+            <li ><a href="http://outofmemory.cn/tag/" title="标签">标签</a></li>
+        </ul>
+    </div>
+</div>
+<div class="head-right">
+<div class="userStatus">
+    <a class="signin" target="_self" href="http://outofmemory.cn/user/login"><i></i><b>登录</b></a><a class="signup" target="_self" href="http://outofmemory.cn/user/register"><i></i><b>注册</b></a>
+</div>
+</div>
+</header>
+
+
+<div class="wrap">
+<div class="content"><h1>[C++技巧篇5]C++中的yield和fork</h1>
+<div class="meta">
+    <a href="http://ju.outofmemory.cn/feed/91/" title="麦片说"><i class="ico man"></i>麦片说</a>
+    <time><i class="ico date"></i>2013-12-08</time>
+    <span class="pv"><b>4742</b> 阅读</span>
+</div>
+<div class="tags">
+<a class="tag" href="http://ju.outofmemory.cn/tag/C%2B%2B/">C++</a>
+
+</div>
+
+<script>
+    function imgError(img){
+        if (typeof img.hasReplaceSrc != 'undefined'){
+            var refer = $('div.author a:last').attr('href');
+            img.src = '/imgr?src=' + encodeURIComponent(img.src) + '&r=' + encodeURIComponent(refer);
+        } else {
+            var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/;
+            for (var i=0;i<img.attributes.length;i++){
+                var attrName = img.attributes[i].nodeName;
+                var attrVal = img.attributes[i].nodeValue;
+                if(attrName.toLowerCase() != 'src' && urlPattern.test(attrVal)){
+                    img.src = attrVal;
+                    img.hasReplaceSrc=true;
+                    break;
+                }
+            }
+        }
+        return true;
+    }
+</script>
+<p>各位看官，您没有看错，C++是可以有yield和fork的，这个主题小麦很早以前就打算写，只是一直没有一个契机给我这个动力。前段日子，小麦帮朋友处理一个用单线程模拟多线程的活儿的时候，再次想到了这个事情，决定写一下，也算是自己的一个回顾。本文其实也可以叫做boost::asio::coroutine原理解析。。。</p>
+<p>当然，C++本身是没有yield这个关键字的，这个关键字的意义可以参考C#对其的定义，就是跳出当前的执行过程，下次调用这个过程的时候，直接从yield处开始执行。例如</p>
+<pre><code>int foo()
+{
+    yield return 1;
+    yield return 2;
+    yield return 3;
+}</code></pre>
+<p>连续调用<code>foo</code>函数3次，分别得到了1，2，3这三个数，这就是yield的基本语义，而fork的意思是保存当前上下文，跳转到目标函数，在目标函数执行完成之后，回到当前位置，例如</p>
+<pre><code>std::cout&lt;&lt;&quot;line 1&quot;&lt;&lt;std::endl;
+fork foo()</code></pre>
+<p>从上面的例子可以看出，yield和fork的作用就相当于用单线程模拟了多线程的语义。这个语义正是常说的coroutine，即协程。通常来说，协程的实现是保存当前上下文，然后在线程内不断切换上下文，这种情况也叫做stackfull coroutine.本文要描述的是不保存上下文的情况，即stackless coroutine。</p>
+<h4>怎么用</h4>
+<p>如果各位看过C#中关于 yield的实现的话，可能会有一些印象，C#把yield语句翻译成了一个状态机，利用状态机记录每次进入函数时应该从何处开始执行。然而在C++中，失去了编译器的支持，想实现这个语义还是颇为困难的。下面的实现是boost asio的作者给出的实现，其逆天程度之高，以致于这个实现最开始并没有出现在boost asio的官方文档中，而是在boost asio的example中静静的躺着，直到最近的boost 1.54，这个技术才正式成为boost asio的一部分，</p>
+<p>简而言之，这个实现是用宏实现的，请各位忘记C++的程序跳转，记住C#的yield，我们来看个例子</p>
+<pre><code>#include &lt;boost/asio/yield.hpp&gt;
+#include &lt;boost/asio/coroutine.hpp&gt;
+#include &lt;iostream&gt;
+
+boost::asio::coroutine c;
+
+void foo(int i)
+{
+    reenter(c)
+    {
+        yield std::cout&lt;&lt;&quot;foo1 &quot;&lt;&lt;i&lt;&lt;std::endl;
+        fork foo(100);
+        yield std::cout&lt;&lt;&quot;foo2 &quot;&lt;&lt; i+1&lt;&lt;std::endl;
+    }
+}
+int main()
+{
+    foo(1);
+    foo(2);
+    foo(3);
+    return 0;
+}</code></pre>
+<p>这个程序的输出是。。。</p>
+<pre><code>foo1 1
+foo2 101
+foo2 3</code></pre>
+<p>这个咋看之下有点难以理解，我们先忽略具体的细节，解释一下这是怎么回事。</p>
+<p>首先，我们需要声明一个<code>corountine</code>，然后将需要重复进入的代码用<code>reenter</code>包括起来。第一次调用<code>foo</code>的时候，代码执行到第一个<code>yield</code>，此时，<code>foo</code>直接返回。</p>
+<p>第二次调用的时候，程序直接执行上一次<code>yield</code>之后的代码，即<code>fork</code>，此时，程序调用foo，需要注意的是，被调用的<code>fork</code>不再执行第一个<code>yield</code>，而是直接从当前语句开始执行，于是得到输出<code>foo2 101</code>，返回之后，程序调用<code>fork</code>之后的yield，得到输出<code>foo2 3</code>。</p>
+<p>第三次调用的时候，由于不再有任何未执行的<code>yield</code>，因此不再产生任何输出。</p>
+<p>很自然的，我们会想像C#中的yield一样使用，类似这样</p>
+<pre><code>int nums()
+{
+    reenter(c)
+    {
+        for(int i = 0; i &lt; 10; i++)
+        {
+            yield return i;
+        }
+    }
+}</code></pre>
+<p>很遗憾，这是不行的，这会有一个编译错误，<code>Switch case is in protected scope</code>，这显然让人觉得不可思议，联想到我们写的程序本身就不太像正常的C++代码，我们有必要详细了解一下到底发生了什么。</p>
+<h4>内部实现</h4>
+<p>首先，我们先从能看见的类开始，<code>coroutine</code>。</p>
+<pre><code>class coroutine
+
+{
+
+public:
+
+    /// Constructs a coroutine in its initial state.
+
+    coroutine() : value_(0) {}
+
+
+
+    /// Returns true if the coroutine is the child of a fork.
+
+    bool is_child() const { return value_ &lt; 0; }
+
+
+
+    /// Returns true if the coroutine is the parent of a fork.
+
+    bool is_parent() const { return !is_child(); }
+
+
+
+    /// Returns true if the coroutine has reached its terminal state.
+
+    bool is_complete() const { return value_ == -1; }
+
+
+
+private:
+
+    friend class detail::coroutine_ref;
+
+    int value_;
+
+};
+
+
+
+
+
+namespace detail {
+
+
+
+class coroutine_ref
+
+{
+
+public:
+
+    coroutine_ref(coroutine&amp; c) : value_(c.value_), modified_(false) {}
+
+    coroutine_ref(coroutine* c) : value_(c-&gt;value_), modified_(false) {}
+
+    ~coroutine_ref() { if (!modified_) value_ = -1; }
+
+    operator int() const { return value_; }
+
+    int&amp; operator=(int v) { modified_ = true; return value_ = v; }
+
+private:
+
+    void operator=(const coroutine_ref&amp;);
+
+    int&amp; value_;
+
+    bool modified_;
+
+};
+
+} // namespace detail</code></pre>
+<p>上面这两个类，都很简单，从类名就可以看出来这是啥意思，略过不提。重要的是如何用宏实现reenter、yield、fork。</p>
+<p>reenter的定义是一个宏，名字有重定义，如下</p>
+<pre><code>#define BOOST_ASIO_CORO_REENTER(c) \
+
+    switch (::boost::asio::detail::coroutine_ref _coro_value = c) \
+
+    case -1: if (_coro_value) \
+
+    { \
+
+        goto terminate_coroutine; \
+
+    terminate_coroutine: \
+
+        _coro_value = -1; \
+
+        goto bail_out_of_coroutine; \
+
+    bail_out_of_coroutine: \
+
+        break; \
+
+    } \
+
+    else case 0:</code></pre>
+<p>回想一下，reenter的用法是</p>
+<pre><code>reenter(coroutine){ your_code...;}</code></pre>
+<p>因此<code>your_code</code>实际被放在<code>case 0:</code>中，回想一下<code>_coro_value</code>最初的初始化值是0，因此，第一次确实执行了<code>your_code</code>。</p>
+<p>yield的定义同样是个宏，定义如下</p>
+<pre><code>#define BOOST_ASIO_CORO_YIELD_IMPL(n) \
+
+    for (_coro_value = (n);;) \
+
+        if (_coro_value == 0) \
+
+        { \
+
+            case (n): ; \
+
+            break; \
+
+        } \
+
+        else \
+
+            switch (_coro_value ? 0 : 1) \
+
+                for (;;) \
+
+                    case -1: if (_coro_value) \
+
+                        goto terminate_coroutine; \
+
+                        else for (;;) \
+
+                            case 1: if (_coro_value) \
+
+                            goto bail_out_of_coroutine; \
+
+                                else case 0:</code></pre>
+<p>其中n的定义为__COUNTER___。</p>
+<p>看到这个宏，估计看官和我最初反应差不多，深切的怀疑这个代码的合法性，因为有这样一种混乱的用法</p>
+<pre><code>switch(n)
+{
+    for(...)
+        case 1: if(...) 
+}</code></pre>
+<p>这个事实上就是将case 1看作普通的类似goto使用的代码标签，也就是说可以通过switch到达，也可以通过for到达！</p>
+<p>这里用户的代码仍然在<code>case 0</code>中出现，当执行这段代码是，<code>_coro_value</code>的值首先被设置成一个程序标识用的整数<code>n</code>， 在最内层的<code>swithc-case</code>中，<code>_coro_value</code>的值为n，因此，程序跳转到<code>case 0</code>，首先执行用户的代码，用户代码执行完后，返回执行<code>for</code>循环，此时执行对应的if语句，即<code>goto bail_out_of_coroutine</code>，这个定义在之前的reenter的宏中，此时将直接break，返回整个reenter的最外层。</p>
+<p>再次调用函数时，由于<code>_coro_value</code>的值仍然为n，则直接调用<code>case 0</code>，直接执行后续的语句。</p>
+<p>fork的实现如下，这个小麦就不再具体解释，各位看官请自行理解，比较简单。</p>
+<pre><code>#define BOOST_ASIO_CORO_FORK_IMPL(n) \
+
+    for (_coro_value = -(n);; _coro_value = (n)) \
+
+        if (_coro_value == (n)) \
+
+        { \
+
+            case -(n): ; \
+
+            break; \
+
+        } \
+
+        else</code></pre>
+<p>至此，我们就理解了前面的程序为什么会出现一个编译错误，因为大量的使用了<code>switch-case</code>，因此程序的层次很重要，不能在reenter中随意修改 yield和fork的层次，否则会导致switch－case不匹配，从而出现编译错误！！</p>
+<h4>总结</h4>
+<p>上述的用法并不是唯一的用法，各位还可以继承<code>boost::asio::coroutine</code>，而不是定义变量，更多用法可以参考boost::asio的example。当然也可以和小麦探讨哦～</p>
+<div class="like">
+    <a href="javascript:void(0)" class="assertLogin" rel="nofollow" target="_self">点赞</a>
+</div>
+<div class="tags">
+<a class="tag" href="http://ju.outofmemory.cn/tag/C%2B%2B/">C++</a>
+
+</div>
+
+<div class="author">
+    <span class="name">作者：<a href="http://ju.outofmemory.cn/feed/91/" title="麦片说">麦片说</a></span>
+    <div class="small">
+        更有营养的IT评论
+    </div>
+    <div class="small">原文地址：<a rel="nofollow external" target="_blank" href="http://maipianshuo.com/?p=329">[C++技巧篇5]C++中的yield和fork</a>, 感谢原作者分享。</div>
+</div>
+
+<div class="pn">
+    <span class="next"><mark>→</mark><a href="/entry/59726">［C++技巧篇6］C++中的友元(friend)</a></span>
+    <span class="pre"><mark>←</mark><a href="/entry/56050">[C++技巧篇4]C++应该如何优雅的处理分支判断</a></span>
+</div>
+<div class="tgBD">
+<script type="text/javascript">
+
+var cpro_id = "u2080713"
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/cm.js" type="text/javascript"></script>
+</div>
+
+<div class="comments">
+<a name="comments"></a>
+</div>
+
+
+<div class="newComment"><a name="newComment"></a>
+<h3>发表评论</h3>
+<form action="/entry/comment/add" method="POST">
+    <input type="hidden" name="targetId" value="57710"/>
+    <input type="hidden" name="title" value="回复:[C++技巧篇5]C++中的yield和fork"/>
+    <input type="hidden" name="replyId"/>
+    <textarea name="content" cols="100" rows="6" class="mdInput" style="width:98%"></textarea>
+    <p>
+        <button type="button" id="btnComment">发表评论</button><span id="commentTip"></span>
+    </p>
+</form>
+</div>
+
+
+
+
+</div>
+<div class="sidebar">
+    <div class="similar entry">
+    <span class="title">您可能感兴趣的博客</span>
+    <div><ul class="similarEntries">
+    <li><span class="meta"><a href="http://ju.outofmemory.cn/feed/906/" title="Adam Welch (MSFT)">Adam Welch (MSFT)</a> 发表 <span class="time">2017-04-18 01:06:22</span></span>
+<a href="http://ju.outofmemory.cn/entry/310892" class="codeTitle">Windows desktop development with C++ in Visual Stu</a>
+</li>
+    <li><span class="meta"><a href="http://ju.outofmemory.cn/feed/906/" title="Adam Welch (MSFT)">Adam Welch (MSFT)</a> 发表 <span class="time">2017-04-18 01:06:39</span></span>
+<a href="http://ju.outofmemory.cn/entry/310891" class="codeTitle">Universal Windows Platform Development with C++</a>
+</li>
+    <li><span class="meta"><a href="http://ju.outofmemory.cn/feed/906/" title="Marc Goodner - MSFT">Marc Goodner - MSFT</a> 发表 <span class="time">2017-04-12 00:38:21</span></span>
+<a href="http://ju.outofmemory.cn/entry/309991" class="codeTitle">Linux development with C++ in Visual Studio</a>
+</li>
+    <li><span class="meta"><a href="http://ju.outofmemory.cn/feed/906/" title="RongLu">RongLu</a> 发表 <span class="time">2017-04-12 03:03:29</span></span>
+<a href="http://ju.outofmemory.cn/entry/309990" class="codeTitle">DirectX game development with C++ in Visual Studio</a>
+</li>
+    <li><span class="meta"><a href="http://ju.outofmemory.cn/feed/2933/" title="博主">博主</a> 发表 <span class="time">2017-03-30 06:56:03</span></span>
+<a href="http://ju.outofmemory.cn/entry/309845" class="codeTitle">标准库函数mktime与夏令时</a>
+</li>
+    <li><span class="meta"><a href="http://ju.outofmemory.cn/feed/906/" title="Eric Battalio [MSFT]">Eric Battalio [MSFT]</a> 发表 <span class="time">2017-04-10 19:10:00</span></span>
+<a href="http://ju.outofmemory.cn/entry/309678" class="codeTitle">Visual Studio for Teams of C++ Developers</a>
+</li>
+    <li><span class="meta"><a href="http://ju.outofmemory.cn/feed/906/" title="Adam Welch (MSFT)">Adam Welch (MSFT)</a> 发表 <span class="time">2017-04-11 05:50:46</span></span>
+<a href="http://ju.outofmemory.cn/entry/309676" class="codeTitle">C++ Debugging and Diagnostics</a>
+</li>
+    <li><span class="meta"><a href="http://ju.outofmemory.cn/feed/1557/" title="博主">博主</a> 发表 <span class="time">2017-04-09 16:24:16</span></span>
+<a href="http://ju.outofmemory.cn/entry/309288" class="codeTitle">C++ 的几个基本原理和技术</a>
+</li>
+    <li><span class="meta"><a href="http://ju.outofmemory.cn/feed/4075/" title="zhu329599788@126">zhu329599788@126</a> 发表 <span class="time">2017-04-02 11:35:06</span></span>
+<a href="http://ju.outofmemory.cn/entry/308349" class="codeTitle">CC++标准开放草案</a>
+</li>
+    <li><span class="meta"><a href="http://ju.outofmemory.cn/feed/4075/" title="zhu329599788@126">zhu329599788@126</a> 发表 <span class="time">2017-03-30 06:14:55</span></span>
+<a href="http://ju.outofmemory.cn/entry/307776" class="codeTitle">C++中的基本数据类型</a>
+</li>
+    <li><span class="meta"><a href="http://ju.outofmemory.cn/feed/903/" title="Herb Sutter">Herb Sutter</a> 发表 <span class="time">2017-03-25 00:03:44</span></span>
+<a href="http://ju.outofmemory.cn/entry/307045" class="codeTitle">Trip report: Winter ISO C++ standards meeting (Kon</a>
+</li>
+    <li><span class="meta"><a href="http://ju.outofmemory.cn/feed/3795/" title="yalewoo">yalewoo</a> 发表 <span class="time">2017-03-24 09:36:26</span></span>
+<a href="http://ju.outofmemory.cn/entry/306909" class="codeTitle">Sublime Text 3 使用 SublimeGDB 图形化调试c/c++程序</a>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+    <div class="tgSide"><script type="text/javascript">var jd_union_unid="1000081043",jd_ad_ids="512:6",jd_union_pid="CKvGvfKzKxCTjfDcAxoAIMH+guICKgA=";var jd_width=336;var jd_height=280;var jd_union_euid="";var p="BBcEUB5aEwUbNwpfBkgyTUMIRmtKRk9aZV8ETVxNNwpfBkgyeWcXBSJifWVlDFMYfkNLDwxmRRwAYgtZK10WABoBVhlcFzISBlQaWhwCEwJXK2tKRk9aZVA1FDJNQwhGaxUHGgdXE1MUBxIOVxxrFDIiNw%3D%3D";</script><script type="text/javascript" charset="utf-8" src="//u.x.jd.com/static/js/auto.js"></script></div>
+    <div class="similar code">
+    <span class="title">您可能感兴趣的代码</span>
+    <div><ul class="similarCodes">
+    <li><span class="time">2015-09-09 16:29:06</span><a href="http://outofmemory.cn/code-snippet/38177/jiang-jpg-switch-bmp-format-file">将jpg转换为bmp格式的文件</a> by <a href="//outofmemory.cn/user/149">qqmmcc</a>
+</li>
+    <li><span class="time">2015-09-09 09:29:49</span><a href="http://outofmemory.cn/code-snippet/38168/kezhixingwenjian-jiami">可执行文件加密</a> by <a href="//outofmemory.cn/user/173">walker30</a>
+</li>
+    <li><span class="time">2015-09-08 18:42:46</span><a href="http://outofmemory.cn/code-snippet/38164/TCP-port-involve-search">TCP端口占用查询</a> by <a href="//outofmemory.cn/user/41">灵剑子</a>
+</li>
+    <li><span class="time">2015-09-08 14:16:34</span><a href="http://outofmemory.cn/code-snippet/38162/Luffar-schack-wuziqi">Luffar schack五子棋</a> by <a href="//outofmemory.cn/user/113">蟋蟀哥</a>
+</li>
+    <li><span class="time">2015-09-08 10:39:34</span><a href="http://outofmemory.cn/code-snippet/38154/wav-turn-mp3-program">wav转mp3的程序</a> by <a href="//outofmemory.cn/user/41">灵剑子</a>
+</li>
+    <li><span class="time">2015-09-05 16:54:59</span><a href="http://outofmemory.cn/code-snippet/38114/zhuxing-search-directory-de-file-content-output-come-Excel">逐行搜索目录中的文件内容并输出到Excel</a> by <a href="//outofmemory.cn/user/113">蟋蟀哥</a>
+</li>
+    <li><span class="time">2015-09-03 20:10:15</span><a href="http://outofmemory.cn/code-snippet/38085/LZW-AES-Base64-coding-jiema-jiantieban-text">LZW+AES+Base64编码解码剪贴板文本</a> by <a href="//outofmemory.cn/user/137">童学芬</a>
+</li>
+    <li><span class="time">2015-09-01 17:47:21</span><a href="http://outofmemory.cn/code-snippet/38056/mao-liao">猫里奥</a> by <a href="//outofmemory.cn/user/29">aiheng1988</a>
+</li>
+    <li><span class="time">2015-08-31 15:33:59</span><a href="http://outofmemory.cn/code-snippet/38033/moni-keyboard-operation-send-string">模拟键盘操作发送字符串</a> by <a href="//outofmemory.cn/user/65">千万不要郁闷</a>
+</li>
+    <li><span class="time">2015-08-30 10:18:26</span><a href="http://outofmemory.cn/code-snippet/38002/CRC32-nixiang-algorithm">CRC32 逆向算法</a> by <a href="//outofmemory.cn/user/89">niutao.linux</a>
+</li>
+    <li><span class="time">2015-08-26 20:37:48</span><a href="http://outofmemory.cn/code-snippet/37945/dangqian-program-quit-hou-zhongqi">当前程序退出后重启</a> by <a href="//outofmemory.cn/user/89">niutao.linux</a>
+</li>
+    <li><span class="time">2015-08-25 14:46:00</span><a href="http://outofmemory.cn/code-snippet/37922/duihuakuang-type-yulan-and-type">对话框打印预览及打印</a> by <a href="//outofmemory.cn/user/113">蟋蟀哥</a>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+    
+    
+    
+    
+</div>
+
+
+</div>
+<script src="/static/js/jquery-1.11.3.min.js"></script>
+<script>var isMobile= $('.sidebar').css('clear') == 'both';</script>
+<script src="http://outofmemory.cn/user/loginUser_v5?t=juke&k=57710&oa=getEntryVoteStatus&oa=triggerCommentCaptcha&oa=displayPv&oa=dynamicTG&tg=jukeTopLine" charset="utf-8"></script>
+<script src="/static/prettify/prettify.js?1?1.9.0" type="text/javascript"></script>
+<script src="http://outofmemory.cn/v5/s/5.js?1.9.0"></script>
+<script>
+    var removeAD=false;
+    var voteTargetType='entry';var voteTargetId =57710;
+    var voting=false;
+    function onGetVoteStatus(status){
+        if(status.type != 0){
+            voting=true;
+            $('.like a').html('0赞');
+        }
+    }
+    $('.like a').click(function(){
+        if (!voting){
+            voting = true;
+            $.post("/"+voteTargetType+"/"+voteTargetId+"/vote", { type: '1'},
+            function (response, textStatus){
+                if(!response.success){
+                    alert(response.message);
+                } else {
+                    $('.like a').html((response.upCount||1) + '赞');
+                }
+            }, "json");
+        } else {
+            $('.like a').html('已赞');
+        }
+    });
+    $('pre,code').removeClass('prettyprint').addClass('prettyprint');
+    prettyPrint();
+    function displayPv(pv){
+        $('.pv b').html(pv + '');
+    }
+    function resizeImg(o,maxWidth) {
+        var img = $(o);
+        if(img.width() > maxWidth) {
+            var h = Math.round(maxWidth / img.width() * img.height());
+            img.width(maxWidth).height(h);
+        }
+    }
+    function resizeImgs(){
+        var maxWidth = $('div.author').width();
+        $('.content img').each(
+            function(i,o){resizeImg(o,maxWidth);}
+        );
+        var tg = $('.tgBD');
+        if(tg.width()>maxWidth){
+            tg.width(maxWidth+'px').css({'text-align':'center','overflow':'hidden',border:'1px solid transparent','border-radius':'2px','-moz-border-radius':'2px'});
+        }
+    }
+    $(resizeImgs);
+    $(window).resize(resizeImgs);
+    function showBooks(books) {
+        var h = '<div class="tgL books"><span>&nbsp;</span>好书：';
+        var maxCount = 5;
+        var lineCn = books.length>maxCount?maxCount:books.length;
+        function getProvidersHtml(b) {
+            var h='';
+            if (b.providers) {
+                h += '[';
+                var first = true;
+                for (var p in b.providers) {
+                    var pUrl = b.providers[p]['url'];
+                    
+                    if (first) {
+                        first = false;
+                    } else {
+                        h += ' &nbsp; ';
+                    }
+                    h += ('<a href="' + pUrl +'" target="_blank">' + p +  '</a>');
+                    
+                }
+                h += ']';
+            }
+            return h;
+        }
+
+        for (var i=0; i<lineCn;i++) {
+            if (i>0) h += '<span class="sep"> | </span>';
+            var book = books[i];
+            h += ('<a href="'+ book.url +'" target="_blank">' + book.title + '</a>');
+            h += getProvidersHtml(book);
+        }
+
+
+        h += '</div>';
+        $(h).insertBefore($('div.wrap'));
+
+        var rightHtml = '<div class="tgSide booksNail"><div class="cTitle">好书推荐</div>';
+        rightHtml += '<div><ul>';
+        var startIdx = books.length > 4 ? books.length-4 : 0;
+        for (var i=startIdx; i<books.length;i++) {
+            var book = books[i];
+            rightHtml += ('<li><div class="nail"><a href="' + book.url + '" target="_blank"><img src="//outofmemory.cn/static/book/' + book.image + '" /></a></div>');
+            rightHtml += ('<div class="title"><a class="bookName" href="'+book.url+'" target="_blank"><nobr>'+book.title+ '</nobr></a>');
+            var providerH = getProvidersHtml(book);
+            rightHtml += providerH;
+            rightHtml += '</div></li>';
+        }
+        rightHtml += '</ul></div>';
+        rightHtml += '</div>';
+
+        $(rightHtml).insertBefore($('div.sidebar div:first'))
+    }
+</script>
+<script src="http://outofmemory.cn/book/list?cb=showBooks&tags=%7B%E9%BA%A6%E7%89%87%E5%AD%A6%E5%A0%82%7D%2CC%2B%2B&page=1" type="text/javascript"></script>
+
+
+<footer class="foot">
+&copy; 2015 <a href="http://outofmemory.cn/">内存溢出</a>
+</footer>
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-36036446-1', 'outofmemory.cn');
+    ga('send', 'pageview');
+    ga('set',  '&uid', window.loginUser.id); // 使用已登录的 user_id 来设置用户 ID。
+</script>
+
+<div class="bdtj"><script type="text/javascript">
+
+
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?2051de3619785a7bff6213250ea9fbbd";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+<script>
+    function displayTG(k, h){
+        var display = typeof removeAD != 'undefined' && !removeAD;
+        if (!display) {
+            return;
+        }
+        if(k == 'jukeTopLine'){
+            $(h).insertBefore($('div.wrap'));
+        }
+    }
+    if(parseInt($('.content').css('marginRight')) > 50){
+        var contentHeight=$('.content').height();var sideHeight=$('.sidebar').height();
+        if(contentHeight<sideHeight) $('.content').css({'minHeight':sideHeight+'px'});
+    }
+</script>
+</body>
+</html>
