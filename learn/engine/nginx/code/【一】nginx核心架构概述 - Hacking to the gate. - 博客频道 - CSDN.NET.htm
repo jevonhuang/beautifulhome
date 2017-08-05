@@ -1,0 +1,1046 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+     
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>  
+
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <title>【一】nginx核心架构概述 - Hacking to the gate.
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="1.相同属性或变量等的代码高亮显示，如果没有则按一下步骤解决：&#160;&#160; myeclipse--&gt;windows--&gt;java--&gt;Editor--&gt;content Assist--&gt;Mark Occurrences 把所有的框全点上对号，保存。&#160;&#160;&#160; 或者是因为Toggle Mark Occurrences(Alt + Shift + 0) 这个按钮没有按下，在工具栏的小黄颜色的笔的形状的" />
+    <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+      <script type="text/javascript" src="http://static.blog.csdn.net/scripts/jquery-version.js"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
+        <!--new top-->
+               <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css">        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/tracking.js"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/dark1/css/style.css?v=1.1" />
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/hmemoryl/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+ 
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+</head>
+<body>
+
+
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/bipedal_bit">Hacking to the gate.</a></h2>
+            <h3>为了证明并非止步不前，为了安慰被神牛震慑的心。</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/bipedal_bit?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/bipedal_bit?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/bipedal_bit/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "hmemoryl";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/bipedal_bit";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+
+<a href="http://geek.csdn.net/news/detail/134790
+">
+<font color=blue>CSDN学院招募微信小程序讲师啦
+
+
+</font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://bss.csdn.net/m/topic/edu_develop
+">
+<font color=red>程序猿全指南，让【移动开发】更简单！ 
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/PK.html">
+<font color=blue>【观点】移动原生App开发 PK HTML 5开发
+</font></a>
+
+&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/baiyuzhong2012/article/details/54098338">
+<font color=red>博客的神秘功能
+</font></a>
+
+
+</div>                        </div>
+                        
+
+
+
+  
+<link href="http://static.blog.csdn.net/css/comment1.css" type="text/css" rel="stylesheet" />
+<link href="http://static.blog.csdn.net/css/style1.css" type="text/css" rel="stylesheet" />
+<script language='JavaScript' type='text/javascript' src='http://download.csdn.net/js/jquery.cookie.js'></script>
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/search-service/main.js"></script>
+<link rel="stylesheet" href="http://static.blog.csdn.net/public/res-min/markdown_views.css?v=1.0" />
+<link rel="stylesheet" href="http://static.blog.csdn.net/css/category.css?v=1.0" />
+<script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/web-storage-cache.min.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/replace.min.js"></script>
+
+
+
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=%e3%80%90%e4%b8%80%e3%80%91nginx%e6%a0%b8%e5%bf%83%e6%9e%b6%e6%9e%84%e6%a6%82%e8%bf%b0&u=http://blog.csdn.net/bipedal_bit/article/details/47018607"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/bipedal_bit/article/details/47018607">
+        【一】nginx核心架构概述            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href='http://www.csdn.net/tag/nginx' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">nginx</a><a href='http://www.csdn.net/tag/epoll' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">epoll</a><a href='http://www.csdn.net/tag/%e5%bc%82%e6%ad%a5%e9%9d%9e%e9%98%bb%e5%a1%9e%e4%ba%8b%e4%bb%b6%e6%9c%ba%e5%88%b6' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">异步非阻塞事件机制</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2015-07-23 11:01</span>
+            <span class="link_view" title="阅读次数">252人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(0)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('%e3%80%90%e4%b8%80%e3%80%91nginx%e6%a0%b8%e5%bf%83%e6%9e%b6%e6%9e%84%e6%a6%82%e8%bf%b0','47018607');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(47018607,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody"  style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script  type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label  onclick="GetCategoryArticles('5674569','hmemoryl','top','47018607');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">nginx<em>（4）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/hmemoryl/article/category/5674569"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_5674569">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+    <script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>  
+        <div   class="bog_copyright">         
+            <p  class="copyright_p" >版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+
+<p>&nbsp;&nbsp;&nbsp; 毕业前，毕设完成后，我闲极无聊接触了一下socket编程，用C&#43;&#43;的Qt框架写了玩具一样的TCP和UDP通信客户端。跟直系学长电话聊天时被建议深挖一下socket，尝试走走后端或者架构师路线。问该怎么深挖，答研究源码，要学习socket相关知识，研究服务器源码是最合适不过的了。至于选择哪个服务器，经过考量调查，发现比起比较沉重庞大的apache，nginx更加小巧，也非常优秀。于是在开始正式吃源码之前，我先开始了一番自我科普工作。<br>
+</p>
+<h3>1<span style="font-family:宋体">、进程模型</span></h3>
+<p>&nbsp;&nbsp;&nbsp; 首先，默认的，与其他服务器一样，<span style="font-family:Times New Roman">Unix</span><span style="font-family:宋体">下的</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">也以</span><span style="font-family:Times New Roman">daemon</span><span style="font-family:宋体">（守护进程）的形式持续在后台运行。虽然</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">也可以以调试为目的关掉后台模式，使用前台模式，甚至可以通过配置取消</span><span style="font-family:Times New Roman">master</span><span style="font-family:宋体">进程（后面会详细解释），使</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">以单进程的形式工作。但是这些与</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">引以为傲的架构关系不大，这里按下不表。尽管</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">也支持多线程方式，我们还是着重来了解下其默认的多进程方式。</span></p>
+<p>&nbsp;&nbsp;&nbsp; nginx<span style="font-family:宋体">在启动后会创建一个</span><span style="font-family:Times New Roman">master</span><span style="font-family:宋体">进程（主进程）和若干个</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程（从进程）。</span><span style="font-family:Times New Roman">master</span><span style="font-family:宋体">进程主要负责管理</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程，具体来说就是接收来自管理员的信号并转发给对应</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程；监控</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程的工作状态，在</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程异常终止时重新创建并启动</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程。而</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程负责处理基本的网络事件。</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程之间优先级对等、相互独立，公平竞争来自客户端的请求，每个请求只由一个</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程处理。</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">进程模型示意图如图</span><span style="font-family:Times New Roman">1</span><span style="font-family:宋体">所示。</span></p>
+<p align="center">&nbsp;<img src="http://img.blog.csdn.net/20150723104541689?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></p>
+<p>&nbsp;</p>
+<p align="center">图<span style="font-family:Times New Roman">1&nbsp;nginx</span><span style="font-family:宋体">进程模型示意图</span></p>
+<p>&nbsp;&nbsp;&nbsp; worker<span style="font-family:宋体">进程的数量可以进行设置，一般设置与</span><span style="font-family:Times New Roman">CPU</span><span style="font-family:宋体">核数一致，这一原则与</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">的事件处理模型有关。后面会继续介绍</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">的事件处理模型。</span></p>
+<h3>2、信号与请求</h3>
+<p>&nbsp;&nbsp;&nbsp; nginx<span style="font-family:宋体">与外界互动无非通过两种接口界面：来自管理员的信号和来自客户端的请求。下面我们举例说明</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">是如何处理信号与请求的。</span></p>
+<p>&nbsp;&nbsp;&nbsp; 管理员要控制<span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">需要与</span><span style="font-family:Times New Roman">master</span><span style="font-family:宋体">进程通信，向</span><span style="font-family:Times New Roman">master</span><span style="font-family:宋体">进程发送指令信号即可。比如，</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">在</span><span style="font-family:Times New Roman">0.8</span><span style="font-family:宋体">版本之前使用</span><span style="font-family:Times New Roman">kill&nbsp;-HUP
+ pid</span><span style="font-family:宋体">命令来重启</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">。使用这个命令重启</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">将实现从容地重启过程，期间服务不中断。</span><span style="font-family:Times New Roman">master</span><span style="font-family:宋体">进程在接到</span><span style="font-family:Times New Roman">HUP</span><span style="font-family:宋体">指令后首先会重新加载配置文件，然后启动新的</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程，向旧的</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程发送停止信号。这时新的</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程开始接收网络请求，旧的</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程停止接收新的请求，等到处理完当前请求后，旧的</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程就退出销毁了。在</span><span style="font-family:Times New Roman">0.8</span><span style="font-family:宋体">版本以后，</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">引入了一系列命令行参数以方便管理服务器，比如</span><span style="font-family:Times New Roman">./nginx&nbsp;-s&nbsp;reload</span><span style="font-family:宋体">和</span><span style="font-family:Times New Roman">./nginx&nbsp;-s&nbsp;stop</span><span style="font-family:宋体">，分别用来重启和停止</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">。执行操作命令时，我们实际上启动了一个新的</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">进程，这个进程在解析命令中的参数后，自行向</span><span style="font-family:Times New Roman">master</span><span style="font-family:宋体">进程发送相应的信号，达成与之前手动发送信号相同的效果。</span></p>
+<h3>3、请求与事件</h3>
+<p>&nbsp;&nbsp;&nbsp; 服务器最常处理的就是<span style="font-family:Times New Roman">80</span><span style="font-family:宋体">端口</span><span style="font-family:Times New Roman">http</span><span style="font-family:宋体">协议的请求了，</span> 以此为例说明一下<span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">处理请求的过程。首先，每一个</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程都是从</span><span style="font-family:Times New Roman">master</span><span style="font-family:宋体">进程</span><span style="font-family:Times New Roman">fork</span><span style="font-family:宋体">（分叉）而成的，</span><span style="font-family:Times New Roman">master</span><span style="font-family:宋体">进程中先建立好需要监听的</span><span style="font-family:Times New Roman">socket</span><span style="font-family:宋体">（套接字，即</span><span style="font-family:Times New Roman">IP</span><span style="font-family:宋体">地址</span><span style="font-family:Times New Roman">&#43;</span><span style="font-family:宋体">端口号）和相应的</span><span style="font-family:Times New Roman">listenfd</span><span style="font-family:宋体">（监听文件描述符或句柄）。我们知道</span><span style="font-family:Times New Roman">socket</span><span style="font-family:宋体">通信中每个进程都要分配一个端口号，</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程的</span><span style="font-family:Times New Roman">socket</span><span style="font-family:宋体">分配工作就由</span><span style="font-family:Times New Roman">master</span><span style="font-family:宋体">进程来完成。所有</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程的</span><span style="font-family:Times New Roman">listenfd</span><span style="font-family:宋体">在新的连接到来时变得可读，为保证只有一个</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程处理连接，各</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程在注册</span><span style="font-family:Times New Roman">listenfd</span><span style="font-family:宋体">读事件前先要抢</span><span style="font-family:Times New Roman">accept_mutex</span><span style="font-family:宋体">（接受连接互斥锁），一个</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程抢注连接成功后，开始读取请求、解析请求、处理请求并反馈数据给客户端。</span></p>
+<h3>4、进程模型分析</h3>
+<p>&nbsp;&nbsp;&nbsp; nginx<span style="font-family:宋体">使用但不仅仅使用多进程请求处理模型（</span><span style="font-family:Times New Roman">PPC</span><span style="font-family:宋体">），每个</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程一次只处理一个请求，使得请求间资源独立不需要上锁，进程间互不影响能并行处理请求。一个请求处理失败导致一个</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程异常退出，不会使服务中断，而是由</span><span style="font-family:Times New Roman">master</span><span style="font-family:宋体">进程立刻重新启动一个新的</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程，降低了服务器面临的整体风险，使服务更加稳定。但是相比多线程模型（</span><span style="font-family:Times New Roman">TPC</span><span style="font-family:宋体">），系统开销略大，效率略低，这需要借助别的手段来改进。</span></p>
+<h3>5、nginx<span style="font-family:宋体">的高并发机制</span><span style="font-family:Times New Roman">——</span><span style="font-family:宋体">异步非阻塞事件机制</span></h3>
+<p>&nbsp;&nbsp;&nbsp; IIS<span style="font-family:宋体">的事件处理机制是多线程，每个请求独占一个工作线程。由于多线程比较占用内存，线程间的上下文切换（反复的对寄存器组进行保护现场和恢复现场的操作）带来的</span><span style="font-family:Times New Roman">CPU</span><span style="font-family:宋体">开销也很大，多线程机制的服务器在面临数千并发量时，会给系统造成很大的压力，高并发性能并不算理想，当然如果硬件足够出色，能够提供足够的系统资源，系统压力也就不再是问题了。</span></p>
+<p>&nbsp;&nbsp;&nbsp; 我们深入到系统层面讨论一下多进程与多线程，阻塞式机制与非阻塞式机制的区别。</p>
+<p>&nbsp;&nbsp;&nbsp; 熟悉操作系统的同学应该了解，多线程的出现是为了在资源充足的情况下更充分的调度使用<span style="font-family:Times New Roman">CPU</span><span style="font-family:宋体">，尤其对提高多核</span><span style="font-family:Times New Roman">CPU</span><span style="font-family:宋体">的利用率十分有益。但是线程是系统任务的最小单位，而进程却是系统分配资源的最小单位，这就意味着多线程将面临一个很大的问题：当线程数增多，资源需求变大，这些线程的母进程可能无法立即一口气申请到足够所有线程使用的资源，而当系统手里没有足够的资源满足一个进程时，它会选择让整个进程都等着。这时即使系统资源足够一部分线程正常工作，母进程也无法申请到这些资源，导致所有线程一起等待。直白的说，使用多线程，进程内的线程间可以灵活的进行调度（虽然增加了线程死锁的风险和线程切换的开销），但是却无法保证母进程在逐渐庞大沉重时还能够在系统中得到合理的调度。由此可见，多线程确实可以提高</span><span style="font-family:Times New Roman">CPU</span><span style="font-family:宋体">利用率，但是并不是解决服务器高并发请求问题的理想解决方案，且不说在高并发状态下</span><span style="font-family:Times New Roman">CPU</span><span style="font-family:宋体">的高利用率也无法维持。以上是</span><span style="font-family:Times New Roman">IIS</span><span style="font-family:宋体">的多线程同步阻塞式事件机制。</span></p>
+<p>&nbsp;&nbsp;&nbsp; nginx<span style="font-family:宋体">的多进程机制保证了每个请求独立申请系统资源，一旦满足条件，每一个请求都可以立即被处理，即异步非阻塞处理。但是创建进程需要的资源开销会比线程多一些，为了节约进程数，</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">使用了一些进程调度算法，使</span><span style="font-family:Times New Roman">I/O</span><span style="font-family:宋体">事件处理不仅仅靠多进程机制，而是异步非阻塞的多进程机制。下面我们就来具体的引入</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">的异步非阻塞事件处理机制。</span></p>
+<h3>6、epoll</h3>
+<p>&nbsp;&nbsp;&nbsp; Linux<span style="font-family:宋体">下，言高并发的高性能网络必</span><span style="font-family:Times New Roman">epoll</span><span style="font-family:宋体">，</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">也正是使用了</span><span style="font-family:Times New Roman">epoll</span><span style="font-family:宋体">模型作为网络事件的处理机制。我们先看看</span><span style="font-family:Times New Roman">epoll</span><span style="font-family:宋体">是怎么来的。</span></p>
+<p>&nbsp;&nbsp;&nbsp; 最早的调度方案是异步忙轮询方式，即持续的轮询<span style="font-family:Times New Roman">I/O</span><span style="font-family:宋体">事件也就是遍历</span><span style="font-family:Times New Roman">socket</span><span style="font-family:宋体">集合的访问状态，显然服务器空闲时这一方案造成了无谓的</span><span style="font-family:Times New Roman">CPU</span><span style="font-family:宋体">开销。</span></p>
+<p>&nbsp;&nbsp;&nbsp; 后来，<span style="font-family:Times New Roman">select</span><span style="font-family:宋体">和</span><span style="font-family:Times New Roman">poll</span><span style="font-family:宋体">作为调度进程和提高</span><span style="font-family:Times New Roman">CPU</span><span style="font-family:宋体">利用率的代理先后出现，字面上看，一个是</span><span style="font-family:Times New Roman">“</span><span style="font-family:宋体">选择</span><span style="font-family:Times New Roman">”</span><span style="font-family:宋体">，一个是</span><span style="font-family:Times New Roman">“</span><span style="font-family:宋体">投票</span><span style="font-family:Times New Roman">”</span><span style="font-family:宋体">，它们的本质相同，都是轮询</span><span style="font-family:Times New Roman">socket</span><span style="font-family:宋体">集合并处理请求，与之前不同的地方在于，它们能够监视</span><span style="font-family:Times New Roman">I/O</span><span style="font-family:宋体">事件，空闲时轮询线程将被阻塞，而一个或多个</span><span style="font-family:Times New Roman">I/O</span><span style="font-family:宋体">事件到来时则被唤醒，摆脱了</span><span style="font-family:Times New Roman">“</span><span style="font-family:宋体">忙轮询</span><span style="font-family:Times New Roman">”</span><span style="font-family:宋体">的</span><span style="font-family:Times New Roman">“</span><span style="font-family:宋体">忙</span><span style="font-family:Times New Roman">”</span><span style="font-family:宋体">，成为异步轮询方式。</span><span style="font-family:Times New Roman">select/poll</span><span style="font-family:宋体">模型轮询的是整个</span><span style="font-family:Times New Roman">FD</span><span style="font-family:宋体">（文件描述符）集合即</span><span style="font-family:Times New Roman">socket</span><span style="font-family:宋体">集合，网络事件处理效率随着并发请求数线性降低，所以使用一个宏来限制最大并发连接数。同时，</span><span style="font-family:Times New Roman">select/poll</span><span style="font-family:宋体">模型的内核空间与用户空间通信方式为内存复制，带来较高的开销。以上缺点催生了新模型的产生。</span></p>
+<p>&nbsp;&nbsp;&nbsp; epoll<span style="font-family:宋体">可以认为是</span><span style="font-family:Times New Roman">event&nbsp;poll</span><span style="font-family:宋体">的简写，</span>是<span style="font-family:Times New Roman">Linux</span><span style="font-family:宋体">内核为处理大批量文件描述符而作了改进的</span><span style="font-family:Times New Roman">poll</span><span style="font-family:宋体">，是</span><span style="font-family:Times New Roman">Linux</span><span style="font-family:宋体">下多路复用</span><span style="font-family:Times New Roman">I</span>/O<span style="font-family:宋体">接口</span><span style="font-family:Times New Roman">select/poll</span><span style="font-family:宋体">的增强版本，它能显著提高程序在大量并发连接中只有少量活跃的情况下的系统</span><span style="font-family:Times New Roman">CPU</span><span style="font-family:宋体">利用率。</span>首先，<span style="font-family:Times New Roman">epoll</span><span style="font-family:宋体">没有最大并发连接数的限制，上限是可以打开的最大文件数，这与硬件内存大小有关，</span><span style="font-family:Times New Roman">1GB</span><span style="font-family:宋体">的机器上大约是</span><span style="font-family:Times New Roman">10w</span><span style="font-family:宋体">左右；然后是</span><span style="font-family:Times New Roman">epoll</span><span style="font-family:宋体">最显著的优点，它只对</span><span style="font-family:Times New Roman">“</span><span style="font-family:宋体">活跃</span><span style="font-family:Times New Roman">”</span><span style="font-family:宋体">的</span><span style="font-family:Times New Roman">socket</span><span style="font-family:宋体">进行操作，因为只有那些被内核</span><span style="font-family:Times New Roman">I/O</span><span style="font-family:宋体">读写事件异步唤醒的</span><span style="font-family:Times New Roman">socket</span><span style="font-family:宋体">才被放入</span><span style="font-family:Times New Roman">ready</span><span style="font-family:宋体">队列，准备进入</span><span style="font-family:Times New Roman">worker</span><span style="font-family:宋体">进程被处理，这在实际生产环境中节省了大量轮询开销，极大的提高了事件处理效率；最后，</span><span style="font-family:Times New Roman">epoll</span><span style="font-family:宋体">使用共享内存（</span><span style="font-family:Times New Roman">MMAP</span><span style="font-family:宋体">）的方式实现内核空间与用户空间的通信，省掉了内存复制的开销。额外的，</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">中使用</span><span style="font-family:Times New Roman">epoll</span><span style="font-family:宋体">的</span><span style="font-family:Times New Roman">ET</span><span style="font-family:宋体">（边缘触发）工作模式即快速工作模式。</span><span style="font-family:Times New Roman">ET</span><span style="font-family:宋体">模式下，只支持非阻塞</span><span style="font-family:Times New Roman">socket</span><span style="font-family:宋体">，</span><span style="font-family:Times New Roman">FD</span><span style="font-family:宋体">就绪即由内核通过</span><span style="font-family:Times New Roman">epoll</span><span style="font-family:宋体">发送通知，经过某些操作使</span><span style="font-family:Times New Roman">FD</span><span style="font-family:宋体">不再是就绪状态时也会发送通知，但如果一直没有</span><span style="font-family:Times New Roman">I/O</span><span style="font-family:宋体">操作导致</span><span style="font-family:Times New Roman">FD</span><span style="font-family:宋体">变为未就绪状态将不再发送通知。总的来说，</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">在</span><span style="font-family:Times New Roman">Linux</span><span style="font-family:宋体">下是基于事件，利用</span><span style="font-family:Times New Roman">epoll</span><span style="font-family:宋体">处理网络事件的。</span></p>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_detail.css" />
+
+    
+<!--172.16.140.11-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+ 
+
+
+        <div id="digg" ArticleId="47018607" >
+            <dl id="btnDigg" class="digg digg_disable"  onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>0</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable"  onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/bipedal_bit/article/details/46425665';">上一篇</span><a href="/bipedal_bit/article/details/46425665" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">Qt出现错误&quot;undefined reference to &#39;vtable for XXXXX.XXX&#39;&quot;</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/bipedal_bit/article/details/47025049';">下一篇</span><a href="/bipedal_bit/article/details/47025049" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">【二】nginx源码文件结构浏览</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+        <div class="similar_article"  style="display:none">
+                <h4>我的同类文章</h4>
+                <div class="similar_c"style="margin:20px 0px 0px 0px">
+                    <div class="similar_c_t">
+                                <label class="similar_cur">
+                                    <span  style="cursor:pointer"  onclick="GetCategoryArticles('5674569','hmemoryl','foot','47018607');">nginx<em>（4）</em></span>
+                                </label>
+                    </div>
+                   
+                    <div class="similar_wrap tracking-ad" data-mod="popu_141"  style="max-height:195px;">
+                        <a href="http://blog.csdn.net" style="display:none">http://blog.csdn.net</a>
+                        <ul class="similar_list fl">                          
+                        </ul>
+
+                        <ul class="similar_list fr">                           
+                        </ul>
+                    </div>
+                </div>
+            </div>    
+    <script  type="text/javascript">
+        $(function () {
+            GetCategoryArticles('5674569', 'hmemoryl','foot','47018607');
+        });
+    </script>
+      
+</div>
+
+     <div>
+                <script type="text/javascript">
+                    /*博客内容页下方Banner1-960*90，创建于2016-12-13*/
+                    var cpro_id = "u2843955";
+                </script>
+                <script type="text/javascript" src="http://cpro.baidustatic.com/cpro/ui/c.js"></script>
+    </div>
+
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/hmemoryl/svc/GetSuggestContent/47018607",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ <link rel="stylesheet" href="http://static.blog.csdn.net/css/replace.css"/>
+<div id="relate" data-mod="popu_218"  class="tracking-ad">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c">
+        </div>
+</div>
+ 
+
+<dl class="blog-ass-articl" id="res-relatived" > 
+    <div class="embody embody_b" id="libkeyparent"  style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="http://csdnimg.cn/jobreco/job_reco.js" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "47018607",
+                username: "",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+        </script> 
+    </div>  
+
+    
+     <div id="res"  data-mod="popu_36"  class="tracking-ad" style="width: 42%;float: left;margin-right: 30px;"></div>
+   
+</dl>
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = '【一】nginx核心架构概述' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>  
+
+
+    <div id="ad_cen">        
+                    <script type="text/javascript">
+                        /*博客内容页下方Banner-728*90，创建于2014-7-3*/
+                        var cpro_id = "u1607657";
+                    </script>
+                    <script type="text/javascript" src="http://cpro.baidustatic.com/cpro/ui/c.js"></script>
+    </div>  
+
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '47018607';
+    var commentscount = 0;
+    var islock = false
+</script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/comment.js"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="display:none"></div>
+  <script  language="javascript" type='text/javascript'>     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/hmemoryl/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+</script>
+ <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/async_new.js"></script>      
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/hmemoryl" target="_blank">
+    <img src="http://avatar.csdn.net/7/0/0/1_hmemoryl.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/hmemoryl" class="user_name" target="_blank">hmemoryl</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=hmemoryl','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>22823次</span></li>
+    <li>积分：<span>603</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog3.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：603 </div>
+        </span>  </li>
+    <li>排名：<span>千里之外</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>37篇</span></li>
+    <li>转载：<span>13篇</span></li>
+    <li>译文：<span>1篇</span></li>
+    <li>评论：<span>0条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字" /></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog" />
+        <input type="hidden" name="q" id="inputQ" />
+        <input type="hidden" name="t" value="blog" />
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/hmemoryl/article/category/2155963" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C++</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155965" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C#</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155967" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据库</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155973" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">解题报告</a><span>(18)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155975" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">算法总结</a><span>(8)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155981" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">随笔</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2899811" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">软件工程</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2908699" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Python</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/3165429" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Jquery</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/3167517" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">codeigniter</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5577059" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Qt</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5674569" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">nginx</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5727781" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5741479" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Sublime Text</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5794525" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">node.js</a><span>(2)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/hmemoryl/article/month/2015/09">2015年09月</a><span>(2)</span></li><li><a href="/hmemoryl/article/month/2015/08">2015年08月</a><span>(5)</span></li><li><a href="/hmemoryl/article/month/2015/07">2015年07月</a><span>(2)</span></li><li><a href="/hmemoryl/article/month/2015/06">2015年06月</a><span>(1)</span></li><li><a href="/hmemoryl/article/month/2015/05">2015年05月</a><span>(2)</span></li><li><a href="/hmemoryl/article/month/2015/03">2015年03月</a><span>(4)</span></li><li><a href="/hmemoryl/article/month/2015/02">2015年02月</a><span>(2)</span></li><li><a href="/hmemoryl/article/month/2014/04">2014年04月</a><span>(18)</span></li><li><a href="/hmemoryl/article/month/2014/03">2014年03月</a><span>(16)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/bipedal_bit/article/details/22671035" title="复用数据库之中国地区表（除台湾外精确到地级市）">复用数据库之中国地区表（除台湾外精确到地级市）</a><span>(1872)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/23549025" title="poj DP（动态规划）题集">poj DP（动态规划）题集</a><span>(1085)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/48246963" title="node.js的&quot;Cannot enqueue Handshake after invoking quit&quot;错误">node.js的&quot;Cannot enqueue Handshake after invoking quit&quot;错误</a><span>(1071)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/23387761" title="求强连通分量——Tarjan、Kosaraju算法">求强连通分量——Tarjan、Kosaraju算法</a><span>(1046)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/47708009" title="Linux下Sublime的C/C++多文件程序Makefile+清理+执行配置">Linux下Sublime的C/C++多文件程序Makefile+清理+执行配置</a><span>(694)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22676029" title="C#语言SqlClient接口SQL Server数据库类">C#语言SqlClient接口SQL Server数据库类</a><span>(608)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22679109" title="winform下word文件转.mht">winform下word文件转.mht</a><span>(573)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/23860645" title="C#语言 SqlClient接口SQL Sever数据库类+OleDb接口Access数据库类">C#语言 SqlClient接口SQL Sever数据库类+OleDb接口Access数据库类</a><span>(554)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/23519611" title="poj 3259 Wormholes SPFA">poj 3259 Wormholes SPFA</a><span>(541)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/24105437" title="set/multiset，map/multimap的使用与比较+pair介绍">set/multiset，map/multimap的使用与比较+pair介绍</a><span>(536)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/bipedal_bit/article/details/48401295" title="socket.io邀请制带登录聊天室实例【DRRR-chat-room】">socket.io邀请制带登录聊天室实例【DRRR-chat-room】</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22684825" title="二分图最大匹配总结（匈牙利算法）">二分图最大匹配总结（匈牙利算法）</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22684441" title="C++运算符优先级">C++运算符优先级</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22683381" title="vector的内存释放">vector的内存释放</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22682253" title="优先队列priority_queue用法">优先队列priority_queue用法</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22680449" title="winform下Dataset转Excel文件">winform下Dataset转Excel文件</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22679109" title="winform下word文件转.mht">winform下word文件转.mht</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22678373" title="winform下word文件与byte[]互转">winform下word文件与byte[]互转</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22677971" title="winform下图片文件与byte[]互转">winform下图片文件与byte[]互转</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22676029" title="C#语言SqlClient接口SQL Server数据库类">C#语言SqlClient接口SQL Server数据库类</a><span>(0)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/laoyang360/article/details/53843771" target="_blank">* 而立之年——三线城市程序员的年终告白</a></li>
+<li><a href="http://blog.csdn.net/sdkfjksf/article/details/54380659" 
+target="_blank">* Java集合框架中隐藏的设计套路</a></li>
+<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/54092364" 
+target="_blank">* Python脚本下载今日头条视频(附加Android版本辅助下载器)</a></li>
+<li><a href="http://blog.csdn.net/caowenbin/article/details/54406716" target="_blank">* 人工智能的冷思考</a></li>
+<li><a href="http://blog.csdn.net/it_talk/article/details/54346566" 
+target="_blank">* React Native 实战系列教程之热更新原理分析与实现</a></li>
+
+
+</ul></ul>
+</div>
+
+
+    </div>
+    <div class="clear">
+    </div>
+
+
+                   <!-- 广告位开始 --> 
+                    <ins data-revive-zoneid="190" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+                    <!-- 广告位结束 -->
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/cnick/cnick.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/newblog.min.js"></script>
+
+
+<script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=2841237"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/JavaScript1.js"></script>
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>     <!--new top-->
+   
+    <link href="http://c.csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet" />
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/wmd.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/showdown.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/prettify.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/apps/ask_float_block.js'></script>
+   
+
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_code.css" />
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/saveToCode.js"></script>
+      <script type="text/javascript" src="//csdnimg.cn/rabbit/tracking-ad/main.js?75eacd8"></script>
+
+     <link rel="stylesheet" href="http://static.blog.csdn.net/css/fa.css" />
+
+    <div class="pop_CA_cover"  style="display:none"></div>
+    <div class="pop pop_CA"  style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon"  id="fapancle"  onclick="$('.pop_CA').hide();$('.pop_CA_cover').hide();"></span>
+          </div>
+          <iframe src="" id="fa" frameborder="0" width="100%" height="360"  scrolling="no" />
+    </div>
+</body>
+</html>   
+ 

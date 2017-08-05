@@ -1,0 +1,1451 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+     
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>  
+
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <title>【三】nginx的数据结构(1)——ngx_int_t与ngx_rbtree_t - Hacking to the gate.
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="1.相同属性或变量等的代码高亮显示，如果没有则按一下步骤解决：&#160;&#160; myeclipse--&gt;windows--&gt;java--&gt;Editor--&gt;content Assist--&gt;Mark Occurrences 把所有的框全点上对号，保存。&#160;&#160;&#160; 或者是因为Toggle Mark Occurrences(Alt + Shift + 0) 这个按钮没有按下，在工具栏的小黄颜色的笔的形状的" />
+    <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+      <script type="text/javascript" src="http://static.blog.csdn.net/scripts/jquery-version.js"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
+        <!--new top-->
+               <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css">        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/tracking.js"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/dark1/css/style.css?v=1.1" />
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/hmemoryl/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+ 
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+</head>
+<body>
+
+
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/bipedal_bit">Hacking to the gate.</a></h2>
+            <h3>为了证明并非止步不前，为了安慰被神牛震慑的心。</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/bipedal_bit?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/bipedal_bit?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/bipedal_bit/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "hmemoryl";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/bipedal_bit";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+
+<a href="http://geek.csdn.net/news/detail/134790
+">
+<font color=blue>CSDN学院招募微信小程序讲师啦
+
+
+</font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://bss.csdn.net/m/topic/edu_develop
+">
+<font color=red>程序猿全指南，让【移动开发】更简单！ 
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/PK.html">
+<font color=blue>【观点】移动原生App开发 PK HTML 5开发
+</font></a>
+
+&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/baiyuzhong2012/article/details/54098338">
+<font color=red>博客的神秘功能
+</font></a>
+
+
+</div>                        </div>
+                        
+
+
+
+  
+<link href="http://static.blog.csdn.net/css/comment1.css" type="text/css" rel="stylesheet" />
+<link href="http://static.blog.csdn.net/css/style1.css" type="text/css" rel="stylesheet" />
+<script language='JavaScript' type='text/javascript' src='http://download.csdn.net/js/jquery.cookie.js'></script>
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/search-service/main.js"></script>
+<link rel="stylesheet" href="http://static.blog.csdn.net/public/res-min/markdown_views.css?v=1.0" />
+<link rel="stylesheet" href="http://static.blog.csdn.net/css/category.css?v=1.0" />
+<script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/web-storage-cache.min.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/replace.min.js"></script>
+
+
+
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=%e3%80%90%e4%b8%89%e3%80%91nginx%e7%9a%84%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84(1)%e2%80%94%e2%80%94ngx_int_t%e4%b8%8engx_rbtree_t&u=http://blog.csdn.net/bipedal_bit/article/details/47306809"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/bipedal_bit/article/details/47306809">
+        【三】nginx的数据结构(1)——ngx_int_t与ngx_rbtree_t            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href='http://www.csdn.net/tag/nginx' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">nginx</a><a href='http://www.csdn.net/tag/ngx_int_t' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">ngx_int_t</a><a href='http://www.csdn.net/tag/ngx_rbtree_t' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">ngx_rbtree_t</a><a href='http://www.csdn.net/tag/%e7%ba%a2%e9%bb%91%e6%a0%91' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">红黑树</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2015-08-06 07:18</span>
+            <span class="link_view" title="阅读次数">454人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(0)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('%e3%80%90%e4%b8%89%e3%80%91nginx%e7%9a%84%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84(1)%e2%80%94%e2%80%94ngx_int_t%e4%b8%8engx_rbtree_t','47306809');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(47306809,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody"  style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script  type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label  onclick="GetCategoryArticles('5674569','hmemoryl','top','47306809');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">nginx<em>（4）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/hmemoryl/article/category/5674569"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_5674569">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+    <script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>  
+        <div   class="bog_copyright">         
+            <p  class="copyright_p" >版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+
+<p>&nbsp;&nbsp;&nbsp; 面对<span style="font-family:Times New Roman">./src/core</span><span style="font-family:宋体">子目录中</span><span style="font-family:Times New Roman">71</span><span style="font-family:宋体">个源文件，有点无从下手。浏览包含主函数的</span><span style="font-family:Times New Roman">nginx.c</span><span style="font-family:宋体">文件，发现</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">使用了很多自行封装的数据结构，不弄清楚这是些什么样的数据结构就很难理解主函数中操作的意义。于是我们挑看起来基础的数据结构开始研究。组织</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">所有数据结构的是</span><span style="font-family:Times New Roman">ngx_core.h</span><span style="font-family:宋体">文件。它首先包含了</span><span style="font-family:Times New Roman">ngx_config.h</span><span style="font-family:宋体">，我们在</span><span style="font-family:Times New Roman">ngx_config.h</span><span style="font-family:宋体">中发现了三个类型定义。</span></p>
+<h1>1、ngx_int_t<span style="font-family:宋体">、</span><span style="font-family:Times New Roman">ngx_uint_t</span><span style="font-family:宋体">、</span><span style="font-family:Times New Roman">ngx_flag_t</span></h1>
+<p>&nbsp;&nbsp;&nbsp; nginx.c<span style="font-family:宋体">中看到的第一个陌生数据类型是</span><span style="font-family:Times New Roman">ngx_int_t</span><span style="font-family:宋体">，在</span><span style="font-family:Times New Roman">nginx_config.h</span><span style="font-family:宋体">中找到了它的定义。</span></p>
+<p><span style="font-family:宋体"></span></p>
+<pre name="code" class="cpp">typedef intptr_t        ngx_int_t;
+typedef uintptr_t       ngx_uint_t;
+typedef intptr_t        ngx_flag_t;</pre>&nbsp;&nbsp;&nbsp; 顺藤摸瓜找到了三个数据类型的定义。本科<span style="font-family:Times New Roman">c</span><span style="font-family:宋体">入门教学中并没有对</span><span style="font-family:Times New Roman">intptr_t/uintptr_t</span><span style="font-family:宋体">的介绍，我在</span><span style="font-family:Times New Roman">c</span><span style="font-family:宋体">的</span><span style="font-family:Times New Roman">stdint.h</span><span style="font-family:宋体">头文件中发现了它们的定义。</span>
+<p></p>
+<p><span style="font-family:宋体"></span></p>
+<pre name="code" class="cpp">/* Types for `void *&#39; pointers.  */
+#if __WORDSIZE == 64
+# ifndef __intptr_t_defined
+typedef long int               intptr_t;
+#  define __intptr_t_defined
+# endif
+typedef unsigned long int    uintptr_t;
+#else
+# ifndef __intptr_t_defined
+typedef int                    intptr_t;
+#  define __intptr_t_defined
+# endif
+typedef unsigned int        uintptr_t;
+#endif</pre>&nbsp;&nbsp;&nbsp; 首先注释说这两种类型是<span style="font-family:Times New Roman">“void&nbsp;*”</span><span style="font-family:宋体">的指针类型，尽管字面上看，</span><span style="font-family:Times New Roman">intptr_t</span><span style="font-family:宋体">和</span><span style="font-family:Times New Roman">uintptr_t</span><span style="font-family:宋体">确实是整型指针类型和无符号整型指针类型，但是让人摸不着头脑，为什么要使用整型作为整型的指针类型呢？先放一放，看后面的宏，机器是</span><span style="font-family:Times New Roman">64</span><span style="font-family:宋体">位字长则</span><span style="font-family:Times New Roman">intptr_t</span><span style="font-family:宋体">为</span><span style="font-family:Times New Roman">long&nbsp;int</span><span style="font-family:宋体">，</span><span style="font-family:Times New Roman">uintptr_t</span><span style="font-family:宋体">为</span><span style="font-family:Times New Roman">unsigned&nbsp;long&nbsp;int</span><span style="font-family:宋体">，正好我机器上是</span><span style="font-family:Times New Roman">64</span><span style="font-family:宋体">位编译器，</span><span style="font-family:Times New Roman">sizeof()</span><span style="font-family:宋体">了一下，是</span><span style="font-family:Times New Roman">8</span><span style="font-family:宋体">个字节</span><span style="font-family:Times New Roman">64</span><span style="font-family:宋体">位，小于</span><span style="font-family:Times New Roman">64</span><span style="font-family:宋体">位字长的</span><span style="font-family:Times New Roman">intptr_t</span><span style="font-family:宋体">为</span><span style="font-family:Times New Roman">int</span><span style="font-family:宋体">，</span><span style="font-family:Times New Roman">uintptr_t</span><span style="font-family:宋体">为</span><span style="font-family:Times New Roman">unsigned&nbsp;int</span><span style="font-family:宋体">，查表得知</span><span style="font-family:Times New Roman">32</span><span style="font-family:宋体">位编译器下</span><span style="font-family:Times New Roman">int</span><span style="font-family:宋体">和</span><span style="font-family:Times New Roman">unsigned</span><span style="font-family:宋体">为</span><span style="font-family:Times New Roman">4</span><span style="font-family:宋体">个字节，</span><span style="font-family:Times New Roman">16</span><span style="font-family:宋体">位编译器下为</span><span style="font-family:Times New Roman">2</span><span style="font-family:宋体">个字节。那么</span><span style="font-family:Times New Roman">intptr_t/uintptr_t</span><span style="font-family:宋体">应该是会随着平台字长变化而发生对应变化的整型类型。经过了解，发现《深入分析</span><span style="font-family:Times New Roman">Linux</span><span style="font-family:宋体">内核源码》中对此的解释是，系统内核在操作内存时，将内存当做一个大数组，而指针就是数组索引</span><span style="font-family:Times New Roman">/</span><span style="font-family:宋体">下标，内核程序员使用这种特殊的整型来接受内存地址&#20540;、操作内存相比使用指针更加直观，不容易犯错。看起来，</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">中，只是单纯的想要使用一些平台相关的</span><span style="font-family:Times New Roman">int</span><span style="font-family:宋体">、</span><span style="font-family:Times New Roman">unsigned&nbsp;int</span><span style="font-family:宋体">类型变量而已。</span>
+<p></p>
+<h1><span style="font-family:宋体"></span></h1>
+<h1>2、ngx_rbtree_t</h1>
+<h2><span style="font-family:宋体"></span>
+<p>2.1、什么是红黑树</p>
+</h2>
+<p><span style="font-family:宋体"></span></p>
+<p><span style="font-family:宋体"></span></p>
+<p>&nbsp;&nbsp;&nbsp; 作为一个曾经常年在<span style="font-family:Times New Roman">ACM</span><span style="font-family:宋体">比赛里划水的退役队员，对红黑树这样的有名数据结构还是比较敏感的。红黑树是一种特殊约束形式下的平衡二叉查找树实现。学过数据结构课的同学应该知道，课本上的最早的自平衡二叉树</span><span style="font-family:Times New Roman">AVL</span><span style="font-family:宋体">树严&#26684;的要求子树的高度差不超过</span><span style="font-family:Times New Roman">2</span><span style="font-family:宋体">，以获得根结点到所有叶结点距离基本相同（平衡）的特性。</span></p>
+<p>&nbsp;&nbsp;&nbsp; 红黑树不追求严&#26684;的平衡，而是通过<span style="font-family:Times New Roman">5</span><span style="font-family:宋体">个约束实现基本平衡：</span></p>
+<p>&nbsp;&nbsp;&nbsp; ①结点是红色或黑色；</p>
+<p>&nbsp;&nbsp;&nbsp; ②根是黑色；</p>
+<p>&nbsp;&nbsp;&nbsp; ③叶结点是黑色；</p>
+<p>&nbsp;&nbsp;&nbsp; ④红色结点的子结点都是黑色；</p>
+<p>&nbsp;&nbsp;&nbsp; ⑤任一结点到其叶结点的简单路径中黑色结点数相同。</p>
+<p>&nbsp;&nbsp;&nbsp; AVL树根到叶结点最长距离与最短距离的比不超过2。红黑树的约束也保证了这一特性（最长路径是红黑相间，最短路径是全黑，这种情况下最长路径刚好是最短路径的2倍长）。</p>
+<p>&nbsp;&nbsp;&nbsp; 既然是平衡二叉查找树的一种实现，那么红黑树自然是内部有序的，同时跟AVL树一样支持O(log2n)时间复杂度的查找、插入和删除。</p>
+<p>&nbsp;&nbsp;&nbsp; 相比AVL树，红黑可以保证在每次插入或删除操作之后的重平衡过程中，全树拓扑结构的更新仅涉及常数个结点。尽管最坏情况下需对O(log2n)个结点重染色，但就分摊意义（平均效率）而言，仅为O(1)个。但是因为没有严&#26684;约束树的平衡特性，红黑树的左右子树高度差比AVL<span style="font-family:宋体">树</span>要大。</p>
+<h2><span style="font-family:宋体"></span>
+<p>2.2、ngx_rbtree.h</p>
+</h2>
+<p><span style="font-family:宋体"></span></p>
+<p><span style="font-family:宋体"></span></p>
+<p>&nbsp;&nbsp;&nbsp; 机会难得，我们就把nginx的源码作为素材来深入了解一下红黑树的实现。首先是结点的结构：</p>
+<pre name="code" class="cpp">typedef ngx_uint_t  ngx_rbtree_key_t;
+typedef ngx_int_t   ngx_rbtree_key_int_t;
+
+
+typedef struct ngx_rbtree_node_s  ngx_rbtree_node_t;
+
+struct ngx_rbtree_node_s {
+    ngx_rbtree_key_t       key;//平台相关的无符号整型关键字
+    ngx_rbtree_node_t     *left;//左子结点指针
+    ngx_rbtree_node_t     *right;//&lt;span style=&quot;font-family:宋体;&quot;&gt;右&lt;/span&gt;子结点指针
+    ngx_rbtree_node_t     *parent;//父结点指针
+    u_char                 color;//结点颜色
+    u_char                 data;//结点数据
+};</pre>
+<p>&nbsp;&nbsp;&nbsp; 然后是红黑树的结构定义：</p>
+<pre name="code" class="cpp">typedef struct ngx_rbtree_s  ngx_rbtree_t;	//“_s”是结构体“_t”是类型
+//下面是一个函数指针变量类型的定义，是红黑树插入函数的指针
+//参数有树根结点、插入结点和哨兵结点的指针
+typedef void (*ngx_rbtree_insert_pt) (ngx_rbtree_node_t *root,
+    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
+
+struct ngx_rbtree_s {
+    ngx_rbtree_node_t     *root;	//根节点指针
+    ngx_rbtree_node_t     *sentinel;	//哨兵结点指针
+    ngx_rbtree_insert_pt   insert;	//插入函数指针
+};
+</pre>&nbsp;&nbsp;&nbsp; 将函数指针变量作为结构体成员变量以达成可以把结构体当做类来使用（既有成员变量又有成员方法）的效果，这种手法在<span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">的源码中相当普遍。关于函数，</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">还有一种更神奇的手段</span><span style="font-family:Times New Roman">——</span><span style="font-family:宋体">宏：</span><span style="font-family:宋体"><br>
+</span><span style="font-family:宋体"></span><pre name="code" class="cpp">#define ngx_rbtree_init(tree, s, i)                                         \
+    ngx_rbtree_sentinel_init(s);                                               \
+    (tree)-&gt;root = s;                                                                  \
+    (tree)-&gt;sentinel = s;                                                            \
+    (tree)-&gt;insert = i//这里insert函数指针的赋值实现了多态
+</pre>
+<p>&nbsp;&nbsp;&nbsp; 借助宏来达成内联函数的效果（函数实现如果比较简单，就干脆把实现过程整个搬到类中），令人费解的是，<span style="font-family:Times New Roman">C</span><span style="font-family:宋体">不是没有内联关键字，甚至同一个头文件中就有一个内联函数的定义。研究内联函数之前，下面还有几个宏要看一看：</span></p>
+<pre name="code" class="cpp">#define ngx_rbt_red(node)               ((node)-&gt;color = 1)
+#define ngx_rbt_black(node)             ((node)-&gt;color = 0)
+#define ngx_rbt_is_red(node)            ((node)-&gt;color)
+#define ngx_rbt_is_black(node)          (!ngx_rbt_is_red(node))
+#define ngx_rbt_copy_color(n1, n2)      (n1-&gt;color = n2-&gt;color) 
+
+/* a sentinel must be black */
+#define ngx_rbtree_sentinel_init(node)  ngx_rbt_black(node)
+</pre>
+<p>&nbsp;&nbsp;&nbsp; nginx<span style="font-family:宋体">源码中的变量都很容易看懂以至于我们不怎么需要查资料或找注释。</span><span style="font-family:Times New Roman">color</span><span style="font-family:宋体">置</span><span style="font-family:Times New Roman">1</span><span style="font-family:宋体">染红置</span><span style="font-family:Times New Roman">0</span><span style="font-family:宋体">染黑，</span><span style="font-family:Times New Roman">color</span><span style="font-family:宋体">为</span><span style="font-family:Times New Roman">1</span><span style="font-family:宋体">则结点为红色，不为红色的则为黑色，复制结点颜色即复制</span><span style="font-family:Times New Roman">color</span><span style="font-family:宋体">&#20540;，哨兵结点一定要染成黑色。</span></p>
+<pre name="code" class="cpp">static ngx_inline ngx_rbtree_node_t *
+ngx_rbtree_min(ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+{
+    while (node-&gt;left != sentinel) {
+        node = node-&gt;left;
+    } 
+    return node;
+}
+</pre>
+<p>&nbsp;&nbsp;&nbsp; ngx_inline是一个宏，实际&#20540;就是关键字inline。这个内联函数非常好懂，目的看起来是寻找以任意结点为根结点的子树中结点&#20540;最小的结点。实现方法是找到红黑树子树最边缘的左子结点。那么我们有理由猜测，哨兵结点是空结点或边缘标识。</p>
+<h2><span style="font-family:宋体">2.3、红黑树的结点插入</span></h2>
+<p><span style="font-family:宋体"></span></p>
+<p>&nbsp;&nbsp;&nbsp; 接下来我们来深入<span style="font-family:Times New Roman">ngx_rbtree.c</span><span style="font-family:宋体">看看</span><span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">如何实现几个关键的红黑树方法。</span></p>
+<pre name="code" class="cpp">void
+ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+{
+    //根结点指针的指针，或者根结点指针数组，会有多个根结点吗，令人费解
+    //临时结点指针
+    //哨兵结点指针，推测哨兵在每次查询时可能都不一样，也许指待插位置
+    //变量不分行，我写注释都很不方便
+    ngx_rbtree_node_t  **root, *temp, *sentinel;
+ 
+    /* a binary tree insert */
+ 
+    root = (ngx_rbtree_node_t **) &amp;tree-&gt;root;//树根指针的指针赋给了root
+    sentinel = tree-&gt;sentinel;//哨兵指针赋给了哨兵指针
+ 
+    if (*root == sentinel) {//特判，如果根是哨兵，即树是空的
+        node-&gt;parent = NULL;//新插入的结点变成了根
+        node-&gt;left = sentinel;//新结点的左子结点是哨兵
+        node-&gt;right = sentinel;//新结点的右子结点也是哨兵
+        ngx_rbt_black(node);//新根染黑
+        *root = node;//确认新结点为新根
+ 
+        return;//插入结束
+    }
+ 
+    //树初始化时给了insert指针一个函数地址
+    //查看前面的宏ngx_rbtree_init(tree, s, i)
+    //发现只是把指定结点染黑，同时赋为根和哨兵，给insert指针指定一个函数
+    //ngx_rbtree.c中有两个参数表符合的可选函数：插入值、插入计时器值
+    //稍后来看两种插入分别如何实现又有什么区别
+    tree-&gt;insert(*root, node, sentinel);
+ 
+    /* re-balance tree */
+    //如果新结点不是根且其父结点是红的，循环
+    while (node != *root &amp;&amp; ngx_rbt_is_red(node-&gt;parent)) {
+        //如果父结点是左子结点，获得父结点的右兄弟
+        if (node-&gt;parent == node-&gt;parent-&gt;parent-&gt;left) {
+            temp = node-&gt;parent-&gt;parent-&gt;right;
+            //如果父结点的右兄弟是红的
+            if (ngx_rbt_is_red(temp)) {
+                ngx_rbt_black(node-&gt;parent);//父结点染黑
+                ngx_rbt_black(temp);//父结点的右兄弟染黑
+                ngx_rbt_red(node-&gt;parent-&gt;parent);//父结点的父结点染红
+                node = node-&gt;parent-&gt;parent;//父结点的父结点成为当前结点
+ 
+            } else {//如果父结点的右兄弟是黑的
+                if (node == node-&gt;parent-&gt;right) {//如果新结点是右子结点
+                    node = node-&gt;parent;//父结点成为新node
+                    ngx_rbtree_left_rotate(root, sentinel, node);//node左旋
+ 
+                }
+ 
+                ngx_rbt_black(node-&gt;parent);//node的父结点染黑
+                //node的父结点的父结点染红
+                ngx_rbt_red(node-&gt;parent-&gt;parent);
+                ngx_rbtree_right_rotate(root, sentinel, node-&gt;parent-&gt;parent);//node的父结点的父结点右旋
+            }
+ 
+        } else {//如果父结点是右子结点，获得父结点的左兄弟
+            temp = node-&gt;parent-&gt;parent-&gt;left;
+            //如果父结点的左兄弟是红的
+            if (ngx_rbt_is_red(temp)) {
+                ngx_rbt_black(node-&gt;parent);//父结点染黑
+                ngx_rbt_black(temp);//父结点的左兄弟染黑
+                ngx_rbt_red(node-&gt;parent-&gt;parent);//父结点的父结点染红
+                node = node-&gt;parent-&gt;parent;
+ 
+            } else {//如果父结点的左兄弟是黑的
+                if (node == node-&gt;parent-&gt;left) {//如果新结点是左子结点
+                    node = node-&gt;parent;//父结点成为当前结点
+                    ngx_rbtree_right_rotate(root, sentinel, node);
+                    //当前结点右旋
+                }
+ 
+                ngx_rbt_black(node-&gt;parent);//当前结点染黑
+                //当前结点父结点的父结点染红
+                ngx_rbt_red(node-&gt;parent-&gt;parent);
+                ngx_rbtree_left_rotate(root, sentinel, node-&gt;parent-&gt;parent);//当前结点的父结点的父结点左旋
+            }
+        }
+    }
+ 
+    ngx_rbt_black(*root);//根结点染黑
+}</pre>
+<p>&nbsp;&nbsp;&nbsp; 然后是对应ngx_rbtree_insert_pt指针的基础的结点插入函数：</p>
+<pre name="code" class="cpp">void
+ngx_rbtree_insert_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
+    ngx_rbtree_node_t *sentinel)
+{
+    ngx_rbtree_node_t  **p;//虽然无关紧要，但两层指针令人费解
+ 
+    for ( ;; ) {//无条件循环或者说死循环，等同于while(1)但节省了一个字符
+ 
+        p = (node-&gt;key &lt; temp-&gt;key) ? &amp;temp-&gt;left : &amp;temp-&gt;right;
+ 
+        if (*p == sentinel) {//在二叉树中查找新结点合适的叶结点位置
+            break;
+        }
+ 
+        temp = *p;
+    }
+    //令新结点占据合适的哨兵位置成为新的叶结点，染红，产生新哨兵
+    *p = node;
+    node-&gt;parent = temp;
+    node-&gt;left = sentinel;
+    node-&gt;right = sentinel;
+    ngx_rbt_red(node);
+}
+</pre>
+<p>&nbsp;&nbsp;&nbsp; ngx_rbtree_insert_timer_value<span style="font-family:宋体">函数跟</span><span style="font-family:Times New Roman">ngx_rbtree_insert_value</span><span style="font-family:宋体">函数唯一区别就是判断大小时，采用了两个&#20540;相减，避免溢出。</span></p>
+<p>&nbsp;&nbsp;&nbsp; 以上是插入结点涉及的函数，老实说我不太喜欢这么长的函数实现，换我自己写肯定分块了。分支操作太多，看代码逻辑已经乱了，我们需要画几个图。首先，如果树为空：</p>
+<img src="http://img.blog.csdn.net/20150806074055339" alt=""><br>
+<p>&nbsp;&nbsp;&nbsp; 如果树中只有一个根结点：</p>
+<p><img src="http://img.blog.csdn.net/20150806074132691" alt=""></p>
+<p></p>
+<p>&nbsp;&nbsp;&nbsp; 如果<span style="font-family:Times New Roman">C&gt;A</span><span style="font-family:宋体">：</span></p>
+<img src="http://img.blog.csdn.net/20150806074207378" alt="">
+<p></p>
+<p>&nbsp;&nbsp;&nbsp; 如果<span style="font-family:Times New Roman">C&lt;B&lt;A</span><span style="font-family:宋体">，</span><span style="font-family:Times New Roman">C</span><span style="font-family:宋体">染红，</span><span style="font-family:Times New Roman">B</span><span style="font-family:宋体">染黑</span><span style="font-family:Times New Roman">A</span><span style="font-family:宋体">染红，</span><span style="font-family:Times New Roman">A</span><span style="font-family:宋体">右旋。右旋函数如下：</span></p>
+<pre name="code" class="cpp">static ngx_inline void
+ngx_rbtree_right_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
+    ngx_rbtree_node_t *node)
+{
+    ngx_rbtree_node_t  *temp;
+ 
+    temp = node-&gt;left;
+    node-&gt;left = temp-&gt;right;//左子结点指向原左子结点的右结点
+ 
+    if (temp-&gt;right != sentinel) {//如果左子结点的右结点不为哨兵
+        temp-&gt;right-&gt;parent = node;//左子结点的右子结点挂在右旋结点上
+    }
+ 
+    temp-&gt;parent = node-&gt;parent;//左子结点挂在右旋结点的父结点上
+ 
+    if (node == *root) {//如果右旋结点为根节点
+        *root = temp;//根节点赋为左子结点
+ 
+    } else if (node == node-&gt;parent-&gt;right) {//如果右旋结点为右子结点
+        node-&gt;parent-&gt;right = temp;//左子结点挂父结点右边
+ 
+    } else {//否则左子结点挂父结点左边
+        node-&gt;parent-&gt;left = temp;
+    }
+ 
+    temp-&gt;right = node;//右旋结点挂左子结点右边
+    node-&gt;parent = temp;
+}
+</pre>
+<p>&nbsp;&nbsp;&nbsp; 显然<span style="font-family:Times New Roman">B</span><span style="font-family:宋体">将成为新的根，左</span><span style="font-family:Times New Roman">C</span><span style="font-family:宋体">右</span><span style="font-family:Times New Roman">A</span><span style="font-family:宋体">：</span></p>
+<img src="http://img.blog.csdn.net/20150806074443292" alt=""><br>
+<p>&nbsp;&nbsp;&nbsp; 如果<span style="font-family:Times New Roman">B&lt;C&lt;A</span><span style="font-family:宋体">，会先做一次左旋再做一次右旋，其实除开染色过程，我觉得这跟</span><span style="font-family:Times New Roman">AVL</span><span style="font-family:宋体">树的插入过程没有什么区别：</span></p>
+<img src="http://img.blog.csdn.net/20150806074520668" alt="">
+<p></p>
+<p>&nbsp;&nbsp;&nbsp; 其他的插入情景要么与以上几个对称，要么发生在树的其他子树中，实际过程完全一样。LL<span style="font-family:宋体">型右旋，</span><span style="font-family:Times New Roman">RR</span><span style="font-family:宋体">型左旋，</span><span style="font-family:Times New Roman">LR</span><span style="font-family:宋体">型先右旋后左旋，</span><span style="font-family:Times New Roman">RL</span><span style="font-family:宋体">型先左旋后右旋。</span>与<span style="font-family:Times New Roman">AVL</span><span style="font-family:宋体">树不同的是，插入结点时红黑树左旋或右旋的判定条件明确为附近一两个结点的颜色，其他过程没有任何区别。</span></p>
+<h2>2.4、红黑树的结点删除</h2>
+<p></p>
+<p>&nbsp;&nbsp;&nbsp; 据说红黑树和<span style="font-family:Times New Roman">AVL</span><span style="font-family:宋体">树的区别主要体现在删除节点时，我们就来看一看。</span>我刚说什么来着，删除结点的函数体更长了，足足<span style="font-family:Times New Roman">165</span><span style="font-family:宋体">行，我决定分段研究，</span>先看第一部分：</p>
+<pre name="code" class="cpp">if (node-&gt;left == sentinel) {//如果左子结点是哨兵或左右子结点都是哨兵
+    temp = node-&gt;right;//获得右子结点，后面让它接替node位置
+    subst = node;//node赋给subst
+ 
+} else if (node-&gt;right == sentinel) {//如果右子结点是哨兵
+    temp = node-&gt;left;//获得左子结点，后面让它接替node位置
+    subst = node;//node赋给subst
+ 
+} else {//如果左右子结点都不是哨兵
+    subst = ngx_rbtree_min(node-&gt;right, sentinel);//获得右子树中最小的结点
+ 
+    if (subst-&gt;left != sentinel) {//如果右子树的最小结点的左子结点不是哨兵
+        temp = subst-&gt;left;//获得右子树的最小结点的左子结点
+    } else {//否则获得右子树最小结点的右子结点
+        temp = subst-&gt;right;
+    }//看起来subst将被从原位置删掉然后接替node的位置
+}
+</pre>
+<p>&nbsp;&nbsp;&nbsp; 下面我们来看看<span style="font-family:Times New Roman">temp</span><span style="font-family:宋体">和</span><span style="font-family:Times New Roman">subst</span><span style="font-family:宋体">要干什么用：</span></p>
+<pre name="code" class="cpp">if (subst == *root) {//如果subst是根
+    *root = temp;//temp接替根
+    ngx_rbt_black(temp);//染黑temp
+ 
+    /* DEBUG stuff */
+    node-&gt;left = NULL;//清空了待删结点
+    node-&gt;right = NULL;
+    node-&gt;parent = NULL;
+    node-&gt;key = 0;
+ 
+    return;
+}
+ 
+red = ngx_rbt_is_red(subst);//获得subst是否是红色
+ 
+if (subst == subst-&gt;parent-&gt;left) {//如果subst是左子结点
+    subst-&gt;parent-&gt;left = temp;//把接替结点挂到subst位置
+ 
+} else {//如果subst是右子结点
+    subst-&gt;parent-&gt;right = temp;//把接替结点挂到subst位置
+}
+</pre>&nbsp;&nbsp;&nbsp; 下一段：
+<p></p>
+<pre name="code" class="cpp">if (subst == node) {//如果subst是待删结点
+    temp-&gt;parent = subst-&gt;parent;//接替结点直接接替，删除完成
+ 
+} else {//如果subst不是待删结点
+     if (subst-&gt;parent == node) {//如果subst的父结点就是待删结点
+        temp-&gt;parent = subst;//接替结点挂在subst上
+     } else {//如果待删结点比subst的父结点更高
+        temp-&gt;parent = subst-&gt;parent;//把接替结点挂在subst的父结点上
+    }
+    //subst接替待删结点node的位置，复制待删结点跟周围结点的关系
+    subst-&gt;left = node-&gt;left;
+    subst-&gt;right = node-&gt;right;
+    subst-&gt;parent = node-&gt;parent;
+    ngx_rbt_copy_color(subst, node);//复制颜色
+ 
+    if (node == *root) {//如果待删结点是根
+        *root = subst;//subst接替根
+    } else {//如果待删结点不是根，subst接替它
+        if (node == node-&gt;parent-&gt;left) {
+            node-&gt;parent-&gt;left = subst;
+        } else {
+            node-&gt;parent-&gt;right = subst;
+        }
+    }
+ 
+    if (subst-&gt;left != sentinel) {//如果subst左子结点不是哨兵
+        subst-&gt;left-&gt;parent = subst;//subst的左子结点放弃node，挂上来
+    }
+ 
+    if (subst-&gt;right != sentinel) {//如果subst右子结点不是哨兵
+        subst-&gt;right-&gt;parent = subst;//subst右子结点放弃node，挂上来
+    }
+}
+//清空待删结点node
+/* DEBUG stuff */
+node-&gt;left = NULL;
+node-&gt;right = NULL;
+node-&gt;parent = NULL;
+node-&gt;key = 0;
+//如果subst是红色，红黑树约束依然被遵守，删除工作就可以结束了
+if (red) {
+    return;
+}
+</pre>
+<p></p>
+<p>&nbsp;&nbsp;&nbsp; 看起来结点的删除过程已经顺利完成了，但是如果<span style="font-family:Times New Roman">subst</span><span style="font-family:宋体">是黑色，我们需要修复红黑树的约束。下面这一段代码的主角是接替</span><span style="font-family:Times New Roman">subst</span><span style="font-family:宋体">位置的</span><span style="font-family:Times New Roman">temp</span><span style="font-family:宋体">结点：</span></p>
+<pre name="code" class="cpp">//当subst的接替结点不是根且为黑色，循环
+while (temp != *root &amp;&amp; ngx_rbt_is_black(temp)) {
+        if (temp == temp-&gt;parent-&gt;left) {//如果temp是左子结点
+            w = temp-&gt;parent-&gt;right;//获得其右兄弟
+ 
+            if (ngx_rbt_is_red(w)) {//如果temp的右兄弟是红色
+                ngx_rbt_black(w);//染黑temp的右兄弟
+                ngx_rbt_red(temp-&gt;parent);//染红temp的父结点
+                //temp的父结点左旋
+                ngx_rbtree_left_rotate(root, sentinel, temp-&gt;parent);
+                w = temp-&gt;parent-&gt;right;//获得temp的新右兄弟
+            }
+            //如果temp右兄弟的左右子结点都是黑的
+            if (ngx_rbt_is_black(w-&gt;left) &amp;&amp; ngx_rbt_is_black(w-&gt;right)) {
+                ngx_rbt_red(w);//染红temp的右兄弟
+                temp = temp-&gt;parent;//获得temp的父结点为新temp
+ 
+            } else {//如果temp右兄弟的子结点不全为黑
+                if (ngx_rbt_is_black(w-&gt;right)) {//如果其右子结点是黑色
+                    ngx_rbt_black(w-&gt;left);//染黑左子结点
+                    ngx_rbt_red(w);//染红temp的右兄弟
+                    ngx_rbtree_right_rotate(root, sentinel, w);//右兄弟右旋
+                    w = temp-&gt;parent-&gt;right;//获得temp的新右兄弟
+                }
+                //temp右兄弟复制temp父结点颜色
+                ngx_rbt_copy_color(w, temp-&gt;parent);
+                ngx_rbt_black(temp-&gt;parent);//染黑temp父结点
+                ngx_rbt_black(w-&gt;right);//染黑temp右兄弟的右子结点
+                //temp父结点左旋
+                ngx_rbtree_left_rotate(root, sentinel, temp-&gt;parent);
+                temp = *root;//获得根
+            }
+ 
+        } else {//如果temp是右子结点，做对称的事
+            w = temp-&gt;parent-&gt;left;
+ 
+            if (ngx_rbt_is_red(w)) {
+                ngx_rbt_black(w);
+                ngx_rbt_red(temp-&gt;parent);
+                ngx_rbtree_right_rotate(root, sentinel, temp-&gt;parent);
+                w = temp-&gt;parent-&gt;left;
+            }
+ 
+            if (ngx_rbt_is_black(w-&gt;left) &amp;&amp; ngx_rbt_is_black(w-&gt;right)) {
+                ngx_rbt_red(w);
+                temp = temp-&gt;parent;
+ 
+            } else {
+                if (ngx_rbt_is_black(w-&gt;left)) {
+                    ngx_rbt_black(w-&gt;right);
+                    ngx_rbt_red(w);
+                    ngx_rbtree_left_rotate(root, sentinel, w);
+                    w = temp-&gt;parent-&gt;left;
+                }
+ 
+                ngx_rbt_copy_color(w, temp-&gt;parent);
+                ngx_rbt_black(temp-&gt;parent);
+                ngx_rbt_black(w-&gt;left);
+                ngx_rbtree_right_rotate(root, sentinel, temp-&gt;parent);
+                temp = *root;
+            }
+        }
+    }
+
+ngx_rbt_black(temp);//染黑当前temp</pre>
+<p>&nbsp;&nbsp;&nbsp; 跟插入结点时一样乱，我们梳理一下。</p>
+<p>&nbsp;&nbsp;&nbsp; 首先忽略红黑树的约束进行删除：</p>
+<p>&nbsp;&nbsp;&nbsp; ①如果删除的是一个叶结点，即没有后继或后继全为哨兵的结点，直接删除即可；</p>
+<p>&nbsp;&nbsp;&nbsp; ②如果只有一个后继，让其替换待删除结点即可；</p>
+<p>&nbsp;&nbsp;&nbsp; ③如果有两个后继，需要从树的边缘选择一个结点，有两种等价的选择，待删结点左子树的最大结点和右子树的最小结点，<span style="font-family:Times New Roman">nginx</span><span style="font-family:宋体">选择的是后者，以这个结点的键与&#20540;（</span><span style="font-family:Times New Roman">key</span><span style="font-family:宋体">与</span><span style="font-family:Times New Roman">value/data</span><span style="font-family:宋体">）替换待删结点的键与&#20540;，然后删除这个替身。</span></p>
+<p>&nbsp;&nbsp;&nbsp; 不论是①、②情景中的待删结点还是③情景中替身，在源码中都是subst。下面要围绕着它来进行讨论。</p>
+<p>&nbsp;&nbsp;&nbsp; 以上是不考虑红黑树平衡性的纯拓扑结构变动。下面要考虑是否调整树的拓扑结构使树重新平衡，是否调整结点的颜色使树重新符合红黑树的约束条件。我们知道红黑树有一条关键约束是任意结点到其子树中叶结点的简单路径中黑色结点数相同。那么如果<span style="font-family:Times New Roman">subst</span><span style="font-family:宋体">是一个红色结点，我们不需要对红黑树做任何调整，它仍是一棵红黑树；如果</span><span style="font-family:Times New Roman">subst</span><span style="font-family:宋体">是黑色的，所有经过</span><span style="font-family:Times New Roman">subst</span><span style="font-family:宋体">的简单路径上都会少一个黑色结点数，所以需要进行调整。</span></p>
+<p>&nbsp;&nbsp;&nbsp; 下面来根据不同情景分情况讨论，因为二叉树的情景左右颠倒时调整方式也可以左右颠倒，我们只讨论<span style="font-family:Times New Roman">subst</span><span style="font-family:宋体">是左子结点的情况。设刚接替</span><span style="font-family:Times New Roman">subst</span><span style="font-family:宋体">的</span><span style="font-family:Times New Roman">temp</span><span style="font-family:宋体">为</span><span style="font-family:Times New Roman">X</span><span style="font-family:宋体">，</span><span style="font-family:Times New Roman">X</span><span style="font-family:宋体">的新右兄弟为</span><span style="font-family:Times New Roman">W</span><span style="font-family:宋体">。从经过简化的源码来看，关于结点颜色的变化很令人费解，我们不妨先来看一看：</span></p>
+<p>&nbsp;&nbsp;&nbsp; ①W为红色：将W染黑，将X与W的父结点X-&gt;parent染红，X-&gt;parent左旋，W重设为X的新右兄弟，然后转入情景①、②或③；</p>
+<p>&nbsp;&nbsp;&nbsp; ②W为黑色，W两个后继都是黑色：将W染红，X重设为X-&gt;parent；</p>
+<p>&nbsp;&nbsp;&nbsp; ③W为黑色，W右子结点为黑色：将W左子结点染黑，将W染红，W右旋，W重设为X的新右兄弟，然后将X-&gt;parent的颜色赋给W，将X-&gt;parent染黑，X-&gt;parent左旋，根赋给temp；</p>
+<p>&nbsp;&nbsp;&nbsp; ④W为黑色，W右子结点为红色：将W左子结点染黑，将W染红，W右旋，W重设为X的新右兄弟，然后将X-&gt;parent的颜色赋给W，将X-&gt;parent染黑，将W右子结点染黑，X-&gt;parent左旋，根赋给temp。</p>
+<p>&nbsp;&nbsp;&nbsp; 最后还要把temp染黑。我们可以看到情景①中进行了一次左旋，情景②只进行了染色，情景③、④都进行了一次右旋和一次左旋。情景①处理结束时一定还要转入别的情景，情景②、③、④的出现则标志着本次调整的结束。那么，红黑树删除结点后的调整过程中，依情景①循环出现的次数，调整过程中旋转的最多见的次数将是1次、2次、3次，再往上次数越多越罕见（依情景①循环出现的次数），最多旋转次数将可能到达树高即log2n次。生产环境中，删除结点后平均每次调整中旋转的次数就像分析源码之前提到的，将是常数规模的。</p>
+<p>&nbsp;&nbsp;&nbsp; 接下来我打算以逐步翻新版本的方式重写红黑树，更精细、直观地了解红黑树这一数据结构。而在重写之前，我们需要了解，nginx的红黑中所有的叶结点，都是哨兵（sentinel），这在调整红黑树时达成了对红黑树的一种优化。通过增加一层全黑的子结点，红黑树中实际有&#20540;的子树里，就允许在子结点出现红色结点了。虽然我没有证明，但这常数规模地增加了删除结点时的旋转次数，也促进了插入新结点时进行调整的概率（增加了在红色结点下插入新结点的概率），同样增加了旋转的次数。而旋转将压缩红黑树子树的高度，提高查询效率。</p>
+<p>&nbsp;&nbsp;&nbsp; 在由朴素到精致地重写红黑树的过程中，我将由少到多地考虑使用nginx对红黑树的优化，或者加入我自己的优化。</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:#FF0000">从杭州回来后翻了CLRS（算法导论），发现：</span></p>
+<p><span style="color:#FF0000">&nbsp;&nbsp;&nbsp; 首先，nginx的红黑树中，sentinel结点并非独创的优化手段，CLRS的红黑树也是带哨兵的，可以说，一般的，我们令红黑树带哨兵。目的是更直截了当的满足红黑树的叶结点全黑约束，同时更方便标识树的边缘。</span></p>
+<p><span style="color:#FF0000">&nbsp;&nbsp;&nbsp; 其次，所有的叶结点都是由同一个哨兵结点代表，节省了空间开销，省去了叶结点逐一染色的麻烦。</span></p>
+<p><span style="color:#FF0000">&nbsp;&nbsp;&nbsp; 另外，之前我感到迷惑的static inline组合用法，在oschina.net获得了解释：</span></p>
+<p><span style="color:#FF0000">&nbsp;&nbsp;&nbsp; 1.inline函数是不能像传统的函数那样放在.c中然后在.h中给出接口在其余文件中调用的,因为inline函数其实是跟宏定义类&#20284;，被调用时尝试在调用处直接展开整个函数体，不存在所谓的函数入口。&nbsp;</span></p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:#FF0000">2.因为第一点，会出现一个问题，如果inline函数在两个不同的文件中出现。也就是说一个头文件被两个不同的源文件包含，则会出现重名，链接失败。static inline 的用法就能很好的解决这个问题。使用static修饰符，函数仅在文件内部可见，不会污染命名空间。可以理解为一个inline函数在不同的源文件里面生成了不同的实例，而且名字是完全相同的 。</span></p>
+<p><span style="color:#FF0000">&nbsp;&nbsp;&nbsp; 总结一下。功能上，我们需要微型函数被大量调用时尝试内联展开以节省压栈弹栈的开销；实践中，为了防止不同文件中函数同名时的链接错误，我们需要加上static关键字的限制。（尽管inline关键字的效果有所不同，c99标准和gcc下static inline组合是兼容的，效果相同）</span></p>
+<p><span style="color:#FF0000">&nbsp;&nbsp;&nbsp; 之前看到nginx源码中函数参数有双重指针一直很费解，今天研究了一下才发现原因。ngx_rbtree_t中，root经常使用双重结点指针，也就是根结点地址的地址。如果树的修改过程中，根结点地址被别的结点地址替换掉，需要重新设置根的地址*root。假设ngx_rbtree_t中的根地址参数是*root单层指针，进入函数体时将是一个&#20540;传递，出函数体时无论函数体中如何更改根的地址，都是无效的，只有对根结点内容的修改能保留下来。所以要么使用双重指针作为根地址的参数，要么提供树结构体的地址，变相提供双重指针作为参数，当然可以提供树的结构体对象本身作为参数，但是&#20540;传递是要复制整个&#20540;对象的，显然当结构体比较大时这样做将明显增加开销。nginx选择双重指针而非结构体指针来避免树结构体内的变量遍历寻址，进一步提高效率。</span><br>
+</p>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_detail.css" />
+
+    
+<!--172.16.140.11-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+ 
+
+
+        <div id="digg" ArticleId="47306809" >
+            <dl id="btnDigg" class="digg digg_disable"  onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>0</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable"  onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/bipedal_bit/article/details/47025049';">上一篇</span><a href="/bipedal_bit/article/details/47025049" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">【二】nginx源码文件结构浏览</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/bipedal_bit/article/details/47425873';">下一篇</span><a href="/bipedal_bit/article/details/47425873" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">C语言的static关键字</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+        <div class="similar_article"  style="display:none">
+                <h4>我的同类文章</h4>
+                <div class="similar_c"style="margin:20px 0px 0px 0px">
+                    <div class="similar_c_t">
+                                <label class="similar_cur">
+                                    <span  style="cursor:pointer"  onclick="GetCategoryArticles('5674569','hmemoryl','foot','47306809');">nginx<em>（4）</em></span>
+                                </label>
+                    </div>
+                   
+                    <div class="similar_wrap tracking-ad" data-mod="popu_141"  style="max-height:195px;">
+                        <a href="http://blog.csdn.net" style="display:none">http://blog.csdn.net</a>
+                        <ul class="similar_list fl">                          
+                        </ul>
+
+                        <ul class="similar_list fr">                           
+                        </ul>
+                    </div>
+                </div>
+            </div>    
+    <script  type="text/javascript">
+        $(function () {
+            GetCategoryArticles('5674569', 'hmemoryl','foot','47306809');
+        });
+    </script>
+      
+</div>
+
+     <div>
+             <ins data-revive-zoneid="206" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+    </div>
+
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/hmemoryl/svc/GetSuggestContent/47306809",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ <link rel="stylesheet" href="http://static.blog.csdn.net/css/replace.css"/>
+<div id="relate" data-mod="popu_218"  class="tracking-ad">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c">
+        </div>
+</div>
+ 
+
+<dl class="blog-ass-articl" id="res-relatived" > 
+    <div class="embody embody_b" id="libkeyparent"  style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="http://csdnimg.cn/jobreco/job_reco.js" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "47306809",
+                username: "",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+        </script> 
+    </div>  
+
+    
+     <div id="res"  data-mod="popu_36"  class="tracking-ad" style="width: 42%;float: left;margin-right: 30px;"></div>
+   
+</dl>
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = '【三】nginx的数据结构(1)——ngx_int_t与ngx_rbtree_t' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>  
+
+
+    <div id="ad_cen">        
+                      <ins data-revive-zoneid="199" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    </div>  
+
+    <!-- 广告位开始 -->
+    <ins data-revive-zoneid="72" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '47306809';
+    var commentscount = 0;
+    var islock = false
+</script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/comment.js"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="display:none"></div>
+  <script  language="javascript" type='text/javascript'>     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/hmemoryl/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+</script>
+ <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/async_new.js"></script>      
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/hmemoryl" target="_blank">
+    <img src="http://avatar.csdn.net/7/0/0/1_hmemoryl.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/hmemoryl" class="user_name" target="_blank">hmemoryl</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=hmemoryl','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>22825次</span></li>
+    <li>积分：<span>603</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog3.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：603 </div>
+        </span>  </li>
+    <li>排名：<span>千里之外</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>37篇</span></li>
+    <li>转载：<span>13篇</span></li>
+    <li>译文：<span>1篇</span></li>
+    <li>评论：<span>0条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字" /></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog" />
+        <input type="hidden" name="q" id="inputQ" />
+        <input type="hidden" name="t" value="blog" />
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/hmemoryl/article/category/2155963" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C++</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155965" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C#</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155967" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据库</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155973" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">解题报告</a><span>(18)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155975" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">算法总结</a><span>(8)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155981" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">随笔</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2899811" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">软件工程</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2908699" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Python</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/3165429" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Jquery</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/3167517" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">codeigniter</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5577059" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Qt</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5674569" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">nginx</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5727781" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5741479" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Sublime Text</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5794525" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">node.js</a><span>(2)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/hmemoryl/article/month/2015/09">2015年09月</a><span>(2)</span></li><li><a href="/hmemoryl/article/month/2015/08">2015年08月</a><span>(5)</span></li><li><a href="/hmemoryl/article/month/2015/07">2015年07月</a><span>(2)</span></li><li><a href="/hmemoryl/article/month/2015/06">2015年06月</a><span>(1)</span></li><li><a href="/hmemoryl/article/month/2015/05">2015年05月</a><span>(2)</span></li><li><a href="/hmemoryl/article/month/2015/03">2015年03月</a><span>(4)</span></li><li><a href="/hmemoryl/article/month/2015/02">2015年02月</a><span>(2)</span></li><li><a href="/hmemoryl/article/month/2014/04">2014年04月</a><span>(18)</span></li><li><a href="/hmemoryl/article/month/2014/03">2014年03月</a><span>(16)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/bipedal_bit/article/details/22671035" title="复用数据库之中国地区表（除台湾外精确到地级市）">复用数据库之中国地区表（除台湾外精确到地级市）</a><span>(1872)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/23549025" title="poj DP（动态规划）题集">poj DP（动态规划）题集</a><span>(1085)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/48246963" title="node.js的&quot;Cannot enqueue Handshake after invoking quit&quot;错误">node.js的&quot;Cannot enqueue Handshake after invoking quit&quot;错误</a><span>(1071)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/23387761" title="求强连通分量——Tarjan、Kosaraju算法">求强连通分量——Tarjan、Kosaraju算法</a><span>(1046)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/47708009" title="Linux下Sublime的C/C++多文件程序Makefile+清理+执行配置">Linux下Sublime的C/C++多文件程序Makefile+清理+执行配置</a><span>(694)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22676029" title="C#语言SqlClient接口SQL Server数据库类">C#语言SqlClient接口SQL Server数据库类</a><span>(608)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22679109" title="winform下word文件转.mht">winform下word文件转.mht</a><span>(573)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/23860645" title="C#语言 SqlClient接口SQL Sever数据库类+OleDb接口Access数据库类">C#语言 SqlClient接口SQL Sever数据库类+OleDb接口Access数据库类</a><span>(554)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/23519611" title="poj 3259 Wormholes SPFA">poj 3259 Wormholes SPFA</a><span>(541)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/24105437" title="set/multiset，map/multimap的使用与比较+pair介绍">set/multiset，map/multimap的使用与比较+pair介绍</a><span>(536)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/bipedal_bit/article/details/48401295" title="socket.io邀请制带登录聊天室实例【DRRR-chat-room】">socket.io邀请制带登录聊天室实例【DRRR-chat-room】</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22684825" title="二分图最大匹配总结（匈牙利算法）">二分图最大匹配总结（匈牙利算法）</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22684441" title="C++运算符优先级">C++运算符优先级</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22683381" title="vector的内存释放">vector的内存释放</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22682253" title="优先队列priority_queue用法">优先队列priority_queue用法</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22680449" title="winform下Dataset转Excel文件">winform下Dataset转Excel文件</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22679109" title="winform下word文件转.mht">winform下word文件转.mht</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22678373" title="winform下word文件与byte[]互转">winform下word文件与byte[]互转</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22677971" title="winform下图片文件与byte[]互转">winform下图片文件与byte[]互转</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22676029" title="C#语言SqlClient接口SQL Server数据库类">C#语言SqlClient接口SQL Server数据库类</a><span>(0)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/laoyang360/article/details/53843771" target="_blank">* 而立之年——三线城市程序员的年终告白</a></li>
+<li><a href="http://blog.csdn.net/sdkfjksf/article/details/54380659" 
+target="_blank">* Java集合框架中隐藏的设计套路</a></li>
+<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/54092364" 
+target="_blank">* Python脚本下载今日头条视频(附加Android版本辅助下载器)</a></li>
+<li><a href="http://blog.csdn.net/caowenbin/article/details/54406716" target="_blank">* 人工智能的冷思考</a></li>
+<li><a href="http://blog.csdn.net/it_talk/article/details/54346566" 
+target="_blank">* React Native 实战系列教程之热更新原理分析与实现</a></li>
+
+
+</ul></ul>
+</div>
+
+
+    </div>
+    <div class="clear">
+    </div>
+
+
+                   <!-- 广告位开始 --> 
+                    <ins data-revive-zoneid="190" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+                    <!-- 广告位结束 -->
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/cnick/cnick.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/newblog.min.js"></script>
+
+
+<script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=2841237"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/JavaScript1.js"></script>
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>     <!--new top-->
+   
+    <link href="http://c.csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet" />
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/wmd.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/showdown.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/prettify.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/apps/ask_float_block.js'></script>
+   
+
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_code.css" />
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/saveToCode.js"></script>
+      <script type="text/javascript" src="//csdnimg.cn/rabbit/tracking-ad/main.js?75eacd8"></script>
+
+     <link rel="stylesheet" href="http://static.blog.csdn.net/css/fa.css" />
+
+    <div class="pop_CA_cover"  style="display:none"></div>
+    <div class="pop pop_CA"  style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon"  id="fapancle"  onclick="$('.pop_CA').hide();$('.pop_CA_cover').hide();"></span>
+          </div>
+          <iframe src="" id="fa" frameborder="0" width="100%" height="360"  scrolling="no" />
+    </div>
+</body>
+</html>   
+ 

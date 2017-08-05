@@ -1,0 +1,1730 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+     
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>  
+
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <title>【五】nginx的数据结构(3)——扩展红黑树 - Hacking to the gate.
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="1.相同属性或变量等的代码高亮显示，如果没有则按一下步骤解决：&#160;&#160; myeclipse--&gt;windows--&gt;java--&gt;Editor--&gt;content Assist--&gt;Mark Occurrences 把所有的框全点上对号，保存。&#160;&#160;&#160; 或者是因为Toggle Mark Occurrences(Alt + Shift + 0) 这个按钮没有按下，在工具栏的小黄颜色的笔的形状的" />
+    <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+      <script type="text/javascript" src="http://static.blog.csdn.net/scripts/jquery-version.js"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
+        <!--new top-->
+               <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css">        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/tracking.js"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/dark1/css/style.css?v=1.1" />
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/hmemoryl/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+ 
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+</head>
+<body>
+
+
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/bipedal_bit">Hacking to the gate.</a></h2>
+            <h3>为了证明并非止步不前，为了安慰被神牛震慑的心。</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/bipedal_bit?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/bipedal_bit?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/bipedal_bit/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "hmemoryl";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/bipedal_bit";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+
+<a href="http://geek.csdn.net/news/detail/134790
+">
+<font color=blue>CSDN学院招募微信小程序讲师啦
+
+
+</font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://bss.csdn.net/m/topic/edu_develop
+">
+<font color=red>程序猿全指南，让【移动开发】更简单！ 
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/PK.html">
+<font color=blue>【观点】移动原生App开发 PK HTML 5开发
+</font></a>
+
+&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/baiyuzhong2012/article/details/54098338">
+<font color=red>博客的神秘功能
+</font></a>
+
+
+</div>                        </div>
+                        
+
+
+
+  
+<link href="http://static.blog.csdn.net/css/comment1.css" type="text/css" rel="stylesheet" />
+<link href="http://static.blog.csdn.net/css/style1.css" type="text/css" rel="stylesheet" />
+<script language='JavaScript' type='text/javascript' src='http://download.csdn.net/js/jquery.cookie.js'></script>
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/search-service/main.js"></script>
+<link rel="stylesheet" href="http://static.blog.csdn.net/public/res-min/markdown_views.css?v=1.0" />
+<link rel="stylesheet" href="http://static.blog.csdn.net/css/category.css?v=1.0" />
+<script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/web-storage-cache.min.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/replace.min.js"></script>
+
+
+
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=%e3%80%90%e4%ba%94%e3%80%91nginx%e7%9a%84%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84(3)%e2%80%94%e2%80%94%e6%89%a9%e5%b1%95%e7%ba%a2%e9%bb%91%e6%a0%91&u=http://blog.csdn.net/bipedal_bit/article/details/47739495"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/bipedal_bit/article/details/47739495">
+        【五】nginx的数据结构(3)——扩展红黑树            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href='http://www.csdn.net/tag/nginx' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">nginx</a><a href='http://www.csdn.net/tag/%e7%ba%a2%e9%bb%91%e6%a0%91' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">红黑树</a><a href='http://www.csdn.net/tag/C' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">C</a><a href='http://www.csdn.net/tag/%e5%8e%8b%e5%8a%9b%e6%b5%8b%e8%af%95' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">压力测试</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2015-08-18 02:04</span>
+            <span class="link_view" title="阅读次数">163人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(0)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('%e3%80%90%e4%ba%94%e3%80%91nginx%e7%9a%84%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84(3)%e2%80%94%e2%80%94%e6%89%a9%e5%b1%95%e7%ba%a2%e9%bb%91%e6%a0%91','47739495');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(47739495,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody"  style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script  type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label  onclick="GetCategoryArticles('5674569','hmemoryl','top','47739495');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">nginx<em>（4）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/hmemoryl/article/category/5674569"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_5674569">                            
+                            </ul>
+                        </div>
+                    </label>                    
+                    <label  onclick="GetCategoryArticles('5727781','hmemoryl','top','47739495');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">C<em>（2）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/hmemoryl/article/category/5727781"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_5727781">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+    <script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>  
+        <div   class="bog_copyright">         
+            <p  class="copyright_p" >版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+
+<p>&nbsp;&nbsp;&nbsp; 发扬我一贯的支线任务狂魔的作风，一晚上就完成了之前设想的红黑树扩展版本。</p>
+<p>&nbsp;&nbsp;&nbsp; rbtree.h：</p>
+<p></p>
+<pre name="code" class="cpp">/*
+ * Copyright (C) Bipedal Bit
+ * Verson 1.0.0.2
+ */
+
+#ifndef _RBTREE_H_INCLUDED_
+#define _RBTREE_H_INCLUDED_
+
+/* the node structure of the red-black tree */
+typedef struct rbtree_node_s rbtree_node_t;
+/* Using type int means its range is -0x7fffffff-1~0x7fffffff. */
+typedef int rbtree_key_t;
+/* Abstract type is complicated to achieve with C so I use char* instead. */
+typedef char* rbtree_data_t;
+
+struct rbtree_node_s
+{
+	/* key of the node */
+	rbtree_key_t	key;
+	/* pointer of the parent of the node */
+	rbtree_node_t*	parent;
+	/* pointer of the left kid of the node */
+	rbtree_node_t*	left;
+	/* pointer of the right kid of the node */
+	rbtree_node_t*	right;
+	/* color of the node */
+	unsigned char	color;
+	/* pointer of the value of the node corresponding to the key */
+	rbtree_data_t	value;
+	/* count of nodes in the subtree whose root is the current node */
+	int node_cnt;
+};
+
+/* the tree object stucture of the red-black tree */
+typedef struct rbtree_s rbtree_t;
+/* foundational insert function pointer */
+typedef void (*rbtree_insert_p) (rbtree_t* root, rbtree_node_t* node);
+/* foundational visit function pointer */
+typedef void (*rbtree_visit_p) (rbtree_node_t* node);
+
+struct rbtree_s
+{
+	/* the pointer of the root node of the tree */
+	rbtree_node_t* root;
+	/* black leaf nodes as sentinel */
+	rbtree_node_t* sentinel;
+	/* the polymorphic insert function pointer */
+	rbtree_insert_p insert;
+};
+
+/* macros */
+#define rbtree_init(tree, s, i)		\
+rbtree_sentinel_init(s);			\
+(tree)-&gt;root = s;				\
+(tree)-&gt;sentinel = s;			\
+(tree)-&gt;insert = i
+
+#define rbtree_red(node)	((node)-&gt;color = 1)
+#define rbtree_black(node)	((node)-&gt;color = 0)
+#define rbtree_is_red(node)	((node)-&gt;color)
+#define rbtree_is_black(node)	(!rbtree_is_red(node))
+ /* copy n2&#39;s color to n1 */
+#define rbtree_copy_color(n1, n2)	(n1-&gt;color = n2-&gt;color)
+/* sentinel must be black cuz it&#39;s leaf node */
+#define rbtree_sentinel_init(node)	\
+rbtree_black(node);			\
+(node)-&gt;node_cnt = 0
+
+/* statements of public methods */
+void rbtree_insert_value(rbtree_t* tree, rbtree_node_t* node);
+void rbtree_insert(rbtree_t* tree, rbtree_node_t* node);
+void rbtree_delete(rbtree_t* tree, rbtree_node_t* node);
+/* get node by key */
+rbtree_node_t* rbtree_find(rbtree_t* tree, rbtree_key_t key);
+/* get node by order number */
+rbtree_node_t* rbtree_index(rbtree_t* tree, int index);
+int rbtree_height(rbtree_t* tree, rbtree_node_t* node);
+int rbtree_count(rbtree_t* tree);
+void rbtree_visit(rbtree_node_t* node);
+void rbtree_traversal(rbtree_t* tree, rbtree_node_t* node, rbtree_visit_p);
+
+#endif	/* _RBTREE_H_INCLUDED_ */</pre>&nbsp;&nbsp;&nbsp; 可以看到，我增加了按序号查找结点、求树高、求结点数、可重写访问节点方法的遍历，这么几个功能。
+<p></p>
+<p>&nbsp;&nbsp;&nbsp; 为了提高按序号查找结点的效率，我增加了一个结点项node_cnt，代表当前结点为根的子树上的结点总数。这样按序号查找结点的过程将是一个二分查找，时间效率与按key查找相同，都是O(log2n)。</p>
+<p>&nbsp;&nbsp;&nbsp; 遍历方法使用递归的中序遍历，默认的结点访问方法是个空方法，用户可以自行重写。</p>
+<p>&nbsp;&nbsp;&nbsp; rbtree.c：</p>
+<p></p>
+<pre name="code" class="cpp">/*
+&#160;* Copyright (C) Bipedal Bit
+&#160;* Verson 1.0.0.2
+&#160;*/
+
+#include &lt;stddef.h&gt;
+#include &quot;rbtree.h&quot;
+
+/* inline methods */
+/* get the node with the minimum key in a subtree of the red-black tree */
+static inline rbtree_node_t*
+rbtree_subtree_min(rbtree_node_t* node, rbtree_node_t* sentinel)
+{
+&#160;&#160; &#160;while(node-&gt;left != sentinel)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;node = node-&gt;left;
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;return node;
+}
+
+/* replace the node &quot;node&quot; in the tree with node &quot;tmp&quot; */
+static inline void rbtree_replace(rbtree_t* tree,
+&#160;&#160; &#160;rbtree_node_t* node, rbtree_node_t* tmp)
+{
+&#160;&#160; &#160;/* upward: p[node] &lt;- p[tmp] */
+&#160;&#160; &#160;tmp-&gt;parent = node-&gt;parent;
+
+&#160;&#160; &#160;if (node == tree-&gt;root)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;tree-&gt;root = tmp;
+&#160;&#160; &#160;}
+&#160;&#160; &#160;else if (node == node-&gt;parent-&gt;left)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;/* downward: left[p[node]] &lt;- tmp */
+&#160;&#160; &#160;&#160;&#160; &#160;node-&gt;parent-&gt;left = tmp;
+&#160;&#160; &#160;}
+&#160;&#160; &#160;else
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;/* downward: right[p[node]] &lt;- tmp */
+&#160;&#160; &#160;&#160;&#160; &#160;node-&gt;parent-&gt;right = tmp;
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;node-&gt;parent = tmp;
+}
+
+/* change the topologic structure of the tree keeping the order of the nodes */
+static inline void rbtree_left_rotate(rbtree_t* tree, rbtree_node_t* node)
+{
+&#160;&#160; &#160;/* node as the var x in CLRS while tmp as the var y */
+&#160;&#160; &#160;rbtree_node_t* tmp = node-&gt;right;
+
+&#160;&#160; &#160;/* fix node_cnt */
+&#160;&#160; &#160;node-&gt;node_cnt = node-&gt;left-&gt;node_cnt + tmp-&gt;left-&gt;node_cnt + 1;
+&#160;&#160; &#160;tmp-&gt;node_cnt = node-&gt;node_cnt + tmp-&gt;right-&gt;node_cnt + 1;
+
+&#160;&#160; &#160;/* replace y with left[y] */
+&#160;&#160; &#160;/* downward: right[x] &lt;- left[y] */
+&#160;&#160; &#160;node-&gt;right = tmp-&gt;left;
+&#160;&#160; &#160;/* if left[[y] is not NIL it has a parent */
+&#160;&#160; &#160;if (tmp-&gt;left != tree-&gt;sentinel)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;/* upward: p[left[y]] &lt;- x */
+&#160;&#160; &#160;&#160;&#160; &#160;tmp-&gt;left-&gt;parent = node;
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;/* replace x with y */
+&#160;&#160; &#160;rbtree_replace(tree, node, tmp);
+&#160;&#160; &#160;tmp-&gt;left = node;
+}
+
+static inline void rbtree_right_rotate(rbtree_t* tree, rbtree_node_t* node)
+{
+&#160;&#160; &#160;rbtree_node_t* tmp = node-&gt;left;
+
+&#160;&#160; &#160;/* fix node_cnt */
+&#160;&#160; &#160;node-&gt;node_cnt = node-&gt;right-&gt;node_cnt + tmp-&gt;right-&gt;node_cnt + 1;
+&#160;&#160; &#160;tmp-&gt;node_cnt = node-&gt;node_cnt + tmp-&gt;left-&gt;node_cnt + 1;
+
+&#160;&#160; &#160;/* replace y with right[y] */
+&#160;&#160; &#160;node-&gt;left = tmp-&gt;right;
+&#160;&#160; &#160;if (tmp-&gt;right != tree-&gt;sentinel)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;tmp-&gt;right-&gt;parent = node;
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;/* replace x with y */
+&#160;&#160; &#160;rbtree_replace(tree, node, tmp);
+&#160;&#160; &#160;tmp-&gt;right = node;
+}
+
+/* static methods */
+/* fix the red-black tree after the new node inserted */
+static void rbtree_insert_fixup(rbtree_t* tree, rbtree_node_t* node)
+{
+&#160;&#160; &#160;while(rbtree_is_red(node-&gt;parent))
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;if (node-&gt;parent == node-&gt;parent-&gt;parent-&gt;left)
+&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;/* case 1: node&#39;s uncle is red */
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;if (rbtree_is_red(node-&gt;parent-&gt;parent-&gt;right))
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(node-&gt;parent-&gt;parent-&gt;right);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_red(node-&gt;parent-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;node = node-&gt;parent-&gt;parent;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;/* Then we can consider the whole subtree */
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;/* which is represented by the new &quot;node&quot; as the &quot;node&quot; before */
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;/* and keep looping till &quot;node&quot; become the root. */
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;/* case 2: node&#39;s uncle is black */
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;else
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;/* ensure node is the left kid of its parent */
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;if (node == node-&gt;parent-&gt;right)
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;node = node-&gt;parent;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_left_rotate(tree, node);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;/* case 2 -&gt; case 1 */
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_red(node-&gt;parent-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_right_rotate(tree, node-&gt;parent-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;/* same as the &quot;if&quot; clause before with &quot;left&quot; and &quot;right&quot; exchanged */
+&#160;&#160; &#160;&#160;&#160; &#160;else
+&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;if (rbtree_is_red(node-&gt;parent-&gt;parent-&gt;left))
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(node-&gt;parent-&gt;parent-&gt;left);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_red(node-&gt;parent-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;node = node-&gt;parent-&gt;parent;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;else
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;if (node == node-&gt;parent-&gt;left)
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;node = node-&gt;parent;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_right_rotate(tree, node);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_red(node-&gt;parent-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_left_rotate(tree, node-&gt;parent-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;}
+&#160;&#160; &#160;/* ensure the root node being black */
+&#160;&#160; &#160;rbtree_black(tree-&gt;root);
+}
+
+static void rbtree_delete_fixup(rbtree_t* tree, rbtree_node_t* node)
+{
+&#160;&#160; &#160;rbtree_node_t* brother = NULL;
+
+&#160;&#160; &#160;while(node != tree-&gt;root &amp;&amp; rbtree_is_black(node))
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;if (node == node-&gt;parent-&gt;left)
+&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;brother = node-&gt;parent-&gt;right;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;if (rbtree_is_red(brother))
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(brother);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_red(node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_left_rotate(tree, node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;/* update brother after topologic change of the tree */
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;brother = node-&gt;parent-&gt;right;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;if (rbtree_is_black(brother-&gt;left) &amp;&amp; rbtree_is_black(brother-&gt;right))
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_red(brother);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;/* go upward and keep on fixing color */
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;node = node-&gt;parent;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;else
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;if (rbtree_is_black(brother-&gt;right))
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(brother-&gt;left);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_red(brother);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_right_rotate(tree, brother);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;/* update brother after topologic change of the tree */
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;brother = node-&gt;parent-&gt;right;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_copy_color(brother, node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(brother-&gt;right);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_left_rotate(tree, node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;/* end the loop and ensure root is black */
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;node = tree-&gt;root;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;/* same as the &quot;if&quot; clause before with &quot;left&quot; and &quot;right&quot; exchanged */
+&#160;&#160; &#160;&#160;&#160; &#160;else
+&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;brother = node-&gt;parent-&gt;left;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;if (rbtree_is_red(brother))
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(brother);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_red(node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_left_rotate(tree, node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;brother = node-&gt;parent-&gt;left;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;if (rbtree_is_black(brother-&gt;left) &amp;&amp; rbtree_is_black(brother-&gt;right))
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_red(brother);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;node = node-&gt;parent;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;else
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;if (rbtree_is_black(brother-&gt;left))
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(brother-&gt;right);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_red(brother);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_right_rotate(tree, brother);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;brother = node-&gt;parent-&gt;left;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_copy_color(brother, node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(brother-&gt;left);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;rbtree_left_rotate(tree, node-&gt;parent);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;node = tree-&gt;root;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;rbtree_black(node);
+}
+
+/* public methods */
+void rbtree_insert_value(rbtree_t* tree, rbtree_node_t* node)
+{
+&#160;&#160; &#160;/* Using ** to know wether the new node will be a left kid */
+&#160;&#160; &#160;/* or a right kid of its parent node. */
+&#160;&#160; &#160;rbtree_node_t** tmp = &amp;tree-&gt;root;
+&#160;&#160; &#160;rbtree_node_t* parent;
+
+&#160;&#160; &#160;while(*tmp != tree-&gt;sentinel)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;parent = *tmp;
+
+&#160;&#160; &#160;&#160;&#160; &#160;/* update node_cnt */
+&#160;&#160; &#160;&#160;&#160; &#160;(parent-&gt;node_cnt)++;
+
+&#160;&#160; &#160;&#160;&#160; &#160;tmp = (node-&gt;key &lt; parent-&gt;key) ? &amp;parent-&gt;left : &amp;parent-&gt;right;
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;/* The pointer knows wether the node should be on the left side */
+&#160;&#160; &#160;/* or on the right one. */
+&#160;&#160; &#160;*tmp = node;
+&#160;&#160; &#160;node-&gt;parent = parent;
+&#160;&#160; &#160;node-&gt;left = tree-&gt;sentinel;
+&#160;&#160; &#160;node-&gt;right = tree-&gt;sentinel;
+&#160;&#160; &#160;rbtree_red(node);
+}
+
+void rbtree_visit(rbtree_node_t* node)
+{
+&#160;&#160; &#160;/* visiting the current node */
+}
+
+void rbtree_insert(rbtree_t* tree, rbtree_node_t* node)
+{
+&#160;&#160; &#160;rbtree_node_t* sentinel = tree-&gt;sentinel;
+
+&#160;&#160; &#160;/* if the tree is empty */
+&#160;&#160; &#160;if (tree-&gt;root == sentinel)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;tree-&gt;root = node;
+&#160;&#160; &#160;&#160;&#160; &#160;node-&gt;parent = sentinel;
+&#160;&#160; &#160;&#160;&#160; &#160;node-&gt;left = sentinel;
+&#160;&#160; &#160;&#160;&#160; &#160;node-&gt;right = sentinel;
+&#160;&#160; &#160;&#160;&#160; &#160;rbtree_black(node);
+
+&#160;&#160; &#160;&#160;&#160; &#160;return;
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;/* generally */
+&#160;&#160; &#160;tree-&gt;insert(tree, node);
+&#160;&#160; &#160;rbtree_insert_fixup(tree, node);
+}
+
+void rbtree_delete(rbtree_t* tree, rbtree_node_t* node)
+{
+&#160;&#160; &#160;rbtree_node_t* sentinel = tree-&gt;sentinel;
+&#160;&#160; &#160;/* wether &quot;node&quot; is on the left side or the right one */
+&#160;&#160; &#160;rbtree_node_t** ptr_to_node = NULL;
+&#160;&#160; &#160;/* &quot;cover&quot; is the node which is going to cover &quot;node&quot; */
+&#160;&#160; &#160;rbtree_node_t* cover = NULL;
+&#160;&#160; &#160;/* wether we lossing a red node on the edge of the tree */
+&#160;&#160; &#160;int loss_red = rbtree_is_red(node);
+&#160;&#160; &#160;int is_root = (node == tree-&gt;root);
+
+&#160;&#160; &#160;/* get &quot;cover&quot; &amp; &quot;loss_red&quot;&#160; */
+&#160;&#160; &#160;/* sentinel in &quot;node&quot;&#39;s kids */
+&#160;&#160; &#160;if (node-&gt;left == sentinel)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;cover = node-&gt;right;
+&#160;&#160; &#160;}
+&#160;&#160; &#160;else if (node-&gt;right == sentinel)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;cover = node-&gt;left;
+&#160;&#160; &#160;}
+&#160;&#160; &#160;/* &quot;node&quot;&#39;s kids are both non-sentinel */
+&#160;&#160; &#160;else
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;/* update &quot;node&quot; &amp; &quot;loss_red&quot; &amp; &quot;is_root&quot; &amp; &quot;cover&quot; */
+&#160;&#160; &#160;&#160;&#160; &#160;cover = rbtree_subtree_min(node-&gt;right, sentinel);
+&#160;&#160; &#160;&#160;&#160; &#160;node-&gt;key = cover-&gt;key;
+&#160;&#160; &#160;&#160;&#160; &#160;node-&gt;value = cover-&gt;value;
+&#160;&#160; &#160;&#160;&#160; &#160;node = cover;
+&#160;&#160; &#160;&#160;&#160; &#160;loss_red = rbtree_is_red(node);
+&#160;&#160; &#160;&#160;&#160; &#160;is_root = 0;
+&#160;&#160; &#160;&#160;&#160; &#160;/* move &quot;cover&quot;&#39;s kids */
+&#160;&#160; &#160;&#160;&#160; &#160;/* &quot;cover&quot; can only be a left kid */
+&#160;&#160; &#160;&#160;&#160; &#160;/* and can only have a right non-sentinel kid */
+&#160;&#160; &#160;&#160;&#160; &#160;/* because of function &quot;rbtree_subtree_min&quot; */
+&#160;&#160; &#160;&#160;&#160; &#160;cover = node-&gt;right;
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;if (is_root)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;/* update root */
+&#160;&#160; &#160;&#160;&#160; &#160;tree-&gt;root = cover;
+&#160;&#160; &#160;}
+&#160;&#160; &#160;else
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;/* downward link */
+&#160;&#160; &#160;&#160;&#160; &#160;if (node == node-&gt;parent-&gt;left)
+&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;node-&gt;parent-&gt;left = cover;
+&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;else
+&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;node-&gt;parent-&gt;right = cover;
+&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;}
+&#160;&#160; &#160;/* upward link */
+&#160;&#160; &#160;cover-&gt;parent = node-&gt;parent;
+&#160;&#160; &#160;/* &quot;cover&quot; may be a sentinel */
+&#160;&#160; &#160;if (cover != sentinel)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;/* set &quot;cover&quot; */
+&#160;&#160; &#160;&#160;&#160; &#160;cover-&gt;left = node-&gt;left;
+&#160;&#160; &#160;&#160;&#160; &#160;cover-&gt;right = node-&gt;right;
+&#160;&#160; &#160;&#160;&#160; &#160;rbtree_copy_color(cover, node);
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;/* clear &quot;node&quot; since it&#39;s useless */
+&#160;&#160; &#160;node-&gt;key = -1;
+&#160;&#160; &#160;node-&gt;parent = NULL;
+&#160;&#160; &#160;node-&gt;left = NULL;
+&#160;&#160; &#160;node-&gt;right = NULL;
+&#160;&#160; &#160;node-&gt;value = NULL;
+
+&#160;&#160; &#160;/* update node_cnt */
+&#160;&#160; &#160;rbtree_node_t* tmp = cover-&gt;parent;
+&#160;&#160; &#160;while(tmp != sentinel)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;(tmp-&gt;node_cnt)--;
+&#160;&#160; &#160;&#160;&#160; &#160;tmp = tmp-&gt;parent;
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;if (loss_red)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;return;
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;/* When lossing a black node on edge */
+&#160;&#160; &#160;/* the fifth rule of red-black tree will be broke. */
+&#160;&#160; &#160;/* So the tree need to be fixed. */
+&#160;&#160; &#160;rbtree_delete_fixup(tree, cover);
+}
+
+/* find the node in the tree corresponding to the given key value */
+rbtree_node_t* rbtree_find(rbtree_t* tree, rbtree_key_t key)
+{
+&#160;&#160; &#160;rbtree_node_t* tmp = tree-&gt;root;
+&#160;&#160; &#160;/* next line is just fot test */
+&#160;&#160; &#160;// int step_cnt = 0;
+
+&#160;&#160; &#160;/* search the binary tree */
+&#160;&#160; &#160;while(tmp != tree-&gt;sentinel)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;/* next line is just fot test */
+&#160;&#160; &#160;&#160;&#160; &#160;// step_cnt++;
+&#160;&#160; &#160;&#160;&#160; &#160;if(key == tmp-&gt;key)
+&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;/* next line is just for test */
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;// printf(&quot;step count: %d, color: %s, &quot;, step_cnt, rbtree_is_red(tmp) ? &quot;red&quot; : &quot;black&quot;);
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;return tmp;
+&#160;&#160; &#160;&#160;&#160; &#160;}
+
+&#160;&#160; &#160;&#160;&#160; &#160;tmp = (key &lt; tmp-&gt;key) ? tmp-&gt;left : tmp-&gt;right;
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;return NULL;
+}
+
+/* find the node in the tree corresponding to the given order number */
+rbtree_node_t* rbtree_index(rbtree_t* tree, int index)
+{
+&#160;&#160; &#160;if (index &lt; 0 || index &gt;= rbtree_count(tree))
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;return NULL;
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;rbtree_node_t* tmp = tree-&gt;root;
+&#160;&#160; &#160;int left_cnt = 0;
+&#160;&#160; &#160;int sub_left_cnt;
+
+&#160;&#160; &#160;while(tmp-&gt;node_cnt &gt; 0)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;sub_left_cnt = tmp-&gt;left-&gt;node_cnt;
+&#160;&#160; &#160;&#160;&#160; &#160;if (left_cnt + sub_left_cnt == index)
+&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;return tmp;
+&#160;&#160; &#160;&#160;&#160; &#160;}
+
+&#160;&#160; &#160;&#160;&#160; &#160;if (left_cnt + sub_left_cnt &lt; index)
+&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;left_cnt += sub_left_cnt + 1;
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;tmp = tmp-&gt;right;
+&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;&#160;&#160; &#160;else
+&#160;&#160; &#160;&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;&#160;&#160; &#160;tmp = tmp-&gt;left;
+&#160;&#160; &#160;&#160;&#160; &#160;}
+&#160;&#160; &#160;}
+}
+
+/* get the height of the subtree */
+int rbtree_height(rbtree_t* tree, rbtree_node_t* node)
+{
+&#160;&#160; &#160;if (node == tree-&gt;sentinel)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;return 0;
+&#160;&#160; &#160;}
+
+&#160;&#160; &#160;int left_height = rbtree_height(tree, node-&gt;left);
+&#160;&#160; &#160;int right_height = rbtree_height(tree, node-&gt;right);
+&#160;&#160; &#160;int sub_height = (left_height &gt; right_height) ? left_height : right_height;
+&#160;&#160; &#160;return sub_height+1;
+}
+
+/* get the count of nodes in the tree */
+int rbtree_count(rbtree_t* tree)
+{
+&#160;&#160; &#160;return tree-&gt;root-&gt;node_cnt;
+}
+
+/* visit every node of the subtree whose root is given in order */
+void rbtree_traversal(rbtree_t* tree, rbtree_node_t* node, rbtree_visit_p visit)
+{
+&#160;&#160; &#160;if (node != tree-&gt;sentinel)
+&#160;&#160; &#160;{
+&#160;&#160; &#160;&#160;&#160; &#160;rbtree_traversal(tree, node-&gt;left, visit);
+&#160;&#160; &#160;&#160;&#160; &#160;visit(node);
+&#160;&#160; &#160;&#160;&#160; &#160;rbtree_traversal(tree, node-&gt;right, visit);
+&#160;&#160; &#160;}
+}
+
+</pre>&nbsp;&nbsp;&nbsp; 还是做个压力测试。
+<p></p>
+<p>&nbsp;&nbsp;&nbsp; test.c：</p>
+<p></p>
+<pre name="code" class="cpp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+#include &quot;rbtree.h&quot;
+
+int main(int argc, char const *argv[])
+{
+	double duration;
+	double room;
+
+	rbtree_t t = {};
+	rbtree_node_t s = {};
+	rbtree_init(&amp;t, &amp;s, rbtree_insert_value);
+
+	const int cnt = 1&lt;&lt;20;
+	const int max_len = 15;
+
+#define TEST_VALUES {&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;, &quot;grape&quot;, &quot;lemon&quot;, &quot;mango&quot;, &quot;pear&quot;, &quot;pineapple&quot;, &quot;strawberry&quot;, &quot;watermelon&quot;}
+
+	/* for gcc */
+	char* v[] = TEST_VALUES;
+	/* for g++ */
+	// char v[][max_len] = TEST_VALUES;
+
+	/* Default stack size in Ubuntu Kylin 14.04 is 8MB. */
+	/* It&#39;s not enough. So I use memory in heap which offers a lot larger room. */
+	rbtree_node_t* n = (rbtree_node_t*)calloc(cnt, sizeof(rbtree_node_t));
+	int i;
+
+	long time1 = clock();
+
+	for (i = 0; i &lt; cnt; i++)
+	{
+		n[i].key = i+1;
+		n[i].value = v[i%10];
+		n[i].node_cnt = 1;
+		rbtree_insert(&amp;t, &amp;n[i]);
+	}
+
+	srand( (unsigned int)time(0) );
+	int no = rand()%cnt;
+	printf(&quot;n[%d]-&gt;key = %d\n&quot;, no, rbtree_index(&amp;t, no)-&gt;key);
+
+	long time2 = clock();
+	room = 48.0*cnt/(1&lt;&lt;20);
+	duration = (double)(time2 - time1) / CLOCKS_PER_SEC;
+	printf(&quot;Inserting %d nodes costs %.2fMB and spends %f seconds.\n&quot;, cnt, room, duration);
+
+	const int search_cnt = 1&lt;&lt;10;
+	for( i = 0 ; i &lt; search_cnt ; i++ )
+	{
+		rbtree_find(&amp;t, (rand()%cnt)+1);
+	}
+
+	long time3 = clock();
+	duration = (double)(time3 - time2) / CLOCKS_PER_SEC;
+	printf(&quot;Searching %d nodes among %d spends %f seconds.\n&quot;, search_cnt, cnt, duration);
+
+	const int index_cnt = 1&lt;&lt;10;
+	for( i = 0 ; i &lt; index_cnt ; i++ )
+	{
+		rbtree_index(&amp;t, (rand()%cnt));
+	}
+
+	long time4 = clock();
+	duration = (double)(time4 - time3) / CLOCKS_PER_SEC;
+	printf(&quot;Indexing %d nodes among %d spends %f seconds.\n&quot;, index_cnt, cnt, duration);
+
+	const int delete_cnt = 1&lt;&lt;10;
+	int nums[delete_cnt];
+	int num;
+	/* Let&#39;s hash! */
+	char* mark = (char*)calloc(cnt, sizeof(char));
+	memset(mark, 0, cnt*sizeof(char));
+	for(i = 0; i &lt; delete_cnt; i++)
+	{
+		for(;;)
+		{
+			num = rand()%cnt;
+			if (mark[num] == 0)
+			{
+				mark[num] = 1;
+				nums[i] = num;
+				break;
+			}
+		}
+	}
+
+	long time5 = clock();
+	duration = (double)(time5 - time4) / CLOCKS_PER_SEC;
+	printf(&quot;Hash %d times spends %f seconds.\n&quot;, delete_cnt, duration);
+
+	for(i = 0; i &lt; delete_cnt; i++)
+	{
+		rbtree_delete(&amp;t, &amp;n[nums[i]]);
+	}
+
+	long time6 = clock();
+	duration = (double)(time6 - time5) / CLOCKS_PER_SEC;
+	printf(&quot;Deleting %d nodes among %d spends %f seconds.\n&quot;, delete_cnt, cnt, duration);
+	free(mark);
+
+	int h = rbtree_height(&amp;t, t.root);
+	long time7 = clock();
+	duration = (double)(time7 - time6) / CLOCKS_PER_SEC;
+	printf(&quot;The height of the tree is %d. Getting it spends %f seconds.\n&quot;, h, duration);
+
+	rbtree_traversal(&amp;t, t.root, rbtree_visit);
+	long time8 = clock();
+	duration = (double)(time8 - time7) / CLOCKS_PER_SEC;
+	printf(&quot;Traversal the tree spends %f seconds.\n&quot;, duration);
+
+	printf(&quot;Count of nodes in the tree is %d.\n&quot;, rbtree_count(&amp;t));
+
+	free(n);
+
+	return 0;
+}</pre>&nbsp;&nbsp;&nbsp; 上一个版本的压力测试结果：
+<p></p>
+<p></p>
+<pre name="code" class="plain">Inserting 1048576 nodes costs 48.00MB and spends 0.425416 seconds.
+Searching 1024 nodes among 1048576 spends 0.001140 seconds.
+Hash 1024 times spends 0.000334 seconds.
+Deleting 1024 nodes among 1048576 spends 0.000783 seconds.</pre>&nbsp;&nbsp;&nbsp; 扩展版本的压力测试结果：
+<p></p>
+<p></p>
+<pre name="code" class="plain">Inserting 1048576 nodes costs 48.00MB and spends 0.467859 seconds.
+Searching 1024 nodes among 1048576 spends 0.001188 seconds.
+Indexing 1024 nodes among 1048576 spends 0.001484 seconds.
+Hash 1024 times spends 0.000355 seconds.
+Deleting 1024 nodes among 1048576 spends 0.001417 seconds.
+The height of the tree is 28. Getting it spends 0.021669 seconds.
+Traversal the tree spends 0.023913 seconds.
+Count of nodes in the tree is 1047552.
+</pre>&nbsp;&nbsp;&nbsp; 比较一下可以发现：
+<p></p>
+<p>&nbsp;&nbsp;&nbsp; 1.插入结点略慢了一点，因为插入时多维护了一个node_cnt项。</p>
+<p>&nbsp;&nbsp;&nbsp; 2.按key查找结点速度没有变化。</p>
+<p>&nbsp;&nbsp;&nbsp; 3.哈希查找速度没有变化。</p>
+<p>&nbsp;&nbsp;&nbsp; 4.删除结点花的时间几乎是原来的两倍，因为每次删除后都要一路向上更新node_cnt，几乎相当于包含了一次按key查询。</p>
+<p>&nbsp;&nbsp;&nbsp; 5.按序号查询比按key查询略慢，因为每次进入右子树需要多做一次加法。</p>
+<p>&nbsp;&nbsp;&nbsp; 6.遍历花的时间与求树高相同，因为它们的实质都是遍历树，时间效率O(n)数量级，具体点为2n次结点访问，分别为结点入栈和出栈时。</p>
+<p>&nbsp;&nbsp;&nbsp; 别问我max、min、mid在哪，能按序号查询了这些还是问题吗？<br>
+</p>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_detail.css" />
+
+    
+<!--172.16.140.11-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+ 
+
+
+        <div id="digg" ArticleId="47739495" >
+            <dl id="btnDigg" class="digg digg_disable"  onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>0</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable"  onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/bipedal_bit/article/details/47708009';">上一篇</span><a href="/bipedal_bit/article/details/47708009" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">Linux下Sublime的C/C++多文件程序Makefile+清理+执行配置</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/bipedal_bit/article/details/48246963';">下一篇</span><a href="/bipedal_bit/article/details/48246963" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">node.js的&quot;Cannot enqueue Handshake after invoking quit&quot;错误</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+        <div class="similar_article"  style="display:none">
+                <h4>我的同类文章</h4>
+                <div class="similar_c"style="margin:20px 0px 0px 0px">
+                    <div class="similar_c_t">
+                                <label class="similar_cur">
+                                    <span  style="cursor:pointer"  onclick="GetCategoryArticles('5674569','hmemoryl','foot','47739495');">nginx<em>（4）</em></span>
+                                </label>
+                                <label class="">
+                                    <span  style="cursor:pointer"  onclick="GetCategoryArticles('5727781','hmemoryl','foot','47739495');">C<em>（2）</em></span>
+                                </label>
+                    </div>
+                   
+                    <div class="similar_wrap tracking-ad" data-mod="popu_141"  style="max-height:195px;">
+                        <a href="http://blog.csdn.net" style="display:none">http://blog.csdn.net</a>
+                        <ul class="similar_list fl">                          
+                        </ul>
+
+                        <ul class="similar_list fr">                           
+                        </ul>
+                    </div>
+                </div>
+            </div>    
+    <script  type="text/javascript">
+        $(function () {
+            GetCategoryArticles('5674569', 'hmemoryl','foot','47739495');
+        });
+    </script>
+      
+</div>
+
+     <div>
+             <ins data-revive-zoneid="206" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+    </div>
+
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/hmemoryl/svc/GetSuggestContent/47739495",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ <link rel="stylesheet" href="http://static.blog.csdn.net/css/replace.css"/>
+<div id="relate" data-mod="popu_218"  class="tracking-ad">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c">
+        </div>
+</div>
+ 
+
+<dl class="blog-ass-articl" id="res-relatived" > 
+    <div class="embody embody_b" id="libkeyparent"  style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="http://csdnimg.cn/jobreco/job_reco.js" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "47739495",
+                username: "",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+        </script> 
+    </div>  
+
+    
+     <div id="res"  data-mod="popu_36"  class="tracking-ad" style="width: 42%;float: left;margin-right: 30px;"></div>
+   
+</dl>
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = '【五】nginx的数据结构(3)——扩展红黑树' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>  
+
+
+    <div id="ad_cen">        
+                      <ins data-revive-zoneid="199" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    </div>  
+
+    <!-- 广告位开始 -->
+    <ins data-revive-zoneid="72" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '47739495';
+    var commentscount = 0;
+    var islock = false
+</script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/comment.js"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="display:none"></div>
+  <script  language="javascript" type='text/javascript'>     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/hmemoryl/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+</script>
+ <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/async_new.js"></script>      
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/hmemoryl" target="_blank">
+    <img src="http://avatar.csdn.net/7/0/0/1_hmemoryl.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/hmemoryl" class="user_name" target="_blank">hmemoryl</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=hmemoryl','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>22827次</span></li>
+    <li>积分：<span>603</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog3.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：603 </div>
+        </span>  </li>
+    <li>排名：<span>千里之外</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>37篇</span></li>
+    <li>转载：<span>13篇</span></li>
+    <li>译文：<span>1篇</span></li>
+    <li>评论：<span>0条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字" /></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog" />
+        <input type="hidden" name="q" id="inputQ" />
+        <input type="hidden" name="t" value="blog" />
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/hmemoryl/article/category/2155963" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C++</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155965" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C#</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155967" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据库</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155973" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">解题报告</a><span>(18)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155975" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">算法总结</a><span>(8)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2155981" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">随笔</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2899811" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">软件工程</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/2908699" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Python</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/3165429" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Jquery</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/3167517" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">codeigniter</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5577059" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Qt</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5674569" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">nginx</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5727781" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5741479" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Sublime Text</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/hmemoryl/article/category/5794525" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">node.js</a><span>(2)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/hmemoryl/article/month/2015/09">2015年09月</a><span>(2)</span></li><li><a href="/hmemoryl/article/month/2015/08">2015年08月</a><span>(5)</span></li><li><a href="/hmemoryl/article/month/2015/07">2015年07月</a><span>(2)</span></li><li><a href="/hmemoryl/article/month/2015/06">2015年06月</a><span>(1)</span></li><li><a href="/hmemoryl/article/month/2015/05">2015年05月</a><span>(2)</span></li><li><a href="/hmemoryl/article/month/2015/03">2015年03月</a><span>(4)</span></li><li><a href="/hmemoryl/article/month/2015/02">2015年02月</a><span>(2)</span></li><li><a href="/hmemoryl/article/month/2014/04">2014年04月</a><span>(18)</span></li><li><a href="/hmemoryl/article/month/2014/03">2014年03月</a><span>(16)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/bipedal_bit/article/details/22671035" title="复用数据库之中国地区表（除台湾外精确到地级市）">复用数据库之中国地区表（除台湾外精确到地级市）</a><span>(1872)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/23549025" title="poj DP（动态规划）题集">poj DP（动态规划）题集</a><span>(1085)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/48246963" title="node.js的&quot;Cannot enqueue Handshake after invoking quit&quot;错误">node.js的&quot;Cannot enqueue Handshake after invoking quit&quot;错误</a><span>(1071)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/23387761" title="求强连通分量——Tarjan、Kosaraju算法">求强连通分量——Tarjan、Kosaraju算法</a><span>(1046)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/47708009" title="Linux下Sublime的C/C++多文件程序Makefile+清理+执行配置">Linux下Sublime的C/C++多文件程序Makefile+清理+执行配置</a><span>(694)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22676029" title="C#语言SqlClient接口SQL Server数据库类">C#语言SqlClient接口SQL Server数据库类</a><span>(608)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22679109" title="winform下word文件转.mht">winform下word文件转.mht</a><span>(573)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/23860645" title="C#语言 SqlClient接口SQL Sever数据库类+OleDb接口Access数据库类">C#语言 SqlClient接口SQL Sever数据库类+OleDb接口Access数据库类</a><span>(554)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/23519611" title="poj 3259 Wormholes SPFA">poj 3259 Wormholes SPFA</a><span>(541)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/24105437" title="set/multiset，map/multimap的使用与比较+pair介绍">set/multiset，map/multimap的使用与比较+pair介绍</a><span>(536)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/bipedal_bit/article/details/48401295" title="socket.io邀请制带登录聊天室实例【DRRR-chat-room】">socket.io邀请制带登录聊天室实例【DRRR-chat-room】</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22684825" title="二分图最大匹配总结（匈牙利算法）">二分图最大匹配总结（匈牙利算法）</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22684441" title="C++运算符优先级">C++运算符优先级</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22683381" title="vector的内存释放">vector的内存释放</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22682253" title="优先队列priority_queue用法">优先队列priority_queue用法</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22680449" title="winform下Dataset转Excel文件">winform下Dataset转Excel文件</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22679109" title="winform下word文件转.mht">winform下word文件转.mht</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22678373" title="winform下word文件与byte[]互转">winform下word文件与byte[]互转</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22677971" title="winform下图片文件与byte[]互转">winform下图片文件与byte[]互转</a><span>(0)</span>
+</li>
+<li>
+<a href="/bipedal_bit/article/details/22676029" title="C#语言SqlClient接口SQL Server数据库类">C#语言SqlClient接口SQL Server数据库类</a><span>(0)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/laoyang360/article/details/53843771" target="_blank">* 而立之年——三线城市程序员的年终告白</a></li>
+<li><a href="http://blog.csdn.net/sdkfjksf/article/details/54380659" 
+target="_blank">* Java集合框架中隐藏的设计套路</a></li>
+<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/54092364" 
+target="_blank">* Python脚本下载今日头条视频(附加Android版本辅助下载器)</a></li>
+<li><a href="http://blog.csdn.net/caowenbin/article/details/54406716" target="_blank">* 人工智能的冷思考</a></li>
+<li><a href="http://blog.csdn.net/it_talk/article/details/54346566" 
+target="_blank">* React Native 实战系列教程之热更新原理分析与实现</a></li>
+
+
+</ul></ul>
+</div>
+
+
+    </div>
+    <div class="clear">
+    </div>
+
+
+                   <!-- 广告位开始 --> 
+                    <ins data-revive-zoneid="190" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins> 
+                    <!-- 广告位结束 -->
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/cnick/cnick.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/newblog.min.js"></script>
+
+
+<script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=2841237"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/JavaScript1.js"></script>
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>     <!--new top-->
+   
+    <link href="http://c.csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet" />
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/wmd.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/showdown.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/prettify.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/apps/ask_float_block.js'></script>
+   
+
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_code.css" />
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/saveToCode.js"></script>
+      <script type="text/javascript" src="//csdnimg.cn/rabbit/tracking-ad/main.js?75eacd8"></script>
+
+     <link rel="stylesheet" href="http://static.blog.csdn.net/css/fa.css" />
+
+    <div class="pop_CA_cover"  style="display:none"></div>
+    <div class="pop pop_CA"  style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon"  id="fapancle"  onclick="$('.pop_CA').hide();$('.pop_CA_cover').hide();"></span>
+          </div>
+          <iframe src="" id="fa" frameborder="0" width="100%" height="360"  scrolling="no" />
+    </div>
+</body>
+</html>   
+ 
