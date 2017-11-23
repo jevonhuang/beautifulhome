@@ -4,7 +4,13 @@
 
 问题：Archiver类定时存储的间隔是多少？
 试答：1000毫秒/配置的服务器帧数(gameUpdateHertz_)，如果gameUpdateHertz_配置是10，间隔就是100毫秒。
-说明：entity_app.h(313)，baseapp.cpp(499)，entity_app.h(738)，baseapp.cpp(519)，
+说明：entity_app.h(313)，baseapp.cpp(499)，entity_app.h(738)，baseapp.cpp(519)。
 	
-问题：Archiver类定时存储的策略是怎样？
-	
+问题：Archiver类存储的策略是怎样？
+试答：首先，存储有个周期的概念，这个存储周期（archivePeriod）在配置文件中配置，每一个存储周期会
+	  重新获取要存储的实体，然后将这些实体均匀的分布在这个周期内的每次心跳中进行存储。
+说明：archiver.cpp(40)	  
+
+问题：谁在使用Archiver类的对象？
+试答：baseapp在使用Archiver类的对象。
+说明：baseapp.h(539)，baseapp.cpp(559)，baseapp.cpp(530)。
