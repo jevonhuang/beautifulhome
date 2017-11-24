@@ -14,3 +14,6 @@
 问题：谁在使用Archiver类的对象？
 试答：baseapp在使用Archiver类的对象。
 说明：baseapp.h(539)，baseapp.cpp(559)，baseapp.cpp(530)。
+
+问题：Archiver类存储的时候是直接和数据库打交道吗？
+试答：并不是，Archiver类只是存储的发起者，具体存储的逻辑是交给base类处理的。
