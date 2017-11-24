@@ -1,0 +1,23 @@
+问题：Backuper类的功能是什么？
+试答：Backuper类的功能是将baseapp进程上的实体数据定时的存储到数据库中。(jevon)
+说明：backuper.h, backuper.cpp
+
+问题：Backuper类定时备份的间隔是多少？
+试答：1000毫秒/配置的服务器帧数(gameUpdateHertz_)，如果gameUpdateHertz_配置是10，间隔就是100毫秒。
+说明：entity_app.h(313)，baseapp.cpp(499)，entity_app.h(738)，baseapp.cpp(519)。
+	
+问题：Backuper类备份的策略是怎样？
+试答：首先，备份有个周期的概念，这个存储周期（backupPeriod）在配置文件中配置，这个周期换算成tick
+	  数量，然后根据实体的数量均匀的分布在这个周期中备份。举例说明。如果实体的数量是3，tick数量是
+	  3000，那么会再第1000个tick的时候备份一个实体，第2000个tick的时候备份第二个实体，第3000个tick
+	  的时候备份第三个实体。如果实体的数量是10000，tick数量是3000，那么基本上就是一个tick备份一条数
+	  据，然后在一个周期内没有备份完成的实体，会再第二周期中继续备份，这样循环下去。实体备份完成后
+	  重新取一份要备份的实体集。
+说明：backuper.cpp(42)	  
+
+问题：谁在使用Backuper类的对象？
+试答：baseapp在使用Backuper类的对象。
+说明：baseapp.h(538)，baseapp.cpp(558)，baseapp.cpp(523)。
+
+问题：Backuper类负责备份的具体事务吗？
+试答：没有，Backuper类只是备份时间的管理者，具体备份的逻辑是交给base类处理的。

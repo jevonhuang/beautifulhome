@@ -1,6 +1,6 @@
 问题：Archiver类的功能是什么？
 试答：Archiver类的功能是将baseapp进程上的实体数据定时的存储到数据库中。(jevon)
-说明：Archiver.h, Archiver.cpp
+说明：archiver.h, archiver.cpp
 
 问题：Archiver类定时存储的间隔是多少？
 试答：1000毫秒/配置的服务器帧数(gameUpdateHertz_)，如果gameUpdateHertz_配置是10，间隔就是100毫秒。
@@ -15,5 +15,5 @@
 试答：baseapp在使用Archiver类的对象。
 说明：baseapp.h(539)，baseapp.cpp(559)，baseapp.cpp(530)。
 
-问题：Archiver类存储的时候是直接和数据库打交道吗？
-试答：并不是，Archiver类只是存储的发起者，具体存储的逻辑是交给base类处理的。
+问题：Archiver类负责存储的具体事务吗？
+试答：没有，Archiver类只是存储时间的管理者，具体存储的逻辑是交给base类处理的。
