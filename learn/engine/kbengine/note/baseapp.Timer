@@ -1,0 +1,18 @@
+问题：谁负责Timer的过期检测（也就是Timer的心跳）？
+试答：最上层的调用时服务器的主程序（ServerApp）在它的run()函数。
+	  在run()函数中调用调度程序（Dispatcher）的处理函数processUntilBreak。
+      在processUntilBreak()函数中会循环调用各相关事务的处理函数。
+	  其中processTimers()函数负责Timer的管理器Timers的处理函数process()调用。
+	  最终在process()函数中遍历所有的Timer，检测是否过期，调用相关的处理函数。
+说明：serverapp.cpp(276), event_dispatcher.cpp(195), event_dispatcher.cpp(215), event_dispatcher.cpp(169), timer.inl(125)
+
+
+问题：Timer的管理器Timers的process()函数的实现细节？
+试答：管理器Timers维护着一个采用堆算法优化过的vector容器，用来储存各个定时器的指针。
+	  每个定时器加入的时候，会对其进行一次push_heap()排序，最终的效果是时间越快到的排在数组的前端。
+	  处理的时候，取出前端的定时判断是否过期或者取消。
+	  如果不是，就等待下一帧，这里的效率是很高的，如果有一万个定时器，也只要判断第一个就可以了。
+	  如果是，就处理，这会进行一次pop_heap()的排序，把前端的元素放到末端，调用vector的pop_back()函数弹出，提高效率。
+	  调用定时器的触发函数triggerTimer()。
+	  验证是否取消，取消的就释放定时器，没有取消的，重新加入。
+说明：timer.inl(125)
