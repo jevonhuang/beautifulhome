@@ -58,7 +58,7 @@ namespace BaseappInterface
 	{
 			KBEngine::Baseapp::getSingleton().onExecScriptCommand(pChannel, s);
 	}		
-	onExecScriptCommandBaseappMessagehandler_stream* onExecScriptCommand = static_cast<onExecScriptCommandBaseappMessagehandler_stream>(messageHandlers.add("Baseapp::onExecScriptCommand", new onExecScriptCommandArgs_stream, 0, new onExecScriptCommandBaseappMessagehandler_stream)
+	onExecScriptCommandBaseappMessagehandler_stream* onExecScriptCommand = static_cast<onExecScriptCommandBaseappMessagehandler_stream>(messageHandlers.add("Baseapp::onExecScriptCommand", new onExecScriptCommandArgs_stream, -1, new onExecScriptCommandBaseappMessagehandler_stream)
 	const onExecScriptCommandBaseappMessagehandler_stream& onExecScriptCommand = *ponExecScriptCommand	
 	
 //NETWORK_INTERFACE_DECLARE_END()	
