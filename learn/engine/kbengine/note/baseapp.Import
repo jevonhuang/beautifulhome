@@ -1,0 +1,15 @@
+问题：客户端从baseapp服务器Import了哪些信息？
+试答：客户端与服务端baseapp的协议，baseapp的实体信息。
+说明：kBEngine.cs(605)，kBEngine.cs(748)
+
+
+问题：客户端Import协议用的是哪个协议？
+试答：Baseapp_importClientMessages。
+说明：kBEngine.cs(605)
+
+
+问题：客户端Import实体用的是哪个协议？
+试答：Baseapp_importClientEntityDef。
+说明：kBEngine.cs(748)
+
+
