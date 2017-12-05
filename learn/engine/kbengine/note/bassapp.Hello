@@ -1,0 +1,16 @@
+问题：什么时候开始Hello的？
+试答：客户端与服务端连接成功后，会调用客户端回调函数onConnectTo_baseapp_callback（），在这个函数
+      中客户端发送Bassapp_hello协议。
+说明：kBEngine.cs(587)
+
+
+问题：为什么要进行Hello（Hello做了什么事）？
+试答：客户端获取服务器版本信息，发送加密信息给服务端用于加密协议通道。
+说明：baseapp.cpp(4639)
+
+
+问题：Hello之后客户端做了什么？
+试答：发送协议"Baseapp_importClientMessages"给服务端获取协议信息。
+说明：kBEngine.cs(397)，kBEngine.cs(567)
+
+
