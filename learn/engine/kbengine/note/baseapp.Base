@@ -1,0 +1,7 @@
+问题：Base类的继承层次是怎样的？
+试答：Base类继承于ScriptObject类，后者有继承于PyObject类。
+说明：base.h(49)
+
+
+问题：Base类提供了哪些功能的接口？
+试答：1，脚本操作接口；
