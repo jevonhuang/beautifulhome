@@ -7,9 +7,28 @@
 试答：1，启动信息打印函数START_MSG的定义；
 	  2, 加载配置函数loadConfig的定义；
 	  3，设置环境信息函数setEvns的定义；
-	  4，服务器进程创建函数模板kbeMainT<SERVER_APP>的声明；
+	  4，服务器进程创建函数模板kbeMainT<class SERVER_APP>的声明；
 	  5，解析main函数参数的函数parseMainCommandArgs的定义；
 	  6，KBENGINE_MAIN宏定义。
 说明：-
 
 
+问题：setEvns函数中的环境变量有什么用？
+试答：脚本信息显示，多个进程编号。
+说明：kbemain.h(92)
+
+
+问题：通用函数模板kbeMainT<class SERVER_APP>做了哪些事情？
+试答：1，调试辅助器（DebugHelper）的构建；
+	  2，密钥加载；
+	  3，事件分配器（EventDispatcher）的构建；
+	  4，网络接口构建；
+	  5，服务器组件信息构建；
+	  6，服务器应用程序构建；
+说明：kbemain.h(121)
+
+
+问题：启动时给main函数传了哪些信息？
+试答：1，组件索引；
+	  2，全局唯一索引生成编号；
+	  3，是否隐藏窗口，Windows环境下才有效；
