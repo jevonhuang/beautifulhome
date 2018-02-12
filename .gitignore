@@ -3,3 +3,6 @@
 /book/Programming in Lua 3rd/*.opensdf
 /book/Programming in Lua 3rd/*.suo
 /book/Programming in Lua 3rd/Programming in Lua 3rd.sdf
+__pycache__
+*.sqlite3
+*.pyc
