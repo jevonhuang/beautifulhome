@@ -2,11 +2,24 @@
 试答：1，utf8编码字符输出函数；
 	  2，日志打印类型的宏定义；
 	  3，通过日志类型取对应的日志名称函数；
-	  4，调试辅助器（DebugHelper）类定义；
-	  
+	  4，调试辅助器（DebugHelper）类定义；	  
 说明：-
 
 
 问题：调试辅助器（DebugHelper）类的静态函数initialize()说明？
 试答：1，根据组件类型设置log4cxx属性；
 	  2，获取logger指针，将其赋值给全局变量g_logger；
+说明：-	  
+
+
+问题：调试辅助器（DebugHelper）类的几种打印日志函数说明？
+试答：1，print_msg(s) 不加任何修饰，s是怎样的，输出就是怎样的，受日志等级控制是否输出，同info_msg(s)。
+	  2，debug_msg(s) 添加'[DEBUG]'修饰，受日志等级控制是否输出。
+	  3，error_msg(s) 添加'[ERROR]'修饰，受日志等级控制是否输出,PLATFORM_WIN32控制台下显示颜色为红色。	  
+	  4，info_msg(s) 添加'[INFO]'修饰，受日志等级控制是否输出,PLATFORM_WIN32控制台下显示颜色为红色。
+	  5，warning_msg(s) 添加'[WARNING]'修饰，受日志等级控制是否输出,PLATFORM_WIN32控制台下显示颜色为红色。
+	  6，critical_msg(s) 添加'[CRITICAL]'修饰，受日志等级控制是否输出,PLATFORM_WIN32控制台下显示颜色为红色，会输出堆栈日志。
+	  7，script_info_msg(s) 添加'[S_INFO]'修饰，受日志等级控制是否输出。
+	  8，script_error_msg(s) 添加'[S_ERROR]'修饰，受日志等级控制是否输出,PLATFORM_WIN32控制台下显示颜色为红色。
+	  9，backtrace_msg() 显示堆栈日志。
+说明：debug_helper.h(150)		
