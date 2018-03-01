@@ -21,5 +21,10 @@
 	  6，critical_msg(s) 添加'[CRITICAL]'修饰，受日志等级控制是否输出,PLATFORM_WIN32控制台下显示颜色为红色，会输出堆栈日志。
 	  7，script_info_msg(s) 添加'[S_INFO]'修饰，受日志等级控制是否输出。
 	  8，script_error_msg(s) 添加'[S_ERROR]'修饰，受日志等级控制是否输出,PLATFORM_WIN32控制台下显示颜色为红色。
-	  9，backtrace_msg() 显示堆栈日志。
+	  9，backtrace_msg() 显示堆栈日志,只有unix/linux系统下才有用。
 说明：debug_helper.h(150)		
+
+
+问题：调试辅助器（DebugHelper）类的静态函数onMessage()说明？
+试答：
+说明：-	  
