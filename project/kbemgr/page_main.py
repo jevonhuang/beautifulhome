@@ -22,7 +22,7 @@ class page_main(tkinter.Frame):
 		self.path_desc.place(x=10, y=180)		
 		self.path_input = tkinter.Entry(self)
 		self.path_input.place(x=110, y=181)
-		self.path_input.insert(0, '/root/home')
+		self.path_input.insert(0, 'E:/nirvana')
 	
 		self.addr_desc = tkinter.Label(self, text='服务器所在地址', bg ='BurlyWood', width=12)
 		self.addr_desc.place(x=10, y=220)		
@@ -49,7 +49,9 @@ class page_main(tkinter.Frame):
 		self.error_text.set(dot + error_msg + dot)
 	
 	def go(self):
-		conn = http.client.HTTPConnection(self.addr_input.get(), 8000)	
+		self.root.http_addr = self.addr_input.get()
+	
+		conn = http.client.HTTPConnection(self.root.http_addr, 8000)	
 		rkey = '1MwdxgjOYSr7aague#K6avC6qoq#*3ua'
 		curr = int(time.time())
 		path = self.path_input.get()
@@ -59,7 +61,7 @@ class page_main(tkinter.Frame):
 		args = urllib.parse.urlencode({'path':path, 'time':curr, 'sign':sign})		
 
 		try:			
-			conn.request("POST", "/wc/server_list", args)
+			conn.request("GET", "/wc/server_list?"+args)
 		except:
 			self.error_msg('连接服务失败', 0)
 			conn.close()

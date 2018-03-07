@@ -13,7 +13,8 @@ from page_add_server import page_add_server
 class Application(tkinter.Tk):
 	def __init__(self):       
 		super().__init__()
-
+		self.http_addr = '127.0.0.1'
+		
 		self.geometry('309x500')
 		self.resizable(0, 0)		
 		self.wm_title("运维工具")
@@ -32,6 +33,8 @@ class Application(tkinter.Tk):
 		self.frame_show(page_main)
 		self.server_list = []
 		
+		
+		
 	def set_server_list(self, server_list):
 		self.server_list = server_list
 		
@@ -42,9 +45,9 @@ class Application(tkinter.Tk):
 		frame = self.frames[cont]
 		frame.tkraise() # 切换，提升当前 tkinter.Frame z轴顺序（使可见）！！此语句是本程序的点睛之处
 	
-	def frame_refresh(self, cont):
+	def frame_refresh(self, cont, data=None):
 		frame = self.frames[cont]
-		frame.refresh()
+		frame.refresh(data)
 	
 	def show_page_main(self):
 		self.frame_show(page_main)
@@ -53,8 +56,9 @@ class Application(tkinter.Tk):
 		self.frame_show(page_list)
 		self.frame_refresh(page_list)
 	
-	def show_page_conf(self):
+	def show_page_conf(self, data):
 		self.frame_show(page_conf)
+		self.frame_refresh(page_conf, data)
 		
 	def show_page_add_server(self):
 		self.frame_show(page_add_server)

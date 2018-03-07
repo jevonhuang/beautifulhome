@@ -3,6 +3,7 @@ import http.client
 import urllib.parse
 import hashlib
 import json
+import time
 
 class page_list(tkinter.Frame):
 	def __init__(self, parent, root):
@@ -26,26 +27,31 @@ class page_list(tkinter.Frame):
 		
 		self.control_list = []
 		
-	def refresh(self):
+	def refresh(self, data=None):
 		for control in self.control_list:
 			control.destroy()
 		self.control_list.clear()
 	
-		server_list = self.root.get_server_list()		
+		server_list = self.root.get_server_list()
 		for i in range(len(server_list)):
-			server_label = tkinter.Label(self, text=server_list[i], bg = 'BurlyWood', width=12)
+			server = server_list[i].split('/')[-1]
+			server_label = tkinter.Label(self, text=server, bg = 'BurlyWood', width=12)
 			server_label.place(x=10, y=40+i*40)
 			self.control_list.append(server_label)
 			
-			config_btn = tkinter.Button(self, text='更新配置', bg = 'RosyBrown', command=self.update_config)
+			def index():
+				index = i + 0
+				return index
+			
+			config_btn = tkinter.Button(self, text='更新配置', bg = 'RosyBrown', command=lambda a = i: self.server_conf(a))
 			config_btn.place(x=110, y=37+i*40)
 			self.control_list.append(config_btn)
 			
-			script_btn = tkinter.Button(self, text='更新脚本', bg = 'RosyBrown', command=self.update_script)
+			script_btn = tkinter.Button(self, text='更新脚本', bg = 'RosyBrown', command=lambda a = i: self.update_script(a))
 			script_btn.place(x=175, y=37+i*40)	
 			self.control_list.append(script_btn)
 
-			server_btn = tkinter.Button(self, text='重启游戏', bg = 'RosyBrown', command=self.update_server)
+			server_btn = tkinter.Button(self, text='重启游戏', bg = 'RosyBrown', command=lambda a = i: self.update_server(a))
 			server_btn.place(x=240, y=37+i*40)
 			self.control_list.append(server_btn)			
 			
@@ -61,8 +67,43 @@ class page_list(tkinter.Frame):
 	def add_server(self):
 		self.root.show_page_add_server()	
 		
-	def update_config(self):
-		self.root.show_page_conf()	
+	def server_conf(self, index):
+		conn = http.client.HTTPConnection(self.root.http_addr, 8000)	
+		rkey = '1MwdxgjOYSr7aague#K6avC6qoq#*3ua'
+		curr = int(time.time())
+		path = self.root.get_server_list()[index]
+		data = '%s%u%s' % (path, curr, rkey)
+		data = data.lower()
+		sign = hashlib.md5(data.encode()).hexdigest()	
+		args = urllib.parse.urlencode({'path':path, 'time':curr, 'sign':sign})		
+
+		try:			
+			conn.request("GET", "/wc/server_conf?"+args)
+		except:
+			print('连接服务失败')
+			conn.close()
+			return
+		
+		response = conn.getresponse()
+		data = response.read().decode()		
+		conn.close()
+
+		if response.status != 200:
+			print('请求接口失败')			
+			return
+			
+		try:
+			data = json.loads(data)
+		except:
+			print('数据解析失败' + data)
+			return
+		
+		if data['ret'] != 0:
+			print('数据验证失败')
+			return
+			
+		data['conf']['path'] = path
+		self.root.show_page_conf(data['conf'])	
 	
 	def update_script(self):
 		pass
