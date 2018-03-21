@@ -1,0 +1,17 @@
+问题：ChannelCommon配置结构说明？
+试答：该结构有10个配置，说明如下：
+	  1，channelInternalTimeout，内部链接超时时间，配置为60秒；
+	  2，channelExternalTimeout，外部连接超时时间，配置为60秒；
+	  3，extReadBufferSize，外部链接读出缓存大小，配置为使用系统默认；
+	  4，extWriteBufferSize，外部链接写入缓存大小，配置为使用系统默认；
+	  5，intReadBufferSize，内部链接读出缓存大小，配置为16m;
+	  6，intWriteBufferSize，内部链接写入缓存大小，配置为16m;
+	  7，intReSendInterval，没有使用，服务器用Network::g_intReSendInterval；
+	  8，intReSendRetries，没有使用，服务器用Network::g_intReSendRetries；
+	  9，extReSendInterval，没有使用，服务器用Network::g_extReSendInterval；
+	 10，extReSendRetries，没有使用，服务器用Network::g_extReSendRetries；
+说明：serverconfig.h(68),serverconfig.h(206)
+
+
+
+ 

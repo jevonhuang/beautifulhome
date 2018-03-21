@@ -1,0 +1,52 @@
+问题：NetworkInterface类的说明？
+试答：NetworkInterface类负责组件的网络通信的管理，他包含了两个连接终点：
+	  外部连接终点和内部连接终点，两个终点监听：外部终点监听和内部终点监听，
+	  同时维护着一份通信列表。
+	  每个组件启动的时候，会根据组件的配置，创建一个NetwoInterface对象，
+	  依次创建两个终点，和对应的两个监听，并将两者关联起来（epoll注册）。
+说明：network_interface.h
+
+
+问题：NetworkInterface类的recreateListeningSocket()函数说明？
+试答：参数说明：
+	  1，pEndPointName，终点名称，用于日志信息打印；
+	  2，listeningPort_min，监听的最小端口；
+	  3，listeningPort_max，监听的最大端口；
+	  4，listeningInterface，指定的接口名 NIP,MAC,IP等
+	  5，pEP，连接终点；
+	  6，pLR，终点监听；
+	  7，rbuffer，读取缓存大小；
+	  8，wbuffer，写入缓存大小。
+	  
+	  过程说明：
+	  首先是断言，要求listeningInterface，pEP，pLR指针非空；
+	  如果pEP已经是有效的scoket的话，这里先释放掉；
+	  从这个设计来看，该函数不单单只在构造函数的时候可以，其他地方也可以调用；
+	  创建socket，并对他进行验证，如果验证不通过则打印错误日志并返回失败；
+	  如果配置的最小监听端口和最大监听端口一样，那么设置端口复用，避免绑定的时候失败；
+	  向底层注册文件描述符，关联pEP和pLR；
+	  查找指定接口名，通常配置为空，但某些情况下会需要这个配置；
+	  尝试绑定端口，如果端口被占用则向后递增；如果绑定失败，则报错返回；
+	  获取绑定的ip地址，然后设置地址，非阻塞模式，非延迟模式；
+	  设置读写缓存大小；
+	  最后开始监听。	  
+	  
+	  总结说明：
+	  这个接口是服务器创建网络监听的地方。
+说明：network_interface.cpp(131)
+
+
+问题：NetworkInterface类的通道(Channel)是如何建立的（registerChannel）？
+试答：组件的EventDispatcher类的processNetwork()会定时监听网卡上的socket事件，然后提交
+	  给相应的handler处理。
+	  
+	  NetworkInterface类在构造的时候，就把相关的socket（EndPoint类对象extEndpoint_，
+	  intEndpoint_）和handler（ListenerReceiver类对象pExtListenerReceiver_，
+	  pIntListenerReceiver_）关联了起来。
+	  
+	  当有连接进来的时候，ListenerReceiver类的handleInputNotification()就会处理通道的建立。
+说明：event_dispatcher.cpp(188), poller_epoll.cpp(107), event_poller.cpp(93), listener_receiver.cpp(54)
+	
+
+问题：NetworkInterface类的通道(Channel)是如何取消的（deregisterChannel）？	
+试答：
