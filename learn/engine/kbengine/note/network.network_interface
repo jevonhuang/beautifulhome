@@ -49,4 +49,12 @@
 	
 
 问题：NetworkInterface类的通道(Channel)是如何取消的（deregisterChannel）？	
+试答：会取消Channel注册的几种情况：
+	  1，通道超时，最后一次通信时间超过配置时间（60.0s）则被认定为超时通道， 服务器将踢出该通道；
+	  2，当通道变的不合法的时候；
+	  3，收到协议包出错的时候；
+说明：serverapp.cpp(305),network_interface.cpp(425),tcp_packet_receiver.cpp(131),udp_packet_receiver.cpp(135)
+
+
+问题：NetworkInterface类的通道(Channel)的超时处理流程(pChannelTimeOutHandler())？
 试答：
