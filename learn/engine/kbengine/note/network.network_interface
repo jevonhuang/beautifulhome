@@ -57,4 +57,12 @@
 
 
 问题：NetworkInterface类的通道(Channel)的超时处理流程(pChannelTimeOutHandler())？
-试答：
+试答：每个Channel创建的时候，会相应的创建一个定时器,用来检测通道是否过期；
+	  如果通道过期，会调用NetworkInterface类的onChannelTimeOut()函数，该函数内部主要是
+	  调用ServerApp类的onChannelTimeOut()函数，这个函数会调用NetworkInterface类的deregisterChannel()
+	  来注销通道，同时调用Channel的destroy()接口销毁Channel，并归还内存给内存池。
+	  
+	  在NetworkInterface类的deregisterChannel()函数中，移除通道之后，还要处理相关的善后工作，
+	  如果是内部通道，那就要处理组件移除的事情。
+	  
+说明：channel.cpp(242, 280),network_interface.cpp(410, 381),serverapp.cpp(305)
