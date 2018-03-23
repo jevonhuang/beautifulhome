@@ -66,3 +66,7 @@
 	  如果是内部通道，那就要处理组件移除的事情。
 	  
 说明：channel.cpp(242, 280),network_interface.cpp(410, 381),serverapp.cpp(305)
+
+
+问题：NetworkInterface类是如何使用他所管理的通道呢，用他们做什么呢,（processChannels()函数说明）？
+试答：
