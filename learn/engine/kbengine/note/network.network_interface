@@ -69,4 +69,19 @@
 
 
 问题：NetworkInterface类是如何使用他所管理的通道呢，用他们做什么呢,（processChannels()函数说明）？
-试答：
+试答：服务器的每个组件都有一个定时器来处理组件的定时事务，其中的一个事务就是调用NetworkInterface类
+	  processChannels()函数。
+	  在processChannels()函数中，主要处理失效通道的注销和收到消息的处理。
+	  
+	  
+问题：NetworkInterface类的延迟发送时什么目的，延迟流程是怎样的呢？
+试答：这里延迟发送，其实就是把发送的信息缓存到下一帧去发送。
+	  NetworkInterface类有个成员变量DelayedChannels类的指针pDelayedChannels_，专门负责延迟消息的处理。
+	  每当有要延迟的消息（目前看来是日记系统用到了这个机制），NetworkInterface的delayedSend接口负责往
+	  DelayedChannels类pDelayedChannels_指向对象添加需要延迟发送的Channel。
+	  
+	  DelayedChannels类是Task类的子类，在初始化的时候，把自己加入了任务事务的处理队列中，这样每一帧都
+	  会检测是否有要延迟发送的Channel，并对其进行处理(send)。
+	  
+	  因此，延迟发送的Channel最终在下一帧（因为发送包是在任务事务流程之后）的时候发送出去。
+说明：network_interface.cpp(295), delayed_channels.h
