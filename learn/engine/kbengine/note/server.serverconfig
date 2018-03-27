@@ -13,5 +13,8 @@
 说明：serverconfig.h(68),serverconfig.h(206)
 
 
-
+问题：ServerConfig类的updateInfos()函数说明？
+试答：更新和纠正组件配置，因为IP地址和组件id是动态生成的，没有办法直接从配置中获取，
+	  所以在这里做了一下更新。
+说明：serverconfig(1508)
  
