@@ -1,0 +1,14 @@
+问题：PoolObject类说明？
+试答：池对象类，所有使用池的对象都派生于这个类，同时必须实现回收功能。
+	  这个类的接口一般被ObjectPool类对象调用。因为是属于内存管理部分，
+	  所以派生类尽量不关心调用的细节，只关心对象创建和删除需要处理的
+	  业务。
+	  
+	  函数和变量说明：
+	  onReclaimObject()函数在回收对象（reclaimObject_）的时候调用；
+	  onEabledPoolObject()函数在创建对象（createObject）的时候调用；
+	  getPoolObjectBytes()函数目前只有MemoryStream类有重载；
+	  destructorPoolObject()函数对象池析构（destroy）的时候调用，目前貌似没有对象需要这个处理；
+	  isEnabledPoolObject_变量用来标识池对象是否处于激活状态，也就是从池中已经取出了，正在使用中。
+	  
+说明：objectpool.h(362)
