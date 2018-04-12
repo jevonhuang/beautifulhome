@@ -30,3 +30,8 @@
 	  
 	  从对象池类中取走的对象必须自己管理（参考createObjecte()实现），不然会造成内存泄漏。
 说明：objectpool.h(52)
+
+
+问题：SmartObjectPool类和SmartPoolObject类说明？
+试答：智能对象池和智能池对象是在原来的对象池功能基础上加了自动回收的功能，减少内存泄漏的可能性。
+说明：objectpool.h(427)
