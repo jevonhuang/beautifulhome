@@ -1,0 +1,40 @@
+问题：Bundle类的说明？
+试答：顾名思义，Bundle是捆绑的意思，这里的Bundle类用来捆绑多个消息包，但并不负责发送，
+	  发送相关的执行交由通道（Channel）来做。
+说明：bundle.h
+
+
+问题：Bundle类的成员变量说明？
+试答：pChannel				: 发送Bundle类消息包的通道，在发送时设置，Bundle类用来消息跟踪。
+	  numMessages_			：消息包的个数，当有两个消息包时，会触发消息跟踪。
+	  pCurrPacket_			：当前捆绑的消息包。
+	  currMsgID_			：当前捆绑的消息包的索引。
+	  currMsgPacketCount_	：当前捆绑的消息包使用Packet个数。
+	  currMsgLength_		：当前捆绑的消息包的字节长度。
+	  currMsgHandlerLength_	：当前捆绑的消息包的处理器字节长度。
+	  currMsgLengthPos_		：当前消息包的长度计算位置。
+	  packets_				：捆绑消息包的Packet容器。
+	  isTCPPacket_			：用来标示Packet类型。
+	  packetMaxSize_		：每个Packet可以容纳的最大字节数。
+	  pCurrMsgHandler_		：当前消息包处理器。
+说明：bundle.h, bundle.cpp
+
+
+问题：Bundle类的静态成员函数说明？
+试答：因为Bundle类使用比较频繁，所以对Bundle类的对象使用了对象池来管理内存使用，它的几个
+	  静态函数就是处理这些事情的。
+	  
+	  静态函数：
+	  createSmartPoolObj()	：创建一个可以自己释放的Bundle类对象；
+	  ObjPool()				：获取对象池；
+	  reclaimPoolObject()	: 回收池对象；
+	  destroyObjPool()		：销毁对象池；
+	  
+	  同时，Bundle类派生于PoolObject类，所以必须实现几个相关的函数，这里实现了：
+	  onReclaimObject()		：把自己放回对象池中；
+	  getPoolObjectBytes()	：获取对象的字节数。
+说明：bundle.h
+
+
+问题：Bundle类核心函数newMessage()说明？
+试答：
