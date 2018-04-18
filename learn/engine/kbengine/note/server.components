@@ -8,5 +8,21 @@
 
 
 问题：Components类对象所在组件是如何把自己的组件信息加入管理的？
+试答：Components类有两个成员变量，componentType_和componentID_，用来标示
+	  本组件的身份。这两个变量在Components对象初始化（initialize）的时候，
+	  由进程启动时携带的参数提供。
+	  
+	  ServerApp类在构造的时候，会为Component类对象添加一个任务事件，把
+	  Components类对象所在组件的信息广播给其他关心的组件并加入到对方的
+	  components类对象的管理中。
+说明：components.h(91),serverapp.cpp(81),components.cpp(1457)
+
+
+问题：Components类initialize()函数说明？
+试答：初始化组件信息，同时根据自己的主线类型设置需要关心的其他类型组件。  
+说明：component.cpp(91)
+
+
+问题：Component类对象加入其他组件的组件管理器的流程？
 试答：
- 
+说明：
