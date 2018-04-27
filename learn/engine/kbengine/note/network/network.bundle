@@ -55,4 +55,5 @@
 
 
 问题：Bundle类中的消息包是如何被发送出去的？
-试答：发送Bundle类中的消息包是Channel类的send()接口。
+试答：发送Bundle类中的消息包是Channel类的send()接口，有它处理发送消息的细节。
+说明：channel.cpp(475)
