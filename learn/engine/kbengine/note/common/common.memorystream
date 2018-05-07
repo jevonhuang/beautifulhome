@@ -1,0 +1,34 @@
+问题：MemoryStream类说明？
+试答：首先，MemeoryStream派生于池对象类，所以实现了一些跟池对象管理相关的接口；
+	  其次，用vector容器对字节流进行管理，同时实现了相关的接口。
+说明：memorystream.h
+
+
+问题：MemoryStream类append()函数家族说明？
+试答：append()函数一共有6个，分别是：
+	  1，template <typename T> void append(T value)；
+	  2，template <typename T> void append(const T *src, size_t cnt)；
+	  3，void append(const std::string& str);
+	  4，void append(const char *src, size_t cnt)；
+	  5，void append(const uint8 *src, size_t cnt)；
+	  6，void append(const MemoryStream& buffer)。
+	  
+	  1,2,3,4,6函数都为了支持不同类型数据的输入，5是写入过程的逻辑处理。
+说明：memorystream.h	  
+
+
+问题：MemoryStream类void append(const uint8 *src, size_t cnt)函数过程说明？
+试答：如果cnt是0，那就没必要处理了，直接返回；
+	  如果写入的字节已经超过了10000000字节，那就产生断言（看来这是比较严重的事情，可为什么是10000000呢？）；
+	  如果字节数组的长度不够写入，那么就更新长度；
+	  写入数据，更新写入位置。
+说明：memorystream.h(568)
+
+
+问题：MemoryStream类appendBlob()函数家族说明？
+试答：还不知道是为什么需要调用她们。
+说明：memorystream.h(527)
+
+
+问题：MemoryStream类put()函数家族说明？
+试答：
