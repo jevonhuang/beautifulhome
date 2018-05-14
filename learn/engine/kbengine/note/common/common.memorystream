@@ -26,9 +26,30 @@
 
 
 问题：MemoryStream类appendBlob()函数家族说明？
-试答：还不知道是为什么需要调用她们。
+试答：appendBlob()函数一共有3个，分别是：
+	  1，void appendBlob(const char *src, ArraySize cnt)
+	  2，void appendBlob(const std::string& datas)
+	  3，void appendBlob(const MemoryStream *stream)
+	  相对于append()相关函数，这里多写入了一个长度到vecotr容器中。
 说明：memorystream.h(527)
 
 
 问题：MemoryStream类put()函数家族说明？
-试答：
+试答：没有找到调用的地方。。。
+说明：memorystream.h(129, 702)
+
+
+问题：MemoryStream类read()函数家族说明？
+试答：read()函数一共有3个，分别是：
+	  1，template <typename T> T read()
+	  2，template <typename T> T read(size_t pos) const
+	  3，void read(uint8 *dest, size_t len) //没有找到用的地方
+说明：memorystream.h(129, 702)
+
+
+问题：MemoryStream类readBlob()函数说明？
+试答：对appendBlob的解析。
+说明：memorystream.h(409)
+
+
+问题：----？
