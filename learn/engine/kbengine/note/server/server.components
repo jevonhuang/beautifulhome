@@ -12,7 +12,7 @@
 	  本组件的身份。这两个变量在Components对象初始化（initialize）的时候，
 	  由进程启动时携带的参数提供。
 	  
-	  ServerApp类在构造的时候，会为Component类对象添加一个任务事件，把
+	  ServerApp类在构造的时候，会为Components类对象添加一个任务事件，把
 	  Components类对象所在组件的信息广播给其他关心的组件并加入到对方的
 	  components类对象的管理中。
 说明：components.h(91),serverapp.cpp(81),components.cpp(1457)
