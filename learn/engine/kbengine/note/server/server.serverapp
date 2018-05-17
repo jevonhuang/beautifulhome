@@ -1,0 +1,118 @@
+问题：ServerApp类说明？
+试答：ServerApp类是KBEngine的核心类，是xxxApp的基类，抽象了各个App的通用接口和行为规范。
+说明：-
+
+
+问题：ServerApp的运行流程？
+试答：分四步走：
+	  1，constructor
+	  2，initialize
+	  3，run
+	  4，finalise
+说明：kbemain.h(163, 167, 191, 194)
+
+
+问题：ServerApp的constructor时做了哪些事？
+试答：1，成员变量的初始化；
+	  2，添加组件管理器任务；
+	  3，组件激活报告处理器相关定时器创建；
+	  4，设置Profile警告间隔。
+说明：serverapp.cpp(83)
+
+
+问题：ServerApp的initialize时做了哪些事？
+试答：initialize分为之前，开始（initializeBegin），之中（inInitialize），结束（initializeEnd），之后五个时期：
+	  1，之前时期，是对安装信号，初始化线程池，加载配置；
+	  2，开始时期，由其派生类根据具体需求决定；
+	  3，之中时期，由其派生类根据具体需求决定；
+	  4，结束时期，由其派生类根据具体需求决定；
+	  5，之后时间，重新安装信号，初始化监视者。
+说明：serverapp.cpp(155)
+
+
+问题：ServerApp的run时做了哪些事？
+试答：调用EventDispatcher类的processUntilBreak()函数，深入该函数，发现这里是一个无限循环的过程。
+	  在循环的过程中不停的处理以下事务：
+	  1，任务
+	  2，定时器
+	  3，统计
+	  4，网络信息
+	  当进程遇到异常时，会打断该循环，然后进程会退出。
+说明：serverapp.cpp(278)
+
+
+问题：ServerApp的finalise时做了哪些事？
+试答：剖析组内存释放；线程池内存释放；监视路径内存释放；消息处理器内存释放；网络相关对象池释放。
+说明：serverapp.cpp(252)
+
+
+问题：ServerApp的installSignals()函数时做了哪些事？
+试答：绑定信号到该进程，然后添加关心的信号。（详细参考server.signal_handler）
+说明：serverapp.cpp(145)
+
+
+问题：ServerApp的initThreadPool()函数时做了哪些事？
+试答：预创建一些线程来处理任务事务。（详细参考thread.threadpool）
+说明：serverapp.cpp(237)
+
+
+问题：ServerApp类管理了哪些接口？
+试答：1，启动流程接口：
+			initialize();
+			initializeBegin();
+			inInitialize();
+			initializeEnd();
+			run();
+			finalise();
+			initThreadPool();
+			installSignals();
+			initializeWatcher();
+			loadConfig();
+			
+	  2，继承的基类们的接口：
+			onSignalled();			SignalHandler类
+			handleTimeout(); 		TimerHandler类
+			onShutdownBegin();		ShutdownHandler类
+			onShutdown();			ShutdownHandler类
+			onShutdownEnd();		ShutdownHandler类
+			onChannelTimeOut();		ChannelTimeOutHandler类
+			onChannelDeregister();	ChannelDeregisterHandler类
+			onAddComponent();		ComponentsNotificationHandler类
+			onRemoveComponent();	ComponentsNotificationHandler类
+			onIdentityillegal();	ComponentsNotificationHandler类
+			
+	  3，网络接口：
+			queryWatcher();	
+			请求查看watcher
+			
+			onRegisterNewApp();
+			注册一个新激活的baseapp或者cellapp或者dbmgr，通常是一个新的app被启动了， 它需要向某些组件注册自己。	
+
+			onAppActiveTick();
+			某个app向本app告知处于活动状态。
+			
+			reqClose();
+			请求断开服务器的连接
+			
+			lookApp();
+			某个app请求查看该app
+			
+			reqCloseServer();
+			请求关闭服务器
+			
+			queryLoad();
+			某个app请求查看该app负载状态， 通常是console请求查看
+			
+			reqKillServer();
+			请求关闭服务器
+			
+			hello();
+			客户端与服务端第一次建立交互, 客户端发送自己的版本号与通讯密钥等信息，给服务端， 服务端返回是否握手成功
+			
+			startProfile();
+			console请求开始profile
+	  
+	  4，其他一些接口；
+
+	  
+说明：serverapp.h
