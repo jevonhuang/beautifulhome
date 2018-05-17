@@ -1,0 +1,33 @@
+问题：SignalHandlers类管理哪些信息？
+试答：SignalHandlers类是组件对各种信号处理器（SignalHandler）的管理。它维护着两个容器，
+	  一个是信号对应着处理器的映射（map）容器；一个是存储接收到信号的向量（vector）容器。
+	  
+	  一般来讲，SignalHandlers类是ServerApp相关的，所以它维护着一个指向ServerApp的指针papp_。
+说明：signal_handler.h
+
+
+问题：SignalHandlers类的如何进入到工作状态的？	
+试答：组件的ServerApp类对象在initialize阶段会调用installSignals()函数，这个函数做了两件事：
+	  1，往事件分配器（EventDispatcher）的任务管理器（pTasks_）里面添加一个任务，这个任务
+		 就是SignalHandlers类对象，因为它派生于Task类；
+	  2，添加三个信号（SIGINT，SIGPIPE，SIGHUP），他们的处理器是派生于SignalHandler的ServerApp，
+		 这里用到了映射容器（singnalHandlerMap_）；
+	  
+	  组件的ServerApp类对象在run阶段中会调用EventDispatcher类processTasks()函数，遍历Task
+	  列表，调用Task的process函数。SignalHandlers类对象作为其中的一个任务，会调用自己的process()
+	  接口，处理信号。
+说明：serverapp.cpp(145), signal_handler.cpp(100, 159)
+
+
+问题：SignalHandlers类的如何添加一个信号到向量容器（signalledVec_）中的？	
+试答：SignalHandlers类的addSignal()函数，除了会将信号和处理函数关联，同时还设置了当系统底层
+	  触发该信号时的处理函数，这里是void signalHandler(int signum)。
+	  
+	  signalHandler()函数最终是把信号加入了signalledVec_容器中，这样SignalHandlers类的process()
+	  函数调用时，就会处理容器中的信号。
+说明：signal_handler.cpp(107, 116)
+
+
+问题：linux的信号机制？
+试答：参考网络资源
+说明：
