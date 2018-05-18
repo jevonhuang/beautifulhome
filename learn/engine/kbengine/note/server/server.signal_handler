@@ -6,7 +6,7 @@
 说明：signal_handler.h
 
 
-问题：SignalHandlers类的如何进入到工作状态的？	
+问题：SignalHandlers类是如何进入到工作状态的？	
 试答：组件的ServerApp类对象在initialize阶段会调用installSignals()函数，这个函数做了两件事：
 	  1，往事件分配器（EventDispatcher）的任务管理器（pTasks_）里面添加一个任务，这个任务
 		 就是SignalHandlers类对象，因为它派生于Task类；
@@ -16,6 +16,8 @@
 	  组件的ServerApp类对象在run阶段中会调用EventDispatcher类processTasks()函数，遍历Task
 	  列表，调用Task的process函数。SignalHandlers类对象作为其中的一个任务，会调用自己的process()
 	  接口，处理信号。
+	  
+	  
 说明：serverapp.cpp(145), signal_handler.cpp(100, 159)
 
 
