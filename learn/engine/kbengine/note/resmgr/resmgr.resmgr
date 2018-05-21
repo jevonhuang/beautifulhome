@@ -29,3 +29,26 @@
 试答：在Baseapp::initializeEnd()的时候，根据是否配置资源池检测时间，会加入以resmgr，
       作为处理器的相关的定时器。
 说明：baseapp.cpp(543)
+
+
+问题：resmgr类中respaths()获取的路径包含哪些？
+试答：1，../kbe/res
+	  2，../assets
+	  3，../assets/scripts
+	  4，../assets/res
+说明：--
+
+
+问题：resmgr类中getPyUserResPath()获取的路径包含哪些？
+试答：../assets/res
+说明：--
+
+
+问题：resmgr类中getPyUserScriptsPath()获取的路径包含哪些？
+试答：../assets/scripts
+说明：--
+
+
+问题：resmgr类中getPySysResPath()获取的路径包含哪些？
+试答：../kbe/res
+说明：--
