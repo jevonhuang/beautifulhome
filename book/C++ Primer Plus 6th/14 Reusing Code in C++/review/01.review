@@ -1,0 +1,5 @@
+class PolarBear : public class Bear
+class Hone : private class Kitchen
+class Programmer : public class Person
+class HorseAndJockey : private Person
+class Driver : public Person, private Automobile
