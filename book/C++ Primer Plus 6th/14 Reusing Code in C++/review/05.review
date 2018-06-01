@@ -1,0 +1,5 @@
+ArrayTp<string> sa;
+Stack< ArrayTp<double> > stck_arr_db;
+ArrayTp< StackTp<Worker*> > arr_stck_wpr;
+
+程序清单14.18生成4个模板：ArrayTp<int, 10>、ArrayTp<double, 10>、ArrayTp<int, 5>、ArrayTp< ArrayTp<int, 5>, 10>。
