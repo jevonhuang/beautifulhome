@@ -1,0 +1,27 @@
+问题：PythonApp类设计说明？
+试答：顾名思义是对Python层的封装，将与脚本相关的操作都放在这一层，避免了代码的混乱。同时，
+	  如果想改用其他脚本时，比如Lua，只要实现个LuaApp就可以与引擎的其他部分对接。
+说明：python_app.h
+
+
+问题：PythonApp类inInitialize()函数说明？
+试答：1，安装脚本环境（installPyScript）；2，安装kbengine模块（installPyModules）。
+说明：python_app.cpp(161, 241)
+
+
+问题：PythonApp类installPyScript()函数说明？
+试答：1，验证引擎相关路径是否有效；
+	  2，设置组件多个用户脚本路径；
+	  3，设置python脚本工作目录；
+	  4，安装脚本环境；
+	  5，安装PyMemoryStream模块。
+说明：python_app.cpp(161)
+
+
+问题：PythonApp类installPyModules()函数说明？
+试答：1，入口模块名称获取
+	  2，给Kbengine模块加入c++层接口；
+	  3，import kbemain模块。
+说明：python_app.cpp(241)
+
+
