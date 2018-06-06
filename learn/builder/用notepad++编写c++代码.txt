@@ -23,10 +23,9 @@ return 0;
 5：菜单栏--》运行--》运行，弹出框中输入：
 
 cmd /k g++ -std=c++11 -o "$(CURRENT_DIRECTORY)/$(NAME_PART).exe" "$(FULL_CURRENT_PATH)" & PAUSE & EXIT
-cmd /k g++ -std=c++11 -o $(NAME_PART).exe "$(FULL_CURRENT_PATH)" & PAUSE & EXIT
+cmd /k g++ -std=c++11 -c -o "$(CURRENT_DIRECTORY)/$(NAME_PART).o" "$(FULL_CURRENT_PATH)" & PAUSE & EXIT
 选择快捷键后保存为： G++编译，注意快捷键不要有重复，在点击弹出框的运行，Ok，关闭Notepad，再打开Notepad++；
 
 6：菜单栏--》运行--》运行，弹出框中输入：
 cmd /k "$(CURRENT_DIRECTORY)/$(NAME_PART).exe" & PAUSE & EXIT
-cmd /k "$(NAME_PART)" & PAUSE & EXIT
 同理保存名称换为为： G++运行，再点运行程序就会执行了
