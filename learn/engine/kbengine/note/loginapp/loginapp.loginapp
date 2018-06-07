@@ -1,0 +1,75 @@
+问题：Loginapp类设计说明？
+试答：基类接口的重载和特定网络接口的实现。
+说明：loginapp.h
+
+
+问题：TimeOutType枚举说明？
+试答：TimeOutType枚举定义在类内部，但以上一个基类定义的枚举最大值加一为开始，比如，Loginapp的
+	  枚举TIMEOUT_TICK是以基类PythonApp的枚举最大值（TIMEOUT_PYTHONAPP_MAX）加一开始的。
+	  
+	  因为不同定时器可以挂同一个对象来处理过期逻辑，所以在同一个对象内需要不同的TimeOutType类型
+	  来区分handleTimeout是哪个定时器触发的。
+	  
+	  Loginapp中过期类型为TIMEOUT_TICK的定时器是在initializeEnd()函数中加入的。
+	  
+	  枚举作用域说明：在枚举类型中定义的常量，属于定义枚举的作用域，而不属于这个枚举类型。
+说明：loginapp.h(46), loginapp.cpp(164)
+
+
+问题：Loginapp构造函数说明？
+试答：因为实现了构造函数，但没有提供默认构造函数，所以Loginapp的构造必须要求四个参数：
+	  1，事件派发器；
+	  2，网络接口；
+	  3，组件类型；
+	  4，组件索引；
+	  
+	  其他类成员的构造要么调用基于以上四个参数的构造函数，要么调用默认构造函数。
+说明：loginapp.cpp(50)
+
+
+问题：Loginapp析构函数说明？
+试答：对资源释放：
+	  1，其他的成员走自己的析构函数；
+	  2，pHttpCBHandler的释放；
+	  3，pTelnetServer_不知道为啥没释放，finalise()函数里面也没有。？？？
+说明：loginapp.cpp(66)
+
+
+问题：run()函数说明？
+试答：调用父类（PythonApp类）接口，再调用父类（ServerApp类）接口，
+	  最终调用EventDispatcher::processUntilBreak()。
+说明：loginapp.cpp(88)
+
+
+问题：onChannelDeregister(...)函数说明？
+试答：当某个管道断开连接的时候，会调用该函数，函数首先处理外部的管道，然后处理内部的管道。
+		
+	  对于外部管道，会发送一个包给dbmgr组件，通知它从队列中清除他的请求，避免拥塞。
+	  
+	  对于内部管道，需要重组件管理器里面移除掉。
+
+	  该函数是基类ChannelDeregisterHandler的接口，在Loginapp类的父类ServerApp类构造的时候，
+	  会把拥有这个接口的this指针赋值给NetworkInterface类成员pChannelDeregisterHandler_，在
+	  NetworkInterface类deregisterChannel()函数中会用这个成员来调用onChannelDeregister()函数。
+说明：loginapp.cpp(118), serverapp.cpp(79,298), network_interface.cpp(381)
+	  
+	  
+问题：handleTimeout()函数说明？
+试答：在启动loginapp组件的initialize阶段中，分阶段initializeEnd会加入一个每秒定时器，并把自己
+	  作为处理器（因为派生于TimerHandler）与该定时器关联，设置类型为TIMEOUT_TICK，这样当定时器
+	  过期时就会调用处理器（Loginapp类）的接口函数handleTimeout()。
+	  
+	  在handleTimeout()函数中，首先调用基类的handleTimeout()处理相关的事务；在arg参数为TIMEOUT_TICK
+	  时，调用handleMainTick()处理相关业务。
+说明：loginapp.cpp(94,163)	
+
+
+问题：handleMainTick()函数说明？  
+试答：Loginapp类主心跳，处理的事务有：
+	  1，线程池相关；
+	  2，网络消息相关；
+	  3，登录列表相关；
+	  4，创建列表相关；
+说明：loginapp.cpp(109)
+
+
