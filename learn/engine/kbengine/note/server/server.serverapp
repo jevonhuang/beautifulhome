@@ -1,4 +1,4 @@
-问题：ServerApp类说明？
+问题：ServerApp类设计说明？
 试答：ServerApp类是KBEngine的核心类，是xxxApp的基类，抽象了各个App的通用接口和行为规范。
 说明：-
 

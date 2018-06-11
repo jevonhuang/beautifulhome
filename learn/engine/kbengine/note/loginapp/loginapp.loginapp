@@ -73,3 +73,49 @@
 说明：loginapp.cpp(109)
 
 
+问题：initializeBegin()函数说明？
+试答：不处理事务，return true。
+说明：loginapp.cpp(151)
+
+
+问题：inInitialize()函数说明？
+试答：调用父类PythonApp的inInitialize()。
+说明：loginapp.cpp(157)
+
+
+问题：initializeEnd()函数说明？
+试答：1，调用父类PythonApp的inInitialize()；
+	  2，调用脚本接口onLoginAppReady；
+	  3，调用脚本接口onLoginAppPostAddr；
+	  4，创建TelnetServer。
+说明：loginapp.cpp(163)
+
+
+问题：finalise()函数说明？
+试答：1，取消之前加入的定时器；
+	  2，调用父类PythonApp的finalise()。
+说明：loginapp.cpp(228)
+
+
+问题：onInstallPyModules()函数说明？
+试答：父类PythonApp的接口，这里实现了重载，给脚本模块加入服务器错误码枚举。
+	  在PythonApp类的installPyModules()的时候会调用onInstallPyModules()。
+说明：loginapp.cpp(214)
+
+
+问题：onShutdownBegin()函数说明？
+试答：调用父类PythonApp的onShutdownBegin()，通知脚本onLoginAppShutDown装备关服。
+说明：loginapp.cpp(72)
+
+
+问题：onShutdownEnd()函数说明？
+试答：调用父类PythonApp的onShutdownEnd()
+说明：loginapp.cpp(82)
+
+
+问题：onHello()函数说明？
+试答：发送引擎版本号、脚本版本号、消息协议Md5、实体Md5、组件类型给客户端；
+	  用客户端发送上来的密钥（encryptedKey）加密通讯管道。
+说明：loginapp.cpp(1336)
+
+
