@@ -42,15 +42,23 @@
 
 
 问题：onChannelDeregister(...)函数说明？
-试答：当某个管道断开连接的时候，会调用该函数，函数首先处理外部的管道，然后处理内部的管道。
-		
-	  对于外部管道，会发送一个包给dbmgr组件，通知它从队列中清除他的请求，避免拥塞。
+试答：该函数是基类ChannelDeregisterHandler的接口；
 	  
-	  对于内部管道，需要重组件管理器里面移除掉。
-
-	  该函数是基类ChannelDeregisterHandler的接口，在Loginapp类的父类ServerApp类构造的时候，
-	  会把拥有这个接口的this指针赋值给NetworkInterface类成员pChannelDeregisterHandler_，在
-	  NetworkInterface类deregisterChannel()函数中会用这个成员来调用onChannelDeregister()函数。
+	  在Loginapp类的父类ServerApp类构造的时候，会把拥有这个接口的this指针赋值给
+	  NetworkInterface类成员pChannelDeregisterHandler_;
+	  
+	  当某个管道断开连接的时候，会调用NetworkInterface类deregisterChannel()函数，
+	  其又会调用onChannelDeregister()函数;
+	  
+	  onChannelDeregister()函数首先处理外部的管道，然后处理内部的管道；
+		
+	  对于外部管道，其实就是客户端连接，客户端因为外力环境断开网络、登录服连接完毕主动
+	  关闭、连接过期等都会触发这个回调；
+	  
+	  当这个管道中有格外数据时，会发送一个包给dbmgr组件，通知它从队列中清除相关信息，其实
+	  这个格外信息就是登陆账号或创建账号的信息。
+	  
+	  对于内部管道，其实就是各组件连接，需要从组件管理器里面移除掉。
 说明：loginapp.cpp(118), serverapp.cpp(79,298), network_interface.cpp(381)
 	  
 	  
@@ -116,6 +124,50 @@
 问题：onHello()函数说明？
 试答：发送引擎版本号、脚本版本号、消息协议Md5、实体Md5、组件类型给客户端；
 	  用客户端发送上来的密钥（encryptedKey）加密通讯管道。
+	  
+	  扩展知识：加密相关知识。
 说明：loginapp.cpp(1336)
 
 
+问题：onClientActiveTick()函数说明？
+试答：客户端每隔几秒（1.0.0插件上是15秒）跟服务端通讯，确认客户端还处于活跃状态；
+	  服务端收到信息包时，会更新管道的过期时间，并会发一个包给客户端。
+说明：loginapp.cpp(264)
+
+
+问题：reqCreateAccount()函数说明?
+试答：客户端请求创建游戏账号接口。
+说明：loginapp.cpp(538)
+	  
+	 
+问题：_createAccount()函数说明？
+试答：创建账号的逻辑处理，具体分析如下：
+	  1，确认是否开放了账号注册功能，如果没有开放那就不能创建账号；
+	  2，对账号和密码进行修剪，去掉前后的空格；
+	  3，对账号、密码和附加信息的长度进行验证；
+	  4，如果服务器正在关闭中，则不能创建账号；
+	  5，如果创建的账号已经在缓存中，则不能创建账号；
+	  6，脚本处理创建账号请求；
+	  7，创建账号类型识别，如果是邮件注册要求是否邮件地址正确，如果是普通注册要求用户名是否正确；
+	  8，缓存创建账号的信息；
+	  9，获取dbmgr管道，如果管道无效，则不能创建账号；
+	  10，缓存格外信息extra到客户端的管道中，这个信息用来处理客户端断开连接时，是否通知dbmgr清除相关信息；
+	  11，将信息提交给dbmgr继续处理后续流程。
+说明：loginapp.cpp(277)
+
+
+问题：reqCreateMailAccount()函数说明?
+试答：与reqCreateAccount()函数功能相同，只不过ACCOUNT_TYPE类型是ACCOUNT_TYPE_MAIL。
+说明：loginapp.cpp(538)
+
+
+问题：onReqCreateAccountResult()函数说明？
+试答：dbmgr创建账号流程完毕的回调。
+	  主要是根据实际业务的需求，在脚本处理完逻辑之后，通知客户端创建账号结果。
+说明：loginapp.cpp(565)
+
+
+问题：onReqCreateMailAccountResult()函数说明？
+试答：基本上同上，多了一步邮件激活的过程。
+	  todo：邮件激活过程说明带完善。
+说明：loginapp.cpp(616)
