@@ -282,5 +282,44 @@
 
 
 问题：importServerErrorsDescr()函数说明？
-试答：
+试答：服务端提供给客户端的接口，用于导入错误提示，具体逻辑如下：
+	  1，初始一个静态变量的Bundle对象，第一次会去填充这个对象信息；
+	  2，读取xml配置；
+	  3，打包发送。
 说明：loginapp.cpp(1466)
+
+
+问题：onVersionNotMatch()函数说明？
+试答：在hello的时候，发现引擎版本不匹配，调用这个函数给客户端发包。
+说明：loginapp.cpp(1357)
+
+
+问题：onScriptVersionNotMatch()函数说明？
+试答：在hello的时候，发现脚本版本不匹配，调用这个函数给客户端发包。
+说明：loginapp.cpp(1357)
+
+
+问题：onBaseappInitProgress()函数说明？
+试答：当baseappmgr组件发现所有的baseapp的启动完毕会通知登录服baseapp准备完毕了。
+说明：loginapp.cpp(1517)
+
+
+问题：mainProcessTimer_变量说明？
+试答：loginapp组件的主定时器，在initializeEnd()中创建，finalise()中取消。
+	  对应的处理函数是handleTimeout()。
+说明：loginapp.cpp(55,168,220)
+
+
+问题：pendingCreateMgr_变量说明？
+试答：记录注册账号还未登陆的请求，他的process()处理过期处理，2分钟没有创建成功判定为过期。
+说明：loginapp.cpp(56,114,324,488,580,645)
+
+
+问题：PendingLoginMgr_变量说明？
+试答：记录登录到服务器但还未处理完毕的账号，他的process()处理过期处理，2分钟没有登录成功判定为过期。
+说明：loginapp.cpp(57,113,1056,1071,1099,1192,1294)
+
+
+问题：digest_变量说明？
+试答：登录验证，由dbmgr组件提供。
+说明：loginapp.cpp(58,238,939,942,1331)
