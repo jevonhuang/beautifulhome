@@ -1,0 +1,37 @@
+问题：Baseapp的继承关系？
+试答：继承于EntityApp<T>模板类，后者又继承与ServerApp类。
+说明：baseapp.h(37)
+
+
+问题：TimeOutType枚举说明？
+试答：TimeOutType枚举定义在类内部，但以上一个基类定义的枚举最大值加一为开始，比如，Baseapp的
+	  枚举TIMEOUT_CHECK_STATUS是以基类EntityApp的枚举最大值（TIMEOUT_ENTITYAPP_MAX）加一开始的。
+	  
+	  因为不同定时器可以挂同一个对象来处理过期逻辑，所以在同一个对象内需要不同的TimeOutType类型
+	  来区分handleTimeout是哪个定时器触发的。
+	  
+	  Baseapp中过期类型为TIMEOUT_CHECK_STATUS的定时器是在initializeEnd()函数中加入的。
+	  
+	  枚举作用域说明：在枚举类型中定义的常量，属于定义枚举的作用域，而不属于这个枚举类型。
+说明：baseapp.h(41), baseapp.cpp(615)
+
+
+问题：Baseapp构造函数说明？
+试答：因为实现了构造函数，但没有提供默认构造函数，所以Loginapp的构造必须要求四个参数：
+	  1，事件派发器；
+	  2，网络接口；
+	  3，组件类型；
+	  4，组件索引；
+	  
+	  其他类成员的构造要么调用基于以上四个参数的构造函数，要么调用默认构造函数。
+说明：baseapp.cpp(220)
+
+
+问题：Baseapp析构函数说明？
+试答：对资源释放：
+	  1，其他的成员走自己的析构函数；
+	  2，pInitProgressHandler_的释放；
+	  3, 重置EntityCallAbstract类的CallHooks（不知道啥东西）
+说明：baseapp.cpp(248)
+
+
