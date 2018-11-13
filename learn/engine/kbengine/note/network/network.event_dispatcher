@@ -1,3 +1,15 @@
+问题：EventDispatcher类的几种状态？
+试答：1，EVENT_DISPATCHER_STATUS_RUNNING，运行状态，服务器正常情况下的状态；
+	  2，EVENT_DISPATCHER_STATUS_WAITING_BREAK_PROCESSING，等待打断状态，当服务器开始关服时，会把EventDispatcher类状态至为这个状态（这个状态貌似没啥用）；
+	  3，EVENT_DISPATCHER_STATUS_BREAK_PROCESSING，打断状态，服务器关服相关的业务处理完成会置这个状态；
+说明：event_dispatcher.h(40)
+
+
+问题：EventDispatcher类构造函数说明？
+试答：
+说明：event_dispatcher.cpp(17)
+
+
 问题：EventDispatcher类的重要性？
 试答：KBEngine的核心类，所有组件的逻辑都由这个类来驱动。包括：
 	  1，任务事件的处理；
@@ -5,13 +17,6 @@
 	  3，统计事件的处理；
 	  4，网络事件的处理。
 说明：event_dispatcher.cpp
-
-
-问题：EventDispatcher类的几种状态？
-试答：1，运行状态；
-	  2，等待打断状态；
-	  3，打断状态；
-说明：event_dispatcher.h(40)
 
 
 问题：EventDispatcher类的核心函数？
