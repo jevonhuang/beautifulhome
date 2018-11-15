@@ -28,19 +28,19 @@
 说明：event_dispatcher.cpp(177)
 
 
-问题：EventDispatcher类的核心函数？
-试答：processUntilBreak()，维持着一个主循环，根据事件派发器的状态来决定
-	  是继续循环，还是中断循环结束进程。
-说明：event_dispatcher.cpp(195)
+问题：EventDispatcher类的hasBreakProcessing()函数说明？
+试答：返回是否打断状态，在组件管理中会用到这个接口。
+说明：event_dispatcher.cpp(25), components.cpp(1153, 1340, 1390, 1458)
 
 
-问题：EventDispatcher类的处理流程函数？
-试答：processOnce()，由processUntilBreak()在循环体内调用，处理的流程如下：
-	  1，首先处理任务事件（processTasks()）；
-	  2，如果事件派发器的状态不是中断状态，那么处理超时事件（processTimers()）；
-	  3，处理统计事件（processStats()看代码好像没有实现完全）；
-	  4，如果事件派发器的状态不是中断状态，那么处理网络事件（processNetwork()）；
-说明：event_dispatcher.cpp(207)
+问题：EventDispatcher类的处理流程waitingBreakProcessing()函数？
+试答：返回是否等待状态，在组件管理中会用到这个接口。
+说明：event_dispatcher.cpp(30), components.cpp(1153, 1390, 1458)
+
+
+问题：EventDispatcher类的处理流程breakProcessing()函数？
+试答：
+说明：
 
 
 问题：EventDispatcher类处理网络事件函数processNetwork()函数？
