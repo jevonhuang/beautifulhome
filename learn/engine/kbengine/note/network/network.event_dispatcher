@@ -39,6 +39,19 @@
 
 
 问题：EventDispatcher类的处理流程breakProcessing()函数？
+试答：设置打断状态，也就是关闭进程状态，以下几种情况会设置这个状态：
+	  1，当组件广播自己的信息时一直错误的次数超过255次时，会设置这个状态；
+	  2，当组件收到关闭指令时，会设置这个状态；
+	  3，当udp监听或广播异常的时，会设置这个状态；
+说明：components.cpp(1404, 1472), serverapp.cpp(114), bundle_broadcast.cpp(37, 115)
+
+
+问题：EventDispatcher类的处理流程setWaitBreakProcessing()函数？
+试答：貌似没有什么用，关闭组件前，会设置这个状态。
+说明：serverapp.cpp(103)
+
+
+问题：EventDispatcher类的处理流程addTask()函数？
 试答：
 说明：
 
