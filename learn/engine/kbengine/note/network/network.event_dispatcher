@@ -33,12 +33,12 @@
 说明：event_dispatcher.cpp(25), components.cpp(1153, 1340, 1390, 1458)
 
 
-问题：EventDispatcher类的处理流程waitingBreakProcessing()函数？
+问题：EventDispatcher类的waitingBreakProcessing()函数？
 试答：返回是否等待状态，在组件管理中会用到这个接口。
 说明：event_dispatcher.cpp(30), components.cpp(1153, 1390, 1458)
 
 
-问题：EventDispatcher类的处理流程breakProcessing()函数？
+问题：EventDispatcher类的breakProcessing()函数？
 试答：设置打断状态，也就是关闭进程状态，以下几种情况会设置这个状态：
 	  1，当组件广播自己的信息时一直错误的次数超过255次时，会设置这个状态；
 	  2，当组件收到关闭指令时，会设置这个状态；
@@ -46,14 +46,93 @@
 说明：components.cpp(1404, 1472), serverapp.cpp(114), bundle_broadcast.cpp(37, 115)
 
 
-问题：EventDispatcher类的处理流程setWaitBreakProcessing()函数？
+问题：EventDispatcher类的setWaitBreakProcessing()函数？
 试答：貌似没有什么用，关闭组件前，会设置这个状态。
 说明：serverapp.cpp(103)
 
 
-问题：EventDispatcher类的处理流程addTask()函数？
-试答：
-说明：
+问题：EventDispatcher类的addTask()函数？
+试答：添加任务事务入口函数。
+说明：event_dispatcher.cpp(119)
+
+
+问题：EventDispatcher类的cancelTask()函数？
+试答：移除任务事务入口函数。一般在某个模块析构的时候会调用。
+说明：event_dispatcher.cpp(125)
+
+
+问题：EventDispatcher类的maxWait()函数？
+试答：函数有实现但是没有地方调用, 在EvetDispatcher函数中直接使用定义的成员变量maxWait_。
+说明：event_dispatcher.h(44, 45)
+
+
+问题：EventDispatcher类的calculateWait()函数？
+试答：计算距离下次定时器心跳的时间。将这段间隔用于处理网络事件，不浪费。
+说明：event_dispatcher.h(131, 170)
+
+
+问题：EventDispatcher类的 registerReadFileDescriptor()函数？
+试答：注册一个回调函数，这个回调函数当socket描述符/文件描述符可读时被调用。
+	  其实是对EventPoller接口的封装，EventPoller接口又是对epoll的封装。
+说明：event_dispatcher.h(59)
+
+
+问题：EventDispatcher类的 deregisterReadFileDescriptor()函数？
+试答：注销已经通过KBEngine.registerReadFileDescriptor注册的回调。
+	  其实是对EventPoller接口的封装，EventPoller接口又是对epoll的封装。
+说明：event_dispatcher.h(73)
+
+
+问题：EventDispatcher类的 registerWriteFileDescriptor()函数？
+试答：注册一个回调函数，这个回调函数当socket描述符/文件描述符可写时被调用。
+	  其实是对EventPoller接口的封装，EventPoller接口又是对epoll的封装。
+说明：event_dispatcher.h(66)
+
+
+问题：EventDispatcher类的 deregisterWriteFileDescriptor()函数？
+试答：注销已经通过KBEngine.registerWriteFileDescriptor注册的回调。 
+	  其实是对EventPoller接口的封装，EventPoller接口又是对epoll的封装。
+说明：event_dispatcher.h(79)
+
+
+问题：EventDispatcher类的 addTimer()函数？
+试答：定时器添加入口，调用addTimerCommon函数。
+说明：event_dispatcher.inl(9)
+
+
+问题：EventDispatcher类的 addTimerCommon()函数？
+试答：定时器添加入口，对Timers类接口的封装。
+	  添加定时器必须有处理类句柄参数；
+	  定时器的定时时间为0，返回一个默认TimerHandle类对象，不加入定时器管理器中；
+	  调用Timers类的添加定时器接口，添加定时器。
+	  返回生成的TimerHandle类对象。
+说明：event_dispatcher.inl(9)
+
+
+问题：EventDispatcher类的 getSpareTime()函数？
+试答：获取空闲时间，当组件去底层select或者epoll_wait事件处理时，这区间的间隔时间称之为空闲时间，
+	  利用这段时间来计算负载情况。
+说明：event_dispatcher.cpp(108)
+
+
+问题：EventDispatcher类的 clearSpareTime()函数？
+试答：清理上次的空闲时间，累计到accSpareTime_。
+说明：event_dispatcher.cpp(112)
+
+
+问题：EventDispatcher类的 errorReporter()函数？
+试答：返回ErrorReport类对象指针。
+说明：event_dispatcher.h(58)
+
+
+问题：EventDispatcher类的 createPoller()函数？
+试答：EventPoller类对象的创建函数，调用EventPoller类的静态函数来完成。
+说明：event_dispatcher.cpp(52)
+
+
+问题：EventDispatcher类的 pPoller()函数？
+试答：返回EventPoller类对象指针。
+说明：event_dispatcher.h(60)
 
 
 问题：EventDispatcher类处理网络事件函数processNetwork()函数？
@@ -64,33 +143,31 @@
 	  pPoller是一个EventPoller的实例。EventPoller是一个抽象类，它目前有两个派生子类，
 	  SelectorPoller和EpollPoller，顾名思义，它们分别是利用select和epoll系统api进行异步i/o工作的。
 	  网络事件的i/o都在EventPoller类的processPendingEvents()函数中进行的。
-	  
-	  EventDispatcher类抛出了四个文件描述符注册和取消注册的接口，分别是：
-	  1，registerReadFileDescriptor()注册文件描述符读事件；
-	  2，deregisterReadFileDescriptor()取消文件描述符读事件；
-	  3，registerWriteFileDescriptor()注册文件描述符写事件；
-	  4，deregisterWriteFileDescriptor()取消文件描述符写事件。
-	  其实这四个接口是对EventPoller接口的封装，EventPoller接口又是对epoll的封装。
-说明：event_dispatcher.cpp(188)
+说明：event_dispatcher.cpp(170, 188)
 	  
 	  
-问题：EventDispatcher类处理任务事件函数processTasks()函数？
-试答：EventDispatcher类管着Tasks类对象pTasks_，并抛出两个接口addTask()和cancelTask()接口，最终
-	  所有的任务都进入pTasks_中，所以processTasks()函数只要调用Tasks类的处理函数process()就可以了。
-说明：event_dispatcher.h(59)，event_dispatcher.cpp(163)
-
-
 问题：EventDispatcher类处理任务事件函数processTimers()函数？
 试答：EventDispatcher类管着Timers64类对象pTimers_，并抛出接口addTimer()，最终所有的定时器都进入
 	  pTimers_中，所以processTimers()函数只要调用Timers64类的处理函数process()就可以了。
 	  
 	  类内部有个addTimerCommon()私有函数，供addTimer调用。作者应该是想提供多种类型addTimer的封装，
 	  但目前看来常用类型就够用了。	  
-说明: event_dispatcher.h(70)，event_dispatcher.cpp(169)
-	  
-	  
+说明: event_dispatcher.h(71)，event_dispatcher.cpp(151)	  
+	
+	
+问题：EventDispatcher类处理任务事件函数processTasks()函数？
+试答：EventDispatcher类管着Tasks类对象pTasks_，并抛出两个接口addTask()和cancelTask()接口，最终
+	  所有的任务都进入pTasks_中，所以processTasks()函数只要调用Tasks类的处理函数process()就可以了。
+说明：event_dispatcher.h(70)，event_dispatcher.cpp(145)
+
+
 问题：EventDispatcher类处理任务事件函数processStats()函数？
 试答：看函数处理是要统计节省的时间，但是没有找到任何输出，所以暂时没什么价值。
 说明: event_dispatcher.cpp(176)
 
 
+问题：总结说明？
+试答：KBEngine的组件几个比较重要的事件的处理都有EventDispatcher管理，处理顺序是任务事件，超时事件，
+	  统计事件，网络事件。由此源生出整个服务器的逻辑依赖于Tasks类，Timers类，EventPoller类,这三个类
+	  处理了服务器的所有事务。所以学习服务框架可以顺着这三个类继续往下深挖。
+说明：
