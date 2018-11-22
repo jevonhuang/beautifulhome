@@ -1,0 +1,6 @@
+问题：Tasks类设计说明？
+试答：管理Task类对象，添加Task类到管理列表，从管理列表删除Task类，调用Task类的处理函数process()。
+说明：Tasks.h
+
+
+
