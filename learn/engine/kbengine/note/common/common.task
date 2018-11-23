@@ -1,0 +1,25 @@
+问题：Task类设计说明？
+试答：纯虚函数，派生于它的类都需要实现process()函数接口，整个类也就只有这个接口。
+说明：Tasks.h
+
+
+问题：派生于Task类的子类有哪些？
+试答：class CProfileHandler 						: public Task	(lib.helper)
+	  class PyTickProfileHandler 					: public Task 	(lib.pyscript)
+	  class Components 								: public Task	(lib.server)
+	  class ForwardComponent_MessageBuffer 			: public Task	(lib.server)
+	  class ForwardAnywhere_MessageBuffer 			: public Task	(lib.server)
+	  class PendingLoginMgr 						: public Task	(lib.server)
+	  class SignalHandlers 							: public Task	(lib.server)
+	  class DelayedChannels 						: public Task	(lib.network)
+	  class TPTask 									: public Task	(lib.thread)
+	  class InitProgressHandler 					: public Task	(server.cellapp)
+	  class SyncAppDatasHandler 					: public Task	(server.dbmgr)
+	  class EntityMessagesForwardCellappHandler 	: public Task	(server.baseapp)
+	  class BaseMessagesForwardClientHandler 		: public Task	(server.baseapp)
+	  class InitProgressHandler 					: public Task	(server.baseapp)
+	  class RestoreEntityHandler 					: public Task	(server.baseapp)
+	  class SyncEntityStreamTemplateHandler 		: public Task	(server.baseapp)
+说明：具体处理的事务见各类的具体分析。
+	  
+	  
