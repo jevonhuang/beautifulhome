@@ -37,3 +37,50 @@
 	  
 	  pProcessingNode_， lastProcessTime_这个变量2.3.0版本看来没有什么用处。	  
 说明：timer.inl(118)
+
+
+问题：Timers类legal()？
+试答：用来检测TimeHandle是否有效的接口。2.3.0办法没有用到。
+说明：timer.inl(143)
+
+
+问题：Timers类nextExp()?
+试答：返回距离下次定时器触发的时间。组件会利用这段时间去处理网络事件。见processNetwork()函数。
+说明：timer.inl(173)
+
+
+问题：Timers类clear()?
+试答：清理定时器。函数有个参数是shouldCallCancel；
+	  EventDispatcher类在析构的时候会调用该类的clear()函数，shouldCallCancel是false，意味着就是单纯的清理；
+	  自己析构的时候也会调用，shouldCallCancel是true，会执行cancel代码；但是因为析构前，EventDispatcher会先调用，
+	  所以没有什么用处。
+	  不管调用哪个，队列中的定时器都会被清理掉。
+说明：timer.inl(44, 17), EventDispatcher.cpp(47)
+
+
+问题：Timers类getTimerInfo()?
+试答：获取定时器信息，目前在cellapp中使用，用于传递定时器信息，不过用法有点迷糊。
+说明：timer.inl(185), cellapp.entity.cpp(4320)
+
+
+问题：Timers类add()?
+试答：添加一个Time类对象接口，同时返回一个TimerHandle类对象(为什么不是返回一个Time类对象呢？？？)。
+	  需要的参数分别是触发延迟时间，触发间隔时间，触发处理函数，自定义的数据。
+说明：timer.inl(21)
+
+
+问题：Timers类purgeCancelledTimes()?
+试答：
+说明：
+
+
+
+
+
+
+
+
+
+
+
+
