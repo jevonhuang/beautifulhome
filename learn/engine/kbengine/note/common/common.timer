@@ -8,27 +8,27 @@
 说明：timer.h
 
 
-问题：Timers类构造函数？
+问题：TimersT模板类构造函数？
 试答：初始化成员变量。
 说明：timer.inl(6)
 
 
-问题：Timers类析构函数？
+问题：TimersT模板类析构函数？
 试答：定时器清理，但是因为EventDispatcher类在析构的时候会调用该类的clear()函数，所以这里只是多了一重保证而已。
 说明：timer.inl(15)
 
 
-问题：Timers类size()？
+问题：TimersT模板类size()？
 试答：返回队列中定时器数量。
 说明：timer.h(115)
 
 
-问题：Timers类empty()？
+问题：TimersT模板类empty()？
 试答：返回队列中定时器数量是否为空。
 说明：timer.h(116)
 
 
-问题：Timers类process()？
+问题：TimersT模板类process()？
 试答：timeQueue_队列是按时间从小到大排序的，所以在处理队列时，只要是小于等于当前时间的定时器，那么都要进行处理。
 	  从队列头部弹出定时器：
 	  如果没有被取消则触发定时器的处理逻辑；
@@ -39,17 +39,17 @@
 说明：timer.inl(118)
 
 
-问题：Timers类legal()？
+问题：TimersT模板类legal()？
 试答：用来检测TimeHandle是否有效的接口。2.3.0办法没有用到。
 说明：timer.inl(143)
 
 
-问题：Timers类nextExp()?
+问题：TimersT模板类nextExp()?
 试答：返回距离下次定时器触发的时间。组件会利用这段时间去处理网络事件。见processNetwork()函数。
 说明：timer.inl(173)
 
 
-问题：Timers类clear()?
+问题：TimersT模板类clear()?
 试答：清理定时器。函数有个参数是shouldCallCancel；
 	  EventDispatcher类在析构的时候会调用该类的clear()函数，shouldCallCancel是false，意味着就是单纯的清理；
 	  自己析构的时候也会调用，shouldCallCancel是true，会执行cancel代码；但是因为析构前，EventDispatcher会先调用，
@@ -58,25 +58,43 @@
 说明：timer.inl(44, 17), EventDispatcher.cpp(47)
 
 
-问题：Timers类getTimerInfo()?
+问题：TimersT模板类getTimerInfo()?
 试答：获取定时器信息，目前在cellapp中使用，用于传递定时器信息，不过用法有点迷糊。
 说明：timer.inl(185), cellapp.entity.cpp(4320)
 
 
-问题：Timers类add()?
+问题：TimersT模板类add()?
 试答：添加一个Time类对象接口，同时返回一个TimerHandle类对象(为什么不是返回一个Time类对象呢？？？)。
 	  需要的参数分别是触发延迟时间，触发间隔时间，触发处理函数，自定义的数据。
 说明：timer.inl(21)
 
 
-问题：Timers类purgeCancelledTimes()?
+问题：TimersT模板类purgeCancelledTimes()?
+试答：清理过期的定时器。
+	  先对定时器按要取消和非取消进行分割排序，要取消的放在后面，统一清理。
+	  下了一个断言，清理过后，待清理的数量要小于等于1，因为该函函数是在onCancel()函数中调用。（不明白为啥要等于1）
+	  清理容器指针，然后重新排序。
+说明：timer.inl(84)
+
+
+问题：TimersT模板类onCancel()?
+试答：处理清理定时器逻辑。在time类对象调用cancel()函数时，如果待取消的定时器超过了总定时器数量的一半时，这个函数
+	  会被调用。只不过process()函数在处理定时器时会每帧处理待取消的定时器，所以这个函数理论上不会被调用。
+说明：timer.inl(84)
+
+
+问题：TimersT模板类Time(const Time &)和 Time & operator=(const Time &)函数；
+试答：私有化了该函数，所以不允许TimersT模板类的对象赋值和从其他TimersT模板类对象构造。
+说明：timer.h(154, 155)
+
+
+问题：TimeBase类设计说明？
+试答：Time类的基类,也是Time类对象暴露给外部的接口。主要时提供一个外部可以调用cancel()的接口。
+说明：timer.h(71)
+
+
+问题：TimeBase类构造函数?
 试答：
-说明：
-
-
-
-
-
 
 
 
