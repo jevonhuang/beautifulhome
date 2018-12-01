@@ -94,7 +94,20 @@
 
 
 问题：TimeBase类构造函数?
-试答：
+试答：需要三个参数，TimersBase类对象，定时处理类对象，和自定义参数。
+说明：timer.h(74)
+
+
+问题：TimeBase类析构函数？
+试答：由派生类实现。
+说明：timer.h(77)
+
+
+问题：TimeBase类cancel()函数？
+试答：取消定时器接口，释放定时器的Timerhandler类对象。释放的过程如下：
+	  调用TimerHandler类的release()函数，在release()函数中减少TimerHandler类对象引用次数，然后调用
+	  onRelease()函数，具体释放的逻辑取决于TimerHandler类派生类本身的逻辑业务。
+说明：timer.h(79, 62, 53)
 
 
 
