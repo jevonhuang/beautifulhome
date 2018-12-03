@@ -185,3 +185,34 @@
 说明：timer.h(31)
 
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+问题：TimerHandler类设计说明？
+试答：TimerHandler类定时器时间到了对应得逻辑处理，其他额类只要派生于这个方法，实现handleTimeOut接口就可以作为处理函数关联一个定时器。
+说明：timer.h(41)
+
+
+问题：TimerHandler类handleTimeout()函数？
+试答：纯虚函数，由其派生类实现，处理定时器过期得具体业务。
+说明：timer.h(50)
+
+
+问题：TimerHandler类onRelease()函数？
+试答：资源释放逻辑，有需要时重载这个接口。
+说明：timer.h(53)
+
+
+问题：TimerHandler类incTimerRegisterCount()函数？
+试答：每当TimerHandler类对象被一个TimeBase类对象关联时，numTimesRegistered_值加1。
+说明：timer.h(59)
+
+
+问题：TimerHandler类decTimerRegisterCount()函数？
+试答：每当释放时，numTimesRegistered_值减1。
+说明：timer.h(60)
+
+
+问题：TimerHandler类release()函数？
+试答：Time类对象调用cancel()函数时，会调用这个函数。主要处理逻辑；
+	  1，调用numTimesRegistered()函数；
+	  2，调用onRelease()函数。
+说明：timer.h(62)
