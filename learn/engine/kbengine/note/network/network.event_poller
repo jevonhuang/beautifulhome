@@ -1,3 +1,55 @@
 问题：EventPoller类的设计说明？
-试答：
+试答：纯虚类，封装了一些事件管理的常用接口，比如注册，注销，处理事件，创建，事件触发等等，一些纯虚
+	  函数的实现由具体的类EpollPoller类和SelectPoller类实现，这两个类分别对应linux系统和windows系统。
 说明：event_poller.h
+
+
+问题：EventPoller类的构造函数？
+试答：成员变量初始化。
+说明：event_poller.h(24)
+
+
+问题：EventPoller类的析构函数？
+试答：虚函数，派生类析构自己相关的数据。
+说明：event_poller.h(25)
+
+
+问题：EventPoller类的registerForRead()函数？
+试答：注册某个fd的可读事件，并与相关的处理函数关联起来。注册细节由派生类实现，以下同。
+说明：event_poller.h(27), event_poller.cpp(31)
+
+
+问题：EventPoller类的registerForWrite()函数？
+试答：注册某个fd的可写事件，并与相关的处理函数关联起来。
+说明：event_poller.h(28), event_poller.cpp(45)
+
+
+问题：EventPoller类的deregisterForRead()函数？
+试答：注消某个fd的可读事件，并移除相关的处理函数。注消细节由派生类实现，以下同。
+说明：event_poller.h(30), event_poller.cpp(59)
+
+
+问题：EventPoller类的deregisterForWrite()函数？
+试答：注消某个fd的可写事件，并移除相关的处理函数。
+说明：event_poller.h(31), event_poller.cpp(67)
+
+
+问题：EventPoller类的processPendingEvents()函数？
+试答：网络事件处理函数，在EventDispatcher类中processNetwork函数调用。由派生类实现，具体请看EpollPoller类中的说明。
+说明：event_poller.h(34)
+
+问题：EventPoller类的getFileDescriptor()函数？
+试答：虚函数，返回-1，具体由派生类实现。
+说明：event_poller.h(35)
+
+
+问题：EventPoller类的clearSpareTime()函数？
+试答：清理空闲时间spareTime_, spareTime_与负载统计相关，与负载相关的机制，具体查看entity_app.h说明。
+说明：event_poller.h(37)
+
+
+问题：EventPoller类的spareTime()函数？
+试答：返回空闲时间sparedTime_。
+说明：event_poller.h(38)
+
+
