@@ -1,0 +1,16 @@
+问题：EpollPoller类的设计说明？
+试答：对epoll接口epoll_create，epoll_ctl，epoll_wait， close接口的封装。
+说明：poller_epoll.h
+
+
+问题：EpollPoller类的构造函数？
+试答：调用epoll_create函数内核会产生一个epoll instance数据结构并返回一个文件描述符，
+	  这个特殊的描述符就是epoll instance的句柄，后面的两个接口都以它为中心。
+	  size参数表示所要监视文件描述符的最大值，不过在目前的Linux版本中已经被弃用，
+	  调用的时候不要用0，否则会报invalid argument。
+说明：poller_epoll.cpp(17)
+
+
+问题：EpollPoller类的析构函数？
+试答：释放由epoll_create创建的文件描述符。
+说明：poller_epoll.cpp(28)
