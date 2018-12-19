@@ -14,3 +14,13 @@
 问题：EpollPoller类的析构函数？
 试答：释放由epoll_create创建的文件描述符。
 说明：poller_epoll.cpp(28)
+
+
+问题：EpollPoller类的doRegister()函数？
+试答：三个参数，一个是文件描述符，一个是读和写的标识，一个是注册和注销的标识。
+	  创建epoll_event结构，该结构描述一个文件描述符的epoll行为，在使用epoll_wait函数返回处于ready
+	  状态的描述符列表时，epoll_event结构的data域是唯一能给出描述符信息的字段，所以在调用epoll_ctl
+	  加入一个需要监测的描述符时，一定要在此域写入描述符相关的信息，告诉内核需要监听什么事；
+	  检测相关的描述符是否注册了反向的行为（比如注册读，检测是否注册了写），以便确定最终的op行为；
+	  调用epoll_ctl函数对该fd进行管理，增，删，改等。 
+说明：poller_epoll.cpp(28)
