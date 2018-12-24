@@ -24,3 +24,21 @@
 	  检测相关的描述符是否注册了反向的行为（比如注册读，检测是否注册了写），以便确定最终的op行为；
 	  调用epoll_ctl函数对该fd进行管理，增，删，改等。 
 说明：poller_epoll.cpp(37)
+
+
+问题：EpollPoller类的processPendingEvents()函数？
+试答：主要是调用epoll_wait函数，并对事件进行处理。
+	  处于ready状态的那些文件描述符会被复制进ready list中，epoll_wait用于向用户进程返回ready list。
+	  evlist和maxevents两个参数描述一个由用户分配的struct epoll event数组，调用返回时，内核将ready list
+	  复制到这个数组中，并将实际复制的个数作为返回值。
+	  注意，如果ready list比evlist长，则只能复制前maxevents个成员；反之，则能够完全复制ready list。
+	  另外，struct epoll event结构中的events域在这里的解释是：在被监测的文件描述符上实际发生的事件。
+	  参数timeout描述在函数调用中阻塞时间上限，单位是ms：
+		timeout = -1表示调用将一直阻塞，直到有文件描述符进入ready状态或者捕获到信号才返回；
+		timeout = 0用于非阻塞检测是否有描述符处于ready状态，不管结果怎么样，调用都立即返回；
+		timeout > 0表示调用将最多持续timeout时间，如果期间有检测对象变为ready状态或者捕获到信号则返回，否则直到超时。
+
+	  当处理epoll_wait时，会先调用主线程空闲时回调函数，当处理结束时，会调用主线程繁忙时回调函数。
+	  统计空闲时间。
+	  根据事件状态调用先对应的回调函数。	  
+说明：poller_epoll.cpp(37)
