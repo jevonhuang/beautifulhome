@@ -1,10 +1,18 @@
-问题：NetworkInterface类的说明？
+问题：NetworkInterface类设计说明？
 试答：NetworkInterface类负责组件的网络通信的管理，他包含了两个连接终点：
-	  外部连接终点和内部连接终点，两个终点监听：外部终点监听和内部终点监听，
+	  外部连接终点和内部连接终点，两个终点信息接收器：外部终点信息接收器和内部终点信息接收器，
 	  同时维护着一份通信列表。
 	  每个组件启动的时候，会根据组件的配置，创建一个NetwoInterface对象，
-	  依次创建两个终点，和对应的两个监听，并将两者关联起来（epoll注册）。
+	  依次创建两个终点，和对应的两个信息接收器，并将两者关联起来（epoll注册）。
+	  派生于TimerHandler，但处理函数目前没有具体逻辑，可以认为暂时没有应用。
 说明：network_interface.h
+
+
+问题：NetworkInterface类构造函数？
+试答：成员变量的初始化，外部和内部终点的建立，负责外部和内部终点接收器的创建。
+	  关联终点和对应的信息接收器。
+	  初始化延迟频道管理器pDelayedChannels_。
+说明：network_interface.cpp(25)
 
 
 问题：NetworkInterface类的recreateListeningSocket()函数说明？
