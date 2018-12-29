@@ -1,18 +1,60 @@
 问题：NetworkInterface类设计说明？
 试答：NetworkInterface类负责组件的网络通信的管理，他包含了两个连接终点：
-	  外部连接终点和内部连接终点，两个终点信息接收器：外部终点信息接收器和内部终点信息接收器，
+	  外部连接终端和内部连接终端，两个终端信息接收器：外部终端信息接收器和内部终端信息接收器，
 	  同时维护着一份通信列表。
 	  每个组件启动的时候，会根据组件的配置，创建一个NetwoInterface对象，
-	  依次创建两个终点，和对应的两个信息接收器，并将两者关联起来（epoll注册）。
+	  依次创建两个终端，和对应的两个信息接收器，并将两者关联起来（epoll注册）。
 	  派生于TimerHandler，但处理函数目前没有具体逻辑，可以认为暂时没有应用。
 说明：network_interface.h
 
 
 问题：NetworkInterface类构造函数？
-试答：成员变量的初始化，外部和内部终点的建立，负责外部和内部终点接收器的创建。
-	  关联终点和对应的信息接收器。
+试答：成员变量的初始化，外部和内部终端的建立，负责外部和内部终端接收器的创建。
+	  关联终端和对应的信息接收器。
 	  初始化延迟频道管理器pDelayedChannels_。
 说明：network_interface.cpp(25)
+
+
+问题：NetworkInterface类析构函数？
+试答：释放通信信息，关闭socket，释放各种资源。
+说明：network_interface.cpp(88)
+
+
+问题：NetworkInterface类extTcpAddr()？
+试答：获取对外的tcp地址，是一个Address类结构，NetworkInterface::initialize()函数中会对这个结构赋值。
+说明：network_interface.h(40)
+
+
+问题：NetworkInterface类extUdpAddr()？
+试答：获取对外的udp地址，是一个Address类结构，NetworkInterface::initialize()函数中会对这个结构赋值。
+说明：network_interface.h(41)
+
+
+问题：NetworkInterface类intTcpAddr()？
+试答：获取对内的tcp地址，是一个Address类结构，NetworkInterface::initialize()函数中会对这个结构赋值。
+说明：network_interface.h(41)
+
+
+问题：NetworkInterface类initialize()？
+试答：参数是监听终端的类型（tcp/udp）名称，监听的最小端口最大端口，监听的地址，监听终端，监听信息接收器，
+	  可读缓存，可写缓存。
+	  如果终端已经建立了，那么先释放，这里做了重复利用资源的事情；
+	  创建socket类型，并且将它的文件描述符的监听接收器与函数传来的监听接收器关联；
+	  如果端口上限和下限一样，则设置端口重用，防止意外情况这个端口没有被释放，导致无法绑定；
+	  --可以对一个端口进行多次绑定，一般这个是不支持使用的；对于监听套接字，比较特殊。
+	  --如果你定义了SO_REUSEADDR，并且让两个套接字在同一个端口上进行接听，那么对于由谁来ACCEPT，
+	  --就会出现歧义。如果你定义个SO_REUSEADDR，只定义一个套接字在一个端口上进行监听，
+	  --如果服务器出现意外而导致没有将这个端口释放，那么服务器重新启动后，你还可以用这个端口，
+	  --因为你已经规定可以重用了，如果你没定义的话，你就会得到提示，ADDR已在使用中。 	  
+	  验证网络地址是否可以使用；
+	  查找端口并且绑定，绑定不成功进程退出；
+	  获取绑定的地址，如果地址ip为0，就获取默认的地址，失败退出；
+	  监听不阻塞，不延迟；
+	  设置读写缓存大小；
+	  如果是tcp则调用listen接口。	  
+	  #todo需要继续深究。
+说明：network_interface.h(44)
+
 
 
 问题：NetworkInterface类的recreateListeningSocket()函数说明？
