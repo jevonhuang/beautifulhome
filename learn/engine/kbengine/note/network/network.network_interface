@@ -52,38 +52,43 @@
 	  监听不阻塞，不延迟；
 	  设置读写缓存大小；
 	  如果是tcp则调用listen接口。	  
+	  
 	  #todo需要继续深究。
+
 说明：network_interface.h(44)
 
 
+问题：NetworkInterface类registerChannel()？
+试答：频道注册接口，先查找是否存在，没有则添加到channelMap_容器中，如果是外部的频道则外部频道数加一，
+	  如果已经有了则断言报错。
+	  
+	  注册的几种情况：
+	  1，连接
+	  2，被连接
+	  
+	  注册的具体过程：
+	  组件的EventDispatcher类的processNetwork()会定时监听网卡上的socket事件，然后提交给相应的handler处理。	  
+	  NetworkInterface类在构造的时候，就把相关的socket（EndPoint类对象extEndpoint_，intEndpoint_）和
+	  handler（ListenerReceiver类对象pExtListenerReceiver_，pIntListenerReceiver_）关联了起来。	  
+	  当有连接进来的时候，ListenerReceiver类的handleInputNotification()就会处理通道的建立。	  
+说明：network_interface.cpp(345)，event_dispatcher.cpp(188), poller_epoll.cpp(107), event_poller.cpp(93), listener_receiver.cpp(54)
 
-问题：NetworkInterface类的recreateListeningSocket()函数说明？
-试答：参数说明：
-	  1，pEndPointName，终点名称，用于日志信息打印；
-	  2，listeningPort_min，监听的最小端口；
-	  3，listeningPort_max，监听的最大端口；
-	  4，listeningInterface，指定的接口名 NIP,MAC,IP等
-	  5，pEP，连接终点；
-	  6，pLR，终点监听；
-	  7，rbuffer，读取缓存大小；
-	  8，wbuffer，写入缓存大小。
-	  
-	  过程说明：
-	  首先是断言，要求listeningInterface，pEP，pLR指针非空；
-	  如果pEP已经是有效的scoket的话，这里先释放掉；
-	  从这个设计来看，该函数不单单只在构造函数的时候可以，其他地方也可以调用；
-	  创建socket，并对他进行验证，如果验证不通过则打印错误日志并返回失败；
-	  如果配置的最小监听端口和最大监听端口一样，那么设置端口复用，避免绑定的时候失败；
-	  向底层注册文件描述符，关联pEP和pLR；
-	  查找指定接口名，通常配置为空，但某些情况下会需要这个配置；
-	  尝试绑定端口，如果端口被占用则向后递增；如果绑定失败，则报错返回；
-	  获取绑定的ip地址，然后设置地址，非阻塞模式，非延迟模式；
-	  设置读写缓存大小；
-	  最后开始监听。	  
-	  
-	  总结说明：
-	  这个接口是服务器创建网络监听的地方。
-说明：network_interface.cpp(131)
+
+问题：NetworkInterface类deregisterChannel()？
+试答：频道注销接口，从频道容器中移除容器，如果移除失败则断言报错，如果移除成功则调用注销回调相关接口
+	  处理注销业务。
+	  注销的几种情况：
+	  1，通道超时，最后一次通信时间超过配置时间（60.0s）则被认定为超时通道，服务器将踢出该通道；
+	  2，当通道变的不合法的时候；
+	  3，收到协议包出错的时候；	  
+说明：serverapp.cpp(305),network_interface.cpp(3),tcp_packet_receiver.cpp(131),udp_packet_receiver.cpp(135)
+
+
+问题：NetworkInterface类deregisterAllChannels()？
+试答：注销所有频道，注销回调也不处理。目前只再guiconsoleDlg中使用。  
+说明：network_interface.cpp(370)
+
+
 
 
 问题：NetworkInterface类的通道(Channel)是如何建立的（registerChannel）？
@@ -97,13 +102,6 @@
 	  当有连接进来的时候，ListenerReceiver类的handleInputNotification()就会处理通道的建立。
 说明：event_dispatcher.cpp(188), poller_epoll.cpp(107), event_poller.cpp(93), listener_receiver.cpp(54)
 	
-
-问题：NetworkInterface类的通道(Channel)是如何取消的（deregisterChannel）？	
-试答：会取消Channel注册的几种情况：
-	  1，通道超时，最后一次通信时间超过配置时间（60.0s）则被认定为超时通道， 服务器将踢出该通道；
-	  2，当通道变的不合法的时候；
-	  3，收到协议包出错的时候；
-说明：serverapp.cpp(305),network_interface.cpp(425),tcp_packet_receiver.cpp(131),udp_packet_receiver.cpp(135)
 
 
 问题：NetworkInterface类的通道(Channel)的超时处理流程(pChannelTimeOutHandler())？
