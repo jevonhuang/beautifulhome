@@ -3,7 +3,7 @@
 说明：baseapp.h(37)
 
 
-问题：TimeOutType枚举说明？
+问题：TimeOutType枚举？
 试答：TimeOutType枚举定义在类内部，但以上一个基类定义的枚举最大值加一为开始，比如，Baseapp的
 	  枚举TIMEOUT_CHECK_STATUS是以基类EntityApp的枚举最大值（TIMEOUT_ENTITYAPP_MAX）加一开始的。
 	  
@@ -16,7 +16,7 @@
 说明：baseapp.h(41), baseapp.cpp(615)
 
 
-问题：Baseapp构造函数说明？
+问题：Baseapp类的构造函数？
 试答：因为实现了构造函数，但没有提供默认构造函数，所以Loginapp的构造必须要求四个参数：
 	  1，事件派发器（network.event_dispatcher）；
 	  2，网络接口；
@@ -24,14 +24,19 @@
 	  4，组件索引；
 	  
 	  其他类成员的构造要么调用基于以上四个参数的构造函数，要么调用默认构造函数。
+	  EnityApp基类的构建。
 说明：baseapp.cpp(220)
 
 
-问题：Baseapp析构函数说明？
+问题：Baseapp类的析构函数？
 试答：对资源释放：
 	  1，其他的成员走自己的析构函数；
 	  2，pInitProgressHandler_的释放；
 	  3, 重置EntityCallAbstract类的CallHooks（不知道啥东西）
 说明：baseapp.cpp(248)
-456
+
+
+问题：Baseapp类的installPyModules()？
+试答：
+说明：baseapp.cpp(407)
 

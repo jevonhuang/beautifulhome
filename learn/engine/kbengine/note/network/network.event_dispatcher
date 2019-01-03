@@ -171,3 +171,12 @@
 	  统计事件，网络事件。由此源生出整个服务器的逻辑依赖于Tasks类，Timers类，EventPoller类,这三个类
 	  处理了服务器的所有事务。所以学习服务框架可以顺着这三个类继续往下深挖。
 说明：
+
+
+问题：相关类型
+试答；InputNotificationHandler
+	  OutputNotificationHandler
+	  TimerHandler
+	  ErrorReporter
+	  TimeStamp
+说明：

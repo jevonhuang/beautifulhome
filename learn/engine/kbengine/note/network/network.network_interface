@@ -185,3 +185,14 @@
 问题：NetworkInterface类closeSocket()？
 试答：关闭网络连接，析构函数的时候调用，也就是停服的时候处理。
 说明：network_interface.cpp(115) 
+
+
+问题：相关类型
+试答；Address 
+	  Channel 
+	  EndPoint 
+	  ListenerReceiver 
+	  ChannelTimeOutHandler 
+	  ChannelDeregisterHandler 
+	  MessageHandlers 
+	  DelayedChannels 
