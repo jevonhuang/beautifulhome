@@ -89,47 +89,99 @@
 说明：network_interface.cpp(370)
 
 
+问题：NetworkInterface类findChannel()？
+试答：查找频道接口，提供了两个重载函数，一是，通过地址；二是，通过文件描述符。
+说明：network_interface.cpp(321，332)
 
 
-问题：NetworkInterface类的通道(Channel)是如何建立的（registerChannel）？
-试答：组件的EventDispatcher类的processNetwork()会定时监听网卡上的socket事件，然后提交
-	  给相应的handler处理。
+问题：NetworkInterface类pChannelTimeOutHandler()？
+试答：设置或返回频道超时处理句柄，在ServerApp类的构造函数中设置，用来处理当前服务器进程的频道超时的逻辑。
 	  
-	  NetworkInterface类在构造的时候，就把相关的socket（EndPoint类对象extEndpoint_，
-	  intEndpoint_）和handler（ListenerReceiver类对象pExtListenerReceiver_，
-	  pIntListenerReceiver_）关联了起来。
-	  
-	  当有连接进来的时候，ListenerReceiver类的handleInputNotification()就会处理通道的建立。
-说明：event_dispatcher.cpp(188), poller_epoll.cpp(107), event_poller.cpp(93), listener_receiver.cpp(54)
-	
+	  每个Channel创建的时候，会相应的创建一个定时器,用来检测频道是否过期，如果频道过期，会调用NetworkInterface类
+	  的onChannelTimeOut()函数，该函数内部主要是调用ServerApp类的onChannelTimeOut()函数，这个函数最终又会调用
+	  NetworkInterface类的deregisterChannel()来注销频道，同时调用Channel的destroy()接口销毁Channel，并归还内存给内存池。
+
+	  在NetworkInterface类的deregisterChannel()函数中，移除频道之后，还要处理相关的善后工作，
+	  如果是内部频道，那就要处理组件移除的事情。
+说明：serverapp.cpp(37, 305)，network_interface.cpp(55, 388, 417)，channel.cpp(497, 648)
 
 
-问题：NetworkInterface类的通道(Channel)的超时处理流程(pChannelTimeOutHandler())？
-试答：每个Channel创建的时候，会相应的创建一个定时器,用来检测通道是否过期；
-	  如果通道过期，会调用NetworkInterface类的onChannelTimeOut()函数，该函数内部主要是
-	  调用ServerApp类的onChannelTimeOut()函数，这个函数会调用NetworkInterface类的deregisterChannel()
-	  来注销通道，同时调用Channel的destroy()接口销毁Channel，并归还内存给内存池。
-	  
-	  在NetworkInterface类的deregisterChannel()函数中，移除通道之后，还要处理相关的善后工作，
-	  如果是内部通道，那就要处理组件移除的事情。
-	  
-说明：channel.cpp(242, 280),network_interface.cpp(410, 381),serverapp.cpp(305)
+问题：NetworkInterface类pChannelDeregisterHandler()？
+试答：设置或返回频道注销处理句柄，在ServerApp类的构造函数中设置，用来处理当前服务器进程的频道注销的逻辑。
+	  具体调用的地方在deregisterChannel()函数中。
+说明：network_interface.h(58)，network_interface.cpp(388)
 
 
-问题：NetworkInterface类是如何使用他所管理的通道呢，用他们做什么呢,（processChannels()函数说明）？
-试答：服务器的每个组件都有一个定时器来处理组件的定时事务，其中的一个事务就是调用NetworkInterface类
-	  processChannels()函数。
-	  在processChannels()函数中，主要处理失效通道的注销和收到消息的处理。
+问题：NetworkInterface类dispatcher()？
+试答：返回pDispatcher_指针所指对象的引用。
+说明：network_interface.h(63)
+
+
+问题：NetworkInterface类extEndpoint()？
+试答：返回Tcp的外部监听对象。
+说明：network_interface.h(66)
+
+
+问题：NetworkInterface类intEndpoint()？
+试答：返回Tcp的内部监听对象。
+说明：network_interface.h(67)
+
+
+问题：NetworkInterface类c_str()？
+试答：返回Tcp的外监听对象的ip地址，字符串形式。
+说明：network_interface.h(69)
+
+
+问题：NetworkInterface类channels()？
+试答：返回频道容器。
+说明：network_interface.h(71)
+
+
+问题：NetworkInterface类sendIfDelayed()？
+试答：没有看到这个接口使用的地方。
+说明：network_interface.cpp(308)
+
+
+问题：NetworkInterface类delayedSend()？
+试答：延迟发送信息，目前只看到在日志频道中使用。
+	  
+	  延迟发送，其实就是把发送的信息缓存到下一帧去发送，NetworkInterface类的这个接口负责将需要延迟
+	  发送的频道加入到DelayedChannels类的对象中，因为该对象派生于Task类，在构造的时候把自己加入到
+	  了任务事务的处理队列中，这样每一贴都会检测是否又要延迟发送的Channel，并对其处理（send出去）。
+	  
+	  因为发送包是在任务事务流程之后构建的，所以是在下一帧的时候处理。
+	  
+说明：network_interface.cpp(302)
+
+
+问题：NetworkInterface类good()？
+试答：返回NetworkInterface是否准备就绪。内外监听和处理接口是否都好了。
+说明：network_interface.h(77)
+
+
+问题：NetworkInterface类onChannelTimeOut()？
+试答：处理频道超时，具体逻辑在pChannelTimeOutHandler_中，因为每一个ServerApp不同，所以不在NetworkInterface
+	  中处理，而是每个ServerApp自己负责。
+说明：network_interface.cpp(417)
+
+
+问题：NetworkInterface类processChannels()？
+试答：每个ServerApp类的派生类都有一个定时器来处理组件的定时事务，其中的一个事务就是调用NetworkInterface类
+	  processChannels()这个函数，如果频道异常则处理频道的注销，如果频道正常则清理统计变量的累计（用来预防
+	  发送信息过大的统计）。
+说明：network_interface.cpp(432)
+
+
+问题：NetworkInterface类numExtChannels()？
+试答：返回外部频道数量。就是客户端的连接数。
+说明：network_interface.h(86)
 	  
 	  
-问题：NetworkInterface类的延迟发送时什么目的，延迟流程是怎样的呢？
-试答：这里延迟发送，其实就是把发送的信息缓存到下一帧去发送。
-	  NetworkInterface类有个成员变量DelayedChannels类的指针pDelayedChannels_，专门负责延迟消息的处理。
-	  每当有要延迟的消息（目前看来是日记系统用到了这个机制），NetworkInterface的delayedSend接口负责往
-	  DelayedChannels类pDelayedChannels_指向对象添加需要延迟发送的Channel。
-	  
-	  DelayedChannels类是Task类的子类，在初始化的时候，把自己加入了任务事务的处理队列中，这样每一帧都
-	  会检测是否有要延迟发送的Channel，并对其进行处理(send)。
-	  
-	  因此，延迟发送的Channel最终在下一帧（因为发送包是在任务事务流程之后）的时候发送出去。
-说明：network_interface.cpp(295), delayed_channels.h
+问题：NetworkInterface类handleTimeout()？
+试答：只是打印而已，而且没有创建定时器。
+说明：network_interface.cpp(314)
+
+
+问题：NetworkInterface类closeSocket()？
+试答：关闭网络连接，析构函数的时候调用，也就是停服的时候处理。
+说明：network_interface.cpp(115) 
