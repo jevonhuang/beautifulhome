@@ -1,0 +1,4 @@
+问题：ScriptObjecte类的设计说明？
+试答：将python的相关操作封装成类。
+说明：scriptobject.h
+
