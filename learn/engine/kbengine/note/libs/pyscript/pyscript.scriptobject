@@ -2,3 +2,35 @@
 试答：将python的相关操作封装成类。
 说明：scriptobject.h
 
+
+问题：ScriptObject类的_tp_repr()？
+试答：静态函数，参数是PyObject*，在函数内部被强制转换成ScriptObject类对象，并调用其tp_repr()函数，
+	  在tp_repr()函数内部又调用Python的C代码接口PyUnicode_FromFormat，其实就是用对象类型名称构造
+	  一个字符串（ScriptObject）相关的PyObject*，然后返回。
+说明：scriptobject.h(84)
+
+
+问题：ScriptObject类的_tp_str()？
+试答：静态函数，参数是PyObject*，在函数内部被强制转换成ScriptObject类对象，并调用其tp_str()函数，
+	  在tp_str()函数内部又调用Python的C代码接口PyUnicode_FromFormat，其实就是用对象类型名称构造
+	  一个字符串（ScriptObject）相关的PyObject*，然后返回。
+说明：scriptobject.h(89)
+
+
+问题：ScriptObject类的_tp_new()？
+试答：静态函数，参数是PyTypeObject* type，PyObject* args，PyObject* kwds，在函数内部又调用静态函
+	  数tp_new()，在tp_new()函数内部又调用type的接口函数tp_alloc()，args, kwds两个参数被忽略了（
+	  python底层不熟，不知道为什么这么绕），最终是返回一个新的PyObject对象指针。
+说明：scriptobject.h(96)
+
+
+问题：ScriptObject类的_tp_getattro()？
+试答：静态函数，参数是PyObject* self, PyObject* name，获取对象属性的接口，在函数内部被强制转换成
+	  ScriptObject类对象，并调用其onScriptGetAttribute()函数，在该函数内部，最终调用Python相关的
+	  PyObject_GenericGetAttr()函数，获取属性（也是PyObject*）返回。
+说明：scriptobject.h(103)
+
+
+问题：ScriptObject类的_tp_setattro()？
+试答：
+说明：scriptobject.h(110)
