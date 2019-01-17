@@ -379,7 +379,7 @@ public:
 	/** 
 		脚本请求删除一个属性 
 	*/
-	int onScriptDelAttribute(PyObject* attr)]
+	int onScriptDelAttribute(PyObject* attr)
 	{
 		return this->onScriptSetAttribute(attr, NULL);
 	}

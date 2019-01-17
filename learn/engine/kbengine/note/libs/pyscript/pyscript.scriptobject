@@ -32,5 +32,7 @@
 
 
 问题：ScriptObject类的_tp_setattro()？
-试答：
+试答：静态函数，参数是PyObject* self, PyObject* name, PyObject* value，设置对象属性的接口，在函数
+	  内部被强制转换成ScriptObject类对象，并调用其onScriptSetAttribute()或onScriptDelAttribute()
+	  函数，最终调用python相关的PyObject_GenericSetAttr()函数，返回值是整数。
 说明：scriptobject.h(110)
