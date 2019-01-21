@@ -6,7 +6,9 @@ def index(request):
 	return render(request, 'index.html')
 
 def login(request):
-	return HttpResponse("hello world")
+	user = request.GET['user']
+	password = request.GET['password']
+	return HttpResponse(password)
 	
 def add(request):
 	a = request.GET['a']

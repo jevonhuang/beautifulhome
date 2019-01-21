@@ -20,8 +20,9 @@ from django.views.static import serve
 from longyuan_sword import views as longyuan_views
 
 urlpatterns = [
-    path('', longyuan_views.index),
-    path('login/', longyuan_views.login),
+    path('', longyuan_views.index, name = "index"),
+	path('login/', longyuan_views.login, name = "login"),
+	
 	# path(r'^static/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.STATIC_PATH})
     # path('add/', longyuan_views.add, name = 'add'),
     # path('admin/', admin.site.urls),
