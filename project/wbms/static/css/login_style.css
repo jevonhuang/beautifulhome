@@ -11,6 +11,7 @@ p,h1,span,h3,i{margin: 0px;padding: 0px;float: left;font-style: normal;font-weig
 .login span{width: 236px;height: 34px;;line-height: 34px;background: url(../img/login_text.png) no-repeat top center;margin-bottom: 19px;padding-left: 20px;font-size: 15px;color: #888;text-align: left;}
 .login span .text{width: 175px;height: 28px;line-height:28px;margin: 2px 0px 2px 5px;border: none;outline: none;padding: 0px;}
 .login .button{width: 154px;height: 42px;background: url(../img/login_button.png) no-repeat;cursor: pointer;border: none;margin-top: 15px;}
+.login .button:active {-webkit-transform: scale(0.95, 0.95);}
 .bottom{width: 100%;float: left;padding-top: 30px;background: url(../img/login_ge.png) no-repeat top center;text-align: center;margin-top: 70px;font-size: 13px;line-height: 24px;color: #222;}
 #foot{width: 100%;height: 50px;line-height: 50px;float: left;background: #0f64a5;margin-top: 20px;}
 .foot{width: 1200px;margin: 0px auto;}

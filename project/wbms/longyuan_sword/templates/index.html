@@ -21,10 +21,12 @@
 			
 			function md5encrypt()
 			{
-				var password = document.getElementById('password');
-				var password_md5 = document.getElementById('password_md5');
+				var user = document.getElementById('user');
+				var password = document.getElementById('password');		
+				if (user.value == "" || password.value == "")
+					return false;
 
-				// set password
+				var password_md5 = document.getElementById('password_md5');						
 				password_md5.value = hex_md5(password.value);
 				return true;					
 			}			
@@ -35,7 +37,7 @@
 			<div class="main">
 				<div class="login">
 					<form action = "/login" onsubmit="return md5encrypt()">
-						<span>账号 <input type="text" name="user" class="text" value=""/></span>
+						<span>账号 <input type="text" id="user" name="user" class="text" value=""/></span>
 						<span>密码 <input type="password" id="password" class="text" value="" /></span>						
 						<input type="hidden" id="password_md5" name="password"/>					
 						<button type="submit" class="button"> </button>
