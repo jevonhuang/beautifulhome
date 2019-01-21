@@ -4,6 +4,9 @@ from django.http import HttpResponse
 
 def index(request):
 	return render(request, 'index.html')
+
+def login(request):
+	return HttpResponse("hello world")
 	
 def add(request):
 	a = request.GET['a']
