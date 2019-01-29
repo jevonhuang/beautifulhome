@@ -91,7 +91,7 @@ public:
 	static PyTypeObject* getBaseScriptType(void)											
 	{																						
 		if(strcmp("ScriptObject", "ScriptObject") == 0)										
-			return 0;																		
+			return 0; //这里为什么返回0呢？？？																		
 		return ScriptObject::getScriptType();													
 	}																						
 																							

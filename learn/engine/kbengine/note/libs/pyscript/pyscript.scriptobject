@@ -7,32 +7,51 @@
 试答：静态函数，参数是PyObject*，在函数内部被强制转换成ScriptObject类对象，并调用其tp_repr()函数，
 	  在tp_repr()函数内部又调用Python的C代码接口PyUnicode_FromFormat，其实就是用对象类型名称构造
 	  一个字符串（ScriptObject）相关的PyObject*，然后返回。
-说明：scriptobject.h(84)
+说明：scriptobject.h(102)
 
 
 问题：ScriptObject类的_tp_str()？
 试答：静态函数，参数是PyObject*，在函数内部被强制转换成ScriptObject类对象，并调用其tp_str()函数，
 	  在tp_str()函数内部又调用Python的C代码接口PyUnicode_FromFormat，其实就是用对象类型名称构造
 	  一个字符串（ScriptObject）相关的PyObject*，然后返回。
-说明：scriptobject.h(89)
+说明：scriptobject.h(107)
 
 
 问题：ScriptObject类的_tp_new()？
 试答：静态函数，参数是PyTypeObject* type，PyObject* args，PyObject* kwds，在函数内部又调用静态函
 	  数tp_new()，在tp_new()函数内部又调用type的接口函数tp_alloc()，args, kwds两个参数被忽略了（
 	  python底层不熟，不知道为什么这么绕），最终是返回一个新的PyObject对象指针。
-说明：scriptobject.h(96)
+说明：scriptobject.h(116)
 
 
 问题：ScriptObject类的_tp_getattro()？
 试答：静态函数，参数是PyObject* self, PyObject* name，获取对象属性的接口，在函数内部被强制转换成
 	  ScriptObject类对象，并调用其onScriptGetAttribute()函数，在该函数内部，最终调用Python相关的
 	  PyObject_GenericGetAttr()函数，获取属性（也是PyObject*）返回。
-说明：scriptobject.h(103)
+说明：scriptobject.h(123)
 
 
 问题：ScriptObject类的_tp_setattro()？
 试答：静态函数，参数是PyObject* self, PyObject* name, PyObject* value，设置对象属性的接口，在函数
 	  内部被强制转换成ScriptObject类对象，并调用其onScriptSetAttribute()或onScriptDelAttribute()
 	  函数，最终调用python相关的PyObject_GenericSetAttr()函数，返回值是整数。
-说明：scriptobject.h(110)
+说明：scriptobject.h(128)
+
+
+问题：ScriptObject类的_tp_init()？
+试答：静态函数，参数是PyObject* self, PyObject* args, PyObject* kwds，对象初始化接口，在函数内部被
+	  强制转换成ScriptObject类对象，并调用onScriptInit()函数，该函数的内部实现更多的有派生于该类的
+	  子类实现。
+说明：scriptobject.h(137)
+
+
+问题：ScriptObject类的__py_readonly_descr()？
+试答：静态函数，当对一个只读属性进行写入时的报错说明。
+说明：scriptobject.h(156)
+
+
+问题：ScriptObject类的__py_writeonly_descr()？
+试答：静态函数，当对一个只写属性进行读取时的报错说明。
+说明：scriptobject.h(167)
+
+
