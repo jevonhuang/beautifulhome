@@ -91,7 +91,7 @@ public:
 	static PyTypeObject* getBaseScriptType(void)											
 	{																						
 		if(strcmp("ScriptObject", "ScriptObject") == 0)										
-			return 0; //这里为什么返回0呢？？？																		
+			return 0; //这里为什么返回0呢？？？	解释：当本身就是基类时返回空，表示没有基类。																	
 		return ScriptObject::getScriptType();													
 	}																						
 																							

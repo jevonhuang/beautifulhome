@@ -50,8 +50,34 @@
 说明：scriptobject.h(156)
 
 
-问题：ScriptObject类的__py_writeonly_descr()？
-试答：静态函数，当对一个只写属性进行读取时的报错说明。
-说明：scriptobject.h(167)
+问题：ScriptObject类的getScriptType()？
+试答：静态函数，获得当前模块的脚本类别。
+说明：scriptobject.h(178)
+
+
+问题：ScriptObject类的getBaseScriptType()？
+试答：静态函数，获得当前模块的基类脚本类别。当本身就是基类时返回空，表示没有基类。
+说明：scriptobject.h(182)
+
+
+问题：ScriptObject类的calcDictOffset()？
+试答：静态函数，计算实例对象中__dict__的偏移位置。基类和派生类都返回0。
+说明：scriptobject.h(189)
+
+
+问题：ScriptObject类的calcTotalMethodCount()？
+试答：静态函数，计算所有继承模块的暴露方法个数。
+说明：scriptobject.h(198)
+
+
+问题：ScriptObject类的calcTotalMemberCounts()？
+试答：静态函数，计算所有继承模块的暴露成员个数。
+说明：scriptobject.h(216)
+
+
+问题：ScriptObject类的calcTotalGetSetCount()？
+试答：静态函数，计算所有继承模块的暴露getset个数。
+说明：scriptobject.h(234)
+
 
 
