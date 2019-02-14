@@ -80,4 +80,20 @@
 说明：scriptobject.h(234)
 
 
+问题：ScriptObject类的setupScriptMethodAndAttribute()？
+试答：静态函数，将所有父类以及当前模块的暴露成员和方法安装到最终要导入脚本的列表中。
+说明：scriptobject.h(252)
+
+
+问题：ScriptObject类的installScript()？
+试答：静态函数，安装当前脚本模块。
+	  先计算数量，然后创建指针，最后赋值，最终赋值给脚本类型中的变量。
+说明：scriptobject.h(299)
+
+
+问题：ScriptObject类的uninstallScript()？
+试答：静态函数，卸载当前脚本模块。
+说明：scriptobject.h(342)
+
+
 
