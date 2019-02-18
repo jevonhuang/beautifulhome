@@ -96,4 +96,11 @@
 说明：scriptobject.h(342)
 
 
+问题：ScriptObject类的构造函数？
+试答：负责PyObject对象的构建。
+说明：scriptobject.cpp(43)
 
+
+问题：ScriptObject类的析构函数？
+试答：验证PyObject对象是否已经释放。
+说明：scriptobject.cpp(57)
