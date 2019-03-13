@@ -1,0 +1,10 @@
+问题：ScriptDefModule类设计说明？
+试答：描述一个脚本def模块。
+	  在使用kbengine开发的时候，会定义实体以及实体的扩展接口，ScriptDefModule类的设计就是用来描述这些定义的。
+	  ScriptDefModule的构建过程：
+	  1，EntityDef类的initialize函数中读取entities.xml文件，将文件内容存储在TiXmlNode类对象中，这个文件里面定义了游戏中会用到的实体；
+	  2，遍历TiXmlNode类对象的节点，每个节点就是一个实体的模块名称；
+	  3，创建ScriptDefModule类对象pScriptModule，并将其存放在EntityDef类的静态数据__scriptModules的vector容器中；
+	  4，读取相关模块的def文件（同样使用xml解析）；
+	  5，加载定义信息，将其存入pScriptModule对象中；
+说明：refcountable.h
