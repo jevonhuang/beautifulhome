@@ -16,5 +16,29 @@
 
 
 问题：Entity的构造函数？
-试答：
-说明：entity.h(37)
+试答：实体构造函数，在onCreateEntity()函数中调用，或者又在createEntity()中被调用。
+说明：entity.h(37), entity_app.h(676)
+
+
+问题：Entity的析构函数？
+试答：实体析构函数，在onCreateEntity()函数中调用，或者又在createEntity()中被调用。
+说明：entity.h(159)
+
+
+问题：Entity的hasDB()？
+试答：是否存储数据库，在创建实体的时候调用writeToDB()函数时会设置值为true。销毁实体的时候会设置值为false。
+说明：entity.h(62), entity.cpp(1170)
+
+
+问题：Entity的dbid()？
+试答：实体的数据库索引，在实体加载的时候设置或者第一次实体写入数据库回调的时候设置。
+	  pyGetDBID对应的脚本属性databaseID是抛给脚本的获取数据库id的接口。
+说明：entity.h(68)
+
+
+问题：Entity的dbInterfaceIndex()？
+试答：数据库接口索引，同dbid设置。
+	  加载databaseInterfaces中数据库配置的时候，会把每个数据库配置信息压入一个vector容器，
+	  这里的dbInterfaceIndex就是对应这个容器中的索引。
+	  pyGetDBInterfaceName对应的脚本属性databaseInterfaceName是抛给脚本的获取数据库接口名称的接口。
+说明：entity.h(68)
