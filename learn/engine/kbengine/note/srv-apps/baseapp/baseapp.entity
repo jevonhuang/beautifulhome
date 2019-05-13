@@ -12,6 +12,10 @@
 	  
 	  3、client部分：
 	  实体在客户端上的对象（或称为实现），这部分叫做client部分。一般在客户端上进行实现，不在服务端范围内；
+
+	  
+	  实体创建过程中，各部分是如何相应创建和联系在一起的？
+	  
 说明：entity.h(37)
 
 
@@ -42,3 +46,25 @@
 	  这里的dbInterfaceIndex就是对应这个容器中的索引。
 	  pyGetDBInterfaceName对应的脚本属性databaseInterfaceName是抛给脚本的获取数据库接口名称的接口。
 说明：entity.h(68)
+
+
+问题：Entity的destroyCellEntity()？
+试答：销毁实体的cell部分数据，一般供脚本层调用，最后是发包给cell组件，在cell组件中清除数据。
+说明：entity.cpp(486)
+
+
+问题：Entity的cellEntityCall()？
+试答：cell组件中实体的调用接口。在onGetCell回调中设置这个值。
+说明：entity.cpp(90,886)
+
+
+问题：Entity的clientEntityCall()？
+试答：客户端的实体的调用接口。在客户端登陆成功的时候设置这个值。
+说明：entity.cpp(97)
+
+
+问题：Entity的isCreatedSpace()？
+试答：是否在cell中创建了空间。在createCellEntityInNewSpace()中会设置true，在onLoseCell()会设置为false。
+	  base组件通过这个值来处理cell中实体的恢复，同时用来避免空间被重复创建，也就是说一个实体只能在一个
+	  空间之中。
+说明：entity.cpp(934，1343，1364，1373)
