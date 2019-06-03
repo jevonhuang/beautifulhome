@@ -67,4 +67,20 @@
 试答：是否在cell中创建了空间。在createCellEntityInNewSpace()中会设置true，在onLoseCell()会设置为false。
 	  base组件通过这个值来处理cell中实体的恢复，同时用来避免空间被重复创建，也就是说一个实体只能在一个
 	  空间之中。
-说明：entity.cpp(934，1343，1364，1373)
+说明：entity.cpp(934,1343,1364,1373)
+
+
+问题：Entity的installCellDataAttr()？
+试答：建立或者更新一份cell组件相关的数据，缓存再本组件的实体内。
+说明：baseapp.cpp(672),entity.cpp(994)
+
+
+问题：Entity的createCellData()？
+试答：初始化cell组件相关的数据，通过实体的配置文件来生成对应的字段。
+说明：entity.cpp(233)
+
+
+问题：Entity的destroyCellData()？
+试答：当本组件获取Cell中对应的实体信息时，就会把本地的cellData“销毁”，所谓销毁，其实只是让脚本层无法访问到而已，
+	  因为备份的时候，还会用到这个属性，参考installCellDataAttr的实现。
+说明：entity.cpp(896, 474)
