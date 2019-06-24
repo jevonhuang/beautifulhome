@@ -1,6 +1,6 @@
 module Kbe
 {
-	export class Entity
+	export class Entity 
 	{
 		id: number;
 		className: string;
@@ -107,7 +107,7 @@ module Kbe
 			}
 
 			this.base.NewCall();
-			this.base.bundle.WriteUint16(0);
+			//this.base.bundle.WriteUint16(0);
 			this.base.bundle.WriteUint16(method.methodUtype);
 
 			try

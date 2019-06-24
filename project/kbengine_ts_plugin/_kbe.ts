@@ -59,7 +59,7 @@ module Kbe
 		private serverScriptVersion = "";
 		private serverProtocolMD5 = "";
 		private serverEntityDefMD5 = "";
-		private clientVersion = "2.2.9";
+		private clientVersion = "1.3.4";
 		private clientScriptVersion = "0.1.0";
 
 		private lastTickTime: number = 0;
@@ -260,7 +260,7 @@ module Kbe
 			this.serverScriptVersion = "";
 			this.serverProtocolMD5 = "";
 			this.serverEntityDefMD5 = "";
-			this.clientVersion = "2.3.0";
+			this.clientVersion = "1.3.4";
 			this.clientScriptVersion = "0.1.0";
 			
 			// player的相关信息
@@ -791,7 +791,7 @@ module Kbe
 			this.userName = accountName;
 			this.baseappAddress = stream.ReadString();
 			this.baseappPort = stream.ReadUint16();
-			this.baseappUDPPort = stream.ReadUint16();
+			// this.baseappUDPPort = stream.ReadUint16();
 			this.serverdatas = stream.ReadBlob();
 			
 			Logger.Info("App::Client_onLoginSuccessfully: accountName(" + accountName + "), addr(" + 
@@ -1151,11 +1151,11 @@ module Kbe
 			{
 				let utype = 0;
 				if(module.usePropertyDescrAlias) {
-					stream.ReadInt8()
+					// stream.ReadInt8()
 					utype = stream.ReadUint8();
 				}
 				else {
-					stream.ReadUint16()
+					// stream.ReadUint16()
 					utype = stream.ReadUint16();
 				}
 
@@ -1221,6 +1221,7 @@ module Kbe
 
 				if(this.args.isOnInitCallPropertysSetMethods)
 					entity.CallPropertysSetMethods();
+					entity.setMethodsComplete();
 			}
 			else
 			{
@@ -1232,6 +1233,7 @@ module Kbe
 				}
 			}
 		}
+
 
 		OnRemoteMethodCall(eid: number, stream: MemoryStream)
 		{
@@ -1245,11 +1247,11 @@ module Kbe
 			let scriptModule: ScriptModule = MODULE_DEFS[entity.className];
 			let methodUtype: number = 0;
 			if(scriptModule.useMethodDescrAlias) {
-				stream.ReadInt8()
+				// stream.ReadInt8()
 				methodUtype = stream.ReadUint8();
 			}
 			else {
-				stream.ReadUint16()
+				// stream.ReadUint16()
 				methodUtype = stream.ReadUint16();
 			}
 

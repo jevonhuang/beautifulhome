@@ -4,20 +4,20 @@ module Kbe
 	{
 		static Debug(msg: string, ...optionalParams: any[]): void
 		{
-			// optionalParams.unshift(msg);
-			// console.debug.apply(this, optionalParams);
+			optionalParams.unshift(msg);
+			console.debug.apply(this, optionalParams);
 		}
 
 		static Info(msg: string, ...optionalParams: any[]): void
 		{
-			// optionalParams.unshift(msg);
-			// console.info.apply(this, optionalParams);
+			optionalParams.unshift(msg);
+			console.info.apply(this, optionalParams);
 		}
 
 		static Warning(msg: string, ...optionalParams: any[]): void
 		{
-			// optionalParams.unshift(msg);
-			// console.warn.apply(this, optionalParams);
+			optionalParams.unshift(msg);
+			console.warn.apply(this, optionalParams);
 		}
 
 		static Error(msg: string, ...optionalParams: any[]): void
@@ -35,7 +35,7 @@ module Kbe
 			}
 
 			// note：微信小游戏平台不支持，手册中提到的CC_WECHATGAME未定义，无法区分是否微信小游戏平台，
-			// console.assert(condition, message, ...data);
+			console.assert(condition, message, ...data);
 		}
 	}	
 }
